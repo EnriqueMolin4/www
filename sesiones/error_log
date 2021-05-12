@@ -1,0 +1,2 @@
+[27-Jul-2017 20:24:12 UTC] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/lmiguel/public_html/sis/sesiones/validacion.php on line 10
+[27-Jul-2017 20:25:42 UTC] PHP Fatal error:  Call to undefined function mylqi_num_rows() in /home/lmiguel/public_html/sis/sesiones/validacion.php on line 11
