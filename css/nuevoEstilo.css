@@ -1,0 +1,126 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+
+.container-fluid {
+    width: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;/**/
+    margin-left: auto;
+}
+
+/*COLOR FONDO MENU BAR*/
+.ice-theme.sidebar-bg .sidebar-wrapper .sidebar-menu ul li a i {
+    background-color: #0B4D63;
+
+}
+
+/*COLOR FONDO SUBMENU*/
+.sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu ul {
+    padding: 7px 0;
+    background-color: #237B98;
+}
+
+.sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li {
+    padding-left: 2px!important;
+    font-size: 13px;
+}
+
+/* COLOR DEL SUBMENÚ */
+.ice-theme.sidebar-bg .sidebar-wrapper a:not(.dropdown-item), .ice-theme.sidebar-bg .sidebar-wrapper .sidebar-header, .ice-theme.sidebar-bg .sidebar-wrapper .sidebar-search input, .ice-theme.sidebar-bg .sidebar-wrapper .sidebar-search i {
+    color: #d8d8d8;
+}
+
+/*COLOR DEL TEXTO DEL MENU*/
+.sidebar-wrapper .sidebar-menu ul li a .menu-text {
+    color: #E0E0E0!important; 
+    display: inline-block;
+    font-size: 13px!important;
+    margin-bottom: 10px;
+}
+.ice-theme.sidebar-bg .sidebar-wrapper .sidebar-footer {
+    background-color: #0B4D63;
+    -webkit-box-shadow: 0px -1px 5px rgb(43 58 66 / 80%);
+    box-shadow: 0px -1px 5px rgb(43 58 66 / 80%);
+    border-top: 1px solid #445b65;
+}
+
+.fa-edit{
+    color:#187CD0
+}
+.ice-theme.sidebar-bg .sidebar-wrapper .sidebar-footer {
+    background-color: rgba(11, 77, 99, 0.5)!important;
+    -webkit-box-shadow: 0px -1px 5px rgb(43 58 66 / 80%);
+    box-shadow: 0px -1px 5px rgb(53 66 43 / 76%);
+    border-top: 1px solid #000000;
+}
+
+.sidebar-content
+{
+    background-color: #0B4D63;
+}
+
+}
+
+.sidebar-wrapper ul {
+    list-style-type: none;
+    padding: 0;
+    margin: -12px!important;
+}
+
+.sidebar-wrapper .sidebar-header .user-pic {
+    width: 70px;
+    padding: 2px;
+    margin-right: 0px!important;
+    overflow: hidden;
+}
+
+@media screen and (min-width: 768px)
+.page-wrapper.toggled .page-content {
+    padding-left: 250px;
+}
+.sidebar-wrapper {
+   
+    width: auto!important;
+}
+
+.sidebar-wrapper .sidebar-menu ul li a .menu-text {
+    color: white;
+    display: inline-block;
+    font-size: 15px;
+    margin-bottom: 8px!important;
+}
+.h3-menu
+{
+    font-weight: normal;
+    font-family: 'Source Sans Pro', sans-serif;
+    padding-bottom: 10px;
+}
+.icon-fa
+{
+    margin-top: 50px;
+    position: absolute;
+    bottom: 40px;"
+}
+.span-menu
+{
+     margin-bottom: 35px;
+}
+
+.modal-title
+{
+    font-size: 20px;
+}
+
+.modal-content
+{
+    box-shadow: 2px 2px 7px 8px rgba(0.2, 0.2, 0.2, 0.2)!important;
+}
+
+/*COLOR DE LA SCROLLBAR*/
+.ice-theme .mCSB_scrollTools .mCSB_dragger .mCS_dragger_bar,
+.ice-theme .mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar,
+.ice-theme .mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar
+{
+     background-color: #FFFFFF;
+}

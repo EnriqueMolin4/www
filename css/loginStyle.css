@@ -1,0 +1,195 @@
+@import url("//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+        body { 
+            background: #f1f4f9; 
+            font-family: 'Montserrat', sans-serif;
+            background: -webkit-linear-gradient(to bottom, #F3BD77,#FFFFFF ); /*  Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to bottom, #F3BD77,#FFFFFF);/*  W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        .register-photo {
+
+            /*background: #f1f7fc;*/
+            background: #2B3A42;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to bottom, #376A78,#F3BD77 );  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to bottom,  #376A78,#F3BD77); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            padding: 40px 0
+        }
+        .login-form
+        {
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        .register-photo .image-holder {
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            display: table-cell;
+            width: auto;
+            background: url(../images/logoImg2-min.jpg);
+            background-size: cover
+        }
+
+        .register-photo .form-container {
+            
+            display: table;
+            height: 600px!important;
+            width: 90%;
+            margin: 0 auto;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1)
+        }
+
+        .register-photo form {
+            display: table-cell;
+            width: 700px;
+            background-color: #ffffff;
+            padding: 40px 60px;
+            color: #505e6c
+        }
+
+        @media (max-width:991px) {
+            .register-photo form {
+                padding: 40px
+            }
+        }
+        h2 
+        {
+            font-weight: bold;  
+        }
+
+        .register-photo form h2 {
+            font-size: 24px;
+            line-height: 1.5;
+            margin-bottom: 30px
+        }
+
+        .register-photo form .form-control {
+            background: transparent;
+            border: 1px solid #dfe7f1;
+            box-shadow: none;
+            outline: none;
+            color: inherit;
+            text-indent: 0px;
+            height: 40px
+        }
+
+        .register-photo form .form-check {
+            font-size: 13px;
+            line-height: 20px
+        }
+
+        .register-photo form .btn-primary {
+            background: green;
+            border: none;
+            border-radius: 4px;
+            padding: 11px;
+            box-shadow: none;
+            margin-top: 35px;
+            text-shadow: none;
+            outline: none !important
+        }
+
+        .register-photo form .btn-primary:hover,
+        .register-photo form .btn-primary:active {
+            background: green
+        }
+
+        .register-photo form .btn-primary:active {
+            transform: translateY(1px)
+        }
+
+        .register-photo form .already {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            color: #6f7a85;
+            opacity: 0.9;
+            text-decoration: none
+        }
+        .btn-login{
+            background: #DE6262; 
+            color:#fff; 
+            font-weight:600;
+            width: 100px;
+        }
+
+        /* .login-block{
+        background: #f1f4f9;  fallback for old browsers */
+        /*background: -webkit-linear-gradient(to bottom, #2B3A42,#FFB88C );   Chrome 10-25, Safari 5.1-6 */
+        /*background: linear-gradient(to bottom,  #2B3A42,#FFB88C);  W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ 
+        float:left;
+        width:100%;
+        padding : 70px 0;
+        }*/
+       /* .banner-sec{
+            padding: 50px 300px; 
+            position:relative;
+        }
+
+        .row{
+            margin-right: -270px;
+        }
+        .container{background:#fff;box-shadow: 10px 10px 8px #d7d9db; max-width: 90%;}
+
+        .carousel-inner{border-radius:0 10px 10px 0;}
+
+        .carousel-caption{text-align:left; left:5%;}
+
+        .login-sec{
+             background:url(../images/logoImagen.png)  no-repeat left bottom; 
+            background-size:cover; 
+            height: 500px;
+            width: 100px;
+            padding:0;
+            
+        }
+
+        .login-sec .copy-text{
+            position:absolute; 
+            width:70%!important; 
+            bottom:20px; 
+            font-size:13px; 
+            text-align:center;
+        }
+
+        .login-sec .copy-text i{color:#FEB58A;}
+
+        .login-sec .copy-text a{color:#E36262;}
+
+        .banner-sec h2{
+            margin-bottom:30px; 
+            font-weight:800; 
+            font-size:30px; 
+            color: #DE6262;
+            width: 30%!important;
+        }
+
+        .banner-sec h2:after{
+            content:" "; 
+            width:100px; height:5px; 
+            background:#FEB58A; 
+            display:block;
+            margin-top:20px; 
+            border-radius:3px; 
+            margin-left:auto;
+            margin-right:auto
+        }
+
+        
+
+        .banner-text{
+            width:70%; 
+            position:absolute; 
+            bottom:40px; 
+            padding-left:20px;
+        }
+
+        .banner-text h2{
+            color:#fff; 
+            font-weight:600;
+        }
+
+        .banner-text h2:after{content:" "; width:100px; height:5px; background:#FFF; display:block; margin-top:20px; border-radius:3px;}
+
+        .banner-text p{color:#fff;}*/
