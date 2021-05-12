@@ -1,0 +1,1717 @@
+<?php require("header.php"); ?>
+<body>
+    <div class="page-wrapper ice-theme sidebar-bg bg1 toggled">
+            <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                  </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <?php include("menu.php"); ?>    
+        </nav>
+        <!-- page-content  -->
+        <main class="page-content">
+            <div id="overlay" class="overlay"></div>
+            <div class="page-title">
+                <h3>CIERRE DE EVENTO</h3>
+            </div>
+            <div class="container-fluid p-3">
+                <div class="panel-white">
+                    
+               
+               
+                    <div style="border-style: solid; padding: 10px;">
+                        <div class="row">
+                            <div id="avisos" class="display:none;" style="background-color:red;"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">           
+                                <label for="odt" class="col-form-label-sm">ORDENES DE TRABAJO</label>
+                                <input type="text" class="form-control form-control-sm" id="odt" aria-describedby="odt"  readonly>
+                            </div>
+                            <div class="col-sm-4">           
+                                <label for="afiliacion" class="col-form-label-sm">AFILIACION</label>
+                                <input type="text" class="form-control form-control-sm" id="afiliacion" aria-describedby="afiliacion">
+                            </div>                           
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-10" style="padding-left:30px;padding-top:30px;">  
+                                <input type="hidden"  id="servicioTipo" value='0'>
+                                <a href="eventos.php" class="btn btn-warning" id="btnRegresar">Regresar Eventos</a>
+                                <button class="btn btn-primary" id="btnEvidencias">Ver Evidencias</button>
+                                <button class="btn btn-success" id="btnConsultar">Validar Cierre Evento</button>
+                            </div>
+                        </div>
+                
+                    </div>
+
+                 
+                    <div id="divEvento" style="display:none ">
+                        <div class="row">
+                            <div class="col">           
+                                <label for="tipo_servicio" class="col-form-label-sm">TIPO SERVICIO</label>
+                                <input type="text" class="form-control form-control-sm" id="tipo_servicio" aria-describedby="tipo_servicio" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="tipo_subservicio" class="col-form-label-sm">TIPO SUBSERVICIO</label>
+                                <input type="text" class="form-control form-control-sm" id="tipo_subservicio" aria-describedby="tipo_subservicio" readonly>
+                            </div>
+                        
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="checkbox-inline"><input type="checkbox" value="" id="odtGetNet">Vestiduras GetNet</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="" id="odtNotificado">Notificado</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="" id="odtDescarga">Descarga mi comercio</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <div class="col">           
+                                <label for="fecha_alta" class="col-form-label-sm">FECHA ALTA</label>
+                                <input type="text" class="form-control form-control-sm" id="fecha_alta" aria-describedby="fecha_alta" readonly>
+                        </div>
+                            <div class="col">           
+                                <label for="fecha_vencimiento" class="col-form-label-sm">FECHA VENCIMIENTO</label>
+                                <input type="text" class="form-control form-control-sm" id="fecha_vencimiento" aria-describedby="fecha_vencimiento" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="fecha_cierre" class="col-form-label-sm">FECHA CIERRE</label>
+                                <input type="text" class="form-control form-control-sm" id="fecha_cierre" aria-describedby="fecha_cierre" readonly>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                <label for="comercio" class="col-form-label-sm">COMERCIO | CLIENTE</label>
+                                <input type="text" class="form-control form-control-sm" id="comercio" aria-describedby="comercio" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="colonia" class="col-form-label-sm">COLONIA</label>
+                                <input type="text" class="form-control form-control-sm" id="colonia" aria-describedby="colonia" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="ciudad" class="col-form-label-sm">CIUDAD</label>
+                                <input type="text" class="form-control form-control-sm" id="ciudad" aria-describedby="ciudad" readonly >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                <label for="estado" class="col-form-label-sm">ESTADO</label>
+                                <input type="text" class="form-control form-control-sm" id="estado" aria-describedby="estado" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="direccion" class="col-form-label-sm">DIRECCION</label>
+                                <input type="text" class="form-control form-control-sm" id="direccion" aria-describedby="direccion" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="telefono" class="col-form-label-sm">TELEFONO</label>
+                                <input type="text" class="form-control form-control-sm" id="telefono" aria-describedby="telefono" readonly>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col" style="padding:30px;">       
+                                <div class="row justify-content-center" >
+                                    <div class="col-sm-4" style="padding:5px">
+                                        <button class="btn btn-primary" id="btnUbicacion">UBICACION</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="col">           
+                            <label for="descripcion" class="col-form-label-sm">DESCRIPCION</label>
+                                <textarea  class="form-control form-control-sm" rows="5" id="descripcion" aria-describedby="descripcion" readonly></textarea>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col">           
+                                        <label for="hora_atencion" class="col-form-label-sm">HORARIO DE ATENCION</label>
+                                        <input type="text" class="form-control form-control-sm" id="hora_atencion" aria-describedby="hora_atencion" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">           
+                                        <label for="hora_comida" class="col-form-label-sm">HORARIO DE COMIDA</label>
+                                        <input type="text" class="form-control form-control-sm" id="hora_comida" aria-describedby="hora_comida" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">           
+                                        <label for="fecha_asignacion" class="col-form-label-sm">FECHA DE ASIGNACION</label>
+                                        <input type="text" class="form-control form-control-sm" id="fecha_asignacion" aria-describedby="fecha_asignacion" readonly>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">           
+                                <label for="receptor_servicio" class="col-form-label-sm">QUIEN ATENDIO</label>
+                                <input type="text" class="form-control form-control-sm" id="receptor_servicio" aria-describedby="receptor_servicio" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="fecha_atencion" class="col-form-label-sm">FECHA DE ATENCION</label>
+                                <input type="text" class="form-control form-control-sm" id="fecha_atencion" aria-describedby="fecha_atencion" autocomplete="off" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="hora_llegada" class="col-form-label-sm">HORA DE LLEGADA</label>
+                                <input type="time" class="form-control form-control-sm" id="hora_llegada" aria-describedby="hora_llegada" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="hora_salida" class="col-form-label-sm">HORA DE SALIDA</label>
+                                <input type="time" class="form-control form-control-sm" id="hora_salida" aria-describedby="hora_salida" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                <label for="tecnico" class="col-form-label-sm">TECNICO</label><?php if ($_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
+                                <input type="text" class="form-control form-control-sm" id="tecnico" aria-describedby="tecnico" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="estatus" class="col-form-label-sm">ESTATUS</label>
+                                <input type="text" class="form-control form-control-sm" id="estatus" aria-describedby="estatus" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="servicio" class="col-form-label-sm">SERVICIOS SOLICITADO</label>
+                                <input type="text" class="form-control form-control-sm" id="servicio" aria-describedby="servicio" readonly>
+                            </div>
+                            <div class="col" id="col_tipocredito">           
+                                <label for="tipo_credito" class="col-form-label-sm">TIPO CREDITO</label>
+                                <input type="text" class="form-control form-control-sm" id="tipo_credito" aria-describedby="tipo_credito" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                    <label for="tpv" class="col-form-label-sm">TERMINAL INSTALADA</label>
+                                    <input type="text" class="form-control form-control-sm" id="tpv" aria-describedby="tpv" readonly>
+                                    <select  class="form-control form-control-sm" id="tpvInDataModelo" aria-describedby="tpvInDataModelo">
+                                        <option value="0" selected>Seleccionar Modelo</option>
+                                    </select>
+                                    <select  class="form-control form-control-sm" id="tpvInDataConnect" aria-describedby="tpvInDataConnect">
+                                        <option value="0" selected>Seleccionar Conectividad</option>
+                                    </select>
+                            </div>
+                            <div class="col">           
+                                    <label for="tpv_retirado" class="col-form-label-sm">TERMINAL RETIRADA</label>
+                                    <input type="text" class="form-control form-control-sm" id="tpv_retirado" aria-describedby="tpv" readonly>
+                                    <select  class="form-control form-control-sm" id="tpvReDataModelo" aria-describedby="tpvReDataModelo">
+                                        <option value="0" selected>Seleccionar Modelo</option>
+                                    </select>
+                                    <select  class="form-control form-control-sm" id="tpvReDataConnect" aria-describedby="tpvReDataConnect">
+                                        <option value="0" selected>Seleccionar Conectividad</option>
+                                    </select>
+                                    <div class="row" id="tvpRetiradaCHK">
+                                        <div class="col">
+                                            <label class="checkbox-inline"><input type="checkbox" value="" id="tvpRetBateria">Batería</label>
+                                            <label class="checkbox-inline"><input type="checkbox" value="" id="tvpRetEliminador">Eliminador</label>
+                                            <label class="checkbox-inline"><input type="checkbox" value="" id="tvpRetTapa">Tapa Ret</label>
+                                            <label class="checkbox-inline"><input type="checkbox" value="" id="tvpRetCable">Cable AC</label>
+                                            <label class="checkbox-inline"><input type="checkbox" value="" id="tvpRetBase">Base</label>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="col">           
+                                    <label for="idcaja" class="col-form-label-sm">ID CAJA</label>
+                                    <input type="text" class="form-control form-control-sm" id="idcaja" aria-describedby="idcaja" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="afiliacion_amex" class="col-form-label-sm">AFILIACION AMEX</label>
+                                <input type="hidden" id="tieneamex" name="tieneamex">
+                                <input type="text" class="form-control form-control-sm" id="afiliacion_amex" aria-describedby="afiliacion_amex" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="idamex" class="col-form-label-sm">ID AMEX</label>
+                                <input type="text" class="form-control form-control-sm" id="idamex" aria-describedby="idamex" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                    <label for="version" class="col-form-label-sm">VERSION</label>
+                                    <select  class="form-control form-control-sm" id="version" aria-describedby="version" readonly>
+                                        <option value="0">Seleccionar</option>
+                                    </select>
+                            </div>
+                            <div class="col">           
+                                    <label for="aplicativo" class="col-form-label-sm">APLICATIVO</label>
+                                    <select  class="form-control form-control-sm" id="aplicativo" aria-describedby="aplicativo" readonly>
+                                        <option value="0">Seleccionar</option>
+                                    </select>
+                            </div>
+                            <div class="col">           
+                                <label for="producto" class="col-form-label-sm">PRODUCTO</label>
+                                <select  class="form-control form-control-sm" id="producto" aria-describedby="producto" disabled>
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                            <div class="col">           
+                                <label for="rollos_instalar" class="col-form-label-sm">ROLLOS A ENTREGAR</label>
+                                <input type="text" class="form-control form-control-sm" id="rollos_instalar" aria-describedby="rollos_instalar" readonly>
+                            </div>
+                            <div class="col">           
+                                <label for="rollos_entregados" class="col-form-label-sm">ROLLOS ENTREGADOS</label>
+                                <input type="text" class="form-control form-control-sm" id="rollos_entregados" aria-describedby="rollos_entregados" readonly>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                <label for="simInData" class="col-form-label-sm">SIM INSTALADA</label>
+                                <input type="text" class="form-control form-control-sm" id="sim_instalado" aria-describedby="sim_instalado">
+                                <select  class="form-control form-control-sm" id="simInData" aria-describedby="simInData">
+                                    <option value="0" selected>Seleccionar Carrier</option>
+                                </select>
+                            </div>
+                            <div class="col">           
+                                <label for="simReData" class="col-form-label-sm">SIM RETIRADA</label>
+                                <input type="text" class="form-control form-control-sm" id="sim_retirado" aria-describedby="sim_retirado">
+                                <select  class="form-control form-control-sm" id="simReData" aria-describedby="simReData">
+                                    <option value="0" selected>Seleccionar Carrier</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">           
+                                <label for="folio_telecarga" class="col-form-label-sm">FOLIO TELECARGA</label>
+                                <input type="text" class="form-control form-control-sm" id="folio_telecarga" aria-describedby="folio_telecarga" readonly>
+                            </div>
+                            <div class="col-sm-3">           
+                                <label for="estatus_servicio" class="col-form-label-sm">ESTATUS SERVICIO</label>
+                                <select  class="form-control form-control-sm" id="estatus_servicio" aria-describedby="estatus_servicio" disabled>
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4" id="rowRechazos" style="display: none;">           
+                                <label for="rechazo" class="col-form-label-sm">RECHAZO</label>
+                                <select  class="form-control form-control-sm" id="rechazo" aria-describedby="rechazo" >
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4" id="rowSubRechazos" style="display: none;">           
+                                <label for="subrechazo" class="col-form-label-sm">SUB RECHAZO</label>
+                                <select  class="form-control form-control-sm" id="subrechazo" aria-describedby="subrechazo" >
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4" id="rowCancelado" style="display: none;">           
+                                <label for="cancelado" class="col-form-label-sm">CANCELADO</label>
+                                <select  class="form-control form-control-sm" id="cancelado" aria-describedby="cancelado" >
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                <label for="comentarios_tecnico" class="col-form-label-sm">COMENTARIOS DE TECNICO</label>
+                                <textarea  class="form-control form-control-sm" rows="5" id="comentarios_tecnico" aria-describedby="comentarios_tecnico" readonly></textarea>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                <label for="comentarios_cierre" class="col-form-label-sm">COMENTARIOS DE CIERRE</label>
+                                <textarea  class="form-control form-control-sm" rows="5" id="comentarios_cierre" aria-describedby="comentarios_cierre" readonly></textarea>
+                            </div>
+                            
+                        </div>
+                        <div class="row" style="display:none" id="comentarios_valid" >
+                            <div class="col">           
+                                <label for="comentarios_validacion" id="comentarios_valid"  class="col-form-label-sm">COMENTARIOS DE VALIDACION</label>
+                                <textarea  class="form-control form-control-sm" rows="5" id="comentarios_validacion" aria-describedby="comentarios_validacion"></textarea>
+                            </div>
+                            
+                        </div>
+                        <input type="hidden" value="0" id="eventoId">
+                        <input type="hidden" value="0" id="servicioId">
+                        <input type="hidden" value="0" id="tecnicoid"> 
+                        <input type="hidden" value="0" id="odt">
+                        <input type="hidden" value="0" id="latitud">
+                        <input type="hidden" value="0" id="longitud">
+                        <input type="hidden" id="tipo_user" name="tipo_user" value="<?php echo $_SESSION['tipo_user']; ?>">
+                        <button type="button" class="btn btn-success" name="btnUpdateEvento" id="btnUpdateEvento">Cerrar Evento</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" name="btnComentValid" id="btnComentValid" >Guardar Comentario de Validación</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- MODAL Reasignar -->
+        <div class="modal fade" tabindex="-3" role="dialog" id="showReasignar">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Reasignar Tecnico</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">           
+                                <label for="reasignartecnico" class="col-form-label-sm">Tecnico</label>
+                                <select class="form-control form-control-sm" name="reasignartecnico" id="reasignartecnico" aria-describedby="reasignartecnico">
+                                </select>
+                            </div>
+                            
+                        </div>   
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btnSubmitReasignar">ReAsignar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>  
+                </div>
+            </div>
+        </div>
+        <!-- MODAL MAPS Ubicacion -->
+            <div class="modal fade" tabindex="-3" role="dialog" id="showUbicacion">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ubicacion</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                                <div id="mapa" style="width: 700px; height: 500px;"></div>
+                                <div class="row">
+                                    <div class="col"><span id="ubicacionData"></span></div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <!-- MODAL IMAGENES Ubicacion -->
+
+        <!-- page-content" -->
+    </div>
+    <!-- page-wrapper -->
+
+    <!-- using online scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/moment-with-locales.js"></script>
+    <script src="js/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/jquery.datetimepicker.full.min.js"></script>
+    <script type="text/javascript" src="js/jquery.toaster.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
+	<script src="js/zoomifyc.min.js" ></script> 
+	<script type="text/javascript" src="js/jquery.toaster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="js/main.js"></script>
+    <script src="https://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.7&key=AIzaSyAQCiiA5ZZ1RoIxJquirYDaLOwRbZAQDzA&callback=initMap" async defer></script>
+
+    <script>
+        $(document).ready(function() {
+            getTipoEvento();
+            getEstatusEvento();
+            getEstatusServicio();
+            getRechazos();
+            getSubRechazos();
+            getCancelado();
+            getProductos();
+            getAplicativo();
+            getVersion();
+            getModelos();
+            getConectividad();
+            getCarrier();
+
+            //GET info from URL
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const id = urlParams.get('id');
+
+            $("#eventoId").val(id);
+
+            $("#fechaVen_inicio").datetimepicker({
+			timepicker:false,
+            format:'Y-m-d'
+            });
+
+            $("#fechaVen_fin").datetimepicker({
+                timepicker:false,
+                format:'Y-m-d'
+            });
+
+            $("#fecha_atencion").datetimepicker({
+                timepicker:false,
+                format:'Y-m-d'
+            });
+
+            //Traer Info Basica ODT
+            $.ajax({ 
+                type: 'POST',
+                url : 'modelos/eventos_db.php',
+                data: 'module=getOdtById&id='+ id,
+            }).done(function(result) {
+                $("#odt").val(result);
+            });
+
+            $("#btnEvidencias").on("click",function() {
+                var windowname = $("#odt").val();
+                window.open("galeria_img.php?odt="+$("#odt").val() , windowname, "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no ");
+			
+            })
+
+            $(document).on("click","#btnUbicacion", function() {
+                $("#showUbicacion").modal({show: true, backdrop: false, keyboard: false})
+            })
+
+            $("#btnReasignarTecnico").on("click",function() {
+                $("#showReasignar").modal("show");
+                getTecnicos(0)
+            })
+
+            $("#btnSubmitReasignar").on("click", function() {
+                $.ajax({
+                    type: 'GET',
+                    url: 'modelos/eventos_db.php', // call your php file
+                    data: 'module=assignarTecnico&tecnico='+$("#reasignartecnico").val()+"&odtid="+$("#odt").val(),
+                    cache: false,
+                    success: function(data){    
+                        $("#tecnicoid").val(data);
+                            $.toaster({
+                                message: 'Se Reasigno el Tecnico',
+                                title: 'Aviso',
+                                priority : 'success'
+                            });   
+                        
+                        $("#tecnico").val( $("#reasignartecnico option:selected").text() );
+                        $("#showReasignar").modal("hide");
+                        $("#reasignartecnico").val('0');
+                        //$('#showEvento').modal("hide");
+                            
+                    },
+                    error: function(error){
+                        var demo = error;
+                    }
+                });
+            })
+
+
+            $('#showUbicacion').on('show.bs.modal', function (e) {
+                // initMap()
+                var latitud = $("#latitud").val().length > 0 ? parseFloat($("#latitud").val()) : 0;
+                var longitud = $("#longitud").val().length > 0 ? parseFloat($("#longitud").val()) : 0;
+                var cliente = {lat: latitud, lng: longitud};
+
+                var map = new google.maps.Map(document.getElementById('mapa'), {
+                        center: cliente,
+                        zoom: 15
+                    });
+
+                    var marker = new google.maps.Marker({position: cliente, map: map});
+                    $("#ubicacionData").html("Ubicacion: "+latitud+" "+longitud+" Fecha Atencion: "+$("#fecha_atencion").val() );
+
+        
+            });
+
+            $(document).on('click','.btnDelImage', function() {
+                var idImg = $(this).attr('data');
+                $.ajax({
+                    type: 'GET',
+                    url: 'modelos/eventos_db.php', // call your php file
+                    data: { module: 'imgDelete',idImg: idImg },
+                    cache: false,
+                    success: function(data){
+                        if(data == "1") {
+                            $.toaster({
+                                message: 'Se borro con éxito la imagen ',
+                                title: 'Aviso',
+                                priority : 'success'
+                            });  
+                            mostrarImagenes($("#odt").val())
+                        }
+                    }
+                });
+            })
+
+            $("#estatus_servicio").on("change",function() {    
+                var servicio = $("#servicioId").val();
+                var noserie = $("#tpv").val();
+                var modelo = $("#tpvInDataModelo").val();
+                var conectividad = $("#tpvInDataConnect").val();
+
+    
+
+                    if( $(this).val() == '1' || $(this).val() == '16' || $(this).val() == '0' ) {
+                        $("#rowCancelado").hide();
+                        $("#rowRechazos").hide();
+                        $("#rowSubRechazos").hide();
+                        $("#comentarios_cierre").val('');
+                    } else {
+
+                    
+
+                        if($(this).val() == '14' ) {
+                            $("#btnUpdateEvento").attr('disabled',false);
+                            //$("#btnUpdateEvento").attr('disabled',false);
+                            //$("#divBtnCV").show();
+                            $("#rowCancelado").show();
+                            $("#rowRechazos").hide();
+                            $("#rowSubRechazos").hide();
+                            $("#comentarios_cierre").val('');
+
+                        } else if($(this).val() == '15') { 
+                            $("#btnUpdateEvento").attr('disabled',false);
+                            //$("#btnComentValid").attr('disabled',false);
+                            //$("#divBtnCV").show();
+                            $("#rowCancelado").hide();
+                            $("#rowRechazos").show();
+                            $("#rowSubRechazos").show();
+                            $("#comentarios_cierre").val('');
+                            
+                        } else if($(this).val() == '13') { 
+                            $("#btnUpdateEvento").attr('disabled',false);
+                            $("#rowCancelado").hide();
+                            $("#rowRechazos").hide();
+                            $("#rowSubRechazos").hide();
+                            getScriptEvento(servicio,noserie,conectividad,modelo);
+                            
+                        } else {
+                            $("#rowCancelado").hide();
+                            $("#rowRechazos").hide();
+                            $("#rowSubRechazos").hide();
+                            $("#comentarios_cierre").val('');
+                            //$("#btnUpdateEvento").attr('disabled',true);
+                        }
+                    }
+                
+            })
+
+            $("#btnComentValid").on('click', function() {
+            
+            
+            
+                if( $('#comentarios_validacion').val().length > 0  )
+                {
+                    var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val()};
+                console.log(dn);
+                $.ajax({ 
+                        type: 'POST',
+                        url : 'modelos/eventos_db.php',
+                        data: dn,
+                        cache: false,
+                        success: function(data){
+                            
+                        
+                        $.toaster({
+                                message: data,
+                                title: 'Aviso',
+                                priority : 'success'
+                            }); 
+                            cleartext();
+                        },
+                        error: function(error){
+                            var demo = error;
+                        }
+                    });
+                    
+                }else{
+                    $.toaster({
+                    message: 'Ingresa el comentario de validación',
+                    title: 'Aviso',
+                    priority : 'danger'
+                        });}
+                
+            
+                
+                
+                
+            
+            
+            
+            })
+
+            $("#btnConsultar").on("click",function() {
+               
+                var searchAfiliacion = $("#afiliacion").val();
+                var searchODT = $("#odt").val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'modelos/eventos_db.php',
+                    data: { module: 'validateOdt',odt: searchODT, afiliacion: searchAfiliacion }
+                }).done( function(data) { 
+                    var exist = JSON.parse(data).length;
+
+                    if( exist == 0) {
+
+             
+
+                        Swal.fire({
+                            title: 'Cierre de Eventos',
+                            text: "EL Comercio no tiene Asignada la ODT",
+                            footer: 'Comuicate con tu Supervisor',
+                            icon: 'warning',
+                        })
+
+                    } else { 
+                        $.ajax({
+                            type: 'GET',
+                            url: 'modelos/eventos_db.php', // call your php file
+                            data: 'module=getstados',
+                            cache: false,
+                            success: function(data){
+                            $("#estado").html(data);            
+                            },
+                            error: function(error){
+                                var demo = error;
+                            }
+                        });
+
+                        $.ajax({
+                            type: 'GET',
+                            url: 'modelos/eventos_db.php', // call your php file
+                            data: 'module=getevento&eventoid='+id,
+                            cache: false,
+                            success: function(data){
+                            
+                                var info = JSON.parse(data);
+                            
+                                if(info == null ) {
+                                    $("#showEvento").modal('hide');
+                                    cleartext()
+                                    alert("Hay Problemas con los Datos")
+
+                                } else {
+
+                                    $.each(info, function(index, element) {
+
+                                        // trae validaciones de Campos obligatorios
+                                            camposObligatorios(element.tipo_servicio)
+                                                .then( (data) => {
+                                                    PermisosEvento = data
+                                                })
+                                            
+                                             //EXTRAS
+                                            getInfoExtra(element.odt);
+
+                                            $("#odt").val(element.odt)
+                                            $("#afiliacion").val(element.afiliacion)
+                                            $("#tipo_servicio").val(element.servicioNombre);
+                                            $("#tipo_subservicio").val(element.subservicioNombre);
+                                            $("#fecha_alta").val(element.fecha_alta);
+                                            $("#fecha_vencimiento").val(element.fecha_vencimiento)
+                                            $("#fecha_cierre").val(element.fecha_cierre);
+                                            $("#servicioId").val(element.tipo_servicio);
+                                            
+                                            if(element.tipo_servicio == '15') {
+                                            $("#comercio").val(element.cliente_vo)
+                                            } else {
+                                                $("#comercio").val(element.comercioNombre)
+                                            }
+                                            $("#receptor_servicio").val(element.receptor_servicio);
+                                            $("#fecha_atencion").val(element.fecha_atencion);
+                                            $("#colonia").val(element.colonia)
+                                            $("#ciudad").val(element.municipioNombre)
+                                            $("#estado").val(element.estadoNombre)
+                                            $("#direccion").val(element.direccion)
+                                            $("#telefono").val(element.telefono)
+                                            $("#descripcion").val(element.descripcion);
+                                            $("#hora_atencion").val(element.hora_atencion+" | "+element.hora_atencion_fin)
+                                            $("#hora_llegada").val(element.hora_llegada)
+                                            $("#hora_salida").val(element.hora_salida)
+                                            $("#tecnico").val(element.tecnicoNombre)
+                                            $("#tecnicoid").val(element.tecnico)
+                                            $("#estatus").val(element.estatusNombre)
+                                            $("#servicio").val(element.servicioNombre)
+                                            $("#comentarios_tecnico").val(element.comentarios)
+                                            $("#comentarios_validacion").val(element.comentarios_validacion)
+                                            $("#servicio_final").val(element.serviciofinalNombre)
+                                            $("#comentarios_cierre").val(element.comentarios_cierre)
+                                            $("#fecha_asignacion").val(element.fecha_asignacion);
+                                            $("#hora_comida").val(element.hora_comida+" | "+element.hora_comida_fin);
+                                            $("#latitud").val( element.latitud );
+                                            $("#longitud").val( element.longitud );
+                                        
+                                            $("#tipo_credito").val(element.tipocreditoNombre);
+                                            $("#tieneamex").val(element.tieneamex);
+                                            $("#afiliacion_amex").val(element.afiliacionamex);
+                                            $("#idamex").val(element.amex);
+                                            $("#idcaja").val(element.id_caja);
+                                            $("#tpv").val(element.tpv_instalado);
+                                            $("#tpv_retirado").val(element.tpv_retirado); 
+                                            $("#version").val(element.version);
+                                            $("#aplicativo").val(element.aplicativo);
+                                            $("#producto").val(element.producto);
+                                            $("#rollos_instalar").val(element.rollos_instalar);
+                                            $("#rollos_entregados").val(element.rollos_entregados);
+                                            $("#sim_instalado").val(element.sim_instalado);
+                                            $("#sim_retirado").val(element.sim_retirado);
+                                            $("#estatus_servicio").val(element.estatus_servicio);
+
+                                            
+                                            
+                                            if (element.estatus_servicio == '13' )
+                                            {
+                                                if($("#tipo_user").val() == 'callcenterADM' ) {
+                                                    $("#estatus_servicio").attr("disabled",false);
+                                                } else {
+                                                    $("#estatus_servicio").prop("disabled",true);
+                                                    $("#btnUpdateEvento").attr("disabled",true);
+                                                }
+
+                                            }  else {
+                                                
+                                            }
+                                        
+                                            $("#folio_telecarga").val(element.folio_telecarga);
+                                            $("#tpvInDataModelo").val(element.tvpInModelo);
+                                            $("#tpvInDataConnect").val(element.tvpInConectividad);
+                                            $("#tpvReDataModelo").val(element.tvpReModelo);
+                                            $("#tpvReDataConnect").val(element.tvpReConectividad);
+                                            $("#simInData").val(element.simInCarrier);
+                                            $("#simReData").val(element.simReCarrier);
+
+                                            if(element.servicio == '15') {
+                                                $("#labelAfiliacion").html('Folio');
+                                                $("#col_tipocredito").show();
+                                                $("#col_serviciofinal").hide();
+                                            } else {
+                                                $("#labelAfiliacion").html('Afiliacion');
+                                                $("#col_tipocredito").hide();
+                                                $("#col_serviciofinal").show();
+                                            }
+
+                                            if(element.tecnico =='0') {
+                                                $("#btnReasignarTecnico").hide();
+                                            } else {
+                                                $("#btnReasignarTecnico").show();
+                                            }
+
+                                            if(element.estatus == '3' || element.estatus == '1' ) {
+                                                $("#btnReasignarTecnico").hide();
+                                            } else {
+                                                $("#btnReasignarTecnico").show();
+                                            }
+                                            
+                                            $("#divBtnCV").show();
+                                            $("#comentarios_valid").show();
+                                            //getScriptEvento(element.servicio,element.tpv_instalado)
+                                            //INTENTAR VALIDACIÓN AQUÍ
+                                            
+                                            if(element.estatus_servicio == '13')
+                                            {
+                                                $("#divBtnCV").show();
+                                                $("#comentarios_valid").show();
+                                                
+                                            } else if (element.estatus_servicio == '14')
+                                            {
+                                                
+                                            }else if (element.estatus_servicio == '15')
+                                            {
+                                                $("#divBtnCV").show();
+                                                $("#comentarios_valid").show();
+                                            }
+
+                                            tipodeUsuario(element.estatus);
+                                    })  
+
+                                    $("#divEvento").show();
+                                }         
+                            },
+                            error: function(error){
+                                var demo = error;
+                                alert(error)
+                            }
+                        });
+                    }
+                })
+            
+                $("#divImagenes").hide();
+                $("#divImagenes").html('');
+                 
+            })
+
+            $("#btnUpdateEvento").on("click",function() {
+            var validar = 0;
+            var msg = '';
+
+			var eventoId = $("#eventoId").val();
+			var odt = $("#odt").val();
+			var comentario = $("#comentarios_cierre").val();
+			var estatus = $("#estatus_servicio").val();
+            var foliotelecarga = $("#folio_telecarga").val();
+            var version = $("#version").val();
+            var aplicativo = $("#aplicativo").val();
+            var receptorservicio = $("#receptor_servicio").val();
+            var tecnico = 	$("#tecnicoid").val();
+			var servicioId = $("#servicioId").val();
+            var fecha_atencion = $("#fecha_atencion").val();
+            var hora_llegada = $("#hora_llegada").val();
+            var hora_salida = $("#hora_salida").val();
+
+			//ODT checkbox
+			var odtGetNet = $("#odtGetNet").is(":checked") ? 1 : 0;
+			var odtNotificado = $("#odtNotificado").is(":checked") ? 1 : 0;
+			var odtDescarga = $("#odtDescarga").is(":checked") ? 1 : 0;
+			
+			//TPV Retirado
+			var tvpRetBateria = $("#tvpRetBateria").is(":checked") ? 1 : 0;
+			var tvpRetEliminador = $("#tvpRetEliminador").is(":checked") ? 1 : 0;
+			var tvpRetTapa = $("#tvpRetTapa").is(":checked") ? 1 : 0;
+			var tvpRetCable = $("#tvpRetCable").is(":checked") ? 1 : 0;
+			var tvpRetBase = $("#tvpRetBase").is(":checked") ? 1 : 0;
+			
+			// Rechazo
+			var rechazo = $("#rechazo").is(":checked") ? 1 : 0;
+			var subrechazo = $("#subrechazo").is(":checked") ? 1 : 0;
+			var cancelado = $("#cancelado").is(":checked") ? 1 : 0;
+			
+			//DTOS ACtulizables
+            var tpv = $("#tpv").val();
+            var tvpInModelo = $("#tpvInDataModelo").val();
+            var tpvInConnect = $("#tpvInDataConnect").val();
+            var tpv_retirado = 	$("#tpv_retirado").val();
+            var tvpReModelo = $("#tpvReDataModelo").val();
+            var tpvReConnect = $("#tpvReDataConnect").val();
+			var idcaja = 	$("#idcaja").val();
+			var afiliacion_amex = 	$("#afiliacion_amex").val();
+			var idamex = 	$("#idamex").val();
+            var sim_instalado = 	$("#sim_instalado").val();
+            var simInData = $("#simInData").val();
+            var sim_retirado = 	$("#sim_retirado").val();
+            var simReData = $("#simReData").val();
+            var producto = 	$("#producto").val();
+
+            //Rollos
+            var rollosInstalar = $("#rollos_instalar").val();
+            var rollosInstalados = $("#rollos_entregados").val();
+            
+            //Validar si es obligatorio la TVP INStalada
+            if( PermisosEvento.tvp_instalada == '1') {
+                
+                if(tpv.length == 0) {
+                    validar++;
+                    msg += "Necesitas asignar una terminal instalada al Evento \n ";
+                }
+
+            }
+
+            //Validar si es obligatorio la TVP Retirada
+            if( PermisosEvento.tpv_salida == '1') {
+                
+                if(tpv_retirado.length == 0) {
+                    validar++;
+                    msg += "Necesitas asignar una terminal retirada al Evento \n ";
+                }
+
+            }
+
+            //Validar si es obligatorio la SIM Retirada
+            if( PermisosEvento.sim_retirado == '1') {
+                
+                if(sim_retirado.length == 0) {
+                    validar++;
+                    msg += "Necesitas asignar una sim retirada al Evento \n ";
+                }
+
+            }
+
+            //Validar si es obligatorio la SIM Instalado
+            if( PermisosEvento.sim_instalado == '1') {
+                
+                if(sim_instalado.length == 0) {
+                    validar++;
+                    msg += "Necesitas asignar una sim instalada al Evento \n ";
+                }
+
+            }
+
+            //Validar Rollos 
+            if( PermisosEvento.rollos == '1') {
+
+                if( rollosInstalar != rollosInstalados ) {
+                    validar++;
+                    msg += "La cant de rollos no coincide \n ";
+                }
+            }
+			
+            if(tecnico == 0 ) {
+                validar++;
+                msg += "Necesitas asignar un tecnico al Evento \n ";
+            }
+
+            if(existeFecha(fecha_atencion)) {
+                validar++;
+                msg += "Se necesita agregar la fecha de atencion \n ";
+            }
+            
+            if(hora_llegada.length == 0 ) {
+                validar++;
+                msg += "Se necesita agregar la hora de llegada \n ";
+            }
+
+            if( hora_salida.length == 0 ) {
+                validar++;
+                msg += "Se necesita agregar la hora de salida \n ";
+            }
+            
+
+            if(comentario.length <= 200) {
+                validar++;
+                msg += "Se necesita mas información en las observaciones (minimo 200 caracteres) \n ";
+            }
+
+			if(validar == 0 ) {
+				var dnd = { module: 'cerrarEvento',eventoId : eventoId, odt : odt,comentario: comentario,estatus:estatus,foliotelecarga:foliotelecarga, odtGetNet : odtGetNet, odtNotificado : odtNotificado,
+							odtDescarga: odtDescarga, tvpRetBateria: tvpRetBateria, tvpRetEliminador: tvpRetEliminador, tvpRetTapa: tvpRetTapa, tvpRetCable: tvpRetCable, tvpRetBase: tvpRetBase,
+							rechazo: rechazo, subrechazo: subrechazo,cancelado: cancelado,tpv:tpv,tpvRetirado : tpv_retirado,idCaja: idcaja,afiliacionAmex:afiliacion_amex ,idamex:idamex,
+                            simInstalado:sim_instalado, simRetirado: sim_retirado,producto: producto,version: version,aplicativo:aplicativo,receptorservicio:receptorservicio, 
+                            tvpInModelo:tvpInModelo,tpvInConnect:tpvInConnect ,tvpReModelo, tvpReModelo, tpvReConnect: tpvReConnect, simInData:simInData, simReData:simReData,tecnico:tecnico, 
+                            rollosInstalar:rollosInstalar, rollosInstalados:rollosInstalados,servicioId:servicioId,fechaatencion:fecha_atencion,horallegada:hora_llegada,horasalida: hora_salida };
+				
+				 $.ajax({
+					type: 'POST',
+					url: 'modelos/eventos_db.php', // call your php file
+					data: dnd,
+					cache: false,
+					success: function(data){    
+							 
+                            Swal.fire({
+                                title: 'Cierre de Eventos',
+                                text: "Cerrado Existosamente",
+                                icon: 'success',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                   
+                                    window.location.href = "eventos.php";
+                                }
+                            })   
+	 
+					},
+					error: function(error){
+						var demo = error;
+					}
+				});
+			} else {
+				$.toaster({
+					message: msg,
+					title: 'Aviso',
+					priority : 'danger'
+				});   
+			}
+        });
+        
+        $("#tpv").on("change",function() {
+            var tpv = $(this).val();
+            if(tpv.length > 0) {
+                result = validarTPV(tpv,1,'in')
+                
+            }
+        })
+
+        $("#tpv_retirado").on("change",function() {
+            var tpv = $(this).val();
+            if(tpv.length > 0) {
+                validarTPV(tpv,1,'out')
+                
+            }
+           
+        })
+
+        $("#sim_instalado").on("change",function() {
+            var tpv = $(this).val();
+            if(tpv.length > 0) {
+                validarTPV(tpv,2,'in')
+                 
+            }
+        })
+
+        $("#sim_retirado").on("change", function() {
+            var tpv = $(this).val();  
+            var result;
+            if(tpv.length > 0) {
+                validarTPV(tpv,2,'out')
+                
+            }
+        })
+
+        });
+
+        function existeFecha(fecha){
+            var fechaf = fecha.split("-");
+            var day = fechaf[2];
+            var month = fechaf[1];
+            var year = fechaf[0];
+            var date = new Date(year,month,day);
+            if(isNaN(date)){
+                return false ;
+            } else {
+                return true
+            }
+            
+        
+        }
+
+        function validateHhMm(inputField) {
+            var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(inputField.value);
+
+            /*if (isValid) {
+             return true;
+            } else {
+                return false;
+            }*/
+
+            return isValid; 
+        }
+
+        function initMap() {
+         
+        }
+
+        function getInfoExtra(odt) {
+
+           
+
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getInfoExtra&odt='+odt,
+                cache: false,
+                dataType: "json",
+                success: function(data) {
+                    var info =  data;
+
+                    var odtGetNet = info.getnet == '1' ? true : false;
+                    var odtNotificado = info.notificado == '1' ? true : false;
+                    var odtDescarga = info.descarga == '1' ? true : false;
+                    var tvpRetBateria = info.ret_batalla == '1' ? true : false;
+                    var tvpRetEliminador = info.ret_eliminador == '1' ? true : false;
+                    var tvpRetTapa = info.ret_tapa == '1' ? true : false;
+                    var tvpRetCable = info.ret_cable == '1' ? true : false;
+                    var tvpRetBase = info.ret_base == '1' ? true : false;
+
+                    $("#odtGetNet").prop( "checked", odtGetNet );
+                    $("#odtNotificado").prop( "checked", odtNotificado );
+                    $("#odtDescarga").prop( "checked", odtDescarga );
+
+                    $("#tvpRetBateria").prop( "checked", tvpRetBateria );
+                    $("#tvpRetEliminador").prop( "checked", tvpRetEliminador );
+                    $("#tvpRetTapa").prop( "checked", tvpRetTapa );
+                    $("#tvpRetCable").prop( "checked", tvpRetCable );
+                    $("#tvpRetBase").prop( "checked", tvpRetBase );
+
+
+                },
+                error: function(error){
+                    reject(error)
+                }
+            })  
+        }
+
+        function camposObligatorios(servicio) {
+
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: 'GET',
+                    url: 'modelos/eventos_db.php', // call your php file
+                    data: 'module=getCamposObligatorios&servicioid='+servicio,
+                    cache: false,
+                    dataType: "json",
+                    success: function(data) {
+                        resolve(data)
+                    },
+                    error: function(error){
+                        reject(error)
+                    }
+                })  
+
+            }) 
+        }
+
+        function validarTPV(tpv,tipo,donde) {
+            result = 0;
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=validarTPV&noserie='+tpv+"&tipo="+tipo,
+                cache: false,
+                success: function(data){
+                    if(data != 'false' ) {
+                        result = 1;    
+                        var info = JSON.parse(data);
+                        var modelo = info.modelo == null ? 0 : info.modelo;
+                        var conectividad = info.conectividad == null ? 0 : info.conectividad;
+                        if(tipo == 1) {
+                            if(donde == 'in') {
+                                $("#tpvInDataModelo").val(modelo);
+                                $("#tpvInDataConnect").val(conectividad);
+                            } else {
+                                $("#tpvReDataModelo").val(modelo);
+                                $("#tpvReDataConnect").val(conectividad);
+                            }
+
+                        } else if (tipo == 2) {
+                            if(donde == 'in') {
+                                $("#simInData").val(modelo)
+                            } else {
+                                $("#simReData").val(modelo)
+                            }
+                        }
+
+                    } else {
+                        $("#tpv").val('');  
+                        $.toaster({
+                            message: 'La serie no es válida',
+                            title: 'Aviso',
+                            priority : 'danger'
+                                  });
+                            
+                    }
+                 
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+
+            return result;
+
+        }
+
+        function mostrarImagenes(odt) {
+            $("#carruselFotos").html('')
+            $("#btnValidarImagen").data('id','0');
+            
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getImagenesODT&odt='+odt ,
+                cache: false,
+                success: function(data){
+                    var texto = '<div class="row">';
+                    var info = JSON.parse(data);
+                    var locacion = window.location;
+                    if(info['estatus'] == '1') {
+                        $.each(info['imagenes'], function(index, element) {
+                            
+                            texto = texto + '<div class="col-4"><img src="'+locacion.origin+'/'+element.path+'" width="90%" class="zoomImgs"><button class="btn btn-primary button1 btnDelImage" data= "'+element.id+'">Borrar</button></div>'
+
+                        })
+
+                        texto = texto + "</div>";
+                        $("#carruselFotos").html(texto);
+                        zoomifyc.init($('#carruselFotos img'));
+                    } else {
+                    
+                        $.toaster({
+                            message: 'LA ODT NO TIENE IMAGENES REGISTRADAS',
+                            title: 'Aviso',
+                            priority : 'danger'
+                        });      
+                    }
+                            
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function tipodeUsuario(tipo) {
+
+            $("#rowCancelado").hide();
+            $("#rowRechazos").hide();
+            $("#rowSubRechazos").hide();
+            $("#btnUpdateEvento").attr('disabled',true);
+
+            if(  $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'callcenterADM'  ) {
+                $("#rollos_entregados").attr('readonly',false);
+                $("#comentarios_cierre").attr('readonly',false);
+                //$("#btnUpdateEvento").attr('disabled',false);
+                $("#estatus_servicio").attr('disabled',false)
+                $("#folio_telecarga").attr('readonly',false)
+                $("#producto").attr('disabled',false)
+                $("#version").attr('readonly',false)
+                $("#aplicativo").attr('readonly',false)
+                $("#receptor_servicio").attr('readonly',false);
+                //CIERRES CALLCENTER
+                $("#tecnico").attr('readonly',false);
+                $("#btnReasignarTecnico").show();
+
+                $("#odtGetNet").attr('disabled',false)
+                $("#odtNotificado").attr('disabled',false)
+                $("#odtDescarga").attr('disabled',false)
+
+                $("#tvpRetBateria").attr('disabled',false)
+                $("#tvpRetEliminador").attr('disabled',false)
+                $("#tvpRetTapa").attr('disabled',false)
+                $("#tvpRetCable").attr('disabled',false)
+                $("#tvpRetBase").attr('disabled',false)
+                
+                $("#tpv").attr('readonly',false)
+                $("#tpv_retirado").attr('readonly',false)
+                $("#idcaja").attr('readonly',false)
+                $("#afiliacion_amex").attr('readonly',false)
+                $("#idamex").attr('readonly',false)
+                $("#sim_instalado").attr('readonly',false)
+                $("#sim_retirado").attr('readonly',false)  
+                
+                 //HORAS
+                $("#fecha_atencion").attr('readonly',false);
+                $("#hora_llegada").attr('readonly',false);
+                $("#hora_salida").attr('readonly',false);
+            
+            
+            } else {
+                $("#rollos_entregados").attr('readonly',true);
+                $("#comentarios_cierre").attr('readonly',true);
+                $("#btnUpdateEvento").attr('disabled',true);
+                $("#estatus_servicio").attr('disabled',true)
+                $("#folio_telecarga").attr('readonly',true)
+                $("#producto").attr('disabled',true)
+                $("#version").attr('readonly',true)
+                $("#aplicativo").attr('readonly',true)
+                $("#receptor_servicio").attr('readonly',true);
+
+                $("#odtGetNet").attr('disabled',true)
+                $("#odtNotificado").attr('disabled',true)
+                $("#odtDescarga").attr('disabled',true)
+
+                $("#tvpRetBateria").attr('disabled',true)
+                $("#tvpRetEliminador").attr('disabled',true)
+                $("#tvpRetTapa").attr('disabled',true)
+                $("#tvpRetCable").attr('disabled',true)
+                $("#tvpRetBase").attr('disabled',true)
+                
+                $("#tpv").attr('readonly',true)
+                $("#tpv_retirado").attr('readonly',true)
+                $("#idcaja").attr('readonly',true)
+                $("#afiliacion_amex").attr('readonly',true)
+                $("#idamex").attr('readonly',true)
+                $("#sim_instalado").attr('readonly',true)
+                $("#sim_retirado").attr('readonly',true)
+            
+            }
+        }
+
+        function getScriptEvento(servicio,noserie,conectividad,modelo) {
+            var result = '';
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=scriptEvento&servicio_id='+servicio+'&noserie='+noserie+'&conectividad='+conectividad+'&modelo='+modelo,
+                cache: false,
+                success: function(data){    
+                    var info = JSON.parse(data);
+                    
+                    var script = info.script;
+                    script = script.replace("#MODELO#",$("#tpvInDataModelo option:selected" ).text() ) 
+                    script = script.replace("#MODELORETIRO#",$("#tpvReDataModelo option:selected" ).text() )
+                    script = script.replace("#CONECTIVIDAD#",$("#tpvInDataConnect option:selected" ).text() ) 
+                    script = script.replace("#CONECTIVIDADRETIRO#",$("#tpvReDataConnect option:selected" ).text() ) 
+                    script = script.replace("#SERIE#",$("#tpv").val() ) 
+                    script = script.replace("#SERIERETIRO#",$("#tpv_retirado").val() ) 
+                    script = script.replace("#PTID#",$("#tpv").val() ) 
+                    script = script.replace("#SIM#",$("#sim_instalado" ).val() )
+                    script = script.replace("#SIMRETIRO#",$("#sim_retirado" ).val() )
+                    script = script.replace("#CARRIER#",$("#simInData option:selected" ).text())
+                    script = script.replace("#CARRIERRETIRO#",$("#simReData option:selected" ).text()) 
+                    //data.replace("#CARRIER",$("#tpv").val() ) 
+                    script = script.replace("#CAJA#",$("#idcaja").val() ) 
+                    script = script.replace("#FT#",$("#folio_telecarga").val() ) 
+                    script = script.replace("#AMEX#",$("#tieneamex").val() )
+                    if($("#tieneamex").val() == 'SI') {
+                        script = script.replace("#AFAMEX#",$("#afiliacion_amex").val() )
+                        script = script.replace("#AMEXID#",$("#idamex").val() )
+                    } else {
+                        script = script.replace("#AFAMEX#",'' )
+                        script = script.replace("#AMEXID#",'' )
+                    }
+                    script = script.replace("#ROLLOS#",$("#rollos_entregados").val() )
+                    
+                    script = script.replace("#FECHAHORA",$("#fecha_atencion").val()+" DE "+$("#hora_llegada").val()+" A "+$("#hora_salida").val() )
+                    script = script.replace("#APP#",$("#aplicativo option:selected" ).text() ) 
+                    script = script.replace("#VERSION#",$("#version option:selected" ).text() ) 
+                    script = script.replace("#RECEPTORSERVICIO#",$("#receptor_servicio").val() )
+                    script = script.replace("#TELEFONO#", $("#telefono").val() )
+
+                    $("#comentarios_cierre").val(script);
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function cleartext() {
+            $("#odt").val("")
+            $("#afiliacion").val("")
+            $("#tipo_servicio").val("");
+            $("#tipo_subservicio").val("");
+            $("#fecha_alta").val("");
+            $("#fecha_vencimiento").val("")
+            $("#fecha_cierre").val("");
+            $("#comercio").val("")
+            $("#receptor_servicio").val("");
+            $("#fecha_atencion").val("");
+            $("#colonia").val("")
+            $("#ciudad").val("")
+            $("#estado").val("")
+            $("#direccion").val("")
+            $("#telefono").val("")
+            $("#descripcion").val("");
+            $("#hora_atencion").val("")
+            $("#hora_llegada").val("")
+            $("#hora_salida").val("")
+            $("#tecnico").val("")
+            $("#estatus").val("")
+            $("#servicio").val("")
+            $("#comentarios_tecnico").val("")
+            $("#servicio_final").val("")
+            $("#comentarios_cierre").val("")
+            $("#fecha_asignacion").val("");
+            $("#hora_comida").val("");
+            $("#latitud").val("" );
+            $("#longitud").val("");
+
+            $("#tipo_credito").val("");
+            $("#afiliacion_amex").val("");
+            $("#idamex").val("");
+            $("#idcaja").val("");
+            $("#tpv").val("");
+            $("#tpv_retirado").val(""); 
+            $("#version").val("");
+            $("#aplicativo").val("");
+            $("#producto").val("");
+            $("#rollos_instalar").val("");
+            $("#rollos_entregados").val("");
+            $("#sim_instalado").val("");
+            $("#sim_retirado").val("");
+            $("#estatus_servicio").val("");
+            $("#folio_telecarga").val("");
+
+        
+
+        }
+
+        function getTecnicos(id) {
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getTecnicos',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#reasignartecnico").html(data);
+                $("#reasignartecnico").val(id);		
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getEstatusServicio() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getEstatusServicio',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#estatus_servicio").html(data);
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getCancelado() {
+            
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getEstatusCancelado',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#cancelado").html(data);
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+            
+
+        }
+
+        function getRechazos() {
+            
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getEstatusRechazo',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#rechazo").html(data);
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+            
+
+        }
+
+        function getSubRechazos() {
+            
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getEstatusSubRechazo',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#subrechazo").html(data);
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+            
+
+        }
+
+        function getProductos() {
+            
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getProductos',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#producto").html(data);
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+            
+
+        }
+
+        function subirFotos(odt,file) {
+            //var odt = $("#odt").val();
+            var file_data = file; //$("#fileToUpload")[0].files[0];
+            var form_data = new FormData();
+            form_data.append('file', file_data);
+            form_data.append('name',odt);
+            form_data.append('module','saveDoc');
+
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function(data, textStatus, jqXHR){
+                    //$("#avisos").html(data);
+                    $.toaster({
+                        message: data,
+                        title: 'Aviso',
+                        priority : 'warning'
+                    });  
+                    
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert(data)
+            }
+            });
+        }
+
+        function getTipoServicio() {
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=gettiposervicio',
+                cache: false,
+                success: function(data){
+                $("#tipo_servicio").html(data);            
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getTipoSubServicio() {
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=gettiposubservicio',
+                cache: false,
+                success: function(data){
+                $("#tipo_subservicio").html(data);            
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getTipoEvento() {
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=gettipoevento',
+                cache: false,
+                success: function(data){
+                $("#tipo_evento").html(data);            
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getEstatusEvento() {
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getestatusevento',
+                cache: false,
+                success: function(data){
+                $("#estatus_busqueda").html(data);            
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getVersion() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getVersion',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#version").html(data);
+                
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getAplicativo() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getAplicativo',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#aplicativo").html(data);
+                
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getModelos() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getListaModelos',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#tpvInDataModelo").html(data);
+                $("#tpvReDataModelo").html(data);
+                
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getConectividad() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getListaConectividad',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#tpvInDataConnect").html(data);
+                $("#tpvReDataConnect").html(data);
+                
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+
+        function getCarrier() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getListaCarrier',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#simInData").html(data);
+                $("#simReData").html(data);
+                
+                    
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
+</script> 
+</body>
+
+</html>
