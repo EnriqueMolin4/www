@@ -1,0 +1,374 @@
+[23-Feb-2017 22:27:49 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8521377 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:28:30 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8126421 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:29:14 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8126421 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:35:24 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8126421 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:42:30 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8126421 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:43:08 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8126421 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:43:22 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8126421 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:43:40 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8126421 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:54:29 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8529960 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:56:44 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8523100 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:57:02 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8529960 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[23-Feb-2017 22:59:37 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 8126421 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/FPDF/fpdf.php on line 1457
+[24-Feb-2017 15:53:18 UTC] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 32 bytes) in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Cell.php on line 586
+[12-May-2017 21:06:57 UTC] PHP Fatal error:  Uncaught exception 'PHPExcel_Reader_Exception' with message 'The filename bak_layout eventos.xlsx is not recognised as an OLE file' in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Shared/OLERead.php:90
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Reader/Excel5.php(1290): PHPExcel_Shared_OLERead->read('bak_layout even...')
+#1 /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Reader/Excel5.php(622): PHPExcel_Reader_Excel5->loadOLE('bak_layout even...')
+#2 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(20): PHPExcel_Reader_Excel5->load('bak_layout even...')
+#3 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Shared/OLERead.php on line 90
+[12-May-2017 21:07:16 UTC] PHP Fatal error:  Uncaught exception 'PHPExcel_Reader_Exception' with message 'The filename bak_layout eventos.xlsx is not recognised as an OLE file' in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Shared/OLERead.php:90
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Reader/Excel5.php(1290): PHPExcel_Shared_OLERead->read('bak_layout even...')
+#1 /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Reader/Excel5.php(622): PHPExcel_Reader_Excel5->loadOLE('bak_layout even...')
+#2 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(20): PHPExcel_Reader_Excel5->load('bak_layout even...')
+#3 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Shared/OLERead.php on line 90
+[12-May-2017 21:08:24 UTC] PHP Fatal error:  Uncaught exception 'PHPExcel_Reader_Exception' with message 'The filename bak_layout eventos.xlsx is not recognised as an OLE file' in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Shared/OLERead.php:90
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Reader/Excel5.php(1290): PHPExcel_Shared_OLERead->read('bak_layout even...')
+#1 /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Reader/Excel5.php(622): PHPExcel_Reader_Excel5->loadOLE('bak_layout even...')
+#2 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(20): PHPExcel_Reader_Excel5->load('bak_layout even...')
+#3 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Shared/OLERead.php on line 90
+[12-May-2017 21:08:38 UTC] PHP Fatal error:  Uncaught exception 'PHPExcel_Reader_Exception' with message 'The filename bak_layout eventos.xlsx is not recognised as an OLE file' in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Shared/OLERead.php:90
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Reader/Excel5.php(1290): PHPExcel_Shared_OLERead->read('bak_layout even...')
+#1 /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Reader/Excel5.php(622): PHPExcel_Reader_Excel5->loadOLE('bak_layout even...')
+#2 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(20): PHPExcel_Reader_Excel5->load('bak_layout even...')
+#3 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel/Shared/OLERead.php on line 90
+[12-May-2017 17:33:55 America/Mexico_City] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (42874.375--42874.375 ) at position 8 (5): Unexpected character' in /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php:144
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(144): DateTime->__construct('42874.375--4287...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php on line 144
+[12-May-2017 17:36:33 America/Mexico_City] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (42874.375--42874.375 ) at position 8 (5): Unexpected character' in /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php:144
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(144): DateTime->__construct('42874.375--4287...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php on line 144
+[12-May-2017 17:39:40 America/Mexico_City] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (42874.375--42874.375 ) at position 8 (5): Unexpected character' in /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php:144
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(144): DateTime->__construct('42874.375--4287...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php on line 144
+[13-May-2017 09:38:55 America/Mexico_City] PHP Fatal error:  Uncaught exception 'Exception' with message 'DateTime::__construct(): Failed to parse time string (42874.375--42874.375 ) at position 8 (5): Unexpected character' in /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php:144
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(144): DateTime->__construct('42874.375--4287...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php on line 144
+[15-May-2017 07:32:08 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'You tried to set a sheet active by the out of bounds index: 0. The actual number of sheets is 0.' in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel.php:695
+Stack trace:
+#0 /home/lmiguel/public_html/sis/modelos/plugins/cargar_eventos.php(25): PHPExcel->setActiveSheetIndex(0)
+#1 {main}
+  thrown in /home/lmiguel/public_html/sis/modelos/plugins/Classes/PHPExcel.php on line 695
+[04-Sep-2017 01:53:04 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 /home/lmiguel/public_html/demo/modelos/plugins/controlador_pdf.php(10): require_once('/home/lmiguel/p...')
+#2 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:00:23 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar_rutas.php(19): PHPExcel_Reader_Excel2007->load('prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:05:50 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar_rutas.php(19): PHPExcel_Reader_Excel2007->load('prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:09:18 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:09:32 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:11:35 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:11:47 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:13:14 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:15:11 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:20:38 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:20:42 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:20:54 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:24:24 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(22): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:32:01 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(22): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:32:39 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(24): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:33:15 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(24): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:42:00 UTC] PHP Notice:  Undefined variable: filename in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 4
+[04-Sep-2017 02:42:00 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(26): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:42:18 UTC] PHP Notice:  Undefined variable: filename in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 4
+[04-Sep-2017 02:42:18 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(26): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:42:30 UTC] PHP Notice:  Undefined variable: filename in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 4
+[04-Sep-2017 02:42:30 UTC] PHP Notice:  Undefined index: excel in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 6
+[04-Sep-2017 02:42:38 UTC] PHP Notice:  Undefined variable: filename in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 4
+[04-Sep-2017 02:42:38 UTC] PHP Notice:  Undefined index: excel in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 6
+[04-Sep-2017 02:42:53 UTC] PHP Notice:  Undefined variable: filename in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 4
+[04-Sep-2017 02:42:53 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(26): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:43:40 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(25): PHPExcel_Reader_Excel2007->load('bak_prueba.xlsx')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[04-Sep-2017 02:46:55 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:85
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/IOFactory.php(269): PHPExcel_Reader_Excel2007->canRead('bak_prueba.xlsx')
+#1 /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/IOFactory.php(206): PHPExcel_IOFactory::createReaderForFile('bak_prueba.xlsx')
+#2 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_IOFactory::identify('bak_prueba.xlsx')
+#3 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 85
+[04-Sep-2017 02:47:12 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:85
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/IOFactory.php(269): PHPExcel_Reader_Excel2007->canRead('bak_prueba.xlsx')
+#1 /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/IOFactory.php(206): PHPExcel_IOFactory::createReaderForFile('bak_prueba.xlsx')
+#2 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_IOFactory::identify('bak_prueba.xlsx')
+#3 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 85
+[04-Sep-2017 02:47:22 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:85
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/IOFactory.php(269): PHPExcel_Reader_Excel2007->canRead('bak_prueba.xlsx')
+#1 /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/IOFactory.php(206): PHPExcel_IOFactory::createReaderForFile('bak_prueba.xlsx')
+#2 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_IOFactory::identify('bak_prueba.xlsx')
+#3 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 85
+[04-Sep-2017 02:47:39 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:85
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/IOFactory.php(269): PHPExcel_Reader_Excel2007->canRead('bak_prueba.xlsx')
+#1 /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/IOFactory.php(206): PHPExcel_IOFactory::createReaderForFile('bak_prueba.xlsx')
+#2 /home/lmiguel/public_html/demo/modelos/plugins/importar.php(21): PHPExcel_IOFactory::identify('bak_prueba.xlsx')
+#3 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 85
+[04-Sep-2017 03:46:48 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 03:47:47 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 03:47:57 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 03:56:01 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 03:56:13 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 03:56:53 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 03:57:05 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:02:06 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:04:11 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:04:30 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:22:29 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:22:53 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:23:15 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:23:36 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:23:37 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:24:03 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:24:29 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:29:29 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:29:52 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 76
+[04-Sep-2017 04:29:53 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 76
+[04-Sep-2017 04:30:53 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:31:07 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[04-Sep-2017 04:31:42 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[07-Sep-2017 23:47:17 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[07-Sep-2017 23:48:36 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[07-Sep-2017 23:48:38 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[07-Sep-2017 23:48:54 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[07-Sep-2017 23:48:55 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[07-Sep-2017 23:49:07 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[07-Sep-2017 23:49:50 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/lmiguel/public_html/demo/modelos/plugins/importar.php on line 23
+[07-Sep-2017 23:54:13 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/prueba.php(27): PHPExcel_Reader_Excel2007->load('bak_layout alma...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 17:39:27 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php(23): PHPExcel_Reader_Excel2007->load('bak_PRUEBA IMAG...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 17:39:45 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php(23): PHPExcel_Reader_Excel2007->load('bak_PRUEBA IMAG...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 17:40:10 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php(23): PHPExcel_Reader_Excel2007->load('bak_PRUEBA IMAG...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 17:40:12 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php(23): PHPExcel_Reader_Excel2007->load('bak_PRUEBA IMAG...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 17:40:16 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php(23): PHPExcel_Reader_Excel2007->load('bak_PRUEBA IMAG...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 17:54:08 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php(23): PHPExcel_Reader_Excel2007->load('bak_layout even...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 23:09:58 UTC] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/prueba.php(27): PHPExcel_Reader_Excel2007->load('bak_layout alma...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 18:10:42 America/Mexico_City] PHP Fatal error:  Uncaught Error: Class 'ZipArchive' not found in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php:351
+Stack trace:
+#0 /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php(23): PHPExcel_Reader_Excel2007->load('bak_layout alma...')
+#1 {main}
+  thrown in /home/lmiguel/public_html/demo/modelos/plugins/Classes/PHPExcel/Reader/Excel2007.php on line 351
+[08-Sep-2017 23:13:25 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php on line 15
+[08-Sep-2017 23:13:28 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/lmiguel/public_html/demo/modelos/plugins/cargar_eventos.php on line 15
+[04-Oct-2017 22:17:35 UTC] PHP Warning:  include(conexion.php): failed to open stream: No such file or directory in /home/admin/public_html/sis/modelos/plugins/importar.php on line 10
+[04-Oct-2017 22:17:35 UTC] PHP Warning:  include(): Failed opening 'conexion.php' for inclusion (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home/admin/public_html/sis/modelos/plugins/importar.php on line 10
+[04-Oct-2017 22:17:35 UTC] PHP Warning:  include(plugins/Classes/PHPExcel.php): failed to open stream: No such file or directory in /home/admin/public_html/sis/modelos/plugins/importar.php on line 26
+[04-Oct-2017 22:17:35 UTC] PHP Warning:  include(): Failed opening 'plugins/Classes/PHPExcel.php' for inclusion (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home/admin/public_html/sis/modelos/plugins/importar.php on line 26
+[04-Oct-2017 22:17:35 UTC] PHP Warning:  include(plugins/Classes/PHPExcel/Reader/Excel2007.php): failed to open stream: No such file or directory in /home/admin/public_html/sis/modelos/plugins/importar.php on line 27
+[04-Oct-2017 22:17:35 UTC] PHP Warning:  include(): Failed opening 'plugins/Classes/PHPExcel/Reader/Excel2007.php' for inclusion (include_path='.:/opt/cpanel/ea-php70/root/usr/share/pear') in /home/admin/public_html/sis/modelos/plugins/importar.php on line 27
+[04-Oct-2017 22:17:35 UTC] PHP Fatal error:  Uncaught Error: Class 'PHPExcel_Settings' not found in /home/admin/public_html/sis/modelos/plugins/importar.php:28
+Stack trace:
+#0 {main}
+  thrown in /home/admin/public_html/sis/modelos/plugins/importar.php on line 28
+[14-Oct-2017 15:34:13 UTC] PHP Parse error:  syntax error, unexpected '$sql' (T_VARIABLE) in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 24
+[14-Oct-2017 15:35:08 UTC] PHP Warning:  readfile(R_SINTTECOM_ALMACEN.xlsx): failed to open stream: No such file or directory in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 158
+[14-Oct-2017 15:35:08 UTC] PHP Warning:  unlink(R_SINTTECOM_ALMACEN.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 159
+[14-Oct-2017 15:35:38 UTC] PHP Warning:  readfile(R_SINTTECOM_ALMACEN.xlsx): failed to open stream: No such file or directory in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 158
+[14-Oct-2017 15:35:38 UTC] PHP Warning:  unlink(R_SINTTECOM_ALMACEN.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 159
+[14-Oct-2017 15:35:42 UTC] PHP Warning:  readfile(R_SINTTECOM_ALMACEN.xlsx): failed to open stream: No such file or directory in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 158
+[14-Oct-2017 15:35:42 UTC] PHP Warning:  unlink(R_SINTTECOM_ALMACEN.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 159
+[14-Oct-2017 15:40:41 UTC] PHP Parse error:  syntax error, unexpected '$tabla' (T_VARIABLE), expecting ',' or ')' in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 163
+[14-Oct-2017 15:45:49 UTC] PHP Parse error:  syntax error, unexpected 'header' (T_STRING) in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 15:46:46 UTC] PHP Parse error:  syntax error, unexpected 'header' (T_STRING) in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 15:47:02 UTC] PHP Parse error:  syntax error, unexpected 'header' (T_STRING) in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 15:47:09 UTC] PHP Parse error:  syntax error, unexpected ';', expecting ',' or ')' in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 7
+[14-Oct-2017 16:23:23 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:23:27 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:27:36 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:28:25 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:29:42 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:33:16 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:34:07 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:41:06 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:53:33 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:53:51 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Oct-2017 16:54:53 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[16-Oct-2017 16:54:35 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[16-Oct-2017 16:54:49 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[16-Oct-2017 16:55:15 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[16-Oct-2017 16:59:15 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[18-Oct-2017 14:34:35 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 00:23:54 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 00:26:12 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 00:27:34 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 15:09:05 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 15:09:09 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 15:09:44 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 15:17:41 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 18:10:46 America/Mexico_City] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 207
+[19-Oct-2017 23:10:48 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 18:11:47 America/Mexico_City] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 208
+[19-Oct-2017 23:11:49 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 18:12:12 America/Mexico_City] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 208
+[19-Oct-2017 23:12:14 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 23:12:24 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 23:12:55 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 23:58:48 UTC] PHP Parse error:  syntax error, unexpected 'if' (T_IF) in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 156
+[19-Oct-2017 23:58:49 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 23:59:24 UTC] PHP Parse error:  syntax error, unexpected 'if' (T_IF) in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 156
+[19-Oct-2017 23:59:25 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 23:59:55 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:06:26 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:06:49 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:11:13 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:11:44 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:13:09 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:13:22 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:14:19 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:14:57 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:18:29 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:20:06 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[19-Oct-2017 19:25:44 America/Mexico_City] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 210
+[20-Oct-2017 00:25:45 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:26:14 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:26:40 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:27:37 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:27:57 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 00:28:29 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 10:09:08 America/Mexico_City] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /home/admin/public_html/sis/modelos/plugins/creador_excel.php on line 210
+[20-Oct-2017 15:09:09 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 15:09:19 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 15:09:24 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 22:03:23 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 22:07:30 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 22:07:47 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[20-Oct-2017 23:43:31 UTC] PHP Warning:  session_destroy(): Trying to destroy uninitialized session in /home/admin/public_html/sis/modelos/plugins/exit.php on line 4
+[20-Oct-2017 23:43:31 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/admin/public_html/sis/modelos/plugins/exit.php:4) in /home/admin/public_html/sis/modelos/plugins/exit.php on line 6
+[20-Oct-2017 23:43:39 UTC] PHP Warning:  session_destroy(): Trying to destroy uninitialized session in /home/admin/public_html/sis/modelos/plugins/exit.php on line 4
+[20-Oct-2017 23:43:39 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/admin/public_html/sis/modelos/plugins/exit.php:4) in /home/admin/public_html/sis/modelos/plugins/exit.php on line 6
+[20-Oct-2017 23:53:09 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[21-Oct-2017 00:02:36 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[21-Oct-2017 00:03:06 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[23-Oct-2017 17:17:03 UTC] PHP Warning:  unlink(R_SINTTECOM_.xlsx): No such file or directory in /home/admin/public_html/sis/modelos/plugins/d_excel.php on line 5
+[14-Nov-2017 21:15:35 America/Mexico_City] PHP Warning:  copy(): Filename cannot be empty in /home/admin/public_html/sis/modelos/plugins/importar.php on line 18
+[14-Nov-2017 21:40:42 America/Mexico_City] PHP Warning:  copy(): Filename cannot be empty in /home/admin/public_html/sis/modelos/plugins/importar.php on line 18
+[14-Nov-2017 21:41:48 America/Mexico_City] PHP Warning:  copy(): Filename cannot be empty in /home/admin/public_html/sis/modelos/plugins/importar.php on line 18
+[14-Nov-2017 21:44:44 America/Mexico_City] PHP Warning:  copy(): Filename cannot be empty in /home/admin/public_html/sis/modelos/plugins/importar.php on line 25
+[14-Nov-2017 21:45:19 America/Mexico_City] PHP Warning:  copy(): Filename cannot be empty in /home/admin/public_html/sis/modelos/plugins/importar.php on line 25
