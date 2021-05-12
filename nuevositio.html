@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Responsive sidebar template with sliding effect and dropdown menu based on bootstrap 3">
+    <title>SINTTECOM</title>
+
+    <!-- using online links -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/sidebar-themes.css">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+</head>
+
+<body>
+    <div class="page-wrapper chiller-theme sidebar-bg bg1 toggled">
+            <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+                    <i class="fas fa-bars"></i>
+                  </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <!-- sidebar-brand  -->
+                <div class="sidebar-item sidebar-brand">
+                    <a href="#">SAS</a>
+                    <div id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                      </div>
+                </div>
+                <!-- sidebar-menu  -->
+                <div class=" sidebar-item sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>General</span>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-home"></i>
+                                <span class="menu-text">Inicio</span> 
+                            </a>
+                        </li>
+                        <li>
+                            <a href="comercios.php">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span class="menu-text">Comercios</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="far fa-calendar-alt"></i>
+                                <span class="menu-text">Eventos</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">Consulta</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Nuevo Evento</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Asignacion Ruta</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Validacion</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Cierre Eventos</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Visita Ocular</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-warehouse"></i>
+                                <span class="menu-text">Almacen</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-align-justify"></i>
+                                <span class="menu-text">Inventarios</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">TPV</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">SIM</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">INSUMOS</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-images"></i>
+                                <span class="menu-text">Imagenes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-map"></i>
+                                <span class="menu-text">Mapas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fa fa-calendar-alt"></i>
+                                    <span class="menu-text">Reportes</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a href="#">Eventos</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Almacen</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Tecnicos</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-footer  -->
+            <div class="sidebar-footer">
+                <div class="dropdown">
+                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-cog"></i>
+                        <span class="badge-sonar"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuMessage">
+                        <a class="dropdown-item" href="#">My profile</a>
+                        <a class="dropdown-item" href="#">Help</a>
+                        <a class="dropdown-item" href="#">Setting</a>
+                    </div>
+                </div>
+                <div>
+                    <a href="#">
+                        <i class="fa fa-power-off"> Salir</i>
+                    </a>
+                </div>
+                <div class="pinned-footer">
+                    <a href="#">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <!-- page-content  -->
+        <main class="page-content pt-2">
+            <div id="overlay" class="overlay"></div>
+            <div class="container-fluid p-5">
+                <div id="container" class="container">
+					<h3>Cambiar Tema</h3>
+				<div class="row">
+                    <div class="form-group col-md-12">
+                        <a href="#" data-theme="default-theme" class="theme default-theme selected"></a>
+                        <a href="#" data-theme="chiller-theme" class="theme chiller-theme"></a>
+                        <a href="#" data-theme="legacy-theme" class="theme legacy-theme"></a>
+                        <a href="#" data-theme="ice-theme" class="theme ice-theme"></a>
+                        <a href="#" data-theme="cool-theme" class="theme cool-theme"></a>
+                        <a href="#" data-theme="light-theme" class="theme light-theme"></a>
+                    </div>
+                </div>
+                        <div class="row">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-4">
+                            <canvas id="chartEventos" width="200" height="200"></canvas>
+                            </div>
+                            <div class="col-sm-4">
+                                <canvas id="chartServicios" width="500" height="500"></canvas>
+                            </div>
+                        </div>
+                            
+                </div>
+            </div>
+        </main>
+        <!-- page-content" -->
+    </div>
+    <!-- page-wrapper -->
+
+    <!-- using online scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/moment-with-locales.js"></script>
+    <script src="js/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/jquery.datetimepicker.full.min.js"></script>
+    <script type="text/javascript" src="js/jquery.toaster.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
+    <script src="js/main.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            var eventos = $("#chartEventos");
+            var servicios = $("#chartServicios");
+
+            var myDoughnutChart = new Chart(eventos, {
+                type: 'doughnut',
+                data: {
+                labels: ["Abierto", "En Ruta", "Cerrado"],
+                datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#3e95cd", "#8e5ea2","#c45850"],
+                    data: [2478,5267,734]
+                }]
+                },
+                options: {
+                title: {
+                    display: true,
+                    text: '% de ODTs'
+                }
+                }
+            });
+            
+            var chartServicios = new Chart(servicios, {
+                    type: 'horizontalBar',
+                    data: {
+                    labels: ["Cambio de SIM", "Instalacion de TPV", "Envio de Insumos", "Retiro de Tpv adicional"],
+                    datasets: [
+                        {
+                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#c45850"],
+                        data: [10,45,12,24]
+                        }
+                    ]
+                    },
+                    options: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Servicios del Mes'
+                        }
+                    }
+                });
+                        
+        });
+    </script>
+</body>
+
+</html>
