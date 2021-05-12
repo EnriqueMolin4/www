@@ -1,0 +1,135 @@
+var infoAjax = 0;
+var tablePeticiones;
+$(document).ready(function() {
+    getSupervisores();
+    ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "peticioneslink")
+    
+
+    tablePeticiones = $('#tplPeticiones').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+        processing: true,
+        serverSide: true,
+        searching: true,
+        responsive: true,
+        lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
+        order: [[ 0, "ASC" ]],	
+        dom: 'lfrtiBp',	  
+        buttons: [
+            'excelHtml5',
+            'csv'
+        ],
+        ajax: {
+            url: 'modelos/almacen_db.php',
+            type: 'POST',
+            data: function( d ) {
+                d.module = 'getPeticiones',
+                d.supervisor = $("#supervisores").val(),
+                d.active = $("#activa").val();
+            }
+        },
+        columns : [
+            { data: 'id'},
+            { data: 'activa'},
+            { data: 'creadopor'},
+            { data: 'creadopor'},
+            { data: 'fecha_creacion'},
+            { data: 'modificado_por'}
+        ],
+        aoColumnDefs: [
+            {
+                "targets": [1],
+                "mRender": function ( data, type, row ){
+                    var boton = "";
+
+                    if ( data == '0') 
+                    {
+                        boton = 'ACTIVA';
+                    }else if ( data == '1')
+                    {
+                        boton = 'SURTIDA';
+                    }
+
+                    return boton;
+
+                }
+            },
+            {
+                "targets": [5],
+                "mRender": function ( data,type, row ) {
+              
+                    return '<a href="#" title="Detalle Petición" class="mostrarDetalle" data-id="'+row.id+' "><i class="fas fa-info-circle fa-2x" style="color:#3489eb"></i></a> <a href="#" title="Eliminar Petición" class="eliminarPeticion" data="'+row.id+'"><i class="fas fa-trash-alt fa-2x" style="color:#F5425D"></i><a/>';
+
+                }
+            }
+        ]
+    });
+
+    $(document).on("click",".mostrarDetalle", function() {
+        var id = $(this).data('id');
+
+        window.location.href = "detallepeticion.php?peticionId="+id;
+    })
+
+
+
+    $(document).on("click", ".eliminarPeticion", function(e){
+        e.preventDefault();
+        var id = $(this).attr('data');
+
+        var eliminar = confirm("Se borrará esta petición. ¿Deseas continuar?");
+
+        if (eliminar == true) 
+        {
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/almacen_db.php', //call your php file
+                data: {module: 'borrarPeticion', id: id},
+                cache: false,
+                success: function (data){
+                    //var info = JSON.parse(data);
+
+                    $.toaster({
+                        message: 'Se eliminó la petición',
+                        title: 'Aviso',
+                        priority: 'warning'
+                    });
+
+                    $("#tplPeticiones").DataTable().ajax.reload();
+
+                },
+                error: function(error)
+                {
+                    var demo = error;
+                }
+            });
+        }
+
+    });
+
+    $(".searchPeticiones").on('change', function(){
+        $('#tplPeticiones').DataTable().ajax.reload();
+    })
+
+
+	
+});
+
+function getSupervisores() {
+
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/almacen_db.php', // call your php file
+        data: 'module=getSupervisores',
+        cache: false,
+        success: function(data){
+           
+            $("#supervisores").html(data);   
+                 
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
