@@ -60312,3 +60312,749 @@
 				group by id,img.totalImg,du.nombre,du.apellidos
 				 ORDER BY   fecha_vencimiento   ASC
 				 LIMIT  0 , 5 
+13.05.2021 01:18:34 File: comercios_db.php;	Method Name: getMunicipio();	Functionality: Get Municipio;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'GRoup by municipios.Id, municipios.nombre,cp_santander.territorial_banco,territo' at line 4
+13.05.2021 01:18:40 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-05-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:18:43 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-04-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:18:43 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-03-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:18:44 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-02-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:18:44 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-01-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:18:44 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-12-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:18:58 File: comercios_db.php;	Method Name: getMunicipio();	Functionality: Get Municipio;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'GRoup by municipios.Id, municipios.nombre,cp_santander.territorial_banco,territo' at line 4
+13.05.2021 01:23:37 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-05-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:23:39 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-04-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:23:39 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-03-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:23:39 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-02-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:23:39 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-01-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:23:39 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-12-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+13.05.2021 01:23:39 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-11-08' AND '2021-05-14'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:48 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-05-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:51 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-04-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:51 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-03-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:51 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-02-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:51 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2021-01-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:51 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-12-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:51 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-11-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:52 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-10-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:22:52 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-09-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  0 , 5 
+14.05.2021 10:23:18 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-09-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  5 , 5 
+14.05.2021 10:23:20 SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				e.estatus,
+				e.estatus_servicio,
+				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				WHERE date(e.fecha_alta) BETWEEN '2020-09-09' AND '2021-05-15'
+				
+				group by id,img.totalImg,du.nombre,du.apellidos
+				 ORDER BY   fecha_vencimiento   ASC
+				 LIMIT  10 , 5 
