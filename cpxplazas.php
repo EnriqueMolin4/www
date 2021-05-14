@@ -203,7 +203,7 @@
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             $.toaster({
-                                message: 'Hubo un error al grabar el cp  '+cp ,
+                                message: 'Hubo un error al grabar el CP  '+cp ,
                                 title: 'Aviso',
                                 priority : 'danger'
                             });  

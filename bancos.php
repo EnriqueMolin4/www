@@ -49,7 +49,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Nuevo Banco</h5>
+                        <h5 class="modal-title">NUEVO BANCO</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -58,7 +58,7 @@
                         <form id="frm" name="frm">
                             <div class="row">
                                 <div class="col-sm-4">           
-                                    <label for="banco" class="col-form-label-sm">Banco</label>
+                                    <label for="banco" class="col-form-label-sm">BANCO</label>
                                     <input type="text" class="form-control form-control-sm" id="banco" name="banco" aria-describedby="banco">
                                 </div>
 

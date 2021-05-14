@@ -20,8 +20,8 @@
                     <label for="catalogo" class="col-form-label-sm">SELECCIONAR CATALOGO</label>
                     <select id="catalogo" name="catalogo" class="form-control form-control-sm">
                         <option value="0">Seleccionar</option>
-                        <option value="tipo_cancelacion">Tipo Cancelación</option>
-                        <option value="tipo_rechazos">Tipo Rechazos</option>
+                        <option value="tipo_cancelacion">CANCELACION</option>
+                        <option value="tipo_rechazos">RECHAZOS</option>
                         
                        
                     </select>
@@ -153,7 +153,7 @@
                     if ( $("#catalogo").val() == "0" ) 
                     {
                         $.toaster({
-                          message: 'Recuerda elegir un catálogo de la lista',
+                          message: 'Recuerda seleccionar un catálogo de la lista',
                           title: 'Aviso',
                           priority : 'danger'
                       });

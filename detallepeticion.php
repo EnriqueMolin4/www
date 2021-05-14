@@ -333,7 +333,7 @@
             if( $("#sPend").html() != $("#sLoad").html()  ) {
 
                 Swal.fire({
-                    title: 'La peticion no esta completa deseas:',
+                    title: 'La petición no esta completa deseas:',
                     showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonText: `Grabar`,

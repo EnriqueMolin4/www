@@ -214,7 +214,7 @@
                 var messages = {
                    
                     modelo: {
-                        required: "Favor de apturar el Modelo",
+                        required: "Favor de capturar el Modelo",
                     },
                      proveedor: {
                         required: "Favor de seleccionar proveedor",

@@ -76,18 +76,18 @@
                     <thead>
                         <tr>
                             <th>ODT</th>
-                            <th>Afiliacion | Folio</th>
+                            <th>AFILIACION | FOLIO</th>
                             <th>CVE</th>
-                            <th>Comercio | Cliente</th>
-                            <th>Servicio</th>
-                            <th>Fecha de Alta</th>
-                            <th>Fecha Vencimiento</th>
-                            <th>Fecha Cierre</th>
-                            <th>Imagenes Cargadas</th>
-                            <th>Tecnico</th>
-                            <th>Estatus</th>
-                            <th>Estatus Servicio</th>
-                            <th>Accion</th>
+                            <th>COMERCIO | CLIENTE</th>
+                            <th>SERVICIO</th>
+                            <th>FECHA DE ALTA</th>
+                            <th>FECHA VENCIMIENTO</th>
+                            <th>FECHA CIERRE</th>
+                            <th>IMAGENES CARGADAS</th>
+                            <th>TECNICO</th>
+                            <th>ESTATUS</th>
+                            <th>Estatus SERVICIO</th>
+                            <th>ACCION</th>
                             
                         </tr>
                     </thead>
