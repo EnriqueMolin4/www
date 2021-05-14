@@ -11,9 +11,9 @@
         .register-photo {
 
             /*background: #f1f7fc;*/
-            background: #2B3A42;  /* fallback for old browsers */
+            background: #FEFEFE;  /* fallback for old browsers */
             background: -webkit-linear-gradient(to bottom, #376A78,#F3BD77 );  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to bottom,  #376A78,#F3BD77); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            /*background: linear-gradient(to bottom,  #376A78,#F3BD77); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ */
             padding: 40px 0
         }
         .login-form

@@ -105,7 +105,7 @@
 
             <!-- MODAL -->
             <div class="modal fade" tabindex="-1" role="dialog" id="showEvento">
-            <div class="modal-dialog" style="max-width: 1350px!important;" role="document">
+            <div class="modal-dialog modal-lg" style="max-width: 1350px!important;" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">INFORMACION DEL EVENTO</h5>
@@ -523,12 +523,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-sm-3">           
+                            <div class="col-sm-5">           
                                 <label for="old_odt" class="col-form-label-sm">ODT ACTUAL</label>
                                 <input type="text" class="form-control form-control-sm" id="old_odt" aria-describedby="old_odt" readonly>
                                  
                             </div>
-                            <div class="col-sm-3">           
+                            <div class="col-sm-5">           
                                 <label for="new_odt" class="col-form-label-sm">NUEVA ODT</label>
                                 <input type="text" class="form-control form-control-sm" id="new_odt" aria-describedby="new_odt">
                                  

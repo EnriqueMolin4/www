@@ -61,11 +61,11 @@
                     <table id="inventario"  class="table table-md table-bordered table-responsive">
                         <thead>
                             <tr>
-                                <th>TIPO</th>
-                                <th>NO SERIE</th>
-                                <th>FABRICANTE</th>
-                                <th>ESTATUS</th>
-                                <th>ACCION</th>
+                                <th width="300px">TIPO</th>
+                                <th width="300px">NO SERIE</th>
+                                <th width="300px">FABRICANTE</th>
+                                <th width="300px">ESTATUS</th>
+                                <th width="300px">ACCION</th>
                             </tr>
                         </thead>
                         <tbody>
