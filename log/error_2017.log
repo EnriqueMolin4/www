@@ -64131,3 +64131,44 @@
 				group by id,img.totalImg,du.nombre,du.apellidos
 				 ORDER BY   fecha_vencimiento   ASC
 				 LIMIT  0 , 5 
+17.05.2021 12:33:09 File: almacen_db.php;	Method Name: execute_ins();	Functionality: Insert/Update Traspasos;	Log:INSERT INTO `detalle_peticiones` 
+					(`peticiones_id`,`tecnico_id`,`tipo`,`insumo`,`conectividad`,`producto`,`cantidad`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
+					 VALUES
+					 (?,?,?,?,?,?,?,?,?,?,?);
+					 ["1","361","1",0,null,"1","2","1","2021-05-17 12:33:08","1","2021-05-17 12:33:08"] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'conectividad' cannot be null
+17.05.2021 12:46:20 Select 
+				peticiones_id,
+				CONCAT(du.nombre,' ',du.apellidos) tecnico,
+				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
+				ti.nombre insumo ,
+				tc.nombre conectividad,
+				tp.nombre producto,
+				dp.cantidad,
+				dp.id,
+				dp.tipo tipoid
+				FROM detalle_peticiones dp
+				LEFT JOIN detalle_usuarios du ON  dp.tecnico_id = du.cuenta_id
+				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
+				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
+				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
+				WHERE dp.peticiones_id = 1
+				
+				 LIMIT  0 , 5  
+17.05.2021 12:46:20 Select 
+				peticiones_id,
+				CONCAT(du.nombre,' ',du.apellidos) tecnico,
+				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
+				ti.nombre insumo ,
+				tc.nombre conectividad,
+				tp.nombre producto,
+				dp.cantidad,
+				dp.id,
+				dp.tipo tipoid
+				FROM detalle_peticiones dp
+				LEFT JOIN detalle_usuarios du ON  dp.tecnico_id = du.cuenta_id
+				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
+				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
+				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
+				WHERE dp.peticiones_id = 1
+				
+				  

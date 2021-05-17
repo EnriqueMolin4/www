@@ -41,13 +41,13 @@
                     <table class="table table-md table-bordered table-responsive " id="tplDetalle" style="width:100%">
                         <thead>
                             <tr>
-                                <th>TECNICO</th>
-                                <th>TIPO</th>
-                                <th>INSUMO</th>
-                                <th>CONECTIVIDAD</th>
-                                <th>VERSION</th>
-                                <th>CANTIDAD</th>   
-                                <th>ACCION</th>                         
+                                <th width="200px">TECNICO</th>
+                                <th width="200px">TIPO</th>
+                                <th width="200px">INSUMO</th>
+                                <th width="200px">CONECTIVIDAD</th>
+                                <th width="200px">VERSION</th>
+                                <th width="200px">CANTIDAD</th>   
+                                <th width="200px">ACCION</th>                         
                             </tr>
                         </thead>
                     <tbody>

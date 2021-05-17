@@ -767,6 +767,27 @@ class Almacen implements IConnections {
             self::$logger->error ("File: almacen_db.php;	Method Name: validarSerie();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
+
+	function detallePeticion($peticion)
+	{
+		$sql = "  SELECT CONCAT(du.nombre,' ',du.apellidos) supervisor, p.IsActive,
+					CONCAT(du2.nombre,' ',du2.apellidos) creadopor,p.fecha_creacion,supervisor_id
+					FROM peticiones p,
+					detalle_usuarios du, 
+					detalle_usuarios du2 
+					WHERE   p.supervisor_id = du.cuenta_id
+					AND p.creado_por = du2.cuenta_id
+					AND p.id = ?
+				 				
+			   ";
+		        try {
+					$stmt = self::$connection->prepare ($sql);
+					$stmt->execute (array($peticion));
+					return  $stmt->fetch ( PDO::FETCH_ASSOC );
+				} catch ( PDOException $e ) {
+					self::$logger->error ("File: almacen_db.php;	Method Name: detallePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+				}
+	}
 	
 	function getdetallePeticiones($params,$total) {
 		$start = $params['start'];
@@ -811,7 +832,7 @@ class Almacen implements IConnections {
 				$filter  ";
 
 		
-		 
+		 self::$logger->error($sql);
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute ();
@@ -2706,6 +2727,12 @@ if( $module == 'validarSerie') {
 	echo json_encode($rows);
 }
 
+if($module == 'detallePeticion') {
+
+	$rows = $Almacen->detallePeticion($params['peticionId']);
+
+	echo json_encode($rows);
+}
 
 if($module == 'generarEnvio') {
 
@@ -2718,13 +2745,16 @@ if($module == 'generarEnvio') {
 		$fecha = date("Y-m-d H:i:s");
 
 		//cantidad x tipo
-		if($detalle['tipo'] == '3') {
+		if($detalle['tipo'] == '3') 
+		{
 			$cant = $detalle['cantidad'];
 			$tipo = 'INSUMOS';
-		} else if ($detalle['tipo'] == '1' ) {
+		} else if ($detalle['tipo'] == '1' ) 
+		{
 			$cant = 1;
 			$tipo = 'TPV';
-		} else if ($detalle['tipo'] == '2' ) {
+		} else if ($detalle['tipo'] == '2' ) 
+		{
 			$cant = 1;
 			$tipo = 'SIM';
 		}
