@@ -40,9 +40,9 @@ if(isset($_SESSION['user']))
 	{
 		
 		$tipouser = $_SESSION['tipo_user'];
-		//if($tipouser == 'tecnico') {
-		//	header("Location: index.php");
-		//}
+		if($tipouser == 'tecnico') {
+			header("Location: login.php");
+		}
 		//$cve = $_SESSION['cve'];
 	}
 }

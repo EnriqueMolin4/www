@@ -30,22 +30,23 @@
                                     <option value="4">Accesorios</option>
                             </select>
                         </div>   
-                        <div class="col-sm-3">
-                            <label for="tipo_ubicacion" class="col-form-label-sm">UBICACION</label><br>
-                                <select hidden id="tipo_ubicacion" name="tipo_ubicacion[]" class="custom-select form-control-sm searchInventario" multiple>
-                                    
-                                </select>
-                        </div>
+                       
                         <div class="col-sm-3">
                             <label for="tipo_estatusubicacion" class="col-form-label-sm">ESTATUS UBICACION</label><br>
                                 <select hidden id="tipo_estatusubicacion" name="tipo_estatusubicacion[]" class="custom-select form-control-sm searchInventario" multiple>
-                                        
+                                        <option value="0" selected >Seleccionar</option>
+                                </select>
+                        </div>
+						 <div class="col-sm-3">
+                            <label for="tipo_ubicacion" class="col-form-label-sm">ALMACENES / LABORATORIO</label><br>
+                                <select hidden id="tipo_ubicacion" name="tipo_ubicacion[]" class="custom-select form-control-sm searchInventario" multiple>
+										<option value="0" selected >Seleccionar</option>
                                 </select>
                         </div>
                         <div class="col-sm-3">
                             <label for="tipo_estatus" class="col-form-label-sm">ESTATUS</label><br>
                                 <select hidden id="tipo_estatus" name="tipo_estatus[]" class="custom-select form-control-sm searchInventario" multiple>
-                                        
+                                        <option value="0" selected>Seleccionar </option>
                                 </select>
                         </div>
                         

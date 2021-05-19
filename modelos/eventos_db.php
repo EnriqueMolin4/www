@@ -1302,6 +1302,20 @@ class Eventos implements IConnections {
 			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
+	
+	function existHistorialMov($id,$mov) {
+		$sql = "SELECT count(*) FROM historial WHERE inventario_id= ? AND tipo_movimiento=? ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute (array($id,$mov));
+			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+			return $result;
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: api_db.php;	Method Name: existHistorialMov();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+		}
+	}
+		
 	function getOdtById($odtid)
 	{
 		$sql = "SELECT odt FROM eventos WHERE id= '$odtid' ";
@@ -1355,7 +1369,7 @@ class Eventos implements IConnections {
 			self::$logger->error ("File: api_db.php;	Method Name: getInfoExtra();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
 		}
 	}
-
+	
 }
 //
 include 'DBConnection.php';

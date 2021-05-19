@@ -94,7 +94,7 @@ $(document).ready(function() {
 					var buttons = '';
 			
 					if(usrPerm == 'admin' || usrPerm == 'CA' || usrPerm == 'AN' ) {
-						 buttons += ' <a href="#" class="btn btn-warning mostrarDetalle" data="'+id+' ">Editar</a>';
+						 buttons += ' <a href="#" class="mostrarDetalle" title="Editar Información" data="'+id+' "><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a>';
 					} 
 
 					

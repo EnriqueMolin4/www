@@ -18,8 +18,8 @@
             <div class="row p-3">
                 <button class="btn btn-success" id="bntNewTarjeta">Asignar Tarjeta</button>
             </div>
-            <div class="container-fluid p-3">
-                <div class="panel-white">
+            <div class="container-fluid">
+                <div class="panel-white p-3">
                     <div class="table-responsive">
                         <table id="tarjetas"  class="table table-md table-bordered ">
                             <thead>
@@ -165,9 +165,9 @@
                                 var boton = "";
                                 
                             if(row.estatus == '1'){
-                                    boton =  '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
+                                    boton =  '<a href="#" class="EditBanco" title="Editar" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
                                 } else {
-                                    boton = '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
+                                    boton = '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
                             }
 
                                 return boton;
@@ -243,7 +243,7 @@
 
                     } else {
                         $.toaster({
-                            message: 'Favor Capturar todos los datos',
+                            message: 'FAVOR CAPTURAR TODOS LOS DATOS',
                             title: 'Aviso',
                             priority : 'warning'
                         });  

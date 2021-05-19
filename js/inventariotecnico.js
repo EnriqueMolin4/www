@@ -567,7 +567,7 @@ function getTecnicos(ter) {
     $.ajax({
         type: 'GET',
         url: 'modelos/almacen_db.php', // call your php file
-        data: 'module=getTecnicos&ter='+ter,
+        data: 'module=getTecnicosxAlmacen&ter='+ter,
         cache: false,
         success: function(data){
            

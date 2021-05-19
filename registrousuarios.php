@@ -48,7 +48,7 @@
                         <th width="200px">NOMBRE</th>
                         <th width="200px">CORREO</th>
                         <th>TIPO</th>
-                        <th>CLAVE</th>
+                        <th>PLAZA</th>
                         <th width="200px">TERRITORIAL</th>
                         <th width="200px">FECHA ALTA</th>
                         <th>ESTATUS</th>
@@ -64,7 +64,7 @@
                         <th width="200px">NOMBRE</th>
                         <th width="200px">CORREO</th>
                         <th>TIPO</th>
-                        <th>CLAVE</th>
+                        <th>PLAZA</th>
                         <th width="200px">TERRITORIAL</th>
                         <th width="200px">FECHA ALTA</th>
                         <th>ESTATUS</th>
@@ -92,40 +92,51 @@
                             <div class="row">
                                 <div class="col-sm-4">           
                                     <label for="nombre" class="col-form-label-sm">NOMBRES</label>
-                                    <input type="text" class="form-control form-control-sm" id="nombre" name="nombre" aria-describedby="nombre">
+                                    <input type="text" class="custom-select form-control form-control-sm" id="nombre" name="nombre" aria-describedby="nombre">
                                 </div>
                                 <div class="col-sm-4">           
                                     <label for="apellidos" class="col-form-label-sm">APELLIDOS</label>
-                                    <input type="text" class="form-control form-control-sm" id="apellidos" name="apellidos" aria-describedby="apellidos">
+                                    <input type="text" class="custom-select form-control form-control-sm" id="apellidos" name="apellidos" aria-describedby="apellidos">
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-sm-4">           
                                     <label for="correo" class="col-form-label-sm">CORREO</label>
-                                    <input type="text" class="form-control form-control-sm" id="correo" name="correo" aria-describedby="correo">
+                                    <input type="text" class="custom-select form-control form-control-sm" id="correo" name="correo" aria-describedby="correo">
                                 </div>
+                            </div>
+
+                            <div class="row">
+                                
                                 <div class="col-sm-4">           
                                     <label for="contrasena" class="col-form-label-sm">CONTRASEÑA</label>
-                                    <input type="password" class="form-control form-control-sm" id="contrasena" name="contrasena" aria-describedby="contrasena">
+                                    <input type="password" class="custom-select form-control form-control-sm" id="contrasena" name="contrasena" aria-describedby="contrasena">
+                                </div>
+								<div class="col-sm-4">           
+                                    <label for="tipo" class="col-form-label-sm">TIPO USUARIO</label>
+                                    <select id="tipo" name="tipo" class="custom-select form-control form-control-sm">
+                                        <option value="0" selected>Seleccionar</option>
+                                       
+                                    </select>
                                 </div>
                                 <div class="col-sm-4">           
-                                    <label for="negocio" class="col-form-label-sm">CUENTA</label>
-                                    <select id="negocio" name="negocio" class="form-control form-control-sm">
+                                    <label for="negocio" class="col-form-label-sm">CUENTA</label><br>
+                                    <select hidden id="negocio" name="negocio" class="custom-select form-control form-control-sm" multiple>
                                         <option value="0" selected>Seleccionar</option>
                             
                                     </select>
                                 </div>
+                                
                             </div>
+
                             <div class="row">
                             <div class="col-sm-4">           
-                                    <label for="territorial" class="col-form-label-sm">TERRITORIAL</label>
-                                    <select id="territorial" name="territorial" class="form-control form-control-sm">
+                                    <label for="territorial" class="col-form-label-sm">TERRITORIAL</label><br>
+                                    <select hidden id="territorial" name="territorial" class="custom-select form-control form-control-sm" multiple>
                                         
                                     </select>
                             </div>
                                 <div class="col-sm-4">           
-                                    <label for="plaza" class="col-form-label-sm">PLAZA</label>
-                                    <select id="plaza" name="plaza" class="form-control form-control-sm">
+                                    <label for="plaza" class="col-form-label-sm">PLAZA</label><br>
+                                    <select hidden id="plaza" name="plaza" class="custom-select form-control form-control-sm" multiple>
                                         <option value="0" selected>Seleccionar</option>
                             
                                     </select>
@@ -137,13 +148,7 @@
                             
                                     </select>
                                 </div>
-                                <div class="col-sm-4">           
-                                    <label for="tipo" class="col-form-label-sm">TIPO USUARIO</label>
-                                    <select id="tipo" name="tipo" class="form-control form-control-sm">
-                                        <option value="0" selected>Seleccionar</option>
-                                       
-                                    </select>
-                                </div>
+                                
                             </div>
                         </form>
                     </div>
@@ -173,6 +178,7 @@
     <script type="text/javascript" src="js/jquery.datetimepicker.full.min.js"></script>
     <script type="text/javascript" src="js/jquery.toaster.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
+    <script src="js/bootstrap-multiselect.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/jquery.rotate.1-1.js"></script>
     <script>
@@ -216,8 +222,8 @@
                         { data: 'nombre'},
                         { data: 'correo' },
                         { data: 'TipoUser' }, 
-                        { data: 'cve' },
-                        { data: 'territorial' },
+                        { data: 'plazas' },
+                        { data: 'territorios' },
                         { data: 'fecha_alta'},
                         { data: 'estatus'},
                         { data: 'Id'}
@@ -298,12 +304,14 @@
                     }
                 }
 
-
-
+             
                 $("#btnRegistrar").on('click', function() {
                     alert("Grabar")
                     $("#showEvento").modal("hide")
                 })
+
+                //
+               
 
                 //agregar llenado de comboBox de Almacen 
                 $("#plaza").on('change', function() {
@@ -313,10 +321,11 @@
             
 
                 $('#usuarios tbody').on('click', 'tr a.EditUser', function () {
-                var index = $(this).parent().parent().index() ;
-                var data = usuarios.row( index ).data()
-                var id = data.Id;
-                    $(".modal-title").html("EDITAR USUARIO")
+                    var index = $(this).parent().parent().index() ;
+                    var data = usuarios.row( index ).data()
+                    var id = data.Id;
+                  
+                    $(".modal-title").html("Editar Usuario")
                     $("#userId").val(id);
                     $("#btnGrabarUser").html('Editar');
                     $.ajax({
@@ -326,17 +335,26 @@
                         cache: false,
                         success: function(data, textStatus, jqXHR){
                             var info = JSON.parse(data);
-                        
+
+                            var territorios = info[0].territorios.split(',');
+                            var plazas =info[0].plazas.split(',');
+                            almacen = info[0].almacen;
+                            $("#showUser").modal({show: true, backdrop: false, keyboard: false}) 
+                            
                             $("#nombre").val(info[0].nombre)
                             $("#apellidos").val(info[0].apellidos)
-                            $("#negocio").val(info[0].cve)
+                           // $("#negocio").val(info[0].cve)
                             $("#supervisor").val(info[0].supervisor)
                             $("#correo").val(info[0].correo)
                             $("#tipo").val(info[0].tipo_user);
-                            $("#territorial").val(info[0].territorial);
-                            $("#plaza").val(info[0].plaza);
+                            $("#territorial").val(territorios);
+                            $("#territorial").multiselect('rebuild');
+                            getPlazaxTerritorial(JSON.stringify(territorios) )
+                           // $("#plaza").val(plazas);
+                           // $("#plaza").multiselect('rebuild');
+                            //getAlmacen( plazas );
 
-                            $("#showUser").modal({show: true, backdrop: false, keyboard: false}) 
+                            
         
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -359,7 +377,7 @@
                         success: function(data, textStatus, jqXHR){
                             var info = JSON.parse(data);
                             $.toaster({
-                                    message: 'Se deshabilitó el Usuario ',
+                                    message: 'Se deshabilito el Usuario ',
                                     title: 'Aviso',
                                     priority : 'success'
                                 });  
@@ -385,7 +403,7 @@
                         success: function(data, textStatus, jqXHR){
                             var info = JSON.parse(data);
                             $.toaster({
-                                    message: 'Se habilitó el Usuario  ',
+                                    message: 'Se habilito el Usuario  ',
                                     title: 'Aviso',
                                     priority : 'danger'
                                 });  
@@ -399,6 +417,8 @@
                 });
 
 
+
+
                 $("form[name='frm']").validate({
                     rules: rules,
                     messages: messages
@@ -406,13 +426,19 @@
 
                 $("#btnGrabarUser").on('click', function() {
                     var correo = $("#correo").val();
-
-                    var correo =  $("#correo").val();
-					if( correo.length > 0 || $("#contrasena").val().length > 0 || $("#tipo").val() != '0' || $("#nombre").val().length > 0 ) {
+                    var isNew = 1;
+                    if( $("#userId").val() == '0' ) {
+                        if ( $("#contrasena").val().length > 0 ) {
+                            isNew = 1;
+                        } else {
+                            isNew = 0;
+                        }
+                    }
+					if( isNew == 1 && correo.length > 0 && isNew > 0 && $("#tipo").val() != '0' && $("#nombre").val().length > 0  && $("#negocio").val().length > 0 && $("#almacen").val()  != '0' ) {
                         var existUsuario = $.get('modelos/usuarios_db.php',{module: 'existeuser',correo:correo},function(data) {
                             var form_data = { module: 'nuevousuario',nombre: $("#nombre").val(),apellidos: $("#apellidos").val(),
-                            territorial: $("#territorial").val(),tipo: $("#tipo").val(), negocio: $("#negocio").val(),
-                            contrasena:  $("#contrasena").val(),correo: $("#correo").val() ,userid: $("#userId").val(), plaza:  $("#plaza").val()  };
+                            territorial: JSON.stringify( $("#territorial").val() ),tipo: $("#tipo").val(), negocio: JSON.stringify( $("#negocio").val() ),
+                            contrasena:  $("#contrasena").val(),correo: $("#correo").val() ,userid: $("#userId").val(), plaza: JSON.stringify( $("#plaza").val() ),almacen: $("#almacen").val()  };
                             var info = JSON.parse(data) ;
                             console.log(info)	
                                 if( $("#userId").val() == '0'  || $("#userId").val() == '' ) {
@@ -454,7 +480,7 @@
                                     } else {
                                          
                                         $.toaster({
-                                            message: "La Contraseña debe ser de mínimo 8 caracteres",
+                                            message: "La Contraseña debe ser de minimo 8 caracteres",
                                             title: 'Aviso',
                                             priority : 'success'
                                         });  
@@ -503,7 +529,7 @@
                         });
                     } else {
                         $.toaster({
-							message: 'Favor de capturar los campos obligatorios *',
+							message: 'Favor de Capturar los campos obligatorios *',
 							title: 'Aviso',
 							priority : 'warning'
 						});  
@@ -572,14 +598,35 @@
 
                 $(document).on("click","#btnNewUser", function() {
                     cleartext()
-                    $(".modal-title").html("NUEVO USUARIO")
+                    $(".modal-title").html("Nuevo Usuario")
                     $("#btnGrabarUser").html('Registrar');
                     $("#showUser").modal({show: true, backdrop: false, keyboard: false})
+                })
+
+                $("#territorial").on("change", function () {
+                    getPlazaxTerritorial( JSON.stringify($(this).val()) );
+                     
                 })
             
                 $('#showUser').on('show.bs.modal', function (e) {
                 
-                    
+                    if($("#userId").val() == '0' ) {
+
+                        getPlazaxTerritorial(JSON.stringify($("#territorial").val()) );
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'modelos/usuarios_db.php', // call your php file
+                            data: { module: 'getBancos', 'tecnico': 0  }
+                        }).done(function(data) {
+                            console.log(data);
+                            //var plazas = data;
+                            $("#negocio").html(data);
+                            $("#negocio").multiselect('refresh');
+
+                            
+                        });
+                    }
 
                 });
 
@@ -647,19 +694,94 @@
             $.ajax({
                 type: 'POST',
                 url: 'modelos/usuarios_db.php', // call your php file
-                data: { module: 'getTerritorial' },
+                data: { module: 'getTerritorial' }
+            }).done(function(data) {
+
+                $("#territorial").html(data);
+                $("#territorial").multiselect({
+                    includeSelectAllOption: true,
+                    selectAllText: 'Todos',
+                    nonSelectedText: 'Ninguno Seleccionado',
+                    maxHeight: 200 
+                }); 
+                    
+            });
+        }
+        
+        function getPlazaxTerritorial(ter) {
+            tecnico = $("#userId").val();
+           
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/usuarios_db.php', // call your php file
+                data: { module: 'getTerritorioPlazas','territorio': ter,'usr' : tecnico   },
+            }).done(function(data) {
+                var plazas = JSON.parse(data);
+                var combos = '';
+                $val = '<option value="0">Seleccionar</option>';
+
+                $.each(plazas, function(index,element) {
+
+                    var selected = element.tecnico_id == '0' ? '' : 'selected';
+
+                    combos +=  "<option value='"+element.plaza_id+"' "+selected+">"+element.nombre+"</option>";
+
+                })
+                
+                $("#plaza").html(combos);
+                $("#plaza").multiselect({  maxHeight: 200 });
+                $("#plaza").multiselect('rebuild');
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'modelos/usuarios_db.php', // call your php file
+                    data: { module: 'getBancos', 'tecnico': tecnico  }
+                }).done(function(data) {
+                    var plazas = data;
+                    $("#negocio").html(data);
+                    $("#negocio").multiselect('refresh');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'modelos/usuarios_db.php', // call your php file
+                        data: { module: 'getAlmacen','plaza': JSON.stringify( $("#plaza").val() ) },
+                        cache: false,
+                        success: function(data, textStatus, jqXHR){
+                            
+                            $("#almacen").html(data);
+                            $("#almacen").val(almacen);
+
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            alert(textStatus)
+                        }
+                    });
+                });
+            });
+
+            
+
+        }
+
+        function getTerritorioPlazas(tecnico) {
+
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/usuarios_db.php', // call your php file
+                data: { module: 'getTerritorioPlazas', 'tecnico': tecnico  },
                 cache: false,
                 success: function(data, textStatus, jqXHR){
-                    
-                    $("#territorial").html(data);
-                    
-                    
+                    var info = JSON.parse(data);
+
+                    $("#territorial").val(info);
+                    $("#territorial").multiselect('refresh');
+
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     alert(textStatus)
                 }
             });
-        } 
+        }
 
         function getTipoUser() {
 
@@ -679,23 +801,7 @@
             });
         }
 
-        function getBancos() {
-
-            $.ajax({
-                type: 'POST',
-                url: 'modelos/usuarios_db.php', // call your php file
-                data: { module: 'getBancos' },
-                cache: false,
-                success: function(data, textStatus, jqXHR){
-                    
-                    $("#negocio").html(data);
-
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert(textStatus)
-                }
-            });
-        }
+        
 
         function getPlazas() {
 
@@ -720,7 +826,7 @@
             $.ajax({
                 type: 'POST',
                 url: 'modelos/usuarios_db.php', // call your php file
-                data: { module: 'getAlmacen','plaza': plaza },
+                data: { module: 'getAlmacen','plaza': JSON.stringify(plaza) },
                 cache: false,
                 success: function(data, textStatus, jqXHR){
                     
@@ -733,6 +839,31 @@
             });
         }
 
+        function getBancos(tecnico) {
+
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/usuarios_db.php', // call your php file
+                data: { module: 'getBancos', 'tecnico': tecnico },
+                cache: false,
+                success: function(data, textStatus, jqXHR){
+                    
+                    $("#negocio").html(data);
+                    $("#negocio").multiselect({ 
+                        includeSelectAllOption: true,
+                        selectAllText: 'Todos',
+                        maxHeight: 100 
+                    });
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert(textStatus)
+                }
+            });
+        }
+
+        
+
         function cleartext() {
             $("#nombre").val("");
             $("#apellidos").val("");
@@ -743,10 +874,10 @@
             $("#negocio").val("0");
             $("#correo").val("")
             $("#territorial").val("0");
+            $("#territorial").multiselect('refresh');
             $("#plaza").val("0");
 
         }
-
 
     </script> 
   

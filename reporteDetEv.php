@@ -31,12 +31,12 @@
                      <div class="row">
                         <div class="col-sm-3">
                             <label for="fecha_alta" class="col-form-label-sm">FECHA ALTA SISTEMA</label>
-                            <input type="text" class="form-control form-control-sm" id="fecha_alta" name="fecha_alta" value="<?php echo date("Y-m-d", strtotime("-5 days", strtotime(date("Y-m-d")) )); ?>" autocomplete="off">
+                            <input type="text" class="form-control form-control-sm" id="fecha_alta" name="fecha_alta" placeholder="Seleccionar Fecha" value="" autocomplete="off">
                         </div>
 
                         <div class="col-sm-3">
                             <label for="fecha_hasta" class="col-form-label-sm">HASTA</label>
-                            <input type="text" class="form-control form-control-sm" id="fecha_hasta" name="fecha_hasta" value="<?php echo date("Y-m-d", strtotime("+1 days", strtotime(date("Y-m-d")) )); ?>" autocomplete="off">
+                            <input type="text" class="form-control form-control-sm" id="fecha_hasta" name="fecha_hasta" placeholder="Seleccionar Fecha" value="" autocomplete="off">
                         </div>
 
                         <div class="col-sm-4">
@@ -81,7 +81,7 @@
                    
                         <div class="col-sm-3">
                             <label for="hasta_fc">HASTA</label>
-                            <input type="text" class="form-control form-control-sm" id="hasta_fc" placeholder="Hasta" name="hasta_fc" value="" autocomplete="off">
+                            <input type="text" class="form-control form-control-sm" id="hasta_fc" placeholder="Seleccionar Fecha" name="hasta_fc" value="" autocomplete="off">
                         </div>
                    </div>
 
