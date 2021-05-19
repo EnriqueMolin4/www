@@ -175,7 +175,17 @@
                                     </li>
 							<?php
 							   }
-							   ?>
+
+                                if ( searchMenu($_SESSION['Modules'],'url', 'tarjetastecnico')){
+
+							 ?>
+                                    <li id="tarjetaslink">
+                                        <a href="tarjetastecnico.php">Tarj. Tecnico</a>
+                                    </li>
+
+                            <?php
+                                }
+                            ?>
                                 </ul>
                             </div>
                         </li>
