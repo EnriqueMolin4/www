@@ -20,7 +20,7 @@ class Api implements IConnections {
 			return array ();
 		}
 	}
-	private function execute_sel() {
+	private static function execute_sel() {
 		try {
 			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
 			$stmt->execute ( array () );
@@ -29,7 +29,7 @@ class Api implements IConnections {
 			self::$logger->error ("File: api_db.php;	Method Name: execute_sel();	Functionality: Insert;	Log:" . $e->getMessage () );
 		}
 	}
-	private function execute_ins($prepareStatement, $arrayString) {
+	private static function execute_ins($prepareStatement, $arrayString) {
 		try {
 			$stmt = self::$connection->prepare ( $prepareStatement );
 			$stmt->execute ( $arrayString );
@@ -40,7 +40,7 @@ class Api implements IConnections {
 		}
 	}
 	function insert($prepareStatement, $arrayString) {
-
+			
 			return self::execute_ins ( $prepareStatement, $arrayString );
 
     }
@@ -53,11 +53,11 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 	
-	private function execute_qry($prepareStatement, $arrayString) {
+	private static function execute_qry($prepareStatement, $arrayString) {
 		
 		
 		try {
@@ -84,7 +84,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getComercioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getComercioId();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -96,7 +96,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getDefaultBancoCve();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getDefaultBancoCve();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
     }
     
@@ -108,7 +108,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInsumos();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getInsumos();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
     }
     
@@ -120,7 +120,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInsumos();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getInsumos();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 
@@ -132,7 +132,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: estatusEvento();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: estatusEvento();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 
@@ -143,9 +143,22 @@ class Api implements IConnections {
 		try {
 			$stmt = self::$connection->prepare ($sql );
 			$stmt->execute ();
-			return $result = $stmt->fetch();
+			return $result = $stmt->fetch( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInsumos();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getInsumos();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
+		}
+	}
+
+	function existItemInventarioAsignado($noserie,$ubicacion) {
+		$sql = "SELECT * FROM inventario WHERE no_serie= '$noserie' and ubicacion = $ubicacion ";
+		 
+
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return $result = $stmt->fetch( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: api_db.php;	Method Name: existItemInventarioAsignado();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 
@@ -163,9 +176,10 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: existInsumoInventario();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: existInsumoInventario();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
+
 	
 	function existInsumoInventarioTecnico($noguia,$tecnico,$tipo) {
 		
@@ -182,7 +196,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: existInsumoInventarioTecnico();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: existInsumoInventarioTecnico();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -200,7 +214,23 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getIdTraspaso();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getIdTraspaso();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
+		}
+	}
+
+	function getIdInventario($noserie) {
+		
+		$sql = "select id from inventario
+				where no_serie = '$noserie'
+        ";
+ 
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: api_db.php;	Method Name: getIdInventario();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -216,7 +246,7 @@ class Api implements IConnections {
 			$stmt->execute (array($sim));
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: searchSims();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: searchSims();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	
 	}
@@ -240,7 +270,7 @@ class Api implements IConnections {
 			$stmt->execute (array($item,$tipo));
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: searchItemElavon();	Functionality: Search Elavon;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: searchItemElavon();	Functionality: Search Elavon;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -256,7 +286,7 @@ class Api implements IConnections {
 			$stmt->execute (array($item));
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: searchItemElavon();	Functionality: Search Elavon;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: searchItemElavon();	Functionality: Search Elavon;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -270,7 +300,7 @@ class Api implements IConnections {
 			$stmt->execute (array($noserie));
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: existTPVInventarioTecnico();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: existTPVInventarioTecnico();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -282,7 +312,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -294,7 +324,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getClaveInsumo();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getClaveInsumo();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 
@@ -306,7 +336,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getComerciofromOdt();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getComerciofromOdt();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 
@@ -319,7 +349,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getDeviceInfo();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getDeviceInfo();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 
@@ -332,7 +362,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getTraspasoInfo();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getTraspasoInfo();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 
@@ -359,7 +389,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getLogin();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getLogin();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -380,8 +410,8 @@ class Api implements IConnections {
 		CASE WHEN tipo_servicio.obligatorio = 2 THEN 1
 		 WHEN tipo_servicio.obligatorio = 3 THEN 1
 		 ELSE 0 END tpvretiradorule,
-		eventos.tpv_retirado tpvretirado,
-        eventos.tpv_instalado tpvinstalado,
+		IFNULL(eventos.tpv_retirado,'') tpvretirado,
+        IFNULL(eventos.tpv_instalado,'') tpvinstalado,
         DATE(fecha_vencimiento) fechavencimiento ,eventos.fecha_alta,
         CASE WHEN DATEDIFF(NOW(),fecha_vencimiento) > 2 THEN 'red'
             WHEN  DATEDIFF(NOW(),fecha_vencimiento) = 1  THEN 'orange'
@@ -391,6 +421,7 @@ class Api implements IConnections {
         END color,
         eventos.descripcion as description,
         eventos.estatus,
+		eventos.estatus_servicio,
         ifnull(eventos.receptor_servicio,'') receptorservicio,
         ifnull(eventos.rollos_instalar,0) rollosinstalar,
         ifnull(eventos.rollos_entregados,0) rollosentregados,
@@ -417,10 +448,37 @@ class Api implements IConnections {
 			$stmt->execute (array($odt));
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getEventoDetalle();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getEventoDetalle();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 	
+	function getTpvComercio($comercio) {
+		$sql = "SELECT no_serie FROM inventario where id_ubicacion IN (
+			Select comercio from eventos where odt = ? )
+			AND ubicacion= 2
+			AND tipo=1 ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute (array($comercio));
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: api_db.php;	Method Name: getTpvComercio();	Functionality: Search Configuracion;	Log:". $e->getMessage () );
+		}
+	}
+
+	function getImagefromOdt($odt) {
+		$sql = "SELECT dir_img FROM img  WHERE odt = ?  ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute (array($odt));
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: api_db.php;	Method Name: getImagefromOdt();	Functionality: Search Img;	Log:". $e->getMessage () );
+		}
+	}
+
 	function getConfiguration($config) {
 
 		$sql = "SELECT * FROM configuracion  WHERE nombre = '$config'  ";
@@ -430,7 +488,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $stmt->fetch ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getConfiguration();	Functionality: Search Configuracion;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getConfiguration();	Functionality: Search Configuracion;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -470,7 +528,7 @@ class Api implements IConnections {
 			$stmt->execute ();
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getTraspasosTecnico();	Functionality: Search Configuracion;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getTraspasosTecnico();	Functionality: Search Configuracion;	Log:".  $e->getMessage () );
 		}
 	}
 	
@@ -482,7 +540,32 @@ class Api implements IConnections {
 			$stmt->execute (array($servicioid));
 			return $stmt->fetch ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getCamposObligatorios();	Functionality: Search Configuracion;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getCamposObligatorios();	Functionality: Search Configuracion;	Log:".  $e->getMessage () );
+		}
+	}
+	
+	function getTecnicoInfo($tecnico) {
+		
+		$sql = "SELECT 
+				cuentas.id id_tecnico,
+				cuentas.plaza,
+				cuentas.territorial,cuentas.almacen,
+				detalle_usuarios.nombre name,
+				tipo_user,
+				email,
+				supervisor,
+				cve 
+				from cuentas,detalle_usuarios 
+				WHERE cuentas.id = detalle_usuarios.cuenta_id
+				AND cuentas.id = '$tecnico' ";
+
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return $stmt->fetch ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: api_db.php;	Method Name: getLogin();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
 

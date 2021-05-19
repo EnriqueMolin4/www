@@ -589,30 +589,3 @@ if($module == 'AsignarTecnicos') {
 
 	echo $count;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

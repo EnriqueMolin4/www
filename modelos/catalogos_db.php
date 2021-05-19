@@ -17,7 +17,7 @@ class Catalogos implements IConnections {
 			return array ();
 		}
 	}
-	private function execute_sel() {
+	private static function execute_sel() {
 		try {
 			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
 			$stmt->execute ( array () );
@@ -26,7 +26,7 @@ class Catalogos implements IConnections {
 			self::$logger->error ("File: catalogos_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
-	private function execute_ins($prepareStatement, $arrayString) {
+	private static function execute_ins($prepareStatement, $arrayString) {
 		try {
 			$stmt = self::$connection->prepare ( $prepareStatement );
 			$stmt->execute ( $arrayString );

@@ -20,7 +20,7 @@ class Modelos implements IConnections {
 			return array ();
 		}
 	}
-	private function execute_sel() {
+	private static function execute_sel() {
 		try {
 			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
 			$stmt->execute ( array () );
@@ -29,7 +29,7 @@ class Modelos implements IConnections {
 			self::$logger->error ("File: catalogoxmodelos_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
-	private function execute_ins($prepareStatement, $arrayString) {
+	private static function execute_ins($prepareStatement, $arrayString) {
 		try {
 			$stmt = self::$connection->prepare ( $prepareStatement );
 			$stmt->execute ( $arrayString );
@@ -131,14 +131,15 @@ class Modelos implements IConnections {
 
 		if( !empty($params['search']['value'])  &&  $total) {   
 			$where .=" WHERE ";
-			$where .=" modelo LIKE '".$params['search']['value']."%' ";
+			$where .="( modelo LIKE '".$params['search']['value']."%' ";
 			$where .="OR proveedor LIKE '".$params['search']['value']."%' ";
 			$where .="OR conectividad LIKE '".$params['search']['value']."%' ";
-			$where .="OR clave_elavon LIKE '".$params['search']['value']."%' ";           
+			$where .="OR cve_banco LIKE '".$params['search']['value']."%' ";
+			$where .="OR clave_elavon LIKE '".$params['search']['value']."%' )";           
 		}
 
 
-		$sql = "select modelos.id Id,modelos.modelo,modelos.proveedor,modelos.conectividad, modelos.no_largo, modelos.clave_elavon, modelos.estatus
+		$sql = "select modelos.id Id,modelos.modelo,modelos.proveedor,modelos.conectividad, modelos.no_largo, modelos.clave_elavon,modelos.cve_banco, modelos.estatus
 				from modelos
 				$where 
 				$order
@@ -255,7 +256,7 @@ if($module == 'getTable') {
 
 if($module == 'getevento') {
     
-    $rows = $Modelo->getUsuario($params['userid']);
+    $rows = $Modelo->getevento($params['id']);
      
 	echo json_encode($rows);
 

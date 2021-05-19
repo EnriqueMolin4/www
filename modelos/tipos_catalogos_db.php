@@ -112,8 +112,6 @@ class Usuarios implements IConnections {
 			self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
-	
-	
 	function getTableCR($params,$total) {
 
 		$start = $params['start'];
@@ -271,9 +269,6 @@ class Usuarios implements IConnections {
 	}
 
 }
-
-
-
 //
 include 'DBConnection.php';
 $Usuario = new Usuarios ( $db,$log );
@@ -290,7 +285,6 @@ if($module == 'getTable') {
 
 	echo json_encode($data); //$val;
 }
-
 
 if($module == 'getTableCR') {
 

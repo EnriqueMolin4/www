@@ -24,7 +24,7 @@ class Procesos implements IConnections {
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: execute_sel();	Functionality: Insert;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: execute_sel();	Functionality: Insert;	Log:" . $e->getMessage () );
 		}
 	}
 	private static function execute_ins($prepareStatement, $arrayString) {
@@ -36,7 +36,7 @@ class Procesos implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: execute_ins();	Functionality: Insert/Update Eventos;	Log:" . $prepareStatement . " ". $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: execute_ins();	Functionality: Insert/Update Eventos;	Log:" . $prepareStatement . " ". $e->getMessage () );
 		}
 	}
 
@@ -48,7 +48,7 @@ class Procesos implements IConnections {
 			$stmt->execute ( $arrayString );
 			return $stmt->rowCount();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: execute_upd();	Functionality: Insert/Update Eventos;	Log:" . $prepareStatement . " ". $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: execute_upd();	Functionality: Insert/Update Eventos;	Log:" . $prepareStatement . " ". $e->getMessage () );
 		}
 	}
 
@@ -82,9 +82,12 @@ class Procesos implements IConnections {
 		$length = $params['length'];
 
 		$tipo  = $params['tipo'];
-
 		if($tipo == 'I') {
-			$tipo = " I','IA ";
+			$tipo = " 'I','IA' ";
+		}
+		if($tipo == 'E') {
+			
+			$tipo = " 'E' ";
 		}
 
         $orderField =  $params['columns'][$params['order'][0]['column']]['data'];
@@ -121,21 +124,20 @@ class Procesos implements IConnections {
 				 CONCAT(du.nombre,' ',du.apellidos) nombre
 				 FROM carga_archivos ca, detalle_usuarios  du
 				 WHERE ca.creado_por = du.cuenta_id 
-				 AND ca.tipo in ('$tipo') ";
-
-		self::$logger->error($sql);
+				 AND ca.tipo in ($tipo) ";
+	
 		try {
 			$stmt = self::$connection->prepare ($sql);
-			$stmt->execute();
+			$stmt->execute(array($tipo));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: parametros_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
 	function getOlderCargas($tipo) {
 		
-		$sql = "SELECT * from carga_archivos WHERE activo= 1 AND tipo =  ? AND  fecha_creacion = (SELECT MAX(fecha_creacion) FROM carga_archivos ) ";
+		$sql = "SELECT * from carga_archivos WHERE activo= 1 AND tipo =  ? AND  id = (SELECT MAX(id) FROM carga_archivos ) ";
 		
 	
         try {
@@ -185,7 +187,7 @@ class Procesos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getClientesByAfiliacion();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getClientesByAfiliacion();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -197,7 +199,7 @@ class Procesos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getServicioxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getServicioxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -209,7 +211,7 @@ class Procesos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getSubServicioxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getSubServicioxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -221,7 +223,7 @@ class Procesos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getEstatusServicioxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusServicioxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -233,7 +235,7 @@ class Procesos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getConectividadxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getConectividadxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -247,10 +249,22 @@ class Procesos implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: getModeloxNombre();	Functionality: Search Modelos;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: getModeloxNombre();	Functionality: Search Modelos;	Log:". $sql . $e->getMessage () );
 		}
 	}
+	function getCarriersxNombre($modelo) 
+	{
 
+		$sql = "SELECT id FROM carriers WHERE nombre LIKE '%$modelo%' LIMIT 1 ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getCarriersxNombre();	Functionality: Search Modelos;	Log:". $sql . $e->getMessage () );
+		}
+	}
 	function getEstatusxNombre($estatus) {
 		$sql = "SELECT id FROM tipo_estatus_modelos WHERE nombre= '$estatus' LIMIT 1 ";
 		
@@ -260,7 +274,7 @@ class Procesos implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: getEstatusxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: getEstatusxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -273,7 +287,7 @@ class Procesos implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt ->fetch ( PDO::FETCH_COLUMN, 0);
 		} catch ( PDOException $e){
-			self::$logger->error ("File: procesos_db.php;     Method Name: getEstatusInvxNombre();    Functionality: Search Carriers; Log:". $sql . $e->getMessage ());
+			self::$logger->error ("File: almacen_db.php;     Method Name: getEstatusInvxNombre();    Functionality: Search Carriers; Log:". $sql . $e->getMessage ());
 		}
 	}
 
@@ -286,7 +300,7 @@ class Procesos implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: getAlmacenxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: getAlmacenxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -298,7 +312,7 @@ class Procesos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: existeEvento();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: existeEvento();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -311,7 +325,7 @@ class Procesos implements IConnections {
             $stmt->execute (array($id));
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getODTNoProcesados();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getODTNoProcesados();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -323,7 +337,7 @@ class Procesos implements IConnections {
             $stmt->execute (array($serie));
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getInventarioData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -335,7 +349,7 @@ class Procesos implements IConnections {
             $stmt->execute (array($serie));
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getInventarioElavonData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioElavonData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -357,6 +371,19 @@ class Procesos implements IConnections {
 		return  $resultado;
 	}
 
+	function getEventosCerrados() {
+
+		$sql = "SELECT *  FROM eventos WHERE estatus_servicio in (13,14,15,16) AND sync=0 ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($serie));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioElavonData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+        }
+
+	}
 }
 
 include 'DBConnection.php';

@@ -146,7 +146,7 @@ class Almacen implements IConnections {
 				 $where
 				-- group by inv.id
                 $filter ";
-                
+        self::$logger->error($sql);
 		try {
 			$stmt = self::$connection->prepare ($sql);
 			$stmt->execute();
@@ -396,7 +396,7 @@ class Almacen implements IConnections {
 	function getHistoria($params,$total) {
 		$start = $params['start'];
 		$length = $params['length'];
-
+		$where = "";
 		$filter = "";
 		$param = "";
 		$id= $params['noSerie'];

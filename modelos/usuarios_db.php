@@ -20,7 +20,7 @@ class Usuarios implements IConnections {
 			return array ();
 		}
 	}
-	private function execute_sel() {
+	private static function execute_sel() {
 		try {
 			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
 			$stmt->execute ( array () );
@@ -29,7 +29,7 @@ class Usuarios implements IConnections {
 			self::$logger->error ("File: usuarios_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
-	private function execute_ins($prepareStatement, $arrayString) {
+	private static  function execute_ins($prepareStatement, $arrayString) {
 		try {
 			$stmt = self::$connection->prepare ( $prepareStatement );
 			$stmt->execute ( $arrayString );
@@ -79,9 +79,13 @@ class Usuarios implements IConnections {
         }
 	}
 	
-	function getBancos() {
+	function getBancos($tecnico) {
 		
-		$sql = "select id,banco from bancos where status=1 ";
+		$sql = "SELECT bancos.id,banco,IFNULL(tecnico_bancos.tecnico_id,0) tecnico_id 
+				FROM bancos 
+				LEFT JOIN tecnico_bancos ON tecnico_bancos.banco_id = bancos.id AND tecnico_bancos.tecnico_id = $tecnico
+				WHERE status=1 
+				 ";
 		
 	
         try {
@@ -132,14 +136,36 @@ class Usuarios implements IConnections {
 		if( !empty($params['search']['value'])  &&  $total) {   
 			$where .=" AND ";
 			$where .=" ( user LIKE '".$params['search']['value']."%' ";    
-			$where .=" OR tipo_user LIKE '".$params['search']['value']."%' ";
-			$where .=" OR detalle_usuarios.nombre LIKE '".$params['search']['value']."%'  ";
-			$where .=" OR detalle_usuarios.email LIKE '%".$params['search']['value']."%'  )";
+			$where .=" OR c.tipo_user LIKE '".$params['search']['value']."%' ";
+			$where .=" OR du.nombre LIKE '".$params['search']['value']."%'  ";
+			$where .=" OR du.email LIKE '%".$params['search']['value']."%'  )";
 
 		}
 
+		$sql = " SELECT 
+				c.id Id,
+				CONCAT(du.nombre,' ',du.apellidos) nombre,
+				c.correo,
+				tu.nombre TipoUser,
+				GROUP_CONCAT(p.nombre) plazas,
+				CASE WHEN c.tipo_user = 3 THEN GROUP_CONCAT(t.nombre) ELSE t2.nombre END territorios,
+				c.fecha_alta,
+				c.estatus
+				FROM cuentas c
+				LEFT JOIN territorios t2 ON t2.id = c.territorial
+				LEFT JOIN tipo_user tu ON tu.id = c.tipo_user ,detalle_usuarios du
+				LEFT JOIN plaza_tecnico pt ON pt.tecnico_id = du.cuenta_id
+				LEFT JOIN plazas p ON p.id = pt.plaza_id
+				LEFT JOIN territorio_plaza tp ON tp.plaza_id = pt.plaza_id
+				LEFT JOIN territorios t ON t.id = tp.territorio_id
+				WHERE c.id = du.cuenta_id
+				$where 		
+				group by c.id,du.nombre,du.apellidos,c.correo
+				$order
+				$filter 
+		";
 
-		$sql = "select cuentas.id Id,cuentas.tipo_user,cuentas.cve,territorios.nombre territorial,
+		/* $sql = "select cuentas.id Id,cuentas.tipo_user,cuentas.cve,territorios.nombre territorial,
 				CASE WHEN  detalle_usuarios.apellidos is null THEN detalle_usuarios.nombre ELSE CONCAT(detalle_usuarios.nombre,' ',detalle_usuarios.apellidos) END nombre,
 				detalle_usuarios.email correo,cuentas.fecha_alta, cuentas.estatus,GetNameById(cuentas.tipo_user,'TipoUser') TipoUser from cuentas 
 				LEFT JOIN territorios ON  cuentas.territorial = territorios.id
@@ -147,7 +173,7 @@ class Usuarios implements IConnections {
 				WHERE cuentas.Id = detalle_usuarios.cuenta_id
 				$where 
 				$order
-				$filter ";
+				$filter "; */
 
 	
 		try {
@@ -220,11 +246,18 @@ class Usuarios implements IConnections {
 	}
 
 	function getAlmacen($plaza) {
-		$sql = " Select tipo_ubicacion.id,tipo_ubicacion.nombre from tipo_ubicacion,plazas_almacen
-				WHERE tipo_ubicacion.id = plazas_almacen.almacen_id
-				AND almacen = 1
-				AND plazas_almacen.plaza_id = ? ";
-		
+
+		 
+		$plazas = implode(",",json_decode(stripslashes($plaza)));
+		 
+		$sql = " Select tipo_ubicacion.id,tipo_ubicacion.nombre 
+				 FROM tipo_ubicacion,plazas_almacen
+				 WHERE tipo_ubicacion.id = plazas_almacen.almacen_id
+				 AND almacen = 1
+				 AND plazas_almacen.plaza_id in ($plazas)
+				 GROUP BY  tipo_ubicacion.id,tipo_ubicacion.nombre ";
+				 
+
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute (array($plaza));
@@ -252,11 +285,27 @@ class Usuarios implements IConnections {
 	}
 
 	function getUser($id) {
-		$sql = "select cuentas.Id,cuentas.tipo_user,cuentas.cve,cuentas.supervisor supervisor,
-				detalle_usuarios.nombre,detalle_usuarios.apellidos,cuentas.user,cuentas.territorial,
-				detalle_usuarios.email correo,cuentas.fecha_alta,cuentas.plaza from cuentas,detalle_usuarios 
+		$sql = "select 
+				cuentas.Id,
+				cuentas.tipo_user,
+				cuentas.cve,
+				cuentas.supervisor supervisor,
+				detalle_usuarios.nombre,
+				detalle_usuarios.apellidos,
+				cuentas.user,cuentas.territorial,
+				detalle_usuarios.email correo,
+				cuentas.fecha_alta,
+				cuentas.almacen,
+				GROUP_CONCAT(pt.plaza_id) plazas,
+				GROUP_CONCAT(tp.territorio_id) territorios
+				from cuentas 
+				LEFT JOIN plaza_tecnico pt ON pt.tecnico_id = cuentas.id
+				LEFT JOIN territorio_plaza tp ON tp.plaza_id = pt.plaza_id
+				,detalle_usuarios
 				WHERE cuentas.Id = detalle_usuarios.cuenta_id
-				AND cuentas.id = ? ";
+				AND cuentas.id = ?
+				Group by cuentas.id,detalle_usuarios.nombre,detalle_usuarios.apellidos,detalle_usuarios.email   ";
+				
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -278,6 +327,66 @@ class Usuarios implements IConnections {
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: usuarios_db.php;	Method Name: getTerritorio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
+
+	function getPlazasTerritorio($territorio) {
+
+		 
+
+		$sql = "SELECT plazas.id plaza_id,plazas.nombre,IFNULL(plaza_tecnico.tecnico_id,0) tecnico_id 
+				FROM plazas  
+				LEFT JOIN plaza_tecnico ON plaza_tecnico.plaza_id = plazas.id AND plaza_tecnico.tecnico_id = $tecnico
+				";
+
+				"SELECT plazas.id plaza_id,plazas.nombre,IFNULL(plaza_tecnico.tecnico_id,0) tecnico_id 
+				FROM plazas 
+				LEFT JOIN plaza_tecnico ON plaza_tecnico.plaza_id = plazas.id AND plaza_tecnico.tecnico_id = $tecnico,
+				territorio_plaza
+				WHERE plazas.id = territorio_plaza.plaza_id
+				AND territorio_plaza.territorio_id in (0) ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array());
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: usuarios_db.php;	Method Name: getPlazasTerritorio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
+
+	function getTerritorioPlazas($ter,$usr) {
+		$where = '';
+
+		$territorio = json_decode($ter);
+
+		if( sizeof($territorio) > 0 ) {
+			$territorios = implode(',',$territorio);
+
+			$where .= " AND territorio_plaza.territorio_id IN ( $territorios ) ";
+		} else {
+			$where .= " AND territorio_plaza.territorio_id IN (-1) ";
+		}
+		
+
+		$sql = "SELECT 
+				territorio_plaza.plaza_id,
+				plazas.nombre ,
+				IFNULL(plaza_tecnico.tecnico_id,0) tecnico_id
+				FROM territorio_plaza 
+				LEFT JOIN  plaza_tecnico ON territorio_plaza.plaza_id = plaza_tecnico.plaza_id  AND plaza_tecnico.tecnico_id = $usr
+				,plazas
+				WHERE plazas.id = territorio_plaza.plaza_id
+				$where
+				GROUP BY plazas.id,plaza_tecnico.tecnico_id
+				";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute (array());
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: usuarios_db.php;	Method Name: getTerritorioPlazas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -313,13 +422,6 @@ if($module == 'getTable') {
 }
 
 
-if($module == 'getevento') {
-    
-    $rows = $Usuario->getUsuario($params['userid']);
-     
-	echo json_encode($rows);
-
-}
 
 if($module == 'existeuser') {
 	$existe = $Usuario->searchUser($params['correo']);
@@ -330,23 +432,32 @@ if($module == 'existeuser') {
 if($module == 'nuevousuario') {
 	$fecha_alta = date("Y-m-d H:i:s");
 	$existe = $Usuario->searchUser($params['correo']);
+	$territorios = json_decode($params['territorial']);
+	$plazas = json_decode($params['plaza']);
+	$negocios = json_decode( $params['negocio']);
+	$almacen = $params['almacen'];
+	$user = $_SESSION['userid'];
+	$pass = sha1($params['contrasena']);
+
+	
 
 	if(count($existe) == 0 ) {
 		$prepareStatement = "INSERT INTO `cuentas`
-		( `pass`,`supervisor`,`cve`,`tipo_user`,`nombre`,`correo`,`plaza`,`territorial`,`fecha_alta`)
+		( `pass`,`supervisor`,`cve`,`tipo_user`,`nombre`,`correo`,`plaza`,`territorial`,`fecha_alta`,`almacen`)
 		VALUES
-		(?,?,?,?,?,?,?,?,?);
+		(?,?,?,?,?,?,?,?,?,?);
 						";
 		$arrayString = array (
-			sha1($params['contrasena']),
+			$pass,
 			0,
-			$params['negocio'],
+			$negocios[0],
 			$params['tipo'],
 			$params['nombre'],
 			$params['correo'],
-			$params['plaza'],
-			$params['territorial'],
-			$fecha_alta
+			0,
+			0,
+			$fecha_alta,
+			$almacen
 		);
 
 		$id = $Usuario->insert($prepareStatement,$arrayString);
@@ -363,11 +474,13 @@ if($module == 'nuevousuario') {
 				$params['nombre'],
 				$params['apellidos'],
 				$params['correo'],
-				$params['territorial'],
+				0,
 				$id
 			);
 
 			$Usuario->insert($prepareStatement,$arrayString);
+
+			
 			$email = new envioEmail();
 
 			$body = "Se a creado tu cuenta para el Sistema Sinttecom SAS <br /> Tus datos de acceso son  <br/> Usuario :".$params['correo']." <br/>"; 
@@ -379,18 +492,26 @@ if($module == 'nuevousuario') {
 		} 
 	} else {
 
-		$prepareStatement = "UPDATE  `cuentas` SET `cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=? WHERE `id`=? ; ";
+		$id = $params['userid'];
+
+		$oldPass = $Usuario->getPass($id);
+
+		$newPass = strlen($pass) > 0 ? $pass : $oldPass;
+
+		$prepareStatement = "UPDATE  `cuentas` SET `pass`=?,`cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
 		$arrayString = array (
-			$params['negocio'],
+			$newPass,
+			0,
 			$params['tipo'],
 			$params['nombre'],
 			$fecha_alta,
-			$params['territorial'],
-			$params['plaza'],
+			$territorios[0],
+			$plazas[0],
+			$almacen,
 			$params['userid']
 		);
 
-		$id = $Usuario->insert($prepareStatement,$arrayString);
+		$Usuario->insert($prepareStatement,$arrayString);
 
 		if(!empty($params['contrasena'])) {
 			$prepareStatement = "UPDATE  `cuentas` SET `pass`=? WHERE `id`=? ; ";
@@ -413,7 +534,72 @@ if($module == 'nuevousuario') {
 		);
 
 		$Usuario->insert($prepareStatement,$arrayString);		
-		$envio = "El Usuario Ya Existe";
+		$envio = "El Usuario se actualizo correctamente ";
+	}
+
+	if($params['tipo'] == '3') {
+
+				
+	
+			//ACtualizar RElacion Plaza Tecnico
+			$prepareStatement = "DELETE FROM plaza_tecnico WHERE tecnico_id = ? ";
+
+			$arrayString = array (
+				$id 
+			);
+
+			$Usuario->insert($prepareStatement,$arrayString);
+
+			
+
+			foreach($plazas as $plaza ) {
+
+				$prepareStatement = "INSERT INTO `plaza_tecnico`
+					( `plaza_id`,`tecnico_id`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
+					VALUES
+					(?,?,?,?,?,?);
+					";
+					$arrayString = array (
+						$plaza,
+						$id,
+						$user,
+						$fecha_alta,
+						$user,
+						$fecha_alta
+					);
+
+					$Usuario->insert($prepareStatement,$arrayString);
+			}
+
+			//ACtualizar RElacion Banco Tecnico
+			$prepareStatement = "DELETE FROM tecnico_bancos WHERE tecnico_id = ? ";
+
+			$arrayString = array (
+				$id 
+			);
+
+			$Usuario->insert($prepareStatement,$arrayString);
+
+			
+
+			foreach($negocios as $negocio ) {
+
+				$prepareStatement = "INSERT INTO `tecnico_bancos`
+					( `banco_id`,`tecnico_id`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
+					VALUES
+					(?,?,?,?,?,?);
+					";
+					$arrayString = array (
+						$negocio,
+						$id,
+						$user,
+						$fecha_alta,
+						$user,
+						$fecha_alta
+					);
+
+				$Usuario->insert($prepareStatement,$arrayString);
+			}
 	}
 
 	echo $envio;
@@ -443,7 +629,7 @@ if($module == 'getTipoUser') {
 if($module == 'getTerritorial') {
 
 	$rows = $Usuario->getTerritorial();
-	$val = '<option value="0">Seleccionar</option>';
+	$val = '';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
 	}
@@ -451,13 +637,28 @@ if($module == 'getTerritorial') {
 
 }
 
+if($module == 'getPlazasTerritorio') {
+	$rows = $Usuario->getPlazasTerritorio($params['territorio']);
+	 
+
+	echo json_encode($rows);
+	
+}
+
+if($module == 'getTerritorioPlazas') {
+
+	$rows = $Usuario->getTerritorioPlazas($params['territorio'],$params['usr']);
+
+	echo json_encode($rows);
+}
+
 
 if($module == 'getAlmacen') {
 
 	$rows = $Usuario->getAlmacen($params['plaza']);
-	$val = '<option value="0">Seleccionar</option>';
+	$val = '<option value="0" selected>Seleccionar</option>';
 	foreach ( $rows as $row ) {
-		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+		$val .=  '<option value="' . $row ['id'] . '" >' . $row ['nombre'] . '</option>';
 	}
 	echo $val;
 
@@ -466,10 +667,13 @@ if($module == 'getAlmacen') {
 
 if($module == 'getBancos') {
 
-	$rows = $Usuario->getBancos();
-	$val = '<option value="0">Seleccionar</option>';
+	$rows = $Usuario->getBancos($params['tecnico']);
+	$val = '';
+	 
+	 
 	foreach ( $rows as $row ) {
-		$val .=  '<option value="' . $row ['id'] . '">' . $row ['banco'] . '</option>';
+		$selected = $row['tecnico_id'] == '0' ? '' : 'selected';
+		$val .=  "<option value='". $row ['id']."' $selected>" . $row ['banco'] . "</option>";
 	}
 	echo $val;
 

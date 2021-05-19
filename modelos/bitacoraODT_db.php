@@ -169,6 +169,11 @@ class Usuarios implements IConnections {
 		$query = "";
 		$where = '';
 
+		if($id == '') {
+			$id = -1;
+		}
+
+
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
 		}

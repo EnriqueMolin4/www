@@ -259,7 +259,7 @@ if($module == 'grabarComercio') {
 					$params['razon_social'],
 					$params['cve_banco'],
 					$params['cp'],
-					$params['estatus'],
+					1,
 					$createdDate
 			);
 
@@ -283,7 +283,7 @@ if($module == 'grabarComercio') {
 			$params['telefono'],
 			$params['direccion'],
 			$params['rfc'],
-			$params['email'],
+			$params['email_comercio'],
 			$params['email_ejecutivo'],
 			$params['territorial_banco'],
 			$params['territorial_sinttecom'],
@@ -292,7 +292,7 @@ if($module == 'grabarComercio') {
 			$params['razon_social'],
 			$params['cve_banco'],
 			$params['cp'],
-			$params['estatus'],
+			1,
 			$params['comercioid']
 		);
 

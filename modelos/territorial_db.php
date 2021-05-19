@@ -109,6 +109,53 @@ class Territorial implements IConnections {
 		}
 	}
 
+	function getTableCP($params,$total) {
+
+		$start = $params['start'];
+		$length = $params['length'];
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
+		$territorio = $params['territorio'];
+
+		$filter = "";
+		$param = "";
+		$where = "";
+
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( !empty($params['search']['value'])  &&  $total) {   
+			$where .=" AND ";
+			$where .=" ( cp LIKE '".$params['search']['value']."%' ) ";  
+			//$where .="  OR plazas.nombre LIKE '".$params['search']['value']."%' )";   
+
+		}
+
+
+        $sql = "SELECT cp,id
+				FROM cp_territorios
+				WHERE territorio_id = $territorio
+				$where
+				$order
+				$filter ";
+
+		//self::$logger->error($sql);
+		
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: plazas_db.php;	Method Name: getTableCP();	Functionality: Get Table;	Log:".$sql . $e->getMessage () );
+		}
+	}
+
 
 	function  getTablePlaza($params,$total) {
 
@@ -329,6 +376,15 @@ if($module == 'getTable') {
 
     $rows = $Territorial->getTable($params,true);
     $rowsTotal = $Territorial->getTable($params,false);
+    $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+
+	echo json_encode($data); //$val;
+}
+
+if($module == 'getTableCP') {
+
+    $rows = $Territorial->getTableCP($params,true);
+    $rowsTotal = $Territorial->getTableCP($params,false);
     $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
 
 	echo json_encode($data); //$val;
