@@ -126,6 +126,15 @@ class Almacen implements IConnections {
 
 		if( $ubicacion != '0' ) {
 			$where .= " AND tu.id = $ubicacion ";
+		} else {
+			
+			if( $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'almacen'  )
+			{
+				
+			} else {
+				$where .= " AND tu2.id = -1 ";
+			}
+			
 		}
 
 		if( $estatusubicacion != '0' ) {
@@ -133,7 +142,7 @@ class Almacen implements IConnections {
 			if($_SESSION['tipo_user'] != 'admin') {
 				if($_SESSION['tipo_user'] != 'AL') {
 					
-					$where .= "  AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) ";	
+					$where .= "  AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen AND estatus=1) ";	
 				}
 			}
 			
@@ -673,6 +682,81 @@ class Almacen implements IConnections {
 		}
 	}
 
+	function getTecnicos() {
+		$supervisor = "";
+		
+		if($_SESSION['tipo_user'] == 'admin') {
+			
+		} else {
+			$supervisor = " AND st.supervisor_id =".$_SESSION['userid'];
+		}
+		 
+
+
+		$sql = "Select du.nombre,du.apellidos,pt.tecnico_id,st.territorio_id,st.supervisor_id
+				FROM cuentas c,detalle_usuarios du 
+				RIGHT JOIN plaza_tecnico pt ON du.cuenta_id = pt.tecnico_id
+				RIGHT JOIN territorio_plaza tp ON pt.plaza_id = tp.plaza_id
+				RIGHT JOIN supervisor_territorio st ON st.territorio_id = tp.territorio_id
+				WHERE du.cuenta_id is not null 
+				AND c.id = du.cuenta_id
+				AND c.estatus=1
+				$supervisor 
+				ORDER BY du.nombre,du.apellidos
+				";
+		
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute (array($supervisor));
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		}
+	}
+	
+	function getTecnicosxAlmacen() {
+		
+		$userid = $_SESSION['userid'];
+		$where = '';
+		
+		
+		if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'AN' || $_SESSION['tipo_user'] == 'AL' || $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'supervisor') {
+			
+			$where = " ";
+		} else {
+			
+			$where = " AND st.supervisor_id = $userid ";
+		}
+		
+		
+		$sql = " Select DISTINCT
+				du.nombre,
+				du.apellidos,
+				pt.tecnico_id,
+				pt.plaza_id,
+				ta.territorio_id
+				FROM cuentas c,detalle_usuarios du,plaza_tecnico pt,territorio_plaza ta, supervisor_territorio st
+				WHERE c.id = du.cuenta_id
+				AND c.estatus=1
+				AND pt.plaza_id = ta.plaza_id
+				AND du.cuenta_id= pt.tecnico_id
+                AND ta.territorio_id = st.territorio_id
+				$where
+				ORDER BY du.nombre,du.apellidos
+				";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute (array($userid));
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getTecnicosxAlmacen();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		}
+				
+				
+	}
+	
 	function getDetallePeticion($params,$total) {
 		$start = $params['start'];
 		$length = $params['length'];
@@ -839,34 +923,6 @@ class Almacen implements IConnections {
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: almacen_db.php;	Method Name: getdetallePeticiones();	Functionality: Get Historia;	Log:" . $e->getMessage () );
-		}
-	}
-
-	function getTecnicos($territorio) {
-
-		$almacen = $_SESSION['almacen'];
-		$tipo = $_SESSION['tipo_user'];
-
-		$where = '';
-
-		if($tipo == 'admin' || $tipo == 'CA') {
-
-		}  else {
-			$where .= " AND cuentas.almacen in ($almacen) ";
-		}
-
-		$sql = "SELECT *, cuentas.id tecnicoId, cuentas.territorial territorio , cuentas.almacen almacen 
-				from cuentas,detalle_usuarios 
-				WHERE cuentas.id = detalle_usuarios.cuenta_id AND tipo_user = 3 AND cuentas.estatus = 1  $where
-				order By detalle_usuarios.nombre";
-		
-		
-		try {
-			$stmt = self::$connection->prepare ($sql );
-			$stmt->execute ();
-			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		} catch ( PDOException $e ) {
-			self::$logger->error ("File: almacen_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1503,6 +1559,25 @@ if ($module == 'getNoSeriePeticion') {
 	echo $rows['no_series'];
 }
 
+if($module == 'grabardetallePeticion') {
+	$fecha_alta = date("Y-m-d H:i:s");
+	$user = $_SESSION['userid'];
+	$id = $params['id'];
+	$noseries = $params['noseries'];
+
+	$prepareStatement = "UPDATE `detalle_peticiones` SET `no_series` = ?,`modificado_por`= ?,`fecha_modificacion`= ? WHERE `id` = ? ;";
+
+	$arrayString = array (
+		$noseries,
+		$user,
+		$fecha_alta,
+		$id
+	);
+
+	$Almacen->insert($prepareStatement,$arrayString);
+
+}
+
 if($module == 'getVersion') {
 
 	$val = '<option value="0"> Seleccionar </option>';
@@ -1538,6 +1613,16 @@ if($module == 'getTecnicos') {
 	$val = '<option value="0" data-id="0" selected>Seleccionar</option>';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['tecnicoId'] . '"  data-id="'. $row['territorio'] .'" >' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
+	}
+	echo $val;
+}
+
+if($module == 'getTecnicosxAlmacen') {
+	
+	$rows = $Almacen->getTecnicosxAlmacen();
+	$val = '<option value="0" data-id="0" selected>Seleccionar</option>';
+	foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['tecnico_id'] . '"  data-id="'. $row['territorio_id'] .'" >' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
 	}
 	echo $val;
 }
@@ -1624,6 +1709,28 @@ if($module == 'getPeticiones') {
     $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
 
 	echo json_encode($data); //$val
+}
+
+if ($module == 'borrarPeticion') 
+{
+	$prepareStatement = "DELETE FROM peticiones WHERE id = ? ";
+
+	$arrayString = array($params['id']);
+
+	$del = $Almacen->insert($prepareStatement, $arrayString);
+
+	if ($del) 
+	{
+		echo "0";
+
+	}
+	else
+	{
+		$prepareStatement2 = "DELETE FROM detalle_peticiones WHERE peticiones_id=?";
+		$arrayString2 = array( $params['id'] );
+
+		$del2 = $Almacen->insert($prepareStatement2, $arrayString2);
+	}
 }
 
 if($module == 'getHistoriaInsumos') {
@@ -2644,6 +2751,8 @@ if($module == 'grabarTraspaso') {
 	
 }
 
+
+
 /*Grabar peticion*/
 if( $module == 'guardarPeticion' )
 {
@@ -2681,18 +2790,6 @@ if( $module == 'guardarPeticion' )
 		foreach ($info as $data) 
 		{
 			
-
-			/* 
-				foreach ($data['conectividad'] as $conn) 
-				{
-						foreach ($data['producto'] as $prod) 
-					{
-				
-					}
-
-
-				}
-			*/
 		$arrayStringDet = array(
 				$id,
 				$data['tecnico'],
