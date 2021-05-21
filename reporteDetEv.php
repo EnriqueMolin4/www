@@ -20,7 +20,7 @@
            
             
             <div id="container" class="panel-body">
-                <form method = "post" action="modelos/reportes_db.php">
+                <form method="post" action="modelos/reportes_db.php" name="formDetalle"> <!-- onsubmit="return valiDate()" -->
                    
                    <div class="row">
                         <div class="col-sm-5">
@@ -31,12 +31,12 @@
                      <div class="row">
                         <div class="col-sm-3">
                             <label for="fecha_alta" class="col-form-label-sm">FECHA ALTA SISTEMA</label>
-                            <input type="text" class="form-control form-control-sm" id="fecha_alta" name="fecha_alta" placeholder="Seleccionar Fecha" value="" autocomplete="off">
+                            <input type="text" class="form-control form-control-sm" id="fecha_alta" name="fecha_alta" placeholder="Seleccionar Fecha" value="">
                         </div>
 
                         <div class="col-sm-3">
                             <label for="fecha_hasta" class="col-form-label-sm">HASTA</label>
-                            <input type="text" class="form-control form-control-sm" id="fecha_hasta" name="fecha_hasta" placeholder="Seleccionar Fecha" value="" autocomplete="off">
+                            <input type="text" class="form-control form-control-sm" id="fecha_hasta" name="fecha_hasta" placeholder="Seleccionar Fecha" value="">
                         </div>
 
                         <div class="col-sm-4">
@@ -75,13 +75,13 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <label for="fecha_cierre">FECHA CIERRE</label>
-                            <input type="text" class="form-control form-control-sm" id="fecha_cierre" placeholder="Seleccionar Fecha" name="fecha_cierre" value="" autocomplete="off">
+                            <input type="text" class="form-control form-control-sm" id="fecha_cierre" placeholder="Seleccionar Fecha" name="fecha_cierre" value="">
                         </div>
                     
                    
                         <div class="col-sm-3">
                             <label for="hasta_fc">HASTA</label>
-                            <input type="text" class="form-control form-control-sm" id="hasta_fc" placeholder="Seleccionar Fecha" name="hasta_fc" value="" autocomplete="off">
+                            <input type="text" class="form-control form-control-sm" id="hasta_fc" placeholder="Seleccionar Fecha" name="hasta_fc" value="" >
                         </div>
                    </div>
 
