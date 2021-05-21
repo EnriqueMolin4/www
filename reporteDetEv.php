@@ -29,8 +29,20 @@
                         </div>
                     </div>
                      <div class="row">
+
+                        <div class="col-sm-3 mt-4 border">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input"  value="Alta" checked>
+                                <label class="custom-control-label" for="customRadioInline1" >FECHA ALTA SISTEMA</label>
+                            </div><br>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadioInline2" name="customRadioInline1"  class="custom-control-input"  value="Cierre" >
+                                <label class="custom-control-label" for="customRadioInline2" >FECHA CIERRE</label>
+                            </div>
+                        </div>
+
                         <div class="col-sm-3">
-                            <label for="fecha_alta" class="col-form-label-sm">FECHA ALTA SISTEMA</label>
+                            <label for="fecha_alta" class="col-form-label-sm">INICIO</label>
                             <input type="text" class="form-control form-control-sm" id="fecha_alta" name="fecha_alta" placeholder="Seleccionar Fecha" value="">
                         </div>
 
