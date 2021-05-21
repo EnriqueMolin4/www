@@ -1,4 +1,4 @@
-    var infoAjax = 0;
+var infoAjax = 0;
 var tipofallas;
 
 $(document).ready(function() {
@@ -9,6 +9,7 @@ $(document).ready(function() {
     getEstados();
     getEstatusServicio();
     getTipoSubServicio();
+    //valiDate();
 	
 	//Create Ticket
 	var d = new Date();
@@ -88,10 +89,14 @@ $(document).ready(function() {
         }*/
     })
   
+
+
+
 } );
 
+
     
-      function initMap() {
+function initMap() {
          
       }
 
