@@ -26,7 +26,7 @@ class Dashboard implements IConnections {
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: sfa_ordersdmin_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: dashboard_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
 	private static function execute_ins($prepareStatement, $arrayString) {
@@ -36,7 +36,7 @@ class Dashboard implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: sfa_ordersdmin_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: dashboard_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 	}
 	function insert($prepareStatement, $arrayString) {
@@ -60,7 +60,7 @@ class Dashboard implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getTotalEventosbyStatus();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: dashboard_db.php;	Method Name: getTotalEventosbyStatus();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -85,7 +85,7 @@ class Dashboard implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getTotalEventosbyMonth();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: dashboard_db.php;	Method Name: getTotalEventosbyMonth();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 	
@@ -98,7 +98,7 @@ class Dashboard implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: dashboard_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -115,7 +115,7 @@ class Dashboard implements IConnections {
             $stmt->execute (array($cp));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getMunicipio();	Functionality: Get Municipio;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: dashboard_db.php;	Method Name: getMunicipio();	Functionality: Get Municipio;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -142,7 +142,7 @@ class Dashboard implements IConnections {
             $stmt->execute (array());
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getServicioMes();	Functionality: Get Municipio;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: dashboard_db.php;	Method Name: getServicioMes();	Functionality: Get Municipio;	Log:" . $e->getMessage () );
         }
     }
 
@@ -163,7 +163,7 @@ class Dashboard implements IConnections {
             $stmt->execute (array());
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getTotalServiciosMes();	Functionality: Get Municipio;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: dashboard_db.php;	Method Name: getTotalServiciosMes();	Functionality: Get Municipio;	Log:" . $e->getMessage () );
         }
     }
 

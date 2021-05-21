@@ -102,23 +102,13 @@ class Eventos implements IConnections {
 		$userId = $_SESSION['userid'];
 		$territorial = $_SESSION['territorial'];
 		$evidencias = $params['evidencias'];
-
+		
 		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
 		$orderDir = $params['order'][0]['dir'];
 		$order = '';
 		$filter = "";
 		$param = "";
 		$where = "";
-
-
-		if ( $params['diasVen'] > 0) 
-		{
-			$diasVencidos = $params['diasVen'];
-			$n_fecha = date("Y-m-d", strtotime("-$diasVencidos day", strtotime(date("Y-m-d")) ));
-			$n_fecha = date("Y-m-d", strtotime("-$diasVencidos day", strtotime(date("Y-m-d")) ));
-
-			$where .= " AND date(e.fecha_vencimiento) = '$n_fecha' ";
-		}
 
 		if(isset($orderField) ) {
 			$order .= " ORDER BY   $orderField   $orderDir";
@@ -197,7 +187,7 @@ class Eventos implements IConnections {
 
 		//self::$logger->error ($sql);
 		//self::$logger->error($sql);
-		self::$logger->error($sql);
+		
 		try {
 			$stmt = self::$connection->prepare ($sql);
 			$stmt->execute();
@@ -236,7 +226,11 @@ class Eventos implements IConnections {
 				IFNULL(tpvRe.modelo,0)  tvpReModelo,
                 IFNULL(tpvRe.conectividad,0) tvpReConectividad,
 				IFNULL(simIn.modelo,0) simInCarrier,
-                IFNULL(simRe.modelo,0) simReCarrier
+                IFNULL(simRe.modelo,0) simReCarrier,
+				cevento.serie faltaserie,
+				cevento.evidencia faltaevidencia,
+				cevento.informacion faltainformacion,
+				cevento.ubicacion faltaubicacion
 				from eventos 
 				LEFT JOIN detalle_usuarios u ON u.cuenta_id = tecnico
 				LEFT JOIN comercios c ON c.id = eventos.comercio
@@ -247,6 +241,7 @@ class Eventos implements IConnections {
 				LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie 
 				LEFT JOIN inventario simIn ON eventos.sim_instalado= simIn.no_serie
 				LEFT JOIN inventario simRe ON eventos.sim_retirado = simRe.no_serie
+				LEFT JOIN checklist_evento cevento ON cevento.odt = eventos.odt AND cevento.tecnico = eventos.tecnico
 				where eventos.id = $id ";
 		
         try {
@@ -404,16 +399,15 @@ class Eventos implements IConnections {
 		LEFT JOIN inventario ON inventario.no_serie = eventos.tpv_instalado
 		LEFT JOIN tipo_conectividad ON inventario.conectividad = tipo_conectividad.id
 		LEFT JOIN inventario tpvIn ON
-			eventos.tpv_instalado = tpvIn.no_serie
+		eventos.tpv_instalado = tpvIn.no_serie
 		LEFT JOIN inventario tpvRe ON
-			eventos.tpv_retirado = tpvRe.no_serie
+		eventos.tpv_retirado = tpvRe.no_serie
 		LEFT JOIN inventario simIn ON
-			eventos.sim_instalado = simIn.no_serie
+		eventos.sim_instalado = simIn.no_serie
 		LEFT JOIN inventario simRe ON
-			eventos.sim_retirado = simRe.no_serie
+		eventos.sim_retirado = simRe.no_serie
 		LEFT JOIN modelos ON inventario.modelo = modelos.id
 		LEFT JOIN detalle_usuarios ON detalle_usuarios.cuenta_id = eventos.modificado_por
-
 				WHERE eventos.odt = '$odt'
 				$where 
 				$filter";
@@ -447,8 +441,7 @@ class Eventos implements IConnections {
 	}
 
 	function getTipoSubServicios($servicio) {
-
-
+		
 		   $sql = "SELECT * from tipo_subservicios  WHERE status=1 AND servicio_id = ?";
 		   self::$logger->error ($sql);
 		   try {
@@ -458,21 +451,6 @@ class Eventos implements IConnections {
 		   } catch ( PDOException $e ) {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getTipoSubServicios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
 		   }
-	}
-
-	function getTipoSubServicio($serviciosList)
-	{
-	
-		$sql = "SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ($serviciosList);";
-		   self::$logger->error ($sql);
-		   try {
-			   $stmt = self::$connection->prepare ($sql );
-			   $stmt->execute (array($serviciosList));
-			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		   } catch ( PDOException $e ) {
-			   self::$logger->error ("File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
-		   }
-
 	}
  
 	function getCveBanco($cvebanco) {
@@ -688,7 +666,7 @@ class Eventos implements IConnections {
 	}
 
 	function getTecnicos() {
-		$sql = "SELECT *, cuentas.id tecnicoId from cuentas,detalle_usuarios WHERE cuentas.id = detalle_usuarios.cuenta_id AND tipo_user = 3 order By detalle_usuarios.nombre";
+		$sql = "SELECT *, cuentas.id tecnicoId from cuentas,detalle_usuarios WHERE cuentas.id = detalle_usuarios.cuenta_id AND tipo_user = 3 AND cuentas.estatus=1 order By detalle_usuarios.nombre";
 		
 		
 		try {
@@ -743,7 +721,7 @@ class Eventos implements IConnections {
 		$afiliacion = $params['afiliacion'];
 
 		$sql = "SELECT id,estatus,GetNameById(tecnico,'Tecnico') tecnico,tecnico tecnicoId,afiliacion,tipo_servicio,comercio ,count(*) existe,
-		GetNameById(tipo_servicio,'TipoServicio') servicioNombre,GetNameById(servicio,'TipoSubServicio') subservicioNombre,
+		GetNameById(tipo_servicio,'TipoServicio') servicioNombre,CASE WHEN servicio = '' THEN '' ELSE GetNameById(servicio,'TipoSubServicio') END subservicioNombre,
 		GetNameById(estatus_validacion,'EstatusValidacion') validacionNombre,descripcion,afiliacionamex,amex,id_caja,rollos_instalar,rollos_entregados
 		from eventos WHERE odt = ?  AND afiliacion=? group by id ";
 		
@@ -1299,7 +1277,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 	
@@ -1312,7 +1290,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: existHistorialMov();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: existHistorialMov();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 		
@@ -1326,7 +1304,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getOdtById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getOdtById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 
 	}
@@ -1339,7 +1317,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getModeloConectividad();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getModeloConectividad();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1352,7 +1330,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getListaCarrier();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getListaCarrier();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1366,7 +1344,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_ASSOC );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInfoExtra();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getInfoExtra();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
 		}
 	}
 	

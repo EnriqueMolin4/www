@@ -55,7 +55,7 @@ class Modelos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: validcivalidaciones_dbones_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: catalogoxmodelos_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -190,7 +190,7 @@ class Modelos implements IConnections {
             $stmt->execute (array($modelo));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: usuarios_db.php;	Method Name: searchModel();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: catalogoxmodelos_db.php;	Method Name: searchModel();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
