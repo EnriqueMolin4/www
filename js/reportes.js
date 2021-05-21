@@ -17,6 +17,9 @@ $(document).ready(function() {
             format:'Y-m-d'
         });
 
+
+        
+
 })
 
     $('#tipo_producto').multiselect({includeSelectAllOption: true,
