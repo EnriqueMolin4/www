@@ -203,6 +203,15 @@ if( !empty( $_POST['user'] ) and !empty( $_POST['pass'] ) ) {
 
 			break;
 
+			case '19':
+
+				$_SESSION['tipo_user'] = 'LA';
+
+				$_SESSION['cve'] = $dato_access['cve'];
+				$_SESSION['user_role'] = 'Laboratorio';
+
+			break;
+
 		}
 		
 		
