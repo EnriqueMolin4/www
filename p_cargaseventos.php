@@ -11,19 +11,10 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>PROCESO DE CARGA EVENTOS</h3>
-            </div>
-            <div class="row p-3">
-                <div class="col">
-                     <a href="nuevoevento.php" class="btn btn-warning">REGRESAR</a>
-                </div>
-               
-            </div>
-            <div class="container-fluid p-3 panel-white">
+            <div class="container-fluid p-5">
+                <a href="nuevoevento.php" class="btn btn-success">REGRESAR</a>
+                <h3>Procesos de Carga Eventos</h3>
                 
-                <div class="col table-responsive">
-                    
                 <table id="procesos"  class="table table-md table-bordered ">
                     <thead>
                         <tr>
@@ -41,8 +32,6 @@
                     </tbody>
                     
                 </table>
-                </div>
-                
             </div>
             <!-- MODAL Mostrar ODT No Cargadas -->
             <div class="modal fade" tabindex="-3" role="dialog" id="showODTNoCargadas">

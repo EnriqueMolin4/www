@@ -11,24 +11,19 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>PROCESOS DE CARGA - ACTUALIZACION DE INVENTARIO</h3>
-            </div>
-            <div class="row p-3">
-                <a href="registroalmacen.php" class="btn btn-warning">REGRESAR</a>
-            </div>
-            <div class="container-fluid p-3 panel-white">
+            <div class="container-fluid p-5">
+                <a href="registroalmacen.php" class="btn btn-success">REGRESAR</a>
+                <h3>Procesos de Carga Actualizacion de Inventario </h3>
                 
-                <div class="table-responsive">
-                    <table id="procesos"  class="table table-md table-bordered table-responsive">
+                <table id="procesos"  class="table table-md table-bordered ">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th width="350px">ARCHIVO</th>
-                            <th width="200px">TOTAL</th>
-                            <th width="200px">PROCESADOS</th>
-                            <th width="200px">YA EXISTEN BD</th>
-                            <th width="350px">CREADO</th>
+                            <th>ARCHIVO</th>
+                            <th>TOTAL</th>
+                            <th>PROCESADOS</th>
+                            <th>YA EXISTEN BD</th>
+                            <th>CREADO</th>
                             <th>ULTIMA MODIFICACION</th>
                         </tr>
                     </thead>
@@ -37,9 +32,6 @@
                     </tbody>
                     
                 </table>
-                </div>
-                
-                
             </div>
             <!-- MODAL Mostrar ODT No Cargadas -->
             <div class="modal fade" tabindex="-3" role="dialog" id="showODTNoCargadas">
