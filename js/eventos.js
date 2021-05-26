@@ -560,8 +560,7 @@ $(document).ready(function() {
             
         })
 
-        $("#btnComentValid").on('click', function() {
-          
+        $("#btnComentValid").on('click', function() {      
          
           
             if( $('#comentarios_validacion').val().length > 0  )
@@ -593,13 +592,7 @@ $(document).ready(function() {
                 message: 'Ingresa el comentario de validacion',
                 title: 'Aviso',
                 priority : 'danger'
-                      });}
-            
-        
-            
-            
-            
-        
+                      });}  
         
         
         })
