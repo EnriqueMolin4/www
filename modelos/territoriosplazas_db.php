@@ -26,7 +26,7 @@ class Territorial implements IConnections {
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: territorial_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: territoriosplazas_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
 	private function execute_ins($prepareStatement, $arrayString) {
@@ -36,7 +36,7 @@ class Territorial implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: territorial_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: territoriosplazas_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 	}
 	function insert($prepareStatement, $arrayString) {
@@ -55,7 +55,7 @@ class Territorial implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: validcivalidaciones_dbones_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territoriosplazas_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -104,7 +104,7 @@ class Territorial implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: territorial_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:".$sql . $e->getMessage () );
+			self::$logger->error ("File: territoriosplazas_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:".$sql . $e->getMessage () );
 		}
 	}
 
@@ -118,7 +118,7 @@ class Territorial implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: territorial_db.php;	Method Name: getTerritorios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territoriosplazas_db.php;	Method Name: getTerritorios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
     
@@ -131,7 +131,7 @@ class Territorial implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: territorial_db.php;	Method Name: getPlazas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territoriosplazas_db.php;	Method Name: getPlazas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
     
@@ -144,7 +144,7 @@ class Territorial implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: territorial_db.php;	Method Name: getAlmacenes();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territoriosplazas_db.php;	Method Name: getAlmacenes();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
     
@@ -156,7 +156,7 @@ class Territorial implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: territorial_db.php;	Method Name: getAlmacenes();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territoriosplazas_db.php;	Method Name: getAlmacenes();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -213,7 +213,7 @@ class Territorial implements IConnections {
             $stmt->execute (array());
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: territorial_db.php;	Method Name: getplazaAlmacen();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territoriosplazas_db.php;	Method Name: getplazaAlmacen();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 
     }
@@ -231,7 +231,7 @@ class Territorial implements IConnections {
             $stmt->execute (array($usuario));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: territorial_db.php;	Method Name: searchUser();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territoriosplazas_db.php;	Method Name: searchUser();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
     
@@ -249,7 +249,7 @@ class Territorial implements IConnections {
 			$stmt->execute ();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: buscarComercio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: territoriosplazas_db.php;	Method Name: buscarComercio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -265,7 +265,7 @@ class Territorial implements IConnections {
             $stmt->execute (array($id));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: territorial_db.php;	Method Name: getUser();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territoriosplazas_db.php;	Method Name: getUser();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 

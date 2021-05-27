@@ -24,7 +24,7 @@ class Inventarios implements IConnections {
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: sfa_ordersdmin_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
 	private function execute_ins($prepareStatement, $arrayString) {
@@ -34,7 +34,7 @@ class Inventarios implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: sfa_ordersdmin_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 	}
 	function insert($prepareStatement, $arrayString) {
@@ -53,7 +53,7 @@ class Inventarios implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -66,7 +66,7 @@ class Inventarios implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -112,7 +112,7 @@ class Inventarios implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: comercios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
     }
     
@@ -151,7 +151,7 @@ class Inventarios implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: comercios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -190,7 +190,7 @@ class Inventarios implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: comercios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -233,7 +233,7 @@ class Inventarios implements IConnections {
 			$stmt->execute(array( $params['noSerie']));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: comercios_db.php;	Method Name: getHistoricoTpv();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getHistoricoTpv();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -281,7 +281,7 @@ class Inventarios implements IConnections {
 			$stmt->execute(array( $params['noSerie']));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: comercios_db.php;	Method Name: getHistoricoTpv();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getHistoricoTpv();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -294,7 +294,7 @@ class Inventarios implements IConnections {
             $stmt->execute (array($insumo));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: catalogos_db.php;	Method Name: getCantidadInsumos();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: getCantidadInsumos();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -307,7 +307,7 @@ class Inventarios implements IConnections {
             $stmt->execute (array());
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: catalogos_db.php;	Method Name: getFabricanteByName();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: getFabricanteByName();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -320,7 +320,7 @@ class Inventarios implements IConnections {
             $stmt->execute (array());
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: catalogos_db.php;	Method Name: getConectividadByName();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: getConectividadByName();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -333,7 +333,7 @@ class Inventarios implements IConnections {
             $stmt->execute (array());
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: catalogos_db.php;	Method Name: getModeloByName();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: getModeloByName();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -346,7 +346,7 @@ class Inventarios implements IConnections {
             $stmt->execute (array($NumSerie));
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: catalogos_db.php;	Method Name: existeEquipo();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: existeEquipo();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -359,7 +359,7 @@ class Inventarios implements IConnections {
             $stmt->execute (array());
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: catalogos_db.php;	Method Name: getUbicacionByName();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: getUbicacionByName();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -372,7 +372,7 @@ class Inventarios implements IConnections {
 			$stmt->execute ();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 

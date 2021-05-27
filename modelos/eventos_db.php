@@ -789,22 +789,20 @@ class Eventos implements IConnections {
 	}
  
  	function getTipoEvento() {
- 
-     if($_SESSION['tipo_user'] == 'VO' || $_SESSION['tipo_user'] == 'supVO') {
-       $sql = "SELECT * FROM `tipo_servicio` WHERE `status` = 1 AND tipo = 'vo' ";
-     } else {
-       $sql = "SELECT * FROM `tipo_servicio` WHERE `status` = 1 ";
-     }
-     
-		
-		
-		try {
-			$stmt = self::$connection->prepare ($sql );
-			$stmt->execute (array());
-			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getTipoEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
-		}
+		if($_SESSION['tipo_user'] == 'VO' || $_SESSION['tipo_user'] == 'supVO') 
+		{
+		  $sql = "SELECT * FROM `tipo_servicio` WHERE `status` = 1 AND tipo = 'vo' ";
+		} else 
+		{
+		  $sql = "SELECT * FROM `tipo_servicio` WHERE `status` = 1 ";
+		}	
+		   try {
+			   $stmt = self::$connection->prepare ($sql );
+			   $stmt->execute (array());
+			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		   } catch ( PDOException $e ) {
+			   self::$logger->error ("File: eventos_db.php;	Method Name: getTipoEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		   }
 	 }
 
  	function getEstatusEvento() {

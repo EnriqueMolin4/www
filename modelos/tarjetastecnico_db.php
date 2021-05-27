@@ -26,7 +26,7 @@ class Tarjetas implements IConnections {
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: catalogos_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: tarjetastecnico_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
 	private static function execute_ins($prepareStatement, $arrayString) {
@@ -36,7 +36,7 @@ class Tarjetas implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: catalogos_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: tarjetastecnico_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 	}
 
@@ -48,7 +48,7 @@ class Tarjetas implements IConnections {
 			$stmt->execute ( $arrayString );
 			return $stmt->rowCount();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: execute_upd();	Functionality: Insert/Update Eventos;	Log:" . $prepareStatement . " ". $e->getMessage () );
+			self::$logger->error ("File: tarjetastecnico_db.php;	Method Name: execute_upd();	Functionality: Insert/Update Eventos;	Log:" . $prepareStatement . " ". $e->getMessage () );
 		}
 	}
 
@@ -70,10 +70,6 @@ class Tarjetas implements IConnections {
 		$filter = "";
 		$param = "";
 		$where = "";
-
- 
-
-
 		
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
@@ -106,7 +102,7 @@ class Tarjetas implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: bancos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: tarjetastecnico_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -123,7 +119,7 @@ class Tarjetas implements IConnections {
 			$stmt->execute ();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: tarjetastecnico_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -136,7 +132,7 @@ class Tarjetas implements IConnections {
 			$stmt->execute ();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getBancos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: tarjetastecnico_db.php;	Method Name: getBancos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -149,7 +145,7 @@ class Tarjetas implements IConnections {
 			$stmt->execute (array($num));
 			return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: validarTarjeta();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventarjetastecnico_dbtos_db.php;	Method Name: validarTarjeta();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
     }
 
