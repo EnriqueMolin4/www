@@ -87,7 +87,7 @@ class Usuarios implements IConnections {
 				WHERE status=1 
 				 ";
 		
-	
+		//self::$logger->error($sql);
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute ();
@@ -96,6 +96,22 @@ class Usuarios implements IConnections {
             self::$logger->error ("File: usuarios_db.php;	Method Name: getBancos();	Functionality: Get Bancos;	Log:" . $e->getMessage () );
         }
 	}
+
+	/*Para combobox de Usuario Nuevo (CUENTA)*/
+	function getBancosUser()
+	{
+		$sql = "SELECT * FROM `bancos`";
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: usuarios_db.php;	Method Name: getBancosUser();	Functionality: Get Bancos;	Log:" . $e->getMessage () );
+        }
+
+	}	
+	/**/
 	
 	function getPlazas() {
 		$sql = "select id,nombre from plazas where estatus=1 ";
@@ -673,6 +689,19 @@ if($module == 'getBancos') {
 	 
 	foreach ( $rows as $row ) {
 		$selected = $row['tecnico_id'] == '0' ? '' : 'selected';
+		$val .=  "<option value='". $row ['id']."' $selected>" . $row ['banco'] . "</option>";
+	}
+	echo $val;
+
+}
+
+if($module == 'getBancosUser')
+{
+	$rows = $Usuario->getBancosUser();
+	$val = '';
+
+	foreach ( $rows as $row ) {
+		
 		$val .=  "<option value='". $row ['id']."' $selected>" . $row ['banco'] . "</option>";
 	}
 	echo $val;
