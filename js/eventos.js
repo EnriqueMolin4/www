@@ -66,7 +66,7 @@ $(document).ready(function() {
             },
             columns : [
                 { data: 'odt'},
-                { data: 'afiliacion' },
+                { data: 'afiliacion'},
                 { data: 'cveBancoNombre' },
                 { data: 'comercio' },
                 { data: 'servicio' },
@@ -560,7 +560,8 @@ $(document).ready(function() {
             
         })
 
-        $("#btnComentValid").on('click', function() {      
+        $("#btnComentValid").on('click', function() {
+          
          
           
             if( $('#comentarios_validacion').val().length > 0  )
@@ -592,7 +593,13 @@ $(document).ready(function() {
                 message: 'Ingresa el comentario de validacion',
                 title: 'Aviso',
                 priority : 'danger'
-                      });}  
+                      });}
+            
+        
+            
+            
+            
+        
         
         
         })
@@ -1072,8 +1079,6 @@ $(document).ready(function() {
       }
       
       function getInfoExtra(odt) {
-
-    
 
         $.ajax({
             type: 'POST',

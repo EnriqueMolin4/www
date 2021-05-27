@@ -101,9 +101,9 @@ $(document).ready(function() {
                     
                     
                     
-                    if(usrPerm == 'admin' || usrPerm == 'CA' || usrPerm == 'AN' ) {
-                         buttons += ' <a href="#" title="Editar Información" class="mostrarDetalle" data="'+id+' "><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a>';
-                         buttons += '<a href="#" title="Mostrar Historia" class="mostrarHistoria" data="'+id+' "><i class="fas fa-history fa-2x" style="color:#C17137"></i></a>';
+                    if(usrPerm == 'admin' || usrPerm == 'CA' || usrPerm == 'AN' || usrPerm == 'LA' ) {
+                         buttons += ' <a href="#" class="btn btn-warning mostrarDetalle" data="'+id+' ">Editar</a>';
+                         buttons += '<a href="#" class="btn btn-success mostrarHistoria" data="'+id+' ">Historia</a>';
                     } 
 
                     
@@ -170,8 +170,9 @@ $(document).ready(function() {
         columns : [
             { data: 'fecha_movimiento'},
             { data: 'tipo_movimiento'},
-            { data: 'nombre'},
+            { data: 'ubicacionStatus'},
             { data: 'cantidad'},
+            { data: 'modificadoPor' },
             { data: 'id_ubicacion'}
         ],
         fixedColumns: true
@@ -366,7 +367,7 @@ $(document).ready(function() {
         
         if( estatusinventario == '1' ) {
 
-            if(ubicacion == '1' || ubicacion == '7' || ubicacion == '8' || ubicacion == '10' || ubicacion == '11' || ubicacion == '14' || ubicacion == '13'  )
+            if(ubicacion == '1' || ubicacion == '7' || ubicacion == '8' || ubicacion == '10' || ubicacion == '11' || ubicacion == '14' || ubicacion == '13' || ubicacion == '15'  )
             {
                 valido++;
             } else {

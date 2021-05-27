@@ -839,12 +839,12 @@
             });
         }
 
-        function getBancos(tecnico) {
+        function getBancos() {
 
             $.ajax({
                 type: 'POST',
                 url: 'modelos/usuarios_db.php', // call your php file
-                data: { module: 'getBancos', 'tecnico': tecnico },
+                data: { module: 'getBancosUser'},
                 cache: false,
                 success: function(data, textStatus, jqXHR){
                     
@@ -852,6 +852,7 @@
                     $("#negocio").multiselect({ 
                         includeSelectAllOption: true,
                         selectAllText: 'Todos',
+                        nonSelectedText: 'Ninguno Seleccionado',
                         maxHeight: 100 
                     });
 

@@ -215,6 +215,7 @@
                                         <th>UBICACION</th>
                                         <th>CANTIDAD</th>
                                         <th>UBICACION ID</th>
+										<th>MODIFICADO POR</th>
                                     </tr>
                                 </thead>
                                 <tbody>

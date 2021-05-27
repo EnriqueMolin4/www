@@ -72,8 +72,9 @@
                 </div>
                 <br />
                 <div class="table-responsive">
+
                    <table id="eventos"  class="display table table-md table-bordered table-responsive"  cellspacing="0" width="100%">
-                    <thead>
+                   <thead>
                         <tr>
                             <th>ODT</th>
                             <th>AFILIACION | FOLIO</th>
@@ -92,13 +93,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                    
                     </tbody>
-                    <tfoot>
-                       
-                    </tfoot>
-                </table> 
+                    
+                    </table> 
+
+
+
                 </div>
+
+               
                 
                  
            <input type="hidden" id="tipo_user" name="tipo_user" value="<?php echo $_SESSION['tipo_user']; ?>">

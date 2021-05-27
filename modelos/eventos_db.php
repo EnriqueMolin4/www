@@ -109,7 +109,7 @@ class Eventos implements IConnections {
 		$filter = "";
 		$param = "";
 		$where = "";
-
+		
 		if(isset($orderField) ) {
 			$order .= " ORDER BY   $orderField   $orderDir";
 		}				   
@@ -150,7 +150,6 @@ class Eventos implements IConnections {
 			$where .=" OR e.estatus LIKE '".$params['search']['value']."%'  )";
 
 		}
-    
      
 
 		$sql = "SELECT e.id,
@@ -185,8 +184,8 @@ class Eventos implements IConnections {
 				$order
 				$filter ";
 
-		//self::$logger->error ($sql);
-		//self::$logger->error($sql);
+		self::$logger->error($sql);
+	
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);

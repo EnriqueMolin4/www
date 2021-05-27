@@ -21,7 +21,7 @@ class Almacen implements IConnections {
 			return array ();
 		}
 	}
-	private function execute_sel() {
+	private static function execute_sel() {
 		try {
 			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
 			$stmt->execute ( array () );
@@ -30,7 +30,7 @@ class Almacen implements IConnections {
 			self::$logger->error ("File: almacen_db.php;	Method Name: execute_sel();	Functionality: Insert;	Log:" . $e->getMessage () );
 		}
 	}
-	private function execute_ins($prepareStatement, $arrayString) {
+	private static function execute_ins($prepareStatement, $arrayString) {
 		try {
 			$stmt = self::$connection->prepare ( $prepareStatement );
 			$stmt->execute ( $arrayString );
@@ -122,10 +122,10 @@ class Almacen implements IConnections {
 
 		if( $bancos != '0' ) {
 			$where .= " AND b.id = $bancos ";
-		}
+		}  
 
 		if( $ubicacion != '0' ) {
-			$where .= " AND tu.id = $ubicacion ";
+			$where .= " AND tu2.id = $ubicacion ";
 		} else {
 			
 			if( $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'almacen'  )
@@ -138,9 +138,12 @@ class Almacen implements IConnections {
 		}
 
 		if( $estatusubicacion != '0' ) {
+			
 			$where .= " AND ei.id = $estatusubicacion ";
-			if($_SESSION['tipo_user'] != 'admin') {
-				if($_SESSION['tipo_user'] != 'AL') {
+
+			if($_SESSION['tipo_user'] != 'admin' ) //
+			{
+				if($_SESSION['tipo_user'] != 'AL' && $_SESSION['tipo_user'] != 'CA') {
 					
 					$where .= "  AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen AND estatus=1) ";	
 				}
@@ -150,7 +153,7 @@ class Almacen implements IConnections {
 		
 		if( $estatus != '0' ) {
 			$where .= " AND em.id = $estatus ";
-		}
+		} 
 
 		if( $producto != '0' ) {
 			$where .= " AND inv.tipo = $producto ";
@@ -190,13 +193,13 @@ class Almacen implements IConnections {
 				-- GetUbicacionId(inv.id_ubicacion,inv.ubicacion) ubicacion,
 				-- GetNameById(inv.ubicacion,'AlmacenTraspaso') ubicacion,
 				-- CASE WHEN inv.estatus_inventario = 1  THEN tu.nombre WHEN inv.estatus_inventario = 3  THEN CONCAT(du.nombre,'',du.apellidos)  WHEN inv.estatus_inventario = 2  THEN CONCAT(du.nombre,'',du.apellidos)  WHEN inv.estatus_inventario = 4  THEN cm.comercio END ubicacion,
+				-- tu.nombre ubicacion,
 				CASE WHEN inv.ubicacion = 1 THEN tu2.nombre  ELSE tu.nombre END ubicacion,
 				inv.ubicacion ubicacionId,
 				inv.fecha_edicion,
-				inv.cantidad,
 				inv.fecha_entrada,
 				inv.id_ubicacion,
-				CASE WHEN inv.ubicacion = 1 THEN tu.nombre  ELSE tu2.nombre END ubicacion,
+				CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad END cantidad,
 				b.banco, 
 				inv.cve_banco
 				FROM inventario inv
@@ -206,8 +209,8 @@ class Almacen implements IConnections {
 				LEFT JOIN accesorios a ON a.id = inv.modelo
 				LEFT JOIN tipo_estatus_modelos em ON em.id = inv.estatus
 				LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
-				LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
-				LEFT JOIN tipo_ubicacion tu2 ON tu2.id = inv.ubicacion
+				LEFT JOIN tipo_ubicacion tu ON tu.id = inv.ubicacion
+				LEFT JOIN tipo_ubicacion tu2 ON tu2.id = inv.id_ubicacion
 				LEFT JOIN comercios cm ON cm.id = inv.id_ubicacion
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
 				LEFT JOIN bancos b ON inv.cve_banco = b.cve
@@ -217,7 +220,8 @@ class Almacen implements IConnections {
 				-- group by inv.id
 				$filter ";
 			 		
-				
+				self::$logger->error($sql);
+		
 		try {
 			$stmt = self::$connection->prepare ($sql);
 			$stmt->execute();
@@ -333,10 +337,10 @@ class Almacen implements IConnections {
 			$where .=" OR it.no_serie LIKE '".$params['search']['value']."%'  )";
 		}
 		
-		if($_SESSION['tipo_user'] != 'admin' && $_SESSION['tipo_user'] != 'supervisor' && $_SESSION['tipo_user'] != 'CA' && $_SESSION['tipo_user'] != 'AN') { 
+		if($_SESSION['tipo_user'] != 'admin' && $_SESSION['tipo_user'] != 'supervisor' && $_SESSION['tipo_user'] != 'CA' && $_SESSION['tipo_user'] != 'AN' && $_SESSION['tipo_user'] != 'supOp' ) { 
 			$userId = $_SESSION['userid'] ;
 			
-			$where .= " AND it.tecnico in ( SELECT id FROM cuentas WHERE almacen in ($almacenId ) ) ";
+			$where .= " AND it.tecnico in ( SELECT id FROM cuentas WHERE almacen in ($almacenId ) AND estatus=1 ) ";
 		}
 
 
@@ -353,7 +357,7 @@ class Almacen implements IConnections {
 				i.estatus estatusId,
 				ifnull(tp.estatus,1) estatustraspaso
 				FROM inventario_tecnico it
-								LEFT JOIN traspasos tp ON tp.no_serie = it.no_serie
+				LEFT JOIN traspasos tp ON tp.no_serie = it.no_serie
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = it.tecnico, inventario i
 				LEFT JOIN tipo_estatus_modelos tm ON i.estatus = tm.id
 				LEFT JOIN modelos m ON i.modelo = m.id						  
@@ -488,7 +492,7 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getFabricantes();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: catalogos_db.php;	Method Name: getFabricantes();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -502,14 +506,14 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getBancos();	Functionality: Get Bancos;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: catalogos_db.php;	Method Name: getBancos();	Functionality: Get Bancos;	Log:" . $e->getMessage () );
         }
     }
 
 	
 	function getInsumos() {
 
-		$sql = "select * from tipo_insumos ";
+		$sql = "select id,  nombre from tipo_insumos ";
 		
 	
         try {
@@ -517,10 +521,24 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getInsumos();	Functionality: Get Insumos price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: catalogos_db.php;	Method Name: getInsumos();	Functionality: Get Insumos price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
+	function getInsumosId($id) {
+
+		$sql = "select id,  nombre from tipo_insumos WHERE id = ? ";
+		
+	
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($id));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: catalogos_db.php;	Method Name: getInsumos();	Functionality: Get Insumos price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
+
 	function getCantidadInsumos($insumo) {
 		$sql = "select id,cantidad from inventario where insumo = ? ";
 		
@@ -530,12 +548,12 @@ class Almacen implements IConnections {
             $stmt->execute (array($insumo));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getCantidadInsumos();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: catalogos_db.php;	Method Name: getCantidadInsumos();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
 	function getCantidadInsumosTecnico($insumo,$tecnico) {
-		$sql = "select id,cantidad from inventario_tecnico where insumo = ? and tecnico = ?";
+		$sql = "select id,cantidad from inventario_tecnico where no_serie = ? and tecnico = ?";
 		
 	
         try {
@@ -543,14 +561,14 @@ class Almacen implements IConnections {
             $stmt->execute (array($insumo,$tecnico));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getCantidadInsumos();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: catalogos_db.php;	Method Name: getCantidadInsumos();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
 	function getubicacion() {
 		
-		
-		$sql = "SELECT * from tipo_ubicacion where status=1  order by almacen DESC";
+
+		$sql = "SELECT * from tipo_ubicacion where status=1   order by almacen DESC";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -599,20 +617,23 @@ class Almacen implements IConnections {
 				  
 		h.fecha_movimiento,
 		h.tipo_movimiento,
-		tu.nombre,
+		tu.nombre ubicacionStatus,
 		h.cantidad,
 		h.ubicacion,
 		CASE WHEN h.ubicacion = 1 THEN tu.nombre 
 			 WHEN h.ubicacion = 2 THEN c.comercio 
-			 WHEN h.ubicacion = 9 THEN CONCAT(du.nombre,'' ,du.apellidos)
-			 WHEN h.ubicacion = 12 THEN CONCAT(du.nombre,'' ,du.apellidos)
+			 WHEN h.ubicacion = 9 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 12 THEN CONCAT(du.nombre,' ' ,du.apellidos)
 			 WHEN h.ubicacion = 4 THEN c.comercio
-		END id_ubicacion
+		END id_ubicacion,
+		h.modified_by,
+		CONCAT(du2.nombre,' ' ,du2.apellidos) modificadoPor
 		FROM historial h 
 		LEFT JOIN tipo_estatus_inventario te ON te.id = h.ubicacion
 		LEFT JOIN tipo_ubicacion tu ON tu.id = h.ubicacion
 		LEFT JOIN comercios c ON c.id = h.id_ubicacion
 		LEFT JOIN detalle_usuarios du ON du.cuenta_id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du2 ON du2.cuenta_id = h.modified_by
 		WHERE no_serie = '$id' 
 		$where ";
 
@@ -681,7 +702,7 @@ class Almacen implements IConnections {
             self::$logger->error ("File: almacen_db.php;	Method Name: getHistoriaInsumos();	Functionality: Get Historia;	Log:" . $e->getMessage () );
 		}
 	}
-
+		
 	function getTecnicos() {
 		$supervisor = "";
 		
@@ -699,7 +720,7 @@ class Almacen implements IConnections {
 				RIGHT JOIN territorio_plaza tp ON pt.plaza_id = tp.plaza_id
 				RIGHT JOIN supervisor_territorio st ON st.territorio_id = tp.territorio_id
 				WHERE du.cuenta_id is not null 
-				AND c.id = du.cuenta_id
+				AND c.id = c.cuenta_id
 				AND c.estatus=1
 				$supervisor 
 				ORDER BY du.nombre,du.apellidos
@@ -756,175 +777,6 @@ class Almacen implements IConnections {
 				
 				
 	}
-	
-	function getDetallePeticion($params,$total) {
-		$start = $params['start'];
-		$length = $params['length'];
-		$id= $params['idPet'];
-		$query = "";
-		$where = '';
-		$filter = "";
-		$param = "";
-		if($id == '') {
-			$id = -1;
-		}
-
-		if(isset($start) && $length != -1 && $total) {
-			$filter .= " LIMIT  $start , $length";
-		}
-
-
-		$sql = "SELECT
-				CONCAT(
-					detalle_usuarios.nombre,
-					' ',
-					detalle_usuarios.apellidos
-					) tecnico,
-				CASE WHEN detalle_peticiones.tipo = '1' THEN 'TPV' WHEN detalle_peticiones.tipo = '2' THEN 'SIM' WHEN detalle_peticiones.tipo = '3' THEN 'Insumos'
-				END tipoNombre,
-				tipo_insumos.nombre insumo,
-				tipo_conectividad.nombre conectividad,
-				tipo_version.nombre version,
-				detalle_peticiones.cantidad,
-				cuentas.correo Creado_Por,
-				detalle_peticiones.fecha_creacion
-				FROM detalle_peticiones
-					LEFT JOIN detalle_usuarios ON detalle_usuarios.id = detalle_peticiones.tecnico_id
-					LEFT JOIN tipo_insumos ON tipo_insumos.id = detalle_peticiones.insumo
-					LEFT JOIN tipo_conectividad ON tipo_conectividad.id = detalle_peticiones.conectividad
-					LEFT JOIN tipo_version ON tipo_version.id = detalle_peticiones.version
-					LEFT JOIN cuentas ON cuentas.id = detalle_peticiones.creado_por
-				WHERE  detalle_peticiones.peticiones_id = '$id' 
-
-				";
-
-		 
-        try {
-            $stmt = self::$connection->prepare ($sql );
-            $stmt->execute ();
-            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-        } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getDetallePeticion();	Functionality: Get Historia;	Log:" . $e->getMessage () );
-        }
-	}
-
-	function validarSerie($noserie,$tipo) {
-
-		$where = '';
-		$tipoUser = $_SESSION['tipo_user'];
-		$almacen = $_SESSION['almacen'];
-
-		if( $tipoUser == 'CA' || $tipoUser == 'admin' || $tipoUser == 'AL' ) {
-
-		} else {
-			$where .= " AND ubicacion_id = $almacen ";
-		}
-
-		if ($tipo == '1') {
-
-			$sql = "  SELECT no_serie,m.modelo ,count(i.id) total
-				  FROM inventario i
-				  LEFT JOIN modelos m ON m.id = i.modelo 
-				  WHERE i.no_serie = ?
-				  AND i.ubicacion = 1
-				  AND i.tipo = ?
-				  $where	
-				  group by no_serie,m.modelo			
-			   ";
-		} else {
-			$sql = "  SELECT no_serie,m.nombre modelo ,count(i.id) total
-				  FROM inventario i
-				  LEFT JOIN carriers m ON m.id = i.modelo 
-				  WHERE i.no_serie = ?
-				  AND i.ubicacion = 1
-				  AND i.tipo = ?
-				  $where	
-				  group by no_serie,m.nombre			
-			   ";
-		}
-		
-        try {
-            $stmt = self::$connection->prepare ($sql);
-            $stmt->execute (array($noserie,$tipo));
-            return  $stmt->fetch ( PDO::FETCH_ASSOC );
-        } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: validarSerie();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
-        }
-	}
-
-	function detallePeticion($peticion)
-	{
-		$sql = "  SELECT CONCAT(du.nombre,' ',du.apellidos) supervisor, p.IsActive,
-					CONCAT(du2.nombre,' ',du2.apellidos) creadopor,p.fecha_creacion,supervisor_id
-					FROM peticiones p,
-					detalle_usuarios du, 
-					detalle_usuarios du2 
-					WHERE   p.supervisor_id = du.cuenta_id
-					AND p.creado_por = du2.cuenta_id
-					AND p.id = ?
-				 				
-			   ";
-		        try {
-					$stmt = self::$connection->prepare ($sql);
-					$stmt->execute (array($peticion));
-					return  $stmt->fetch ( PDO::FETCH_ASSOC );
-				} catch ( PDOException $e ) {
-					self::$logger->error ("File: almacen_db.php;	Method Name: detallePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
-				}
-	}
-	
-	function getdetallePeticiones($params,$total) {
-		$start = $params['start'];
-		$length = $params['length'];
-
-		$filter = "";
-		$param = "";
-		$query = "";
-		$where = '';
-		$peticion = $params['peticion'];
-
-		
-		if(isset($start) && $length != -1 && $total) {
-			$filter .= " LIMIT  $start , $length";
-		}
-
-		if( !empty($params['search']['value'])) {   
-			$where .=" where ";
-			$where .=" ( ti.nombre LIKE '".$params['search']['value']."%' ";
-			$where .=" OR tc.nombre LIKE '".$params['search']['value']."%'  ";
-			$where .=" OR tv.nombre LIKE '".$params['search']['value']."%' ) ";
-
-		}
-
-		$sql = "Select 
-				peticiones_id,
-				CONCAT(du.nombre,' ',du.apellidos) tecnico,
-				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
-				ti.nombre insumo ,
-				tc.nombre conectividad,
-				tp.nombre producto,
-				dp.cantidad,
-				dp.id,
-				dp.tipo tipoid
-				FROM detalle_peticiones dp
-				LEFT JOIN detalle_usuarios du ON  dp.tecnico_id = du.cuenta_id
-				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
-				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
-				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
-				WHERE dp.peticiones_id = $peticion
-				$where
-				$filter  ";
-
-		
-		 self::$logger->error($sql);
-        try {
-            $stmt = self::$connection->prepare ($sql );
-            $stmt->execute ();
-            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-        } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getdetallePeticiones();	Functionality: Get Historia;	Log:" . $e->getMessage () );
-		}
-	}
 
 	function buscarNoSerie($nom_serie,$tipo) {
 		$sql = "SELECT count(*) existe from inventario  WHERE no_serie = '$nom_serie'  AND estatus = 5 AND ubicacion  = 1 AND tipo = $tipo ";
@@ -955,7 +807,7 @@ class Almacen implements IConnections {
 	function getAlmacen() {
 		
 		$where = '';
-
+	
 		if( $_SESSION['tipo_user'] != 'almacen' ) {
 			$where = ' AND id = 13';
 		}
@@ -1020,11 +872,10 @@ class Almacen implements IConnections {
 		
 		if($_SESSION['tipo_user'] != 'admin' && $_SESSION['tipo_user'] != 'CA' && $_SESSION['tipo_user'] != 'AN' && $_SESSION['tipo_user'] != 'AL' && $_SESSION['tipo_user'] != 'almacen') {
 			$userId = $_SESSION['userid'] ;
-			$where .= " AND t1.cuenta_id in ( SELECT id FROM cuentas WHERE territorial in (Select territorial FROM cuentas WHERE id = $userId ) ) ";
+			$where .= " AND t1.cuenta_id in ( SELECT id FROM cuentas WHERE territorial in (Select territorial FROM cuentas WHERE id = $userId ) AND estatus=1 ) ";
 		}  
 		
 		$sql = "SELECT *, CASE WHEN trasp != total THEN 'ACEPTADO' ELSE 'EN TRANSITO' END estatus FROM ( SELECT 
-				
 				t1.no_guia,
 				t1.codigo_rastreo,
 				CASE WHEN GetNameById(t1.origen,'AlmacenTraspaso') IS NULL THEN  CONCAT(nombre,' ',ifnull(apellidos,''))  ELSE GetNameById(t1.origen,'AlmacenTraspaso')  END origen,
@@ -1332,14 +1183,40 @@ class Almacen implements IConnections {
             self::$logger->error ("File: almacen_db.php;	Method Name: getSerie();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
+
+
+	//Existencia de serie para reporte
+	function getSerieInfo($serie) 
+	{
+		$sql = " SELECT  
+		i.no_serie,
+		IFNULL(m.modelo ,'') modelo ,
+		IFNULL(tc.nombre ,'') conectividad,
+		IFNULL(i.anaquel,'') anaquel,
+		IFNULL(i.caja,'') caja,
+		IFNULL(i.tarima,'') tarima,
+		IFNULL(i.cve_banco,'') cve_banco
+		FROM inventario i
+		LEFT JOIN modelos m ON m.id = i.modelo
+		LEFT JOIN tipo_conectividad tc ON tc.id = i.conectividad
+		WHERE i.no_serie = '$serie' ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute ();
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: getSerieInfo();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
 	
 	function getSeriesTpvSimEventos($serie)
 	{
-		$sql = "SELECT eventos.odt, eventos.ultima_act ultima_mod, eventos.afiliacion, eventos.tpv_instalado, eventos.tpv_retirado, tipo_servicio.nombre servicio, CONCAT(detalle_usuarios.nombre, ' ', 	detalle_usuarios.apellidos) tecnico, cuentas.correo modificado_por
-				FROM eventos
-				LEFT JOIN tipo_servicio ON tipo_servicio.id = eventos.tipo_servicio
-				LEFT JOIN detalle_usuarios ON detalle_usuarios.id = eventos.tecnico
-				LEFT JOIN cuentas ON eventos.modificado_por = cuentas.id
+		$sql = " SELECT odt,ultima_act ultima_mod,afiliacion,tpv_instalado,tpv_retirado,ts.nombre servicio,CONCAT(c.nombre,c.apellidos) tecnico ,CONCAT(cm.nombre,cm.apellidos) modificado_por
+				  FROM `eventos`
+				  LEFT JOIN tipo_servicio ts ON ts.id = tipo_servicio
+				  LEFT JOIN detalle_usuarios  c ON c.cuenta_id = modificado_por
+				  LEFT JOIN detalle_usuarios cm ON cm.cuenta_id = modificado_por
 				  WHERE ( 
 					`tpv_retirado` = '$serie' 
 					 OR `tpv_instalado` = '$serie' 
@@ -1390,32 +1267,16 @@ class Almacen implements IConnections {
 		$sql = " SELECT detalle_usuarios.cuenta_id,CONCAT(detalle_usuarios.nombre,' ',detalle_usuarios.apellidos) nombre FROM cuentas,detalle_usuarios 
 				 WHERE cuentas.id = detalle_usuarios.cuenta_id
 				 AND plaza=? 
+				 AND cuentas.estatus=1
 			   ";
+			   
 		
         try {
             $stmt = self::$connection->prepare ($sql);
             $stmt->execute (array($plaza));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getSerie();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
-        }
-	}
-
-	function getSupervisores() {
-
-		$sql = "  SELECT detalle_usuarios.cuenta_id,CONCAT(detalle_usuarios.nombre,' ',detalle_usuarios.apellidos) nombre 
-				  FROM cuentas,detalle_usuarios 
-					WHERE cuentas.id = detalle_usuarios.cuenta_id
-					AND cuentas.tipo_user = 12
-							
-			   ";
-		
-        try {
-            $stmt = self::$connection->prepare ($sql);
-            $stmt->execute (array());
-            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-        } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getSupervisores();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getTecnicoxPlaza();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1473,18 +1334,173 @@ class Almacen implements IConnections {
 		}
 	}
 
-	function getNoSeriePeticion($id)
-	{
-		$sql = " SELECT no_series
-				 FROM detalle_peticiones dp 
-				 WHERE dp.id = ? ";
+	function getSupervisores() {
 
-		try {
+		$sql = "  SELECT detalle_usuarios.cuenta_id,CONCAT(detalle_usuarios.nombre,' ',detalle_usuarios.apellidos) nombre 
+				  FROM cuentas,detalle_usuarios 
+					WHERE cuentas.id = detalle_usuarios.cuenta_id
+					AND cuentas.tipo_user = 12
+					AND cuentas.estatus = 1
+							
+			   ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute (array());
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: getSupervisores();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
+
+	function getdetallePeticiones($params,$total) {
+		$start = $params['start'];
+		$length = $params['length'];
+
+		$filter = "";
+		$param = "";
+		$query = "";
+		$where = '';
+		$peticion = $params['peticion'];
+
+		
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( !empty($params['search']['value'])) {   
+			$where .=" where ";
+			$where .=" ( ti.nombre LIKE '".$params['search']['value']."%' ";
+			$where .=" OR tc.nombre LIKE '".$params['search']['value']."%'  ";
+			$where .=" OR tv.nombre LIKE '".$params['search']['value']."%' ) ";
+
+		}
+
+		$sql = "Select 
+				peticiones_id,
+				CONCAT(du.nombre,' ',du.apellidos) tecnico,
+				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
+				ti.nombre insumo ,
+				tc.nombre conectividad,
+				tp.nombre producto,
+				dp.cantidad,
+				dp.id,
+				dp.tipo tipoid
+				FROM detalle_peticiones dp
+				LEFT JOIN detalle_usuarios du ON  dp.tecnico_id = du.cuenta_id
+				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
+				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
+				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
+				WHERE dp.peticiones_id = $peticion
+				$where
+				$filter  ";
+
+		
+		 
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: getdetallePeticiones();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+		}
+	}
+
+	function validarSerie($noserie,$tipo) {
+
+		$where = '';
+		$tipoUser = $_SESSION['tipo_user'];
+		$almacen = $_SESSION['almacen'];
+
+		if( $tipoUser == 'CA' || $tipoUser == 'admin' || $tipoUser == 'AL' ) {
+
+		} else {
+			$where .= " AND ubicacion_id = $almacen ";
+		}
+
+		if ($tipo == '1') {
+
+			$sql = "  SELECT no_serie,m.modelo ,count(i.id) total
+				  FROM inventario i
+				  LEFT JOIN modelos m ON m.id = i.modelo 
+				  WHERE i.no_serie = ?
+				  AND i.ubicacion = 1
+				  AND i.tipo = ?
+				  $where	
+				  group by no_serie,m.modelo			
+			   ";
+		} else {
+			$sql = "  SELECT no_serie,m.nombre modelo ,count(i.id) total
+				  FROM inventario i
+				  LEFT JOIN carriers m ON m.id = i.modelo 
+				  WHERE i.no_serie = ?
+				  AND i.ubicacion = 1
+				  AND i.tipo = ?
+				  $where	
+				  group by no_serie,m.nombre			
+			   ";
+		}
+		
+        try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute (array($noserie,$tipo));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: validarSerie();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
+
+	function detallePeticion($peticion) {
+
+
+		$sql = "  SELECT CONCAT(du.nombre,' ',du.apellidos) supervisor, p.IsActive,
+					CONCAT(du2.nombre,' ',du2.apellidos) creadopor,p.fecha_creacion,supervisor_id
+					FROM peticiones p,
+					detalle_usuarios du, 
+					detalle_usuarios du2 
+					WHERE   p.supervisor_id = du.cuenta_id
+					AND p.creado_por = du2.cuenta_id
+					AND p.id = ?
+				 				
+			   ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute (array($peticion));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: detallePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
+
+	function getNoSeriePeticion($id) {
+
+		$sql = "  SELECT no_series
+					FROM detalle_peticiones dp
+					WHERE  dp.id = ?
+				 				
+			   ";
+		
+        try {
             $stmt = self::$connection->prepare ($sql);
             $stmt->execute (array($id));
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: almacen_db.php;	Method Name: getNoSeriePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
+
+	function getDetallePeticion($peticionId) {
+
+		$sql = " SELECT * FROM detalle_peticiones
+				WHERE peticiones_id = ? ";
+		
+		try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute (array($peticionId));
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: getDetallePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 
 	}
@@ -1500,8 +1516,7 @@ class Almacen implements IConnections {
             self::$logger->error ("File: almacen_db.php;	Method Name: getDetallePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
-
-	function getProveedores(){
+	function getProveedores() {
 		return array();
 	}
 }
@@ -1534,13 +1549,14 @@ if($module == 'getTableInsumos'){
 	
 }
 
-if($module == 'getInventarioTecnico') {
-
-    $rows = $Almacen->getInventarioTecnico($params,true);
-    $rowsTotal = $Almacen->getInventarioTecnico($params,false);
-    $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
-
-	echo json_encode($data); //$val;
+if($module == 'getProducto') {
+	$rows = $Almacen->getProducto();
+	$val = '<option value="0"> Seleccionar </option>';
+	
+	foreach ( $rows as $row) {
+		$val .= '<option value="' . $row['id'] . '" >' . $row['nombre'] . '</option>';
+	}
+	echo $val;
 }
 
 if($module == 'getdetallePeticiones') {
@@ -1553,7 +1569,7 @@ if($module == 'getdetallePeticiones') {
 
 }
 
-if ($module == 'getNoSeriePeticion') {
+if($module == 'getNoSeriePeticion') {
 	$rows = $Almacen->getNoSeriePeticion($params['id']);
 
 	echo $rows['no_series'];
@@ -1578,6 +1594,15 @@ if($module == 'grabardetallePeticion') {
 
 }
 
+if($module == 'getInventarioTecnico') {
+
+    $rows = $Almacen->getInventarioTecnico($params,true);
+    $rowsTotal = $Almacen->getInventarioTecnico($params,false);
+    $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+
+	echo json_encode($data); //$val;
+}
+
 if($module == 'getVersion') {
 
 	$val = '<option value="0"> Seleccionar </option>';
@@ -1597,22 +1622,12 @@ if($module == 'getPlazas'){
 	echo $val;
 }
 
-if($module == 'getProducto') {
-	$rows = $Almacen->getProducto();
-	$val = '<option value="0"> Seleccionar </option>';
-	
-	foreach ( $rows as $row) {
-		$val .= '<option value="' . $row['id'] . '" >' . $row['nombre'] . '</option>';
-	}
-	echo $val;
-}
-
 if($module == 'getTecnicos') {
 	
-	$rows = $Almacen->getTecnicos($params['ter']);
+	$rows = $Almacen->getTecnicos();
 	$val = '<option value="0" data-id="0" selected>Seleccionar</option>';
 	foreach ( $rows as $row ) {
-		$val .=  '<option value="' . $row ['tecnicoId'] . '"  data-id="'. $row['territorio'] .'" >' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
+		$val .=  '<option value="' . $row ['tecnico_id'] . '"  data-id="'. $row['territorio_id'] .'" >' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
 	}
 	echo $val;
 }
@@ -1626,6 +1641,7 @@ if($module == 'getTecnicosxAlmacen') {
 	}
 	echo $val;
 }
+	
 
 if($module == 'getSupervisores') {
 
@@ -1652,7 +1668,7 @@ if($module == 'getubicacion') {
 		} else {
 			if($row ['almacen'] == '1') {
 				if($row['id'] == $almacen ) {
-				$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+				$val .=  '<option value="' . $row ['id'] . '" selected>' . $row ['nombre'] . '</option>';
 				}
 			}  
 		
@@ -1690,15 +1706,6 @@ if($module == 'getHistoria') {
 
 	echo json_encode($data); //$val;
 
-}
-
-if($module == 'getDetallePeticion')
-{
-	$rows = $Almacen->getDetallePeticion($params, true);
-	$rowsTotal = $Almacen->getDetallePeticion($params, false);
-	$data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
-
-	echo json_encode($data); //$val;
 }
 
 if($module == 'getPeticiones') {
@@ -1963,7 +1970,7 @@ if($module == 'updateInvProd')
 						SET `modelo` = ?, 
 							`conectividad` = ?, 
 							`estatus` = ?,
-							`id_ubicacion` = ?, 
+							`ubicacion` = ?,  
 							`estatus_inventario` = ?,
 							`cantidad` = ?, 
 							`modificado_por` = ?,
@@ -1983,18 +1990,29 @@ if($module == 'updateInvProd')
 	);
 	
 	$id = $Almacen->insert($prepareStatement,$arrayString);
-	if($id == 0)
+	if($id != 0)
 	{
-		echo json_encode(["msg" => "No se actualizaron los datos", "data" => json_encode($arrayString) ]);
+		echo json_encode(["msg" => "No se actualizaron los datos", "data" => json_encode($arrayString),'id' => $id ]);
 	}
 	else
 	{
-		echo "Se actualizaron los datos";
-	}
+		
+		
+		if($params['estatusinventario'] == '1' || $params['estatusinventario'] == '4' ) {
+			$querySIM = " DELETE FROM inventario_tecnico  WHERE no_serie=?";
+
+			$arrayString = array (
+				$params['noserie']
+			);
+
+			$Almacen->insert($querySIM,$arrayString);
+			
+			
+		}
+		
+		$getIdInv = $Almacen->getInventarioInfo($params['noserie']);
 	
-	$getIdInv = $Almacen->getInventarioInfo($params['noserie']);
-	
-	$prepareStatement = "INSERT INTO `historial`
+		$prepareStatement = "INSERT INTO `historial`
 					( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)
 					VALUES
 					(?,?,?,?,?,?,?,?,?);
@@ -2012,26 +2030,16 @@ if($module == 'updateInvProd')
 		);
 
 		$Almacen->insert($prepareStatement,$arrayString);
+		
+		echo "Se actualizaron los datos";
+	}
 	
-	echo 1;
 	
-}
-
-
-if ($module == 'eliminarTraspaso') 
-{
-	$prepareStatement = "DELETE FROM traspasos WHERE no_guia = ?";
-
-	$arrayString = array (
-		$params['guiaTrasp']
-	);
-
-	$Almacen->insert( $prepareStatement, $arrayString);
-
-	echo 1;
+	
+	 
+	
 
 }
-
 
 
 if($module == 'altaInvTecnico') {
@@ -2778,9 +2786,6 @@ if( $module == 'guardarPeticion' )
 	if ($id)
 	{
 		echo "SE GUARDARON LOS DATOS";
-
-
-
 		$prepareStatementDet = "INSERT INTO `detalle_peticiones` 
 					(`peticiones_id`,`tecnico_id`,`tipo`,`insumo`,`conectividad`,`producto`,`cantidad`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
 					 VALUES
@@ -2790,12 +2795,13 @@ if( $module == 'guardarPeticion' )
 		foreach ($info as $data) 
 		{
 			
-		$arrayStringDet = array(
+
+			$arrayStringDet = array(
 				$id,
 				$data['tecnico'],
 				$data['tipo'],
 				$data['insumo'],
-				$data['conectivodad'],
+				$data['conectividad'],
 				$data['producto'],
 				$data['cantidad'],
 				$user,
@@ -2807,9 +2813,6 @@ if( $module == 'guardarPeticion' )
 			);
 
 			$det = $Almacen->insert($prepareStatementDet, $arrayStringDet);
-
-
-			
 		}
 	}
 		echo $id;
@@ -2842,16 +2845,13 @@ if($module == 'generarEnvio') {
 		$fecha = date("Y-m-d H:i:s");
 
 		//cantidad x tipo
-		if($detalle['tipo'] == '3') 
-		{
+		if($detalle['tipo'] == '3') {
 			$cant = $detalle['cantidad'];
 			$tipo = 'INSUMOS';
-		} else if ($detalle['tipo'] == '1' ) 
-		{
+		} else if ($detalle['tipo'] == '1' ) {
 			$cant = 1;
 			$tipo = 'TPV';
-		} else if ($detalle['tipo'] == '2' ) 
-		{
+		} else if ($detalle['tipo'] == '2' ) {
 			$cant = 1;
 			$tipo = 'SIM';
 		}
@@ -3064,7 +3064,6 @@ if($module == 'generarEnvio') {
 	echo 1;
 }
 
-
 if( $module == 'getTecnicoxPlaza') {
 
 	$val = '<option value="0"> Seleccionar </option>';
@@ -3077,7 +3076,6 @@ if( $module == 'getTecnicoxPlaza') {
 
 	echo json_encode($rows);
 }
-
 
 if($module == 'cargarInventarioMasivo') {
 	$target_dir = "../cron/files/";
@@ -3119,7 +3117,6 @@ if($module == 'cargarInventarioMasivo') {
 		}
 	}
 }
-
 
 if($module == 'InventariosMasivo') {
 	$counter = 0;
@@ -3371,7 +3368,7 @@ if($module == 'grabarInventario')
 
 			//GRABAR HISTORIA 
 			$fecha = date ( 'Y-m-d H:m:s' );
-			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion');
+			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 			
 			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
 			$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
@@ -3384,7 +3381,8 @@ if($module == 'grabarInventario')
 				$info[1],
 				$info[0],
 				$info[9],
-				0
+				$info[11],
+				$info[12]
 			);
 		
 			$Almacen->insert($sql,$arrayString);
@@ -3407,7 +3405,7 @@ if($module == 'grabarInventario')
 
 			//GRABAR HISTORIA 
 			$fecha = date ( 'Y-m-d H:m:s' );
-			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion');
+			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 			
 			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
 			$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
@@ -3415,12 +3413,13 @@ if($module == 'grabarInventario')
 			$arrayString = array (
 				$id,
 				$fecha,
-				'ENTRADA',
+				'ENTRADA ACT',
 				1,
 				$info[1],
 				$info[0],
 				$info[17],
-				0
+				$info[11],
+				$info[12]
 			);
 		
 			$Almacen->insert($sql,$arrayString);
@@ -3669,9 +3668,50 @@ if($module == 'getSerie')
 if($module == 'getSeriesIE') 
 {
 	$array_eventos = $Almacen->getSeriesTpvSimEventos($params['serie']);
-	$array_inventario = $Almacen->getSeriesTpvSimInventario($params['serie']);
+	$array_inventario = $Almacen->getSerieInfo($params['serie']);
 	
 	echo json_encode(['eventos' => $array_eventos, 'inventario' => $array_inventario]);
+}
+
+if($module == 'cargarInventarioEditar') {
+	$target_dir = "../cron/files/";
+	$target_file = $target_dir . basename($_FILES["file"]["name"]);
+	$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+	$uploadOk = 1;
+	$fecha = date ( 'Y-m-d H:m:s' );
+
+	if($imageFileType != "csv" && $imageFileType != "xls" && $imageFileType != "xlsx" ) {
+  		echo "Error solo archivos CSV o XSL";
+  		$uploadOk = 0;
+	}
+
+	// Check if $uploadOk is set to 0 by an error
+	if ($uploadOk == 0) {
+  		echo "Sorry, your file was not uploaded.";
+		// if everything is ok, try to upload file
+	} else {
+		if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+			 
+			$datafieldsCargar = array('tipo','archivo','creado_por','fecha_creacion','fecha_modificacion');
+			
+			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsCargar), '?'));
+			$sql = "INSERT INTO carga_archivos (" . implode(",", $datafieldsCargar ) . ") VALUES (".$question_marks.")"; 
+	
+			$arrayString = array (
+				'IA',
+				$_FILES["file"]["name"],
+				$_SESSION['userid'],
+				$fecha,
+				$fecha
+			);
+		
+			$id = $Almacen->insert($sql,$arrayString);
+			echo "Se Cargo el Archivo. $id ".$target_file;
+
+		} else {
+			echo "No se puede cargar el Archivo. " ;
+		}
+	}
 }
 //Actualizar info series TPV y SIM
 if ($module == 'InventarioEditar')
@@ -3716,11 +3756,11 @@ if ($module == 'InventarioEditar')
 		$ConectividadId = $Almacen->getConectividadId($Conectividad->getValue());
 		$EstatusId = $Almacen->getEstatusId($Estatus->getValue());
 		$Estatus_ubicacionId = $Almacen->getEstatusInvId($Estatus_ubicacion->getValue());
-		$almacenId = $Almacen->getAlmacenId($ubicacion->getValue());
+		$ubicacionId = $Almacen->getAlmacenId($ubicacion->getValue());
 		
 		$valido = 0;
 		
-		if ($_SESSION['almacen'] != $almacenId)
+		/*if ($_SESSION['almacen'] != $almacenId)
 		{
 			if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'CA')
 			{
@@ -3731,7 +3771,7 @@ if ($module == 'InventarioEditar')
 				$valido = 1;
 			}
 			
-		}
+		}*/
 		
 		if ($valido == 0)
 		{
@@ -3756,7 +3796,7 @@ if ($module == 'InventarioEditar')
 				$ConectividadId,
 				$EstatusId,
 				$Estatus_ubicacionId,
-				$almacenId
+				$ubicacionId
 				);
 				
 				array_push($allInventarios, $arrayString);
@@ -3783,33 +3823,46 @@ if ($module == 'InventarioEditar')
 if ($module == 'UpdateInventario')
 {
 	$info = json_decode($params['info']);
-
-	$new = 0;
-
 	$fecha = date ( 'Y-m-d H:m:s' );
-	
-	$sql = "UPDATE inventario 
-			SET 
-			tipo=?, 
-			modelo=?, 
-			conectividad=?, 
-			estatus=?, 
-			estatus_inventario=?, 
-			ubicacion=?, 
-			fecha_edicion=? 
-			WHERE no_serie=?" ;
-
+	$campoUpdate = " tipo=?, fecha_edicion=?  ";
+	$new = 0;
 	$arrayString = array(
 		$info[0],
-		$info[2],
-		$info[3],
-		$info[4],
-		$info[5],
-		$info[6],
-		$fecha,
-		$info[1]
-		
+		$fecha
 	);
+
+
+
+	 if($info[2]) {
+		 $campoUpdate .= " ,modelo=? ";
+		 array_push($arrayString,$info[2]);
+	 }
+
+	 if($info[3]) {
+		$campoUpdate .= " ,conectividad=? ";
+		array_push($arrayString,$info[3]);
+	 }
+	 if($info[4]) {
+		$campoUpdate .= " ,estatus=? ";
+		array_push($arrayString,$info[4]);
+	 }
+	 if($info[5]) {
+		$campoUpdate .= " ,estatus_inventario=? ";
+		array_push($arrayString,$info[5]);
+	 }
+	 if($info[6]) {
+		$campoUpdate .= " ,ubicacion=? ";
+		array_push($arrayString,$info[6]);
+	 }
+
+	 array_push($arrayString,$info[1]);
+
+	$sql = "UPDATE inventario 
+			SET 
+			$campoUpdate
+			WHERE no_serie=?" ;
+
+	
 
 	$id = $Almacen->insert($sql,$arrayString);
 	
@@ -3822,28 +3875,6 @@ if ($module == 'UpdateInventario')
 	else
 	{
 		echo " Se $msg Inventario el numero de serie $info[1] de tipo $info[0]  ";
-	}
-}
-
-if ($module == 'borrarPeticion') 
-{
-	$prepareStatement = "DELETE FROM peticiones WHERE id = ? ";
-
-	$arrayString = array($params['id']);
-
-	$del = $Almacen->insert($prepareStatement, $arrayString);
-
-	if ($del) 
-	{
-		echo "0";
-
-	}
-	else
-	{
-		$prepareStatement2 = "DELETE FROM detalle_peticiones WHERE peticiones_id=?";
-		$arrayString2 = array( $params['id'] );
-
-		$del2 = $Almacen->insert($prepareStatement2, $arrayString2);
 	}
 }
 
