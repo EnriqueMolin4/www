@@ -275,8 +275,6 @@ $(document).ready(function() {
         })
 
         $(document).on("click",".btnCambiarEst", function(){
-
-
             var odt = $(this).attr('data');
 
             if (confirm("Se cambiará el estatus del evento a Abierto. ¿Estas seguro?")) 
@@ -513,8 +511,6 @@ $(document).ready(function() {
             var modelo = $("#tpvInDataModelo").val();
             var conectividad = $("#tpvInDataConnect").val();
 
- 
-
                 if( $(this).val() == '1' || $(this).val() == '16' || $(this).val() == '0' ) {
                     $("#rowCancelado").hide();
                     $("#rowRechazos").hide();
@@ -560,9 +556,7 @@ $(document).ready(function() {
             
         })
 
-        $("#btnComentValid").on('click', function() {
-          
-         
+        $("#btnComentValid").on('click', function() {      
           
             if( $('#comentarios_validacion').val().length > 0  )
             {
@@ -747,13 +741,10 @@ $(document).ready(function() {
 
         $('#showDocumentos').on('show.bs.modal', function (e) {
            
-            showDocumentos();
-
-            
+            showDocumentos();          
        
         })
         
-
         
         $('#showDocumentos').on('hide.bs.modal', function (e) {
             $("#imagenSel").html("");
@@ -763,7 +754,6 @@ $(document).ready(function() {
         $("#btnUpdateEvento").on("click",function() {
             var validar = 0;
             var msg = '';
-
             var eventoId = $("#eventoId").val();
             var odt = $("#odt").val();
             var comentario = $("#comentarios_cierre").val();
@@ -918,10 +908,8 @@ $(document).ready(function() {
         $("#tpv_retirado").on("change",function() {
             var tpv = $(this).val();
             if(tpv.length > 0) {
-                validarTPV(tpv,1,'out')
-                
+                validarTPV(tpv,1,'out')     
             }
-           
         })
 
         $("#sim_instalado").on("change",function() {
@@ -954,8 +942,6 @@ $(document).ready(function() {
             
         })
     */
-        
-        
     } );
 
     function getModeloConectividad(tpv,tipo,donde) {
@@ -1375,8 +1361,6 @@ function getCancelado() {
             var demo = error;
         }
     });
-    
-
 }
 
 function getRechazos() {

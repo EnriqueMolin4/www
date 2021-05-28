@@ -718,7 +718,6 @@ function getSubRechazos() {
 }
 
 
-
 function getCancelaciones() {
 
     $.ajax({

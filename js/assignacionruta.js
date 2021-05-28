@@ -182,16 +182,9 @@ $(document).ready(function() {
             
         })
 
-       
-       
-
-
     } );
 
     
-      
-
-
 function cleartext() {
     $("#odt").val("")
     $("#afiliacion").val("")

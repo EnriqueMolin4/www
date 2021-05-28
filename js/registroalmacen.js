@@ -454,6 +454,7 @@ $(document).ready(function() {
         form_data.append('file', file_data);
         form_data.append('module', 'cargarInventarioMasivo');
         
+        
         $.toaster({
             message: 'Inicia Carga de Series Inventario',
             title: 'Aviso',
@@ -501,6 +502,7 @@ $(document).ready(function() {
         
         form_data.append('file', file_data);
         form_data.append('module', 'cargarInventarioEditar');
+        form_data.append('module', 'InventariosMasivo');
         
         $.toaster({
             message: 'Inicia actualización de Series Inventario',

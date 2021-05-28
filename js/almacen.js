@@ -126,12 +126,7 @@ $(document).ready(function() {
         } else {
             alert("HACEN FALTA CAMPOS POR LLENAR");
         }
-    })
-
-
-    
-
-        
+    })       
 } );
 
     

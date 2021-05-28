@@ -2,9 +2,7 @@
      getTecnicos();
      getEvaluaciones();
      
-     
-
-     $('#evaluaciones').DataTable({
+    $('#evaluaciones').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 },
@@ -47,7 +45,6 @@
             ]
     })
 
-     
 
      $("#btnGuardar").on("click", function() 
         { 
@@ -171,7 +168,6 @@
 
             
         })
-
 
 
     $(document).on("click", ".delEval", function(e){

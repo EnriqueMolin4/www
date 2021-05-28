@@ -254,7 +254,8 @@ $(document).ready(function() {
        
     })
 
-  /*       $( "#tecnico_asig" ).autocomplete({
+  /*       
+        $( "#tecnico_asig" ).autocomplete({
             source: function( request, response ) {
               $.ajax( {
                 url: "modelos/assignacioneventos_db.php",
@@ -285,7 +286,7 @@ $(document).ready(function() {
                 var info = ui.item.data;
                 $("#tecnico_id").val(info.id);
             }
-          } ); */
+    } ); */
 
         $("#btnRegistrar").on('click', function() {
             alert("Grabar")
