@@ -452,14 +452,13 @@ $(document).ready(function() {
 		var form_data_file = new FormData();
         var excelMasivo = $("#excelMasivoInventarios");
         var file_data = excelMasivo[0].files[0];
-		
+		//form data para guardar datos
         form_data.append('file', file_data);
 		form_data.append('module','InventariosMasivo');
 		
+        //form data para mover/cargar el archivo
 		form_data_file.append('file', file_data);
 		form_data_file.append('module','cargarInventarioMasivo');
-		
-		//form_data.append('module', 'cargarInventarioMasivo');
         
         if( document.getElementById("excelMasivoInventarios").files.length == 0)
 		{
@@ -508,33 +507,7 @@ $(document).ready(function() {
 								success: function(data){
 									message += data+" <br />";
 									
-									$("#bodyCargas").append(data+" <br /> ");
-									
-									$.ajax({
-										type: 'POST',
-										url: 'modelos/almacen_db.php', // call your php file
-										data: form_data_file,
-										processData: false,
-										contentType: false,
-            
-										success: function(data, textStatus, jqXHR)
-										{
-											$.toaster({
-											message: 'Se cargó el archivo con éxito',
-											title: 'Aviso',
-											priority : 'success'
-											});  
-
-
-										},
-										error: function(jqXHR, textStatus, errorThrown)
-										{
-											alert(textStatus)
-										}
-            
-
-									});
-									
+									$("#bodyCargas").append(data+" <br /> ")
 									
 								},
 								error: function(error){
@@ -542,8 +515,32 @@ $(document).ready(function() {
 								}
 							});
 							
-						})
+						});
 						
+                        $.ajax({
+                            type: 'POST',
+                            url: 'modelos/almacen_db.php', // call your php file
+                            data: form_data_file,
+                            processData: false,
+                            contentType: false,
+
+                            success: function(data, textStatus, jqXHR)
+                            {
+                                $.toaster({
+                                message: 'Se cargó el archivo con éxito',
+                                title: 'Aviso',
+                                priority : 'success'
+                                });  
+                            },
+                            error: function(jqXHR, textStatus, errorThrown)
+                            {
+                                alert(textStatus)
+                            }
+
+
+                        });
+
+
 						tableInventario.ajax.reload();
 						document.getElementById('excelMasivoInventarios').value == null;
 						
@@ -555,87 +552,131 @@ $(document).ready(function() {
 				error: function(jqXHR, textStatus, errorThrown){
 					alert(textStatus)
 				}
-			});
-			
-			
+			});	
 			
 		}      
-        
-        /* $.ajax({
-            type: 'POST',
-            url: 'modelos/almacen_db.php', // call your php file
-            data: form_data,
-            processData: false,
-            contentType: false,
-            
-        
-            success: function(data, textStatus, jqXHR)
-            {
-                $.toaster({
-                    message: data,
-                    title: 'Aviso',
-                    priority : 'success'
-                });  
-
-
-            },
-            error: function(jqXHR, textStatus, errorThrown)
-            {
-                alert(textStatus)
-            }
-            
-
-        }); */
-
         
     })
 
 
-    //
+    //UPDATE INVENTARIO MASIVA
     $("#btnUpdateExcelInventarios").on('click', function ()
     {
         var form_data = new FormData();
+        var form_data_file = new FormData();
         var excelMasivo = $("#excelMasivoInventarios");
         var file_data = excelMasivo[0].files[0];
         
+        //form data para guardar datos
         form_data.append('file', file_data);
-        form_data.append('module', 'cargarInventarioEditar');
-        form_data.append('module', 'InventariosMasivo');
-        
-        $.toaster({
-            message: 'Inicia actualización de Series Inventario',
-            title: 'Aviso',
-            priority : 'warning'
-        });
+        form_data.append('module', 'InventarioEditar');
+
+        //form data para mover/cargar el archivo
+        form_data_file.append('file', file_data);
+        form_data_file.append('module','cargarInventarioEditar');
 
         
-        
-        $.ajax({
-            type: 'POST',
-            url: 'modelos/almacen_db.php', // call your php file
-            data: form_data,
-            processData: false,
-            contentType: false,
-            
-        
-            success: function(data, textStatus, jqXHR)
-            {
-                $.toaster({
-                    message: data,
-                    title: 'Aviso',
-                    priority : 'success'
-                });  
+        if( document.getElementById("excelMasivoInventarios").files.length == 0 )
+        {
+            $.toaster({
+                message: 'No hay un archivo seleccionado.',
+                title: 'Aviso',
+                priority: 'danger'
+            });
+        }
+        else
+        {
+
+            $.toaster({
+                message: 'Inicia actualización de Series Inventario',
+                title: 'Aviso',
+                priority : 'warning'
+            });
 
 
-            },
-            error: function(jqXHR, textStatus, errorThrown)
-            {
-                alert(textStatus)
-            }
-            
+            $("#showAvisosCargas").modal("show");
+            $("#bodyCargas").html('Cargando Información <br />');
 
-        });
 
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/almacen_db.php', // call your php file
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function(data, textStatus, jqXHR)
+                {
+                    console.log(data);
+                    var info = JSON.parse(data);
+
+                    if(info.inventarios.length > 0)
+                    {
+                        $("#bodyCargas").append(info.mensajeYaCargadas+"<br />");
+                        var message;
+                        
+                        $.each(info.inventarios, function(index, value)
+                        {
+                            $.ajax({
+                                type: 'POST',
+                                url: 'modelos/almacen_db.php', //call ur php file
+                                data: 'module=UpdateInventario&info='+JSON.stringify(value),
+                                cache: false,
+
+                                success: function (data)
+                                {
+                                    message += data+"<br />";
+                                    $("#bodyCargas").append(data+" <br /> ");
+                                },
+                                error: function(error)
+                                {
+                                    var demo = error;
+                                }
+                            });
+                        });
+
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'modelos/almacen_db.php', //
+                            data: form_data_file,
+                            processData: false,
+                            contentType: false,
+
+                            success: function(data, textStatus, jqXHR)
+                            {
+                                $.toaster({
+                                    message: 'Se cargó el archivo con éxito',
+                                    title: 'Aviso',
+                                    priority: 'success'
+                                });
+                            },
+                            error: function(jqXHR, textStatus, errorThrown)
+                            {
+                                alert(textStatus)
+                            }
+
+                        });
+
+                        tableInventario.ajax.reload();
+                        document.getElementById('excelMasivoInventarios').value=null;
+
+                    } 
+                    else
+                    {
+                        $("#bodyCargas").append(info.mensajeYaCargadas);
+                    }
+    
+    
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus)
+                }
+                
+    
+            }); 
+
+        }
 
     })
 

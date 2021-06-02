@@ -3748,12 +3748,18 @@ if ($module == 'InventarioEditar')
 		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
 		
 		$ModeloId = $Almacen->getModeloId($Modelo->getValue());
+
 		$ConectividadId = $Almacen->getConectividadId($Conectividad->getValue());
 		$EstatusId = $Almacen->getEstatusId($Estatus->getValue());
 		$Estatus_ubicacionId = $Almacen->getEstatusInvId($Estatus_ubicacion->getValue());
 		$ubicacionId = $Almacen->getAlmacenId($ubicacion->getValue());
 		
 		$valido = 0;
+
+		if($Tipo->getValue() == 2)
+		{
+			$ModeloId = $Almacen->getCarrierId($Modelo->getValue());
+		}
 		
 		/*if ($_SESSION['almacen'] != $almacenId)
 		{
@@ -3770,14 +3776,16 @@ if ($module == 'InventarioEditar')
 		
 		if ($valido == 0)
 		{
-			/*if($Tipo->getValue() == 'TPV')
-			{
-				$TipoId = "1";
-			}
-			else if ($Tipo->getValue() == 'SIM')
-			{
+			/*
+				if($Tipo->getValue() == 'TPV')
+				{
+					$TipoId = "1";
+				}
+				else if ($Tipo->getValue() == 'SIM')
+				{
 				$TipoId = "2";
-			} */
+				} 
+			*/
 			$TipoId =$Tipo->getValue();
 			
 			if (!is_null($No_serie))
@@ -3826,8 +3834,6 @@ if ($module == 'UpdateInventario')
 		$fecha
 	);
 
-
-
 	 if($info[2]) {
 		 $campoUpdate .= " ,modelo=? ";
 		 array_push($arrayString,$info[2]);
@@ -3857,9 +3863,10 @@ if ($module == 'UpdateInventario')
 			$campoUpdate
 			WHERE no_serie=?" ;
 
-	
 
 	$id = $Almacen->insert($sql,$arrayString);
+
+	print_r($id);
 	
 	$msg = "actualizó en ";
 	
