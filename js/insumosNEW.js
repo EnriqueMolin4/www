@@ -275,6 +275,7 @@ $(document).ready(function() {
         var file_data = excelMasivo[0].files[0];
         form_data.append('file', file_data);
         form_data.append('module','InventariosMasivo');
+        //form_data.append('module','cargarInventarioMasivo');
 
         if( document.getElementById("excelMasivoInventarios").files.length == 0 )
         {

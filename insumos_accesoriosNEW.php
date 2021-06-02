@@ -20,7 +20,7 @@
            
 			<?php  
 			if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
-            <!--<div class="row">
+            <div class="row">
                 <div class="col-sm-6">
                     <label for="excelMasivo" class="col-form-label-sm">Alta en Almacén Masivos</label> 
                     <input class="input-file" type="file" id="excelMasivoInventarios" name="excelMasivoInventarios">
@@ -33,7 +33,7 @@
                 <div class="col-sm-6">
                     <button class="btn btn-warning btn-sm" id="btnUpdateExcelInventarios">Actualizar Series</button>
                 </div>   
-            </div>-->  <br> 
+            </div>  <br> 
 
 
 		    <?php } ?>

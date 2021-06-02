@@ -17,7 +17,7 @@
             <h3>Insumos & Accesorios</h3>
 			<?php  
 			if( searchMenuEdit($_SESSION['Modules'],'url','insumos_accesorios') == '1') { ?>
-            <!--<div class="row">
+            <div class="row">
                 <div class="col-sm-6">
                     <label for="excelMasivo" class="col-form-label-sm">Alta en Almacén Masivos</label> 
                     <input class="input-file" type="file" id="excelMasivoInventarios" name="excelMasivoInventarios">
@@ -30,7 +30,7 @@
                 <div class="col-sm-6">
                     <button class="btn btn-warning btn-sm" id="btnUpdateExcelInventarios">Actualizar Series</button>
                 </div>    
-            </div>--> <br> 
+            </div> <br> 
 		    <?php } ?>
             <h5>Búsqueda</h5>
                 <div class="row  mb-4">
