@@ -643,18 +643,14 @@ if($module == 'getEstatusServicio') {
 {
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="Reporte_Almacen.csv"');
-
     $rows = $Reportes->getAlmaceninventario($params);
     echo 'TipoNombre,No_Serie,Modelo,Estatus,Estatus_Inventario,Ubicacion,Fecha_Edicion,Cantidad,Id'.PHP_EOL;
-
     foreach ($rows as $row)
     {
         echo $row['tipoNombre'] . "," . $row['no_serie'] . "," . $row['modelo'] . "," . $row['estatus'] . "," . $row['estatus_inventario'] . "," . $row['ubicacion'] . "," . $row['fecha_edicion'] . "," . $row['cantidad'] . "," . $row['id'] . PHP_EOL;
     }
-
     /*$rowsTotal = $Reportes->getAlmaceninventario($params,false);*/
     /*$data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
-
 	//echo json_encode($data); //$val;
 } */
 
