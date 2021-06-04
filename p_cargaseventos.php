@@ -143,9 +143,14 @@
                     url: 'modelos/procesos_in.php', // call your php file
                     data: 'module=getODTNoProcesados&id='+id,
                     cache: false,
-                    success: function(data){
+                    success: function(data)
+                    {
+                        console.log(data);
+
                         var info = JSON.parse(data);
+
                         var list = '';
+                        
                         $.each(info, function(index,valor) {
                             list += "<p>"+valor.ODT+"</p>";
                         })

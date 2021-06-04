@@ -761,6 +761,7 @@ class Almacen implements IConnections {
 				$where
 				ORDER BY du.nombre,du.apellidos
 				";
+		self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );

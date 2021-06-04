@@ -1,7 +1,10 @@
 <?php
+error_reporting( error_reporting() & ~E_NOTICE ); //undefined Problem
 //require 'vendor/autoload.php';
 require __DIR__ . '/../vendor/autoload.php';
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7;
 
 
 class Api {
@@ -10,7 +13,8 @@ class Api {
     function __construct() {
 
         self::$client = new Client([
-            'base_uri' => 'https://sgse.microformas.com.mx/' 
+            'base_uri' => 'https://sgse.microformas.com.mx/' ,
+            'verify' => false
         ]);
     }
 
@@ -26,8 +30,8 @@ class Api {
         ];
 
         $body = json_encode($RequestBody);
-        $response = self::$client->request('POST', "GetServerTest/api/authenticate/token",[
-            'cert' => [ '/home/webdeveloper/sitios/sinttecom/conector/cert.pem'],
+        $response = self::$client->request('POST', "GETNETPROVIDERS/api/authenticate/token",[
+            'cert' => [ '/laragon/www/conector/cert.pem'],
             'headers' => ['Content-Type' => 'application/json', 'Accept' => 'application/json'],
             'body'    => $body 
         ]);
@@ -45,23 +49,55 @@ class Api {
        return  json_decode($response->getBody());
     }
 
-    function putImg($object,$token,$params) {
-        $path = '';
-        $response = self::$client->request('POST', $object,[
-            'headers' => [
-            'Authorization' => 'Bearer VTl4tw6n7aA7uixf731yVGHohdCXJWhjyCg4nSZa5lEnIWfVxOksPBTyoNSn'
-            ],
-            'multipart' => $params
-        ]);
+    function putImg($object,$token,$imgs,$odt,$tecnico) {
+        
+        $arrayImg = array();
+        $arrayImgs = array();
+        $result = '';
+        
+        foreach ($imgs as $image) {
+            array_push($arrayImg, [ 'name' => 'Odt', 'contents' => $odt]);
+            array_push($arrayImg, [ 'name' => 'Tecnico', 'contents' => 'android']);
+            $path = $_SERVER['DOCUMENT_ROOT']."/img/".$image['odt']."/".$image['dir_img'];
+            $image_info = getimagesize($path);
+            $name = explode(".",$image['dir_img']);
 
-       return  json_decode($response->getBody());
+            array_push($arrayImg,['name'=> 'Archivos', 'contents' => Psr7\Utils::tryFopen( $path, 'r' )]); 
+          
+
+            try {
+                $response = self::$client->request('POST', $object,[
+                    'multipart' => $arrayImg,
+                    'headers' => [ 'Authorization' => 'Bearer '.$token]
+                ]);
+                
+            } catch (GuzzleHttp\Exception\ClientException $exception) {
+                $response = $exception->getResponse();
+                $responseBodyAsString = $response->getBody()->getContents();
+                echo $responseBodyAsString;
+            } catch (GuzzleHttp\Exception\ServerException  $e) {
+                $response = $e->getResponse();
+                $responseBodyAsString = $response->getBody()->getContents();
+            }  
+           
+           // $result = json_decode($response->getBody());
+           $result= $response->getBody();
+           $arrayImg= array();
+        }
+
+
+
+        //array_push($arrayImg, [ 'name' => 'Archivos', 'contents' => $arrayImgs]);
+
+       
+
+       return  json_decode($result);
     }
 
-    function put($object,$json) {
+    function put($object,$token,$json) {
+
         $response = self::$client->request('POST', $object,[
-            'headers' => [
-            'Authorization' => 'Bearer VTl4tw6n7aA7uixf731yVGHohdCXJWhjyCg4nSZa5lEnIWfVxOksPBTyoNSn'
-            ],
+            'headers' => [ 'Authorization' => 'Bearer '.$token],
             'json' => $json
         ]);
 

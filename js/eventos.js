@@ -1,35 +1,35 @@
 var infoAjax = 0;
 var scriptSinFiltro;
 var tableEventos,PermisosEvento;
-var validData = [];              
+var validData = [];				 
 $(document).ready(function() {
-    var deg = 0;
+	var deg = 0;
     ResetLeftMenuClass("submenueventos", "ulsubmenueventos", "eventoslink")
          $.datetimepicker.setLocale('es');
         getTipoEvento();
         getEstatusEvento();
-        getEstatusServicio();
-        getRechazos();
-        getSubRechazos();
+		getEstatusServicio();
+		getRechazos();
+		getSubRechazos();
         getCancelado();
         getProductos();
-        getAplicativo();
+		getAplicativo();
         getVersion();
         getModelos();
         getConectividad();
         getCarrier();
         $("#fechaVen_inicio").datetimepicker({
-            timepicker:false,
+			timepicker:false,
             format:'Y-m-d'
         });
 
         $("#fechaVen_fin").datetimepicker({
-            timepicker:false,
+			timepicker:false,
             format:'Y-m-d'
         });
 
         $("#fecha_atencion").datetimepicker({
-            timepicker:false,
+			timepicker:false,
             format:'Y-m-d'
         });
 
@@ -43,7 +43,7 @@ $(document).ready(function() {
             serverSide: true,
             searching: true,
             lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
-            order: [[ 6, "ASC" ]],        
+			order: [[ 6, "ASC" ]],		  
             dom: 'lfrtiBp',
             buttons: [
                 'pdf',
@@ -59,24 +59,22 @@ $(document).ready(function() {
                     d.tipoevento = $("#tipo_evento").val(),
                     d.fechaVen_inicio = $("#fechaVen_inicio").val(),
                     d.fechaVen_fin = $("#fechaVen_fin").val(),
-                    d.fecha_Ven = $("#dt_vencimiento").val(),
-                    d.diasVen = $("#diasVencidos").val(),
                     d.evidencias = $('#evidencias').is(':checked') ? 1 : 0
                 }
             },
             columns : [
                 { data: 'odt'},
-                { data: 'afiliacion'},
+                { data: 'afiliacion' },
                 { data: 'cveBancoNombre' },
                 { data: 'comercio' },
                 { data: 'servicio' },
                 { data: 'fecha_alta'},
                 { data: 'fecha_vencimiento'},
-                { data: 'fecha_cierre'},
+				{ data: 'fecha_cierre'},
                 { data: 'totalImg'},
                 { data: 'tecnico'} ,
                 { data: 'nombreEstatus' },
-                { data: 'nombreEstatusServicio' },
+				{ data: 'nombreEstatusServicio' },
                 { data: 'id'}
                   
             ],
@@ -89,14 +87,20 @@ $(document).ready(function() {
                 {
                     "targets": [12],
                     "mRender": function ( data,type, row ) {
+                        var btnALL = '';
+                        var btnCambiarEstatus = '<a href="#" title="Cambiar Estatus" class="btnCambiarEst" data="'+row.id+'"><i class="fas fa-undo fa-2x"></i></a>';
+                        var btnInfo = '<a href="#" class="editCom" title="Información del evento" data="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a>';
+                        var btnCambiarOdt = '<a href="#" title="Cambiar ODT" class="chgODT" data="'+row.odt+'"><i class="fas fa-exchange-alt fa-2x " style="color:red"></i></a>';
+                        var btnHistoria = '<a href="#" class="mostrarHistoria" data="'+row.odt+'"><i class="fas fa-history fa-2x" style="color:#C17137"></i> </a>';
+                        var btnCerrar = '<a href="#" class="endEvent" title="Cerrar evento" data="'+row.id+'"><i class="far fa-calendar fa-2x " style="color:#E04242"></i></a>';
                         if(row.nombreEstatus==='Cerrado' && $("#tipo_user").val() == 'callcenterADM')
                         {
-                            return '<a href="#" title="Cambiar Estatus" class="btnCambiarEst" data="'+row.id+'"><i class="fas fa-undo fa-2x"></i></a>  <a href="#" class="editCom" title="Información del evento" data="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a>  <a href="#" title="Cambiar ODT" class="chgODT" data="'+row.odt+'"><i class="fas fa-exchange-alt fa-2x " style="color:red"></i></a><br><a href="#" class="mostrarHistoria" data="'+row.odt+'"><i class="fas fa-history fa-2x" style="color:#C17137"></i> </a>';
+                            btnALL= btnCambiar+btnInfo+btnCambiarOdt+'<br>'+btnHistoria;  
+                        } else if(row.sync = '0') {
+                            btnALL= btnInfo+btnCerrar+btnCambiarOdt+btnHistoria;
                         }
 
-
-
-                        return '<a href="#" class="editCom" title="Información del evento" data="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a><a href="#" class="endEvent" title="Cerrar evento" data="'+row.id+'"><i class="far fa-calendar fa-2x " style="color:#E04242"></i></a> <a href="#" title="Cambiar ODT" class="chgODT" data="'+row.odt+'"><i class="fas fa-exchange-alt fa-2x " style="color:#E04242"></i></a><br><a href="#" class="mostrarHistoria" title="Ver historia" data="'+row.odt+'"> <i class="fas fa-history fa-2x" style="color:#C17137"></i> </a>';
+                        return btnALL;
                     }
                 }
             ],
@@ -143,8 +147,8 @@ $(document).ready(function() {
             }
         });
 
-    
-    $('#historia').DataTable({ 
+	
+	$('#historia').DataTable({ 
         language: {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
         },
@@ -206,7 +210,7 @@ $(document).ready(function() {
             { data: 'SimSalida'}
         ]
 
-    });
+	});
 
 
 
@@ -229,10 +233,10 @@ $(document).ready(function() {
             
             $("#showHistoria").modal("show");
                     
+        
         })
-
-
-    
+		
+	
         $('#showHistoria').on('show.bs.modal', function () {
             $(this).find('.modal-body').css({
                 width: 'auto',
@@ -244,13 +248,13 @@ $(document).ready(function() {
             $('#historiaevento').DataTable().ajax.reload();
         })
 
-        $("#evidencias").on("change", function() {
+		$("#evidencias").on("change", function() {
             
             if ( $(this).is(":checked") )  {
                 $('#eventos').DataTable().ajax.reload();
             }
         })
-        
+		
         $(".searchEvento").on('change', function() {
 
             $('#eventos').DataTable().ajax.reload();
@@ -273,67 +277,68 @@ $(document).ready(function() {
             $("#showEvento").modal({show: true, backdrop: false, keyboard: false})
             
         })
-
+  
         $(document).on("click",".btnCambiarEst", function(){
-            var odt = $(this).attr('data');
 
-            if (confirm("Se cambiará el estatus del evento a Abierto. ¿Estas seguro?")) 
-            {
-                var estatus = 16;
+			var odt = $(this).attr('data');
 
-                $.ajax({
-                    type: 'GET',
-                    url: 'modelos/eventos_db.php',
-                    data: 'module=cambiarEstatusEvento&estatus='+estatus+"&odtid="+odt,
-                    cache: false,
-                    success: function(data){
-                        $.toaster({
-                            message: 'Se cambió el estatus con éxito',
-                            title: 'Aviso',
-                            priority: 'success'
-                        });
-                        tableEventos.ajax.reload();
-                    },
-                    error: function(error)
-                    {
-                        var demo = error;
-                    }
-                }); 
+			if (confirm("Se cambiará el estatus del evento a Abierto. ¿Estas seguro?")) 
+			{
+				var estatus = 16;
 
-
-            }
-                else
-            {
-                 $.toaster({
-                            message: 'No se actualizó el estatus del evento ',
-                            title: 'Aviso',
-                            priority : 'warning'
-                        });  
-            }
+				$.ajax({
+					type: 'GET',
+					url: 'modelos/eventos_db.php',
+					data: 'module=cambiarEstatusEvento&estatus='+estatus+"&odtid="+odt,
+					cache: false,
+					success: function(data){
+						$.toaster({
+							message: 'Se cambió el estatus con éxito',
+							title: 'Aviso',
+							priority: 'success'
+						});
+						tableEventos.ajax.reload();
+					},
+					error: function(error)
+					{
+						var demo = error;
+					}
+				}); 
 
 
-        })
+			}
+				else
+			{
+				 $.toaster({
+							message: 'No se actualizó el estatus del evento ',
+							title: 'Aviso',
+							priority : 'warning'
+						});  
+			}
+
+
+		})
 
         $(document).on("click",".chgODT", function() {
             var odt = $(this).attr('data');
             $("#old_odt").val(odt);
             $("#chgODT").modal({show: true, backdrop: false, keyboard: false})
         })
-        
-        $("#addDocuments").on("click", function() {
-            var totalArchivos = $("#documentos")[0].files;
-            var odt = $("#odt").val();
-            console.log(totalArchivos);
-            
-            $.each(totalArchivos, function(index,element) {
-                console.log(element);
-                
-                subirFotos(odt,element)
-            });
-            
-            $("#documentos").val('');
-            showDocumentos();
-        })
+		
+		$("#addDocuments").on("click", function() {
+			var totalArchivos = $("#documentos")[0].files;
+			var odt = $("#odt").val();
+			console.log(totalArchivos);
+			
+			$.each(totalArchivos, function(index,element) {
+				console.log(element);
+				
+				subirFotos(odt,element)
+			});
+			
+			$("#documentos").val('');
+			showDocumentos();
+		})
 
         $('#showEvento').on('show.bs.modal', function (e) {
            
@@ -407,7 +412,7 @@ $(document).ready(function() {
                                     $("#estatus").val(element.estatusNombre)
                                     $("#servicio").val(element.servicioNombre)
                                     $("#comentarios_tecnico").val(element.comentarios)
-                                    $("#comentarios_validacion").val(element.comentarios_validacion)
+									$("#comentarios_validacion").val(element.comentarios_validacion)
                                     $("#servicio_final").val(element.serviciofinalNombre)
                                     $("#comentarios_cierre").val(element.comentarios_cierre)
                                     $("#fecha_asignacion").val(element.fecha_asignacion);
@@ -454,6 +459,15 @@ $(document).ready(function() {
                                     $("#simInData").val(element.simInCarrier);
                                     $("#simReData").val(element.simReCarrier);
 
+                                    var faltaserie = element.faltaserie === null ? 0 : element.faltaserie;
+                                    var faltaevidencia = element.faltaevidencia === null ? 0 : element.faltaevidencia;
+                                    var faltainformacion = element.faltainformacion === null ? 0 : element.faltainformacion;
+                                    var faltaubicacion = element.faltaubicacion === null ? 0 : element.faltaubicacion;
+                                    $("#faltaSerie").prop('checked',faltaserie == 0 ? false : true);
+                                    $("#faltaEvidencia").prop('checked',faltaevidencia == 0 ? false : true);
+                                    $("#faltaInformacion").prop('checked',faltainformacion == 0 ? false : true);
+                                    $("#faltaUbicacion").prop('checked',faltaubicacion == 0 ? false : true);
+
                                     if(element.servicio == '15') {
                                         $("#labelAfiliacion").html('Folio');
                                         $("#col_tipocredito").show();
@@ -476,24 +490,24 @@ $(document).ready(function() {
                                         $("#btnReasignarTecnico").show();
                                     } */
                                     
-                                    $("#divBtnCV").show();
-                                    $("#comentarios_valid").show();
+									$("#divBtnCV").show();
+									$("#comentarios_valid").show();
                                     //getScriptEvento(element.servicio,element.tpv_instalado)
                                     //INTENTAR VALIDACIÓN AQUÍ
-                                    
-                                    if(element.estatus_servicio == '13')
-                                    {
-                                        $("#divBtnCV").show();
-                                        $("#comentarios_valid").show();
-                                        
-                                    } else if (element.estatus_servicio == '14')
-                                    {
-                                        
-                                    }else if (element.estatus_servicio == '15')
-                                    {
-                                        $("#divBtnCV").show();
-                                        $("#comentarios_valid").show();
-                                    }
+									
+									if(element.estatus_servicio == '13')
+									{
+										$("#divBtnCV").show();
+										$("#comentarios_valid").show();
+										
+									} else if (element.estatus_servicio == '14')
+									{
+										
+									}else if (element.estatus_servicio == '15')
+									{
+										$("#divBtnCV").show();
+										$("#comentarios_valid").show();
+									}
                             })  
                         }         
                     },
@@ -510,6 +524,8 @@ $(document).ready(function() {
             var noserie = $("#tpv").val();
             var modelo = $("#tpvInDataModelo").val();
             var conectividad = $("#tpvInDataConnect").val();
+
+ 
 
                 if( $(this).val() == '1' || $(this).val() == '16' || $(this).val() == '0' ) {
                     $("#rowCancelado").hide();
@@ -556,46 +572,48 @@ $(document).ready(function() {
             
         })
 
-        $("#btnComentValid").on('click', function() {      
-          
+        $("#btnComentValid").on('click', function() {
+		  
+		 
+		  
             if( $('#comentarios_validacion').val().length > 0  )
-            {
-                var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val()};
-            console.log(dn);
-            $.ajax({ 
-                    type: 'POST',
-                    url : 'modelos/eventos_db.php',
-                    data: dn,
-                    cache: false,
-                    success: function(data){
-                        
-                    
-                      $.toaster({
+			{
+				var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val()};
+			console.log(dn);
+			$.ajax({ 
+					type: 'POST',
+					url : 'modelos/eventos_db.php',
+					data: dn,
+					cache: false,
+					success: function(data){
+						
+					
+					  $.toaster({
                             message: data,
                             title: 'Aviso',
                             priority : 'success'
                         }); 
-                        cleartext();
-                    },
-                    error: function(error){
-                        var demo = error;
-                    }
-                });
-                
-            }else{
-                $.toaster({
-                message: 'Ingresa el comentario de validacion',
-                title: 'Aviso',
-                priority : 'danger'
+						cleartext();
+					},
+					error: function(error){
+						var demo = error;
+					}
+				});
+				
+			}else{
+				$.toaster({
+				message: 'Ingresa el comentario de validacion',
+				title: 'Aviso',
+				priority : 'danger'
                       });}
-            
-        
-            
-            
-            
-        
-        
-        
+			
+		
+			
+			
+			
+		
+		
+		
         })
         $("#btnReasignarTecnico").on("click",function() {
             $("#showReasignar").modal("show");
@@ -616,7 +634,7 @@ $(document).ready(function() {
                             priority : 'success'
                         });   
                     
-                    $("#tecnico").val( $("#reasignartecnico option:selected").text() );
+					$("#tecnico").val( $("#reasignartecnico option:selected").text() );
                     $("#showReasignar").modal("hide");
                     $("#reasignartecnico").val('0');
                     //$('#showEvento').modal("hide");
@@ -698,9 +716,9 @@ $(document).ready(function() {
 
         $(document).on("click","#btnImagenes", function() {
             //$("#showImagenes").modal({show: true, backdrop: false, keyboard: false});
-             var windowname = $("#odt").val();
+			 var windowname = $("#odt").val();
             window.open("galeria_img.php?odt="+$("#odt").val() , windowname, "resizable=no, toolbar=no, scrollbars=no, menubar=no, status=no, directories=no ");
-            
+			
         })
 
         $('#showImagenes').on('show.bs.modal', function (e) {
@@ -732,70 +750,74 @@ $(document).ready(function() {
         $('#showImagenes').on('hide.bs.modal', function (e) {
            // $("#imagenSel").html("");
            // $("#carruselFotos").html("")
-             
+			 
         });
-        
-        $(document).on("click","#btnDocumentos", function() {
+		
+		$(document).on("click","#btnDocumentos", function() {
             $("#showDocumentos").modal({show: true, backdrop: false, keyboard: false});
         })
 
         $('#showDocumentos').on('show.bs.modal', function (e) {
            
-            showDocumentos();          
+            showDocumentos();
+
+            
        
         })
-        
-        
-        $('#showDocumentos').on('hide.bs.modal', function (e) {
+		
+
+		
+		$('#showDocumentos').on('hide.bs.modal', function (e) {
             $("#imagenSel").html("");
             $("#carruselFotos").html("")
         });
-        
-        $("#btnUpdateEvento").on("click",function() {
+		
+		$("#btnUpdateEvento").on("click",function() {
             var validar = 0;
             var msg = '';
-            var eventoId = $("#eventoId").val();
-            var odt = $("#odt").val();
-            var comentario = $("#comentarios_cierre").val();
-            var estatus = $("#estatus_servicio").val();
+
+			var eventoId = $("#eventoId").val();
+			var odt = $("#odt").val();
+			var comentario = $("#comentarios_cierre").val();
+			var estatus = $("#estatus_servicio").val();
             var foliotelecarga = $("#folio_telecarga").val();
             var version = $("#version").val();
             var aplicativo = $("#aplicativo").val();
             var receptorservicio = $("#receptor_servicio").val();
-            var tecnico =   $("#tecnicoid").val();
-            
-            //ODT checkbox
-            var odtGetNet = $("#odtGetNet").is(":checked") ? 1 : 0;
-            var odtNotificado = $("#odtNotificado").is(":checked") ? 1 : 0;
-            var odtDescarga = $("#odtDescarga").is(":checked") ? 1 : 0;
-            
-            //TPV Retirado
-            var tvpRetBateria = $("#tvpRetBateria").is(":checked") ? 1 : 0;
-            var tvpRetEliminador = $("#tvpRetEliminador").is(":checked") ? 1 : 0;
-            var tvpRetTapa = $("#tvpRetTapa").is(":checked") ? 1 : 0;
-            var tvpRetCable = $("#tvpRetCable").is(":checked") ? 1 : 0;
-            var tvpRetBase = $("#tvpRetBase").is(":checked") ? 1 : 0;
-            
-            // Rechazo
-            var rechazo = $("#rechazo").is(":checked") ? 1 : 0;
-            var subrechazo = $("#subrechazo").is(":checked") ? 1 : 0;
-            var cancelado = $("#cancelado").is(":checked") ? 1 : 0;
-            
-            //DTOS ACtulizables
+            var tecnico = 	$("#tecnicoid").val();
+			
+			//ODT checkbox
+			var odtGetNet = $("#odtGetNet").is(":checked") ? 1 : 0;
+			var odtNotificado = $("#odtNotificado").is(":checked") ? 1 : 0;
+			var odtDescarga = $("#odtDescarga").is(":checked") ? 1 : 0;
+			
+			//TPV Retirado
+			var tvpRetBateria = $("#tvpRetBateria").is(":checked") ? 1 : 0;
+			var tvpRetEliminador = $("#tvpRetEliminador").is(":checked") ? 1 : 0;
+			var tvpRetTapa = $("#tvpRetTapa").is(":checked") ? 1 : 0;
+			var tvpRetCable = $("#tvpRetCable").is(":checked") ? 1 : 0;
+			var tvpRetBase = $("#tvpRetBase").is(":checked") ? 1 : 0;
+			
+			// Rechazo
+			var rechazo = $("#rechazo").is(":checked") ? 1 : 0;
+			var subrechazo = $("#subrechazo").is(":checked") ? 1 : 0;
+			var cancelado = $("#cancelado").is(":checked") ? 1 : 0;
+			
+			//DTOS ACtulizables
             var tpv = $("#tpv").val();
             var tvpInModelo = $("#tpvInDataModelo").val();
             var tpvInConnect = $("#tpvInDataConnect").val();
-            var tpv_retirado =  $("#tpv_retirado").val();
+            var tpv_retirado = 	$("#tpv_retirado").val();
             var tvpReModelo = $("#tpvReDataModelo").val();
             var tpvReConnect = $("#tpvReDataConnect").val();
-            var idcaja =    $("#idcaja").val();
-            var afiliacion_amex =   $("#afiliacion_amex").val();
-            var idamex =    $("#idamex").val();
-            var sim_instalado =     $("#sim_instalado").val();
+			var idcaja = 	$("#idcaja").val();
+			var afiliacion_amex = 	$("#afiliacion_amex").val();
+			var idamex = 	$("#idamex").val();
+            var sim_instalado = 	$("#sim_instalado").val();
             var simInData = $("#simInData").val();
-            var sim_retirado =  $("#sim_retirado").val();
+            var sim_retirado = 	$("#sim_retirado").val();
             var simReData = $("#simReData").val();
-            var producto =  $("#producto").val();
+            var producto = 	$("#producto").val();
 
             //Rollos
             var rollosInstalar = $("#rollos_instalar").val();
@@ -849,7 +871,7 @@ $(document).ready(function() {
                     msg += "La cant de rollos no coincide \n ";
                 }
             }
-            
+			
             if(tecnico == 0 ) {
                 validar++;
                 msg += "Necesitas asignar un tecnico al Evento \n ";
@@ -860,41 +882,41 @@ $(document).ready(function() {
                 msg += "Se necesita mas información en las observaciones (minimo 200 caracteres) \n ";
             }
 
-            if(validar == 0 ) {
-                var dnd = { module: 'cerrarEvento',eventoId : eventoId, odt : odt,comentario: comentario,estatus:estatus,foliotelecarga:foliotelecarga, odtGetNet : odtGetNet, odtNotificado : odtNotificado,
-                            odtDescarga: odtDescarga, tvpRetBateria: tvpRetBateria, tvpRetEliminador: tvpRetEliminador, tvpRetTapa: tvpRetTapa, tvpRetCable: tvpRetCable, tvpRetBase: tvpRetBase,
-                            rechazo: rechazo, subrechazo: subrechazo,cancelado: cancelado,tpv:tpv,tpvRetirado : tpv_retirado,idCaja: idcaja,afiliacionAmex:afiliacion_amex ,idamex:idamex,
+			if(validar == 0 ) {
+				var dnd = { module: 'cerrarEvento',eventoId : eventoId, odt : odt,comentario: comentario,estatus:estatus,foliotelecarga:foliotelecarga, odtGetNet : odtGetNet, odtNotificado : odtNotificado,
+							odtDescarga: odtDescarga, tvpRetBateria: tvpRetBateria, tvpRetEliminador: tvpRetEliminador, tvpRetTapa: tvpRetTapa, tvpRetCable: tvpRetCable, tvpRetBase: tvpRetBase,
+							rechazo: rechazo, subrechazo: subrechazo,cancelado: cancelado,tpv:tpv,tpvRetirado : tpv_retirado,idCaja: idcaja,afiliacionAmex:afiliacion_amex ,idamex:idamex,
                             simInstalado:sim_instalado, simRetirado: sim_retirado,producto: producto,version: version,aplicativo:aplicativo,receptorservicio:receptorservicio, 
                             tvpInModelo:tvpInModelo,tpvInConnect:tpvInConnect ,tvpReModelo, tvpReModelo, tpvReConnect: tpvReConnect, simInData:simInData, simReData:simReData,tecnico:tecnico, 
                             rollosInstalar:rollosInstalar, rollosInstalados:rollosInstalados };
-                
-                 $.ajax({
-                    type: 'POST',
-                    url: 'modelos/eventos_db.php', // call your php file
-                    data: dnd,
-                    cache: false,
-                    success: function(data){    
-                            $('#eventos').DataTable().ajax.reload();
-                            $.toaster({
-                                message: 'Evento Cerrado',
-                                title: 'Aviso',
-                                priority : 'success'
-                            });   
-                            
-                             $('#showEvento').modal("hide");
-                             
-                    },
-                    error: function(error){
-                        var demo = error;
-                    }
-                });
-            } else {
-                $.toaster({
-                    message: msg,
-                    title: 'Aviso',
-                    priority : 'danger'
-                });   
-            }
+				
+				 $.ajax({
+					type: 'POST',
+					url: 'modelos/eventos_db.php', // call your php file
+					data: dnd,
+					cache: false,
+					success: function(data){    
+							$('#eventos').DataTable().ajax.reload();
+							$.toaster({
+								message: 'Evento Cerrado',
+								title: 'Aviso',
+								priority : 'success'
+							});   
+							
+							 $('#showEvento').modal("hide");
+							 
+					},
+					error: function(error){
+						var demo = error;
+					}
+				});
+			} else {
+				$.toaster({
+					message: msg,
+					title: 'Aviso',
+					priority : 'danger'
+				});   
+			}
         });
         
         $("#tpv").on("change",function() {
@@ -908,8 +930,10 @@ $(document).ready(function() {
         $("#tpv_retirado").on("change",function() {
             var tpv = $(this).val();
             if(tpv.length > 0) {
-                validarTPV(tpv,1,'out')     
+                validarTPV(tpv,1,'out')
+                
             }
+           
         })
 
         $("#sim_instalado").on("change",function() {
@@ -929,19 +953,8 @@ $(document).ready(function() {
             }
         })
 
-    /*    
-        $( ".diasVencidos" ).change(function() 
-        {
-            //alert("HANDLER FOR BLAH BLAH BLAH");
-            var index = $(this).parent().parent().index();
-            var data  = tableEventos.row( index ).data();
-            console.log( index );
-            console.log( data );
-
-            $("#dt_vencimiento").val(data.fecha_vencimiento);
-            
-        })
-    */
+        
+        
     } );
 
     function getModeloConectividad(tpv,tipo,donde) {
@@ -1063,8 +1076,10 @@ $(document).ready(function() {
       function initMap() {
          
       }
-      
+	  
       function getInfoExtra(odt) {
+
+    
 
         $.ajax({
             type: 'POST',
@@ -1102,17 +1117,17 @@ $(document).ready(function() {
         })  
     }
 
-      function tipodeUsuario(tipo) {
+	  function tipodeUsuario(tipo) {
 
           $("#rowCancelado").hide();
           $("#rowRechazos").hide();
           $("#rowSubRechazos").hide();
           $("#btnUpdateEvento").attr('disabled',true);
           
-          if( $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin'  ) {
-            $("#rollos_entregados").attr('readonly',false);
-            $("#comentarios_cierre").attr('readonly',false);
-            //$("#btnUpdateEvento").attr('disabled',false);
+		  if( $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin'  ) {
+			$("#rollos_entregados").attr('readonly',false);
+			$("#comentarios_cierre").attr('readonly',false);
+			//$("#btnUpdateEvento").attr('disabled',false);
             $("#estatus_servicio").attr('disabled',false)
             $("#folio_telecarga").attr('readonly',false)
             $("#producto").attr('disabled',false)
@@ -1129,13 +1144,13 @@ $(document).ready(function() {
             $("#tvpRetTapa").attr('disabled',false)
             $("#tvpRetCable").attr('disabled',false)
             $("#tvpRetBase").attr('disabled',false)
-            
+			
             $("#tpv").attr('readonly',false)
             $("#tpv_retirado").attr('readonly',false)
-            $("#idcaja").attr('readonly',false)
-            $("#afiliacion_amex").attr('readonly',false)
-            $("#idamex").attr('readonly',false)
-            $("#sim_instalado").attr('readonly',false)
+			$("#idcaja").attr('readonly',false)
+			$("#afiliacion_amex").attr('readonly',false)
+			$("#idamex").attr('readonly',false)
+			$("#sim_instalado").attr('readonly',false)
             $("#sim_retirado").attr('readonly',false)
 
             //HORAS
@@ -1143,11 +1158,11 @@ $(document).ready(function() {
             $("#hora_llegada").attr('readonly',false);
             $("#hora_salida").attr('readonly',false);
             
-            
-          } else {
-            $("#rollos_entregados").attr('readonly',true);
-            $("#comentarios_cierre").attr('readonly',true);
-            $("#btnUpdateEvento").attr('disabled',true);
+			
+		  } else {
+			$("#rollos_entregados").attr('readonly',true);
+			$("#comentarios_cierre").attr('readonly',true);
+			$("#btnUpdateEvento").attr('disabled',true);
             $("#estatus_servicio").attr('disabled',true)
             $("#folio_telecarga").attr('readonly',true)
             $("#producto").attr('disabled',true)
@@ -1164,17 +1179,17 @@ $(document).ready(function() {
             $("#tvpRetTapa").attr('disabled',true)
             $("#tvpRetCable").attr('disabled',true)
             $("#tvpRetBase").attr('disabled',true)
-            
-            $("#tpv").attr('readonly',true)
+			
+			$("#tpv").attr('readonly',true)
             $("#tpv_retirado").attr('readonly',true)
-            $("#idcaja").attr('readonly',true)
-            $("#afiliacion_amex").attr('readonly',true)
-            $("#idamex").attr('readonly',true)
-            $("#sim_instalado").attr('readonly',true)
-            $("#sim_retirado").attr('readonly',true)
+			$("#idcaja").attr('readonly',true)
+			$("#afiliacion_amex").attr('readonly',true)
+			$("#idamex").attr('readonly',true)
+			$("#sim_instalado").attr('readonly',true)
+			$("#sim_retirado").attr('readonly',true)
             
-          }
-      }
+		  }
+	  }
 
 function getScriptEvento(servicio,noserie,conectividad,modelo) {
     var result = '';
@@ -1247,7 +1262,7 @@ function mostrarImagenes(odt) {
                 })
 
                 $("#carruselFotos").html(texto);
-                zoomifyc.init($('#carruselFotos img'));
+				zoomifyc.init($('#carruselFotos img'));
             } else {
             
                 $.toaster({
@@ -1270,41 +1285,41 @@ function fnShowHide( colId,status )
     var table = $('#eventos').DataTable();
     table.column( colId ).visible( status ); 
 }
-          
+      	  
 function showDocumentos() {
-    $("#carruselDocs").html('');
-    $.ajax({
-        type: 'GET',
-        url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getDocumentosODT&odt='+$("#odt").val(),
-        cache: false,
-        success: function(data){
-            var texto = "";
-            var info = JSON.parse(data);
-            if(info['estatus'] == '1') {
-                $.each(info['imagenes'], function(index, element) {
+	$("#carruselDocs").html('');
+	$.ajax({
+		type: 'GET',
+		url: 'modelos/eventos_db.php', // call your php file
+		data: 'module=getDocumentosODT&odt='+$("#odt").val(),
+		cache: false,
+		success: function(data){
+			var texto = "";
+			var info = JSON.parse(data);
+			if(info['estatus'] == '1') {
+				$.each(info['imagenes'], function(index, element) {
 
-                    texto = texto + '<div><a href="'+element.path+'"  data="'+element.path+'">'+element.imagen+'</a></div> '
+					texto = texto + '<div><a href="'+element.path+'"  data="'+element.path+'">'+element.imagen+'</a></div> '
 
-                })
+				})
 
-                $("#carruselDocs").html(texto);
-            } else {
+				$("#carruselDocs").html(texto);
+			} else {
                
                 $.toaster({
                     message: 'LA ODT NO TIENE DOCUMENTOS REGISTRADOS',
                     title: 'Aviso',
                     priority : 'danger'
                 });    
-            }
-                 
-        },
-        error: function(error){
-            var demo = error;
-        }
-    });
+			}
+				 
+		},
+		error: function(error){
+			var demo = error;
+		}
+	});
 
-    
+	
 }
 
 function getTecnicos(id) {
@@ -1317,7 +1332,7 @@ function getTecnicos(id) {
             console.log(data);
         
         $("#reasignartecnico").html(data);
-        $("#reasignartecnico").val(id);     
+		$("#reasignartecnico").val(id);		
         },
         error: function(error){
             var demo = error;
@@ -1327,7 +1342,7 @@ function getTecnicos(id) {
 
 function getEstatusServicio() {
 
-    $.ajax({
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getEstatusServicio',
@@ -1336,7 +1351,7 @@ function getEstatusServicio() {
             console.log(data);
         
          $("#estatus_servicio").html(data);
-            
+		 	
         },
         error: function(error){
             var demo = error;
@@ -1345,8 +1360,8 @@ function getEstatusServicio() {
 }
 
 function getCancelado() {
-    
-    $.ajax({
+	
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getEstatusCancelado',
@@ -1355,17 +1370,19 @@ function getCancelado() {
             console.log(data);
         
          $("#cancelado").html(data);
-            
+		 	
         },
         error: function(error){
             var demo = error;
         }
     });
+	
+
 }
 
 function getRechazos() {
-    
-    $.ajax({
+	
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getEstatusRechazo',
@@ -1374,19 +1391,19 @@ function getRechazos() {
             console.log(data);
         
          $("#rechazo").html(data);
-            
+		 	
         },
         error: function(error){
             var demo = error;
         }
     });
-    
+	
 
 }
 
 function getSubRechazos() {
-    
-    $.ajax({
+	
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getEstatusSubRechazo',
@@ -1395,19 +1412,19 @@ function getSubRechazos() {
             console.log(data);
         
          $("#subrechazo").html(data);
-            
+		 	
         },
         error: function(error){
             var demo = error;
         }
     });
-    
+	
 
 }
 
 function getProductos() {
-    
-    $.ajax({
+	
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getProductos',
@@ -1416,43 +1433,43 @@ function getProductos() {
             console.log(data);
         
          $("#producto").html(data);
-            
+		 	
         },
         error: function(error){
             var demo = error;
         }
     });
-    
+	
 
 }
 
 function subirFotos(odt,file) {
-    //var odt = $("#odt").val();
-    var file_data = file; //$("#fileToUpload")[0].files[0];
-    var form_data = new FormData();
-    form_data.append('file', file_data);
-    form_data.append('name',odt);
-    form_data.append('module','saveDoc');
+	//var odt = $("#odt").val();
+	var file_data = file; //$("#fileToUpload")[0].files[0];
+	var form_data = new FormData();
+	form_data.append('file', file_data);
+	form_data.append('name',odt);
+	form_data.append('module','saveDoc');
 
-    $.ajax({
-        type: 'POST',
-        url: 'modelos/eventos_db.php', // call your php file
-        data: form_data,
-        processData: false,
-        contentType: false,
-        success: function(data, textStatus, jqXHR){
-            //$("#avisos").html(data);
-            $.toaster({
-                message: data,
-                title: 'Aviso',
-                priority : 'warning'
-            });  
-            
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            alert(data)
-       }
-     });
+	$.ajax({
+		type: 'POST',
+		url: 'modelos/eventos_db.php', // call your php file
+		data: form_data,
+		processData: false,
+		contentType: false,
+		success: function(data, textStatus, jqXHR){
+			//$("#avisos").html(data);
+			$.toaster({
+				message: data,
+				title: 'Aviso',
+				priority : 'warning'
+			});  
+			
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			alert(data)
+	   }
+	 });
 }
 
 function getTipoServicio() {
@@ -1517,7 +1534,7 @@ function getEstatusEvento() {
 
 function getVersion() {
 
-    $.ajax({
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getVersion',
@@ -1526,8 +1543,8 @@ function getVersion() {
             console.log(data);
         
          $("#version").html(data);
-         
-            
+		 
+		 	
         },
         error: function(error){
             var demo = error;
@@ -1537,7 +1554,7 @@ function getVersion() {
 
 function getAplicativo() {
 
-    $.ajax({
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getAplicativo',
@@ -1546,8 +1563,8 @@ function getAplicativo() {
             console.log(data);
         
          $("#aplicativo").html(data);
-         
-            
+		 
+		 	
         },
         error: function(error){
             var demo = error;
@@ -1557,7 +1574,7 @@ function getAplicativo() {
 
 function getModelos() {
 
-    $.ajax({
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getListaModelos',
@@ -1567,8 +1584,8 @@ function getModelos() {
         
          $("#tpvInDataModelo").html(data);
          $("#tpvReDataModelo").html(data);
-         
-            
+		 
+		 	
         },
         error: function(error){
             var demo = error;
@@ -1578,7 +1595,7 @@ function getModelos() {
 
 function getConectividad() {
 
-    $.ajax({
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getListaConectividad',
@@ -1588,8 +1605,8 @@ function getConectividad() {
         
          $("#tpvInDataConnect").html(data);
          $("#tpvReDataConnect").html(data);
-         
-            
+		 
+		 	
         },
         error: function(error){
             var demo = error;
@@ -1599,7 +1616,7 @@ function getConectividad() {
 
 function getCarrier() {
 
-    $.ajax({
+	$.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getListaCarrier',
@@ -1609,8 +1626,8 @@ function getCarrier() {
         
          $("#simInData").html(data);
          $("#simReData").html(data);
-         
-            
+		 
+		 	
         },
         error: function(error){
             var demo = error;
@@ -1668,5 +1685,4 @@ function cleartext() {
  
 
 }
-
 

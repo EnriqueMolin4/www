@@ -6,15 +6,18 @@ include('../modelos/procesos_db.php');
 $token = $api->getToken();
 //echo $token->token;
 
-$params = [ 'StartDate'=>'01/03/2021','EndDate'=>'15/03/2021','IdStatusOdt'=> 3];
+$params = [ 'StartDate'=>'10/05/2021','EndDate'=>'08/06/2021','IdStatusOdt'=> '1,3,4,5,13,31','PageSize' => 100 ];
 $odt = $api->get('provider/api/odts/GetServicesProvider',$token->token,$params);
 
 $json =  json_encode($odt);
 //echo $json;
 $format = "Y-m-d\TH:i:s";
 $fecha = date('Y-m-d H:i:s');
+echo count($odt->result->data). "<br>";
+
 
 foreach ($odt->result->data as $object) {
+    
    // echo $object->ID_AR;
     $user = 1;
     $ODT = $object->ODT;
@@ -167,10 +170,6 @@ foreach ($odt->result->data as $object) {
       $newCustomerId = $Procesos->insert($sql,$arrayString);
       
 
-      
-
-      //$newId = $Procesos->insert($sql,$arrayString);
-
     }  else {
         $newCustomerId = $clienteExiste[0]['id'];
 
@@ -207,7 +206,8 @@ foreach ($odt->result->data as $object) {
     }
 
     $existeEvento = $Procesos->existeEvento($ODT);
-
+    $existe = sizeof($existeEvento) == '0' ? 'Se va a Insertar' : 'Ya Existe ';
+    echo $existe. " ".$ODT." <br>";
     if(sizeof($existeEvento) == '0') {
       $fecha = date ( 'Y-m-d H:m:s' );
 
@@ -266,7 +266,7 @@ foreach ($odt->result->data as $object) {
           $user
 
       );
-     // array_push($datosCargar,$arrayStringEvento);
+ 
       
       $newId = $Procesos->insert($sqlEvento,$arrayStringEvento);
       
@@ -282,40 +282,14 @@ foreach ($odt->result->data as $object) {
             $arrayStringHistoria = array ($newId, $fecha, 16, $ODT, $user );
             
             $Procesos->insert($sqlHistoria, $arrayStringHistoria);
-            //END GRABAR HISTORIA EVENTOS
-
-            /* $sqlEvento = "UPDATE carga_archivos SET registros_procesados=? WHERE id = ?";
-
-            $arrayStringEvento = array (
-                $counter,
-                $proceso['id']
-            );
-
-            $Procesos->insert($sqlEvento,$arrayStringEvento); */
+          
     }
       
       
-  } else {
-      $nocounter++;
-
-
-      array_push($odtYaCargadas,["ODT" => $ODT ]);
-
-      /* if($existeEvento[0]['estatus_servicio'] == '16' && $existeEvento[0]['estatus'] == '1' ) {
-          $sqlEvento = "UPDATE eventos SET  fecha_alta= ?,fecha_vencimiento= ? WHERE id = ?";
-
-          $arrayStringEvento = array (
-              $FechaAlta,
-              $FechaVencimiento,
-              $existeEvento[0]['id']
-
-          );
-      
-         // $newId = $Procesos->insert($sqlEvento,$arrayStringEvento);
-      } */
-  }  
+  } 
 
 }
+
 
 
 ?>

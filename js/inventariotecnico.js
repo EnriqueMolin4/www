@@ -12,9 +12,6 @@ $(document).ready(function() {
         tableInventario.ajax.reload();
     })
 
-   
-
-
 
     tableInventario = $('#inventario').DataTable({
         language: {

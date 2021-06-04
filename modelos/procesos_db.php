@@ -82,9 +82,12 @@ class Procesos implements IConnections {
 		$length = $params['length'];
 
 		$tipo  = $params['tipo'];
-
 		if($tipo == 'I') {
 			$tipo = " 'I','IA' ";
+		}
+		if($tipo == 'E') {
+			
+			$tipo = " 'E' ";
 		}
 
         $orderField =  $params['columns'][$params['order'][0]['column']]['data'];
@@ -122,11 +125,10 @@ class Procesos implements IConnections {
 				 FROM carga_archivos ca, detalle_usuarios  du
 				 WHERE ca.creado_por = du.cuenta_id 
 				 AND ca.tipo in ($tipo) ";
-
 	
 		try {
 			$stmt = self::$connection->prepare ($sql);
-			$stmt->execute();
+			$stmt->execute(array($tipo));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: parametros_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
@@ -135,7 +137,7 @@ class Procesos implements IConnections {
 
 	function getOlderCargas($tipo) {
 		
-		$sql = "SELECT * from carga_archivos WHERE activo= 1 AND tipo =  ? AND  fecha_creacion = (SELECT MAX(fecha_creacion) FROM carga_archivos ) ";
+		$sql = "SELECT * from carga_archivos WHERE activo= 1 AND tipo =  ? AND  id = (SELECT MAX(id) FROM carga_archivos ) ";
 		
 	
         try {
@@ -250,7 +252,19 @@ class Procesos implements IConnections {
 			self::$logger->error ("File: almacen_db.php;	Method Name: getModeloxNombre();	Functionality: Search Modelos;	Log:". $sql . $e->getMessage () );
 		}
 	}
+	function getCarriersxNombre($modelo) 
+	{
 
+		$sql = "SELECT id FROM carriers WHERE nombre LIKE '%$modelo%' LIMIT 1 ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getCarriersxNombre();	Functionality: Search Modelos;	Log:". $sql . $e->getMessage () );
+		}
+	}
 	function getEstatusxNombre($estatus) {
 		$sql = "SELECT id FROM tipo_estatus_modelos WHERE nombre= '$estatus' LIMIT 1 ";
 		
@@ -357,6 +371,72 @@ class Procesos implements IConnections {
 		return  $resultado;
 	}
 
+	function getEventosCerrados($odt) {
+
+		$sql = "SELECT *  
+				FROM eventos 
+				LEFT JOIN eventos_tpvretirado et ON et.odt = eventos.odt 
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.tecnico
+				LEFT JOIN cuentas c ON c.id = eventos.tecnico
+				WHERE eventos.sync=0  AND eventos.odt=? ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($odt));
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioElavonData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+        }
+
+	}
+
+	function getSeriesData($noserie) {
+
+		$sql = "SELECT 
+				i.no_serie,
+				CASE WHEN i.tipo=1 THEN m.clave_elavon  ELSE 0 END modelo ,
+				tc.clave_elavon conectividad, 
+				pe.clave_elavon marca
+				FROM inventario i
+				LEFT JOIN tipo_conectividad tc ON tc.id = i.conectividad
+				LEFT JOIN modelos m ON m.id = i.modelo
+				LEFT JOIN tipo_proveedor_equipos pe ON pe.nombre = m.proveedor
+				WHERE i.no_serie=? ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($noserie));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioElavonData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+        }
+	}
+
+	function getOdtImages($odt) {
+
+		$sql = "SELECT *  FROM img WHERE odt = ? ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($odt));
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getOdtImages();	Functionality: Get Image by ODT;	Log:" . $e->getMessage () );
+        }
+	}
+	 
+	function existeUniversoElavon($serie) {
+		$sql = " SELECT * FROM elavon_universo WHERE serie=? ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($serie));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: existeUniversoElavon();	Functionality: Get Image by ODT;	Log:" . $e->getMessage () );
+        }
+
+	}
 }
 
 include 'DBConnection.php';

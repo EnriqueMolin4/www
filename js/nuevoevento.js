@@ -42,38 +42,97 @@ $(document).ready(function() {
         datepicker:false,
         format:'H:i'
     });
-
-    $("#btnCargarExcel").on("click",function() {
+    //CARGA EVENTOS MASIVA
+    $("#btnCargarExcel").on("click",function() 
+    {
         var form_data = new FormData();
+        var form_data_file = new FormData()
         var excelMasivo = $("#excelMasivo");
         var file_data = excelMasivo[0].files[0];
+
+        //Form data para guardar datos
         form_data.append('file', file_data);
         form_data.append('module','eventoMasivo');
-        $.toaster({
-            message: 'Inicia la Carga Masiva de Eventos',
-            title: 'Aviso',
-            priority : 'success'
-        });  
-        $.ajax({
-            type: 'POST',
-            url: 'modelos/eventos_db.php', // call your php file
-            data: form_data,
-            processData: false,
-           contentType: false,
-            success: function(data, textStatus, jqXHR){
-                 
-                $.toaster({
-                    message: data,
-                    title: 'Aviso',
-                    priority : 'success'
-                });  
-                
-                
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert(textStatus)
-           }
-         });
+
+        //Form data para mover/cargar el archivo
+        form_data_file.append('file', file_data);
+        form_data_file.append('module','cargarEventosMasivo');
+
+        if( document.getElementById("excelMasivo").files.length == 0)
+        {   
+            $.toaster({
+                message: 'No hay un archivo seleccionado.',
+                title: 'Aviso',
+                priority: 'danger'
+            });
+
+        }
+        else
+        {
+            $.toaster({
+                message: 'Inicia la Carga Masiva de Eventos',
+                title: 'Aviso',
+                priority : 'success'
+            });
+
+
+            $("#showAvisosCargas").modal("show");
+            $("#bodyCargas").html('Cargando Información... <br /> ');
+
+
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function(data, textStatus, jqXHR){
+                    //console.log(data);
+                    var info = JSON.parse(data);
+                    console.log(info);
+                    if(info.contador.length > 0)
+                    {
+                    
+                        $("#bodyCargas").append(info.contador+" Eventos Cargados");
+                        //
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'modelos/eventos_db.php',
+                            data: form_data_file,
+                            processData: false,
+                            contentType: false,
+                            success: function()
+                            {
+                                $.toaster({
+                                    message: 'Se cargó el archivo con éxito',
+                                    title: 'Aviso',
+                                    priority: 'success'
+                                });
+                            },
+                            error: function(jqXHR, textStatus, errorThrown)
+                            {
+                                alert(textStatus)
+                            }
+                        });
+
+                    }
+                    else
+                    {
+                        $("#bodyCargas").append(info.contador+" Eventos Cargados");
+                    }
+         
+
+
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert(textStatus)
+                }
+            });
+
+        }
+    
     })
     
     $("#btnCargarExcelAsignaciones").on('click', function() {

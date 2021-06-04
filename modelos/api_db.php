@@ -56,6 +56,18 @@ class Api implements IConnections {
 			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
 		}
 	}
+
+	function getInventarioInsumosId($noserie,$tecnico) {
+		$sql = "SELECT id FROM inventario WHERE no_serie= ? AND id_ubicacion=? ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute (array($noserie,$tecnico));
+			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:".  $e->getMessage () );
+		}
+	}
 	
 	private static function execute_qry($prepareStatement, $arrayString) {
 		
@@ -89,7 +101,7 @@ class Api implements IConnections {
 	}
 	
 	function getDefaultBancoCve() {
-		$sql = "SELECT cve FROM bancos WHERE status= 1 ";
+		$sql = "SELECT cve FROM bancos WHERE status= 1 AND `default`=1 ";
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -279,7 +291,6 @@ class Api implements IConnections {
 			$sql = "select  id, serie,fabricante,estatus,estatus_modelo ,tipo 
 					from elavon_universo
 					WHERE   serie =  ? ";
-		 
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -491,6 +502,35 @@ class Api implements IConnections {
 			self::$logger->error ("File: api_db.php;	Method Name: getConfiguration();	Functionality: Search Configuracion;	Log:".  $e->getMessage () );
 		}
 	}
+
+	function getServicioOdt($odt) {
+
+		$sql = "SELECT 
+				e.tipo_servicio,
+				IFNULL(co.sim_instalado,0) sim_instalado,
+				IFNULL(co.sim_retirado,0) sim_retirado,
+				IFNULL(co.rollos,0) rollos,
+				IFNULL(co.hora_ticket,0) hora_ticket,
+				IFNULL(co.folio_telecarga,0) folio_telecarga,
+				IFNULL(co.id_caja,0) id_caja,
+				IFNULL(co.aplicativo,0) aplicativo,
+				IFNULL(co.version,0) version,
+				IFNULL(co.tvp_instalada,0) tvp_instalada,
+				IFNULL(co.tvp_salida,0) tvp_salida
+				FROM eventos e 
+				LEFT JOIN campos_obligatorios co ON  e.tipo_servicio = co.servicio_id
+				WHERE e.odt = ? ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute (array($odt));
+			return $stmt->fetch ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: api_db.php;	Method Name: getServicioOdt();	Functionality: Search Configuracion;	Log:".  $e->getMessage () );
+		}
+	}
+	
+	
 	
 	function getTraspasosTecnico($tecnico) {
 

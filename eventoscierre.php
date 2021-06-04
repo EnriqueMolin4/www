@@ -8,15 +8,10 @@
             <?php include("menu.php"); ?>    
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>CIERRE DE EVENTO</h3>
-            </div>
-            <div class="container-fluid p-3">
-                <div class="panel-white">
-                    
-               
+            <div class="container-fluid p-5">
+                <h3>Cierre de Evento</h3>
                
                     <div style="border-style: solid; padding: 10px;">
                         <div class="row">
@@ -24,11 +19,11 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-5">           
-                                <label for="odt" class="col-form-label-sm">ORDENES DE TRABAJO</label>
+                                <label for="odt" class="col-form-label-sm">Ordenes de Trabajo</label>
                                 <input type="text" class="form-control form-control-sm" id="odt" aria-describedby="odt"  readonly>
                             </div>
                             <div class="col-sm-4">           
-                                <label for="afiliacion" class="col-form-label-sm">AFILIACION</label>
+                                <label for="afiliacion" class="col-form-label-sm">Afilacion</label>
                                 <input type="text" class="form-control form-control-sm" id="afiliacion" aria-describedby="afiliacion">
                             </div>                           
                         </div>
@@ -47,11 +42,11 @@
                     <div id="divEvento" style="display:none ">
                         <div class="row">
                             <div class="col">           
-                                <label for="tipo_servicio" class="col-form-label-sm">TIPO SERVICIO</label>
+                                <label for="tipo_servicio" class="col-form-label-sm">Tipo Servicio</label>
                                 <input type="text" class="form-control form-control-sm" id="tipo_servicio" aria-describedby="tipo_servicio" readonly>
                             </div>
                             <div class="col">           
-                                <label for="tipo_subservicio" class="col-form-label-sm">TIPO SUBSERVICIO</label>
+                                <label for="tipo_subservicio" class="col-form-label-sm">Tipo SubServicio</label>
                                 <input type="text" class="form-control form-control-sm" id="tipo_subservicio" aria-describedby="tipo_subservicio" readonly>
                             </div>
                         
@@ -65,44 +60,44 @@
                         </div>
                         <div class="row">
                         <div class="col">           
-                                <label for="fecha_alta" class="col-form-label-sm">FECHA ALTA</label>
+                                <label for="fecha_alta" class="col-form-label-sm">Fecha Alta</label>
                                 <input type="text" class="form-control form-control-sm" id="fecha_alta" aria-describedby="fecha_alta" readonly>
-                        </div>
+                            </div>
                             <div class="col">           
-                                <label for="fecha_vencimiento" class="col-form-label-sm">FECHA VENCIMIENTO</label>
+                                <label for="fecha_vencimiento" class="col-form-label-sm">Fecha Vencimiento</label>
                                 <input type="text" class="form-control form-control-sm" id="fecha_vencimiento" aria-describedby="fecha_vencimiento" readonly>
                             </div>
                             <div class="col">           
-                                <label for="fecha_cierre" class="col-form-label-sm">FECHA CIERRE</label>
+                                <label for="fecha_cierre" class="col-form-label-sm">Fecha Cierre</label>
                                 <input type="text" class="form-control form-control-sm" id="fecha_cierre" aria-describedby="fecha_cierre" readonly>
                             </div>
 
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="comercio" class="col-form-label-sm">COMERCIO | CLIENTE</label>
+                                <label for="comercio" class="col-form-label-sm">Comercio | Cliente</label>
                                 <input type="text" class="form-control form-control-sm" id="comercio" aria-describedby="comercio" readonly>
                             </div>
                             <div class="col">           
-                                <label for="colonia" class="col-form-label-sm">COLONIA</label>
+                                <label for="colonia" class="col-form-label-sm">Colonia</label>
                                 <input type="text" class="form-control form-control-sm" id="colonia" aria-describedby="colonia" readonly>
                             </div>
                             <div class="col">           
-                                <label for="ciudad" class="col-form-label-sm">CIUDAD</label>
+                                <label for="ciudad" class="col-form-label-sm">Ciudad</label>
                                 <input type="text" class="form-control form-control-sm" id="ciudad" aria-describedby="ciudad" readonly >
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="estado" class="col-form-label-sm">ESTADO</label>
+                                <label for="estado" class="col-form-label-sm">Estado</label>
                                 <input type="text" class="form-control form-control-sm" id="estado" aria-describedby="estado" readonly>
                             </div>
                             <div class="col">           
-                                <label for="direccion" class="col-form-label-sm">DIRECCION</label>
+                                <label for="direccion" class="col-form-label-sm">Dirección</label>
                                 <input type="text" class="form-control form-control-sm" id="direccion" aria-describedby="direccion" readonly>
                             </div>
                             <div class="col">           
-                                <label for="telefono" class="col-form-label-sm">TELEFONO</label>
+                                <label for="telefono" class="col-form-label-sm">Telefono</label>
                                 <input type="text" class="form-control form-control-sm" id="telefono" aria-describedby="telefono" readonly>
                             </div>
                         </div>
@@ -110,30 +105,30 @@
                             <div class="col" style="padding:30px;">       
                                 <div class="row justify-content-center" >
                                     <div class="col-sm-4" style="padding:5px">
-                                        <button class="btn btn-primary" id="btnUbicacion">UBICACION</button>
+                                        <button class="btn btn-primary" id="btnUbicacion">Ubicacion</button>
                                     </div>
                                 </div> 
                             </div>
                             <div class="col">           
-                            <label for="descripcion" class="col-form-label-sm">DESCRIPCION</label>
+                            <label for="descripcion" class="col-form-label-sm">Descripción</label>
                                 <textarea  class="form-control form-control-sm" rows="5" id="descripcion" aria-describedby="descripcion" readonly></textarea>
                             </div>
                             <div class="col">
                                 <div class="row">
                                     <div class="col">           
-                                        <label for="hora_atencion" class="col-form-label-sm">HORARIO DE ATENCION</label>
+                                        <label for="hora_atencion" class="col-form-label-sm">Horario de Atencion</label>
                                         <input type="text" class="form-control form-control-sm" id="hora_atencion" aria-describedby="hora_atencion" readonly>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">           
-                                        <label for="hora_comida" class="col-form-label-sm">HORARIO DE COMIDA</label>
+                                        <label for="hora_comida" class="col-form-label-sm">Horario de Comida</label>
                                         <input type="text" class="form-control form-control-sm" id="hora_comida" aria-describedby="hora_comida" readonly>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">           
-                                        <label for="fecha_asignacion" class="col-form-label-sm">FECHA DE ASIGNACION</label>
+                                        <label for="fecha_asignacion" class="col-form-label-sm">Fecha de Asignación</label>
                                         <input type="text" class="form-control form-control-sm" id="fecha_asignacion" aria-describedby="fecha_asignacion" readonly>
                                     </div>
                                 
@@ -144,43 +139,43 @@
                         
                         <div class="row">
                             <div class="col">           
-                                <label for="receptor_servicio" class="col-form-label-sm">QUIEN ATENDIO</label>
+                                <label for="receptor_servicio" class="col-form-label-sm">Quien Atendio</label>
                                 <input type="text" class="form-control form-control-sm" id="receptor_servicio" aria-describedby="receptor_servicio" readonly>
                             </div>
                             <div class="col">           
-                                <label for="fecha_atencion" class="col-form-label-sm">FECHA DE ATENCION</label>
+                                <label for="fecha_atencion" class="col-form-label-sm">Fecha de Atención</label>
                                 <input type="text" class="form-control form-control-sm" id="fecha_atencion" aria-describedby="fecha_atencion" autocomplete="off" readonly>
                             </div>
                             <div class="col">           
-                                <label for="hora_llegada" class="col-form-label-sm">HORA DE LLEGADA</label>
+                                <label for="hora_llegada" class="col-form-label-sm">Hora de LLegada</label>
                                 <input type="time" class="form-control form-control-sm" id="hora_llegada" aria-describedby="hora_llegada" readonly>
                             </div>
                             <div class="col">           
-                                <label for="hora_salida" class="col-form-label-sm">HORA DE SALIDA</label>
+                                <label for="hora_salida" class="col-form-label-sm">Hora de Salida</label>
                                 <input type="time" class="form-control form-control-sm" id="hora_salida" aria-describedby="hora_salida" readonly>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="tecnico" class="col-form-label-sm">TECNICO</label><?php if ($_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
+                                <label for="tecnico" class="col-form-label-sm">Tecnico</label><?php if ($_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
                                 <input type="text" class="form-control form-control-sm" id="tecnico" aria-describedby="tecnico" readonly>
                             </div>
                             <div class="col">           
-                                <label for="estatus" class="col-form-label-sm">ESTATUS</label>
+                                <label for="estatus" class="col-form-label-sm">Estatus</label>
                                 <input type="text" class="form-control form-control-sm" id="estatus" aria-describedby="estatus" readonly>
                             </div>
                             <div class="col">           
-                                <label for="servicio" class="col-form-label-sm">SERVICIOS SOLICITADO</label>
+                                <label for="servicio" class="col-form-label-sm">Servicio Solicitado</label>
                                 <input type="text" class="form-control form-control-sm" id="servicio" aria-describedby="servicio" readonly>
                             </div>
                             <div class="col" id="col_tipocredito">           
-                                <label for="tipo_credito" class="col-form-label-sm">TIPO CREDITO</label>
+                                <label for="tipo_credito" class="col-form-label-sm">Tipo Credito</label>
                                 <input type="text" class="form-control form-control-sm" id="tipo_credito" aria-describedby="tipo_credito" readonly>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">           
-                                    <label for="tpv" class="col-form-label-sm">TERMINAL INSTALADA</label>
+                                    <label for="tpv" class="col-form-label-sm">Terminal Instalada</label>
                                     <input type="text" class="form-control form-control-sm" id="tpv" aria-describedby="tpv" readonly>
                                     <select  class="form-control form-control-sm" id="tpvInDataModelo" aria-describedby="tpvInDataModelo">
                                         <option value="0" selected>Seleccionar Modelo</option>
@@ -190,7 +185,7 @@
                                     </select>
                             </div>
                             <div class="col">           
-                                    <label for="tpv_retirado" class="col-form-label-sm">TERMINAL RETIRADA</label>
+                                    <label for="tpv_retirado" class="col-form-label-sm">Terminal Retirada</label>
                                     <input type="text" class="form-control form-control-sm" id="tpv_retirado" aria-describedby="tpv" readonly>
                                     <select  class="form-control form-control-sm" id="tpvReDataModelo" aria-describedby="tpvReDataModelo">
                                         <option value="0" selected>Seleccionar Modelo</option>
@@ -209,69 +204,69 @@
                                     </div>
                             </div>
                             <div class="col">           
-                                    <label for="idcaja" class="col-form-label-sm">ID CAJA</label>
+                                    <label for="idcaja" class="col-form-label-sm">Id Caja</label>
                                     <input type="text" class="form-control form-control-sm" id="idcaja" aria-describedby="idcaja" readonly>
                             </div>
                             <div class="col">           
-                                <label for="afiliacion_amex" class="col-form-label-sm">AFILIACION AMEX</label>
+                                <label for="afiliacion_amex" class="col-form-label-sm">Afiliacion Amex</label>
                                 <input type="hidden" id="tieneamex" name="tieneamex">
                                 <input type="text" class="form-control form-control-sm" id="afiliacion_amex" aria-describedby="afiliacion_amex" readonly>
                             </div>
                             <div class="col">           
-                                <label for="idamex" class="col-form-label-sm">ID AMEX</label>
+                                <label for="idamex" class="col-form-label-sm">Id Amex</label>
                                 <input type="text" class="form-control form-control-sm" id="idamex" aria-describedby="idamex" readonly>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">           
-                                    <label for="version" class="col-form-label-sm">VERSION</label>
+                                    <label for="version" class="col-form-label-sm">Version</label>
                                     <select  class="form-control form-control-sm" id="version" aria-describedby="version" readonly>
                                         <option value="0">Seleccionar</option>
                                     </select>
                             </div>
                             <div class="col">           
-                                    <label for="aplicativo" class="col-form-label-sm">APLICATIVO</label>
+                                    <label for="aplicativo" class="col-form-label-sm">Aplicativo</label>
                                     <select  class="form-control form-control-sm" id="aplicativo" aria-describedby="aplicativo" readonly>
                                         <option value="0">Seleccionar</option>
                                     </select>
                             </div>
                             <div class="col">           
-                                <label for="producto" class="col-form-label-sm">PRODUCTO</label>
+                                <label for="producto" class="col-form-label-sm">Producto</label>
                                 <select  class="form-control form-control-sm" id="producto" aria-describedby="producto" disabled>
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
                             <div class="col">           
-                                <label for="rollos_instalar" class="col-form-label-sm">ROLLOS A ENTREGAR</label>
+                                <label for="rollos_instalar" class="col-form-label-sm">Rollos a Entregar</label>
                                 <input type="text" class="form-control form-control-sm" id="rollos_instalar" aria-describedby="rollos_instalar" readonly>
                             </div>
                             <div class="col">           
-                                <label for="rollos_entregados" class="col-form-label-sm">ROLLOS ENTREGADOS</label>
+                                <label for="rollos_entregados" class="col-form-label-sm">Rollos Entregados</label>
                                 <input type="text" class="form-control form-control-sm" id="rollos_entregados" aria-describedby="rollos_entregados" readonly>
                             </div>
                             
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="simInData" class="col-form-label-sm">SIM INSTALADA</label>
+                                <label for="simInData" class="col-form-label-sm">SIM Instalada</label>
                                 <input type="text" class="form-control form-control-sm" id="sim_instalado" aria-describedby="sim_instalado">
                                 <select  class="form-control form-control-sm" id="simInData" aria-describedby="simInData">
                                     <option value="0" selected>Seleccionar Carrier</option>
                                 </select>
                             </div>
                             <div class="col">           
-                                <label for="simReData" class="col-form-label-sm">SIM RETIRADA</label>
+                                <label for="simReData" class="col-form-label-sm">SIM Retirada</label>
                                 <input type="text" class="form-control form-control-sm" id="sim_retirado" aria-describedby="sim_retirado">
                                 <select  class="form-control form-control-sm" id="simReData" aria-describedby="simReData">
                                     <option value="0" selected>Seleccionar Carrier</option>
                                 </select>
                             </div>
                             <div class="col-sm-3">           
-                                <label for="folio_telecarga" class="col-form-label-sm">FOLIO TELECARGA</label>
+                                <label for="folio_telecarga" class="col-form-label-sm">Folio Telecarga</label>
                                 <input type="text" class="form-control form-control-sm" id="folio_telecarga" aria-describedby="folio_telecarga" readonly>
                             </div>
                             <div class="col-sm-3">           
-                                <label for="estatus_servicio" class="col-form-label-sm">ESTATUS SERVICIO</label>
+                                <label for="estatus_servicio" class="col-form-label-sm">Estatus Servicio</label>
                                 <select  class="form-control form-control-sm" id="estatus_servicio" aria-describedby="estatus_servicio" disabled>
                                     <option value="0">Seleccionar</option>
                                 </select>
@@ -279,19 +274,19 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-4" id="rowRechazos" style="display: none;">           
-                                <label for="rechazo" class="col-form-label-sm">RECHAZO</label>
+                                <label for="rechazo" class="col-form-label-sm">Rechazo</label>
                                 <select  class="form-control form-control-sm" id="rechazo" aria-describedby="rechazo" >
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
                             <div class="col-sm-4" id="rowSubRechazos" style="display: none;">           
-                                <label for="subrechazo" class="col-form-label-sm">SUB RECHAZO</label>
+                                <label for="subrechazo" class="col-form-label-sm">Sub Rechazo</label>
                                 <select  class="form-control form-control-sm" id="subrechazo" aria-describedby="subrechazo" >
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
                             <div class="col-sm-4" id="rowCancelado" style="display: none;">           
-                                <label for="cancelado" class="col-form-label-sm">CANCELADO</label>
+                                <label for="cancelado" class="col-form-label-sm">Cancelado</label>
                                 <select  class="form-control form-control-sm" id="cancelado" aria-describedby="cancelado" >
                                     <option value="0">Seleccionar</option>
                                 </select>
@@ -299,21 +294,43 @@
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="comentarios_tecnico" class="col-form-label-sm">COMENTARIOS DE TECNICO</label>
+                                <label for="comentarios_tecnico" class="col-form-label-sm">Comentarios de Tecnico</label>
                                 <textarea  class="form-control form-control-sm" rows="5" id="comentarios_tecnico" aria-describedby="comentarios_tecnico" readonly></textarea>
                             </div>
                             
                         </div>
+                        
                         <div class="row">
                             <div class="col">           
-                                <label for="comentarios_cierre" class="col-form-label-sm">COMENTARIOS DE CIERRE</label>
+                                <label for="comentarios_cierre" class="col-form-label-sm">Comentarios de Cierre</label>
                                 <textarea  class="form-control form-control-sm" rows="5" id="comentarios_cierre" aria-describedby="comentarios_cierre" readonly></textarea>
                             </div>
                             
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="faltaSerie" value="option1">
+                                    <label class="form-check-label" for="faltaSerie">Falta serie</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="faltaEvidencia" value="option2">
+                                    <label class="form-check-label" for="faltaEvidencia">Falta Evidencia</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="faltaInformacion" value="option2">
+                                    <label class="form-check-label" for="faltaInformacion">Falta Información</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="faltaUbicacion" value="option2">
+                                    <label class="form-check-label" for="faltaUbicacion">Falta ubicación</label>
+                                </div>
+                            </div>
+
+                        </div>
                         <div class="row" style="display:none" id="comentarios_valid" >
                             <div class="col">           
-                                <label for="comentarios_validacion" id="comentarios_valid"  class="col-form-label-sm">COMENTARIOS DE VALIDACION</label>
+                                <label for="comentarios_validacion" id="comentarios_valid"  class="col-form-label-sm">Comentarios de Validación</label>
                                 <textarea  class="form-control form-control-sm" rows="5" id="comentarios_validacion" aria-describedby="comentarios_validacion"></textarea>
                             </div>
                             
@@ -329,7 +346,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="button" class="btn btn-primary" name="btnComentValid" id="btnComentValid" >Guardar Comentario de Validación</button>
                     </div>
-                </div>
+               
             </div>
         </main>
         <!-- MODAL Reasignar -->
@@ -524,7 +541,7 @@
                     success: function(data){
                         if(data == "1") {
                             $.toaster({
-                                message: 'Se borro con éxito la imagen ',
+                                message: 'Se borro con exito la imagen ',
                                 title: 'Aviso',
                                 priority : 'success'
                             });  
@@ -617,7 +634,7 @@
                     
                 }else{
                     $.toaster({
-                    message: 'Ingresa el comentario de validación',
+                    message: 'Ingresa el comentario de validacion',
                     title: 'Aviso',
                     priority : 'danger'
                         });}
@@ -710,7 +727,8 @@
                                                 $("#comercio").val(element.comercioNombre)
                                             }
                                             $("#receptor_servicio").val(element.receptor_servicio);
-                                            $("#fecha_atencion").val(element.fecha_atencion);
+											var fechaAtencion = element.fecha_atencion == null ? '' : element.fecha_atencion.split(' ')[0] ;
+                                            $("#fecha_atencion").val(fechaAtencion);
                                             $("#colonia").val(element.colonia)
                                             $("#ciudad").val(element.municipioNombre)
                                             $("#estado").val(element.estadoNombre)
@@ -749,7 +767,11 @@
                                             $("#sim_retirado").val(element.sim_retirado);
                                             $("#estatus_servicio").val(element.estatus_servicio);
 
-                                            
+                                             //Informacion Faltante
+                                            $("#faltaSerie").prop('checked',parseInt(element.faltaserie));
+                                            $("#faltaEvidencia").prop('checked',parseInt(element.faltaevidencia))  ;
+                                            $("#faltaInformacion").prop('checked',parseInt(element.faltainformacion)) ;
+                                            $("#faltaUbicacion").prop('checked',parseInt(element.faltaubicacion)) ;
                                             
                                             if (element.estatus_servicio == '13' )
                                             {
@@ -886,9 +908,15 @@
             //Rollos
             var rollosInstalar = $("#rollos_instalar").val();
             var rollosInstalados = $("#rollos_entregados").val();
+
+            //Informacion Faltante
+            var faltaSerie = $("#faltaSerie").prop('checked') ? 1 : 0 ;
+            var faltaEvidencia = $("#faltaEvidencia").prop('checked') ? 1 : 0 ;
+            var faltaInformacion = $("#faltaInformacion").prop('checked') ? 1 : 0 ;
+            var faltaUbicacion = $("#faltaUbicacion").prop('checked') ? 1 : 0 ;
             
             //Validar si es obligatorio la TVP INStalada
-            if( PermisosEvento.tvp_instalada == '1') {
+            if( PermisosEvento.tvp_instalada == '1' &&  estatus == '13' ) {
                 
                 if(tpv.length == 0) {
                     validar++;
@@ -898,7 +926,7 @@
             }
 
             //Validar si es obligatorio la TVP Retirada
-            if( PermisosEvento.tpv_salida == '1') {
+            if( PermisosEvento.tpv_salida == '1' &&  estatus == '13' ) {
                 
                 if(tpv_retirado.length == 0) {
                     validar++;
@@ -908,7 +936,7 @@
             }
 
             //Validar si es obligatorio la SIM Retirada
-            if( PermisosEvento.sim_retirado == '1') {
+            if( PermisosEvento.sim_retirado == '1' &&  estatus == '13' ) {
                 
                 if(sim_retirado.length == 0) {
                     validar++;
@@ -918,7 +946,7 @@
             }
 
             //Validar si es obligatorio la SIM Instalado
-            if( PermisosEvento.sim_instalado == '1') {
+            if( PermisosEvento.sim_instalado == '1' &&  estatus == '13' ) {
                 
                 if(sim_instalado.length == 0) {
                     validar++;
@@ -928,7 +956,7 @@
             }
 
             //Validar Rollos 
-            if( PermisosEvento.rollos == '1') {
+            if( PermisosEvento.rollos == '1' &&  estatus == '13' ) {
 
                 if( rollosInstalar != rollosInstalados ) {
                     validar++;
@@ -936,28 +964,28 @@
                 }
             }
 			
-            if(tecnico == 0 ) {
+            if(tecnico == 0 &&  estatus == '13' ) {
                 validar++;
                 msg += "Necesitas asignar un tecnico al Evento \n ";
             }
 
-            if(existeFecha(fecha_atencion)) {
+            if(!existeFecha(fecha_atencion) &&  estatus == '13' ) {
                 validar++;
                 msg += "Se necesita agregar la fecha de atencion \n ";
             }
             
-            if(hora_llegada.length == 0 ) {
+            if(hora_llegada.length == 0 &&  estatus == '13' ) {
                 validar++;
                 msg += "Se necesita agregar la hora de llegada \n ";
             }
 
-            if( hora_salida.length == 0 ) {
+            if( hora_salida.length == 0 &&  estatus == '13' ) {
                 validar++;
                 msg += "Se necesita agregar la hora de salida \n ";
             }
             
 
-            if(comentario.length <= 200) {
+            if(comentario.length <= 200 &&  estatus == '13' ) {
                 validar++;
                 msg += "Se necesita mas información en las observaciones (minimo 200 caracteres) \n ";
             }
@@ -968,7 +996,8 @@
 							rechazo: rechazo, subrechazo: subrechazo,cancelado: cancelado,tpv:tpv,tpvRetirado : tpv_retirado,idCaja: idcaja,afiliacionAmex:afiliacion_amex ,idamex:idamex,
                             simInstalado:sim_instalado, simRetirado: sim_retirado,producto: producto,version: version,aplicativo:aplicativo,receptorservicio:receptorservicio, 
                             tvpInModelo:tvpInModelo,tpvInConnect:tpvInConnect ,tvpReModelo, tvpReModelo, tpvReConnect: tpvReConnect, simInData:simInData, simReData:simReData,tecnico:tecnico, 
-                            rollosInstalar:rollosInstalar, rollosInstalados:rollosInstalados,servicioId:servicioId,fechaatencion:fecha_atencion,horallegada:hora_llegada,horasalida: hora_salida };
+                            rollosInstalar:rollosInstalar, rollosInstalados:rollosInstalados,servicioId:servicioId,fechaatencion:fecha_atencion,horallegada:hora_llegada,horasalida: hora_salida, 
+                            faltaSerie:faltaSerie,faltaEvidencia:faltaEvidencia,faltaInformacion:faltaInformacion,faltaUbicacion:faltaUbicacion };
 				
 				 $.ajax({
 					type: 'POST',
@@ -979,11 +1008,15 @@
 							 
                             Swal.fire({
                                 title: 'Cierre de Eventos',
-                                text: "Cerrado Existosamente",
+                                text: "Cerrado Existosamente Deseas<br> Enviar el Evento al Banco?",
+                                showDenyButton: true,
+                                confirmButtonText: `Enviar`,
+                                denyButtonText: `No`,
                                 icon: 'success',
                             }).then((result) => {
-                                if (result.isConfirmed) {
-                                   
+                                if (result.isConfirmed) {    
+                                    sendInfoBanco(odt)
+                                } else if (result.isDenied) {
                                     window.location.href = "eventos.php";
                                 }
                             })   
@@ -1005,7 +1038,7 @@
         $("#tpv").on("change",function() {
             var tpv = $(this).val();
             if(tpv.length > 0) {
-                result = validarTPV(tpv,1,'in')
+                result = validarTPV(tpv,1,'in',$("#afiliacion").val())
                 
             }
         })
@@ -1013,7 +1046,7 @@
         $("#tpv_retirado").on("change",function() {
             var tpv = $(this).val();
             if(tpv.length > 0) {
-                validarTPV(tpv,1,'out')
+                validarTPV(tpv,1,'out',$("#afiliacion").val())
                 
             }
            
@@ -1022,7 +1055,7 @@
         $("#sim_instalado").on("change",function() {
             var tpv = $(this).val();
             if(tpv.length > 0) {
-                validarTPV(tpv,2,'in')
+                validarTPV(tpv,2,'in',$("#afiliacion").val())
                  
             }
         })
@@ -1031,12 +1064,53 @@
             var tpv = $(this).val();  
             var result;
             if(tpv.length > 0) {
-                validarTPV(tpv,2,'out')
+                validarTPV(tpv,2,'out',$("#afiliacion").val())
                 
             }
         })
 
         });
+
+        function sendInfoBanco(odt) {
+
+            $.ajax({
+                type: 'POST',
+                url: 'conector/postODT.php', // call your php file
+                data: 'odt='+odt,
+                cache: false,
+                dataType: "json",
+                success: function(data) {
+                    var msg = 'Se envio la odt '+odt+' con Exito';
+                   if(data.evento.result != '201') {
+                        
+                        Swal.fire({
+                        text: data.evento.result.messages[0],
+                        confirmButtonText: `Volver a Enviar`,
+                        denyButtonText: `No`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {    
+                                window.location.href = "eventos.php";
+                            }  
+                        });
+
+                   } else {
+
+                        Swal.fire({
+                            text: msg,
+                            confirmButtonText: `OK`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {    
+                                window.location.href = "eventos.php";
+                            }  
+                        });
+                   }
+
+                },
+                error: function(error){
+                    alert(error.responseText)
+                }
+            })  
+        }
 
         function existeFecha(fecha){
             var fechaf = fecha.split("-");
@@ -1129,18 +1203,19 @@
             }) 
         }
 
-        function validarTPV(tpv,tipo,donde) {
+        function validarTPV(tpv,tipo,donde,comercio) {
             result = 0;
 
             $.ajax({
                 type: 'GET',
                 url: 'modelos/eventos_db.php', // call your php file
-                data: 'module=validarTPV&noserie='+tpv+"&tipo="+tipo,
+                data: 'module=validarTPV&noserie='+tpv+"&tipo="+tipo+"&comercio="+comercio,
                 cache: false,
                 success: function(data){
-                    if(data != 'false' ) {
+                    var info = JSON.parse(data);
+                    if(info.status != false ) {
                         result = 1;    
-                        var info = JSON.parse(data);
+                        
                         var modelo = info.modelo == null ? 0 : info.modelo;
                         var conectividad = info.conectividad == null ? 0 : info.conectividad;
                         if(tipo == 1) {
@@ -1163,7 +1238,7 @@
                     } else {
                         $("#tpv").val('');  
                         $.toaster({
-                            message: 'La serie no es válida',
+                            message: info.msg,
                             title: 'Aviso',
                             priority : 'danger'
                                   });
@@ -1230,6 +1305,7 @@
 
             if(  $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'callcenterADM'  ) {
                 $("#rollos_entregados").attr('readonly',false);
+                $("#rollos_instalar").attr('readonly',false);
                 $("#comentarios_cierre").attr('readonly',false);
                 //$("#btnUpdateEvento").attr('disabled',false);
                 $("#estatus_servicio").attr('disabled',false)
@@ -1310,6 +1386,7 @@
                     
                     var script = info.script;
                     script = script.replace("#MODELO#",$("#tpvInDataModelo option:selected" ).text() ) 
+                    script = script.replace("#AFILIACION#",$("#afiliacion").val() )
                     script = script.replace("#MODELORETIRO#",$("#tpvReDataModelo option:selected" ).text() )
                     script = script.replace("#CONECTIVIDAD#",$("#tpvInDataConnect option:selected" ).text() ) 
                     script = script.replace("#CONECTIVIDADRETIRO#",$("#tpvReDataConnect option:selected" ).text() ) 
