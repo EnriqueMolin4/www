@@ -39,8 +39,11 @@ foreach($eventos as $evento) {
     $noserier = $evento['tpv_retirado'];
     $sim = $evento['sim_instalado'];
     $simr = $evento['sim_retirado'];
-    $latitud = $evento['latitud'];
-    $longitud = $evento['longitud'];
+    
+    $geolocalizacion = $Procesos->getGeolocalizacion($evento['comercio']);
+
+    $latitud = $geolocalizacion['latitud'];
+    $longitud = $geolocalizacion['longitud'];
 
 
     //
@@ -148,7 +151,7 @@ foreach($eventos as $evento) {
             'isInstalacionSim' => (bool) $isinstalacionSim
         ];
 
-        $json['unidades'] =array($unidades) ;
+        $json['unidades'][] = $unidades;
     }
 
     

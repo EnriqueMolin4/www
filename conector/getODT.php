@@ -6,7 +6,7 @@ include('../modelos/procesos_db.php');
 $token = $api->getToken();
 //echo $token->token;
 
-$params = [ 'StartDate'=>'10/05/2021','EndDate'=>'08/06/2021','IdStatusOdt'=> '1,3,4,5,13,31','PageSize' => 100 ];
+$params = [ 'StartDate'=>'1/06/2021','EndDate'=>'10/06/2021','IdStatusOdt'=> '1,3,6,7,8','PageSize' => 100 ];
 $odt = $api->get('provider/api/odts/GetServicesProvider',$token->token,$params);
 
 $json =  json_encode($odt);
