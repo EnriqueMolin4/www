@@ -375,7 +375,7 @@ class Almacen implements IConnections {
             $stmt->execute (array($insumo,$tecnico));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getCantidadInsumos();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getCantidadInsumosTecnico();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -521,7 +521,7 @@ class Almacen implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getinvInsumo();	Functionality: Search No_Serie;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getInvId();	Functionality: Search No_Serie;	Log:". $sql . $e->getMessage () );
 		}
 	}
 

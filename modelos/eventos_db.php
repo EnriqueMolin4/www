@@ -1310,7 +1310,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1323,7 +1323,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: existHistorialMov();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: existHistorialMov();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1337,7 +1337,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getOdtById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getOdtById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 
 	}
@@ -1363,7 +1363,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getListaCarrier();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getListaCarrier();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1377,7 +1377,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_ASSOC );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getInfoExtra();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getInfoExtra();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
 		}
 	}
 

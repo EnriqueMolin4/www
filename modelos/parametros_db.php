@@ -197,7 +197,7 @@ class Usuarios implements IConnections {
 			$stmt->execute ();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: buscarComercio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: parametros_db.php;	Method Name: buscarComercio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
