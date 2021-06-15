@@ -27816,3 +27816,8 @@
 				group by id,img.totalImg,du.nombre,du.apellidos
 				 ORDER BY   fecha_vencimiento   ASC
 				 LIMIT  0 , 5 
+15.06.2021 11:41:23 File: eventos_db.php;	Method Name: execute_ins();	Functionality: Insert/Update Eventos;	Log:INSERT INTO `cambio_odt`
+						( `old_odt`,`new_odt`,`ultima_act`,`modificado_por`)
+						VALUES
+						(?,?,?,?);
+					 SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sinttecomdev3.cambio_odt' doesn't exist
