@@ -31,8 +31,8 @@
                         <label for="fechaVen_fin" class="col-form-label-sm">VENCIMIENTO HASTA</label>
                         <input type="text" class="form-control form-control-sm searchEvento" id="fechaVen_fin" aria-describedby="fechaVen_fin" value="<?php echo date("Y-m-d", strtotime("+1 days", strtotime(date("Y-m-d")) )); ?>">
                     </div>
+                    <!--
                     <div class="col">
-                        <!--<input type="text" value="0" id="dt_vencimiento" class="dt_vencimiento">-->
                         <label for="diasVencidos" class="col-form-label-sm">DIAS DE VENCIMIENTO</label>
                         <select name="diasVencidos" id="diasVencidos" class="form-control form-control-sm searchEvento">
                             <option value="0" selected>Seleccionar</option>
@@ -48,6 +48,7 @@
                             <option value="10"> 10 </option>
                         </select>
                     </div>
+                    -->
                     <div class="col">
                         <label for="tipo_evento" class="col-form-label-sm">TIPO EVENTOS</label>
                         <select id="tipo_evento" name="tipo_evento" class="form-control form-control-sm searchEvento">
@@ -68,6 +69,26 @@
                     <div class="col">
                         <input type="checkbox" class="form-check-input searchEvento" id="evidencias">
                         <label class="form-check-label" for="evidencias">CON EVIDENCIAS</label>
+                    </div>
+                    <?php if ($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor') { ?>
+                    <div class="col">
+                        <label for="territorialF" class="col-form-label-sm">TERRITORIAL</label>
+                        <select id="territorialF" name="territorialF" class="form-control form-control-sm searchEvento">
+                            <option value="0">Seleccionar</option>
+                        </select>
+                    </div>
+                    <?php } ?>
+                    <div class="col">
+                        <label for="tecnicoF" class="col-form-label-sm">TECNICO</label>
+                        <select name="tecnicoF" id="tecnicoF" class="form-control form-control-sm searchEvento">
+                            <option value="0" selected>Seleccionar</option> 
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="bancoF" class="col-form-label-sm">BANCO</label>
+                        <select name="bancoF" id="bancoF" class="form-control form-control-sm searchEvento">
+                            <option value="0" selected>Seleccionar</option> 
+                        </select>
                     </div>
                 </div>
                 <br />
@@ -247,7 +268,9 @@
                     </div>
                     <div class="row">
                         <div class="col">           
-                            <label for="tecnico" class="col-form-label-sm">TECNICO</label><?php if ($_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
+                            <label for="tecnico" class="col-form-label-sm">TECNICO</label>
+                            <?php if ($_SESSION['tipo_user'] == 'supOp' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' ) {  ?>
+                            <a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
                             <input type="text" class="form-control form-control-sm" id="tecnico" aria-describedby="tecnico" readonly>
                         </div>
                         <div class="col">           
