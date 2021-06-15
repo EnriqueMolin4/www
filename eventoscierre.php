@@ -157,7 +157,7 @@
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="tecnico" class="col-form-label-sm">Tecnico</label><?php if ($_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
+                                <label for="tecnico" class="col-form-label-sm">Tecnico</label><?php if ( $_SESSION['tipo_user'] == 'supOp' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
                                 <input type="text" class="form-control form-control-sm" id="tecnico" aria-describedby="tecnico" readonly>
                             </div>
                             <div class="col">           
