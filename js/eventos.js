@@ -91,6 +91,11 @@ $(document).ready(function() {
                     
                 },
                 {
+                    "targets": [ 1 ],
+                    "visible": $("#tipo_user").val() == 'callcenter' ? false : true
+                    
+                },
+                {
                     "targets": [12],
                     "mRender": function ( data,type, row ) {
                         var btnALL = '';
