@@ -102,6 +102,8 @@ class Eventos implements IConnections {
 		$userId = $_SESSION['userid'];
 		$territorial = $_SESSION['territorial'];
 		$evidencias = $params['evidencias'];
+		//$territorio = $params['territorialF'];
+		$territorio = isset($params['territorialF']) ? $params['territorialF'] : array(); //filtro territorial
 		
 		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
 		$orderDir = $params['order'][0]['dir'];
@@ -131,6 +133,24 @@ class Eventos implements IConnections {
 		if($_SESSION['tipo_user'] == 'supOp' ) {
 			 $where .= " AND cp_territorios.territorio_id = $territorial ";
 		}
+		//filtro territorial
+		if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor'){
+
+			if( $params['territorialF'] != 0 )
+			{
+				//$where .= " AND cp_territorios.territorio_id = ".$params['territorialF'];
+				$where .= " AND cp_territorios.territorio_id = $territorio ";
+			}
+		}
+
+		if($params['tecnicof'] != 0){
+			$where .=" AND e.tecnico =".$params['tecnicof'];
+		}
+
+		if($params['bancof'] != 0)
+		{
+			$where .= " AND e.cve_banco = ".$params['bancof'];
+		}
 
 		if($evidencias == '1') {
 			$where .= " AND e.totalImg > 0 ";
@@ -150,8 +170,6 @@ class Eventos implements IConnections {
 			$where .=" OR e.estatus LIKE '".$params['search']['value']."%'  )";
 
 		}
-    
-     
 
 		$sql = "SELECT e.id,
 				e.odt,
@@ -178,6 +196,7 @@ class Eventos implements IConnections {
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
 				LEFT JOIN comercios c ON  e.comercio = c.id
 				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN territorios ON cp_territorios.territorio_id = territorios.id
 				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
 				WHERE date(e.fecha_alta) BETWEEN '$inicio' AND '$fin'
 				$where
@@ -186,7 +205,7 @@ class Eventos implements IConnections {
 				$filter ";
 
 		//self::$logger->error ($sql);
-		//self::$logger->error($sql);
+		self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -393,21 +412,21 @@ class Eventos implements IConnections {
 		IFNULL(simIn.modelo, 0) simInCarrier,
 		IFNULL(simRe.modelo, 0) simReCarrier, modelos.modelo,
 		CONCAT(detalle_usuarios.nombre, '', detalle_usuarios.apellidos) usuario
-	FROM
-		eventos
-	LEFT JOIN tipo_aplicativo ON tipo_aplicativo.id = eventos.aplicativo
-	LEFT JOIN inventario ON inventario.no_serie = eventos.tpv_instalado
-	LEFT JOIN tipo_conectividad ON inventario.conectividad = tipo_conectividad.id
-	LEFT JOIN inventario tpvIn ON
-		eventos.tpv_instalado = tpvIn.no_serie
-	LEFT JOIN inventario tpvRe ON
-		eventos.tpv_retirado = tpvRe.no_serie
-	LEFT JOIN inventario simIn ON
-		eventos.sim_instalado = simIn.no_serie
-	LEFT JOIN inventario simRe ON
-		eventos.sim_retirado = simRe.no_serie
-	LEFT JOIN modelos ON inventario.modelo = modelos.id
-	LEFT JOIN detalle_usuarios ON detalle_usuarios.cuenta_id = eventos.modificado_por
+		FROM
+			eventos
+		LEFT JOIN tipo_aplicativo ON tipo_aplicativo.id = eventos.aplicativo
+		LEFT JOIN inventario ON inventario.no_serie = eventos.tpv_instalado
+		LEFT JOIN tipo_conectividad ON inventario.conectividad = tipo_conectividad.id
+		LEFT JOIN inventario tpvIn ON
+			eventos.tpv_instalado = tpvIn.no_serie
+		LEFT JOIN inventario tpvRe ON
+			eventos.tpv_retirado = tpvRe.no_serie
+		LEFT JOIN inventario simIn ON
+			eventos.sim_instalado = simIn.no_serie
+		LEFT JOIN inventario simRe ON
+			eventos.sim_retirado = simRe.no_serie
+		LEFT JOIN modelos ON inventario.modelo = modelos.id
+		LEFT JOIN detalle_usuarios ON detalle_usuarios.cuenta_id = eventos.modificado_por
 
 				WHERE eventos.odt = '$odt'
 				$where 
@@ -667,6 +686,20 @@ class Eventos implements IConnections {
 	}
 
 	function getTecnicos() {
+		$sql = "SELECT *, cuentas.id tecnicoId from cuentas,detalle_usuarios WHERE cuentas.id = detalle_usuarios.cuenta_id AND tipo_user = 3 AND cuentas.estatus=1 order By detalle_usuarios.nombre";
+		
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: eventos_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		}
+	}
+
+	
+	function getTecnicosFilter() {
 		$sql = "SELECT *, cuentas.id tecnicoId from cuentas,detalle_usuarios WHERE cuentas.id = detalle_usuarios.cuenta_id AND tipo_user = 3 AND cuentas.estatus=1 order By detalle_usuarios.nombre";
 		
 		
@@ -1317,7 +1350,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: api_db.php;	Method Name: getModeloConectividad();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getModeloConectividad();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1361,6 +1394,33 @@ class Eventos implements IConnections {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
 		   }
 
+	}
+
+	//para el filtro de territorial de eventos
+	function getTerritorialL()
+	{
+		$sql = "SELECT * FROM `territorios`   WHERE status = 1  Order by nombre ";
+
+		 try {
+			 $stmt = self::$connection->prepare ($sql );
+			 $stmt->execute (array());
+			 return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		 } catch ( PDOException $e ) {
+			 self::$logger->error ("File: eventos_db.php;	Method Name: getTerritorialL();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		 }
+	}
+
+	function getBancos()
+	{
+		$sql = " SELECT * FROM `bancos` WHERE status=1";
+
+		try{
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute(array());
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC);
+		} catch ( PDOException $e){
+			self::$logger->error("File: eventos_db.php;	Method Name: getBancos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		}
 	}
 
 }
@@ -1431,7 +1491,7 @@ if($module == 'getTipoServicios') {
 	echo $val;
 }
 	
-	if($module == 'getTipoSubServicio') {
+if($module == 'getTipoSubServicio') {
 
 	$arr = $params['servicio_id'];
 
@@ -1537,6 +1597,17 @@ if($module == 'getInfoExtra') {
 	echo json_encode($rows);
 }
 
+if($module == 'getTerritoriales')
+{
+	$val = '<option value="0">Seleccionar</option>';
+    $rows = $Eventos->getTerritorialL();
+    foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
+}
+
+
 if($module == 'getEstados') {
     $val = '<option value="0">Seleccionar</option>';
     $rows = $Eventos->getEstados();
@@ -1544,8 +1615,17 @@ if($module == 'getEstados') {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
 	}
 	echo $val;
-
 }
+
+if($module == 'getBancos') {
+    $val = '<option value="0">Seleccionar</option>';
+    $rows = $Eventos->getBancos();
+    foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['cve'] . '">' . $row ['banco'] . '</option>';
+	}
+	echo $val;
+}
+
 if($module == 'getEstadosNombre') {
     $val = '<option value="0" selected>Seleccionar</option>';
     $rows = $Eventos->getEstados();
@@ -1802,6 +1882,17 @@ if($module == 'getTecnicos') {
 	
 	$rows = $Eventos->getTecnicos();
 	$val = '<option value="0">Quitar Asignacion</option>';
+	foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['tecnicoId'] . '">' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
+	}
+	echo $val;
+}
+
+
+if($module == 'getTecnicosFiltro') {
+	
+	$rows = $Eventos->getTecnicosFilter();
+	$val = '<option value="0" selected>Seleccionar</option>';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['tecnicoId'] . '">' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
 	}
