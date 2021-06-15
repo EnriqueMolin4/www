@@ -18,6 +18,9 @@ $(document).ready(function() {
         getModelos();
         getConectividad();
         getCarrier();
+        getTerritoriosFilter();
+        getTecnicosf();
+        getBancosf();
         $("#fechaVen_inicio").datetimepicker({
 			timepicker:false,
             format:'Y-m-d'
@@ -59,7 +62,10 @@ $(document).ready(function() {
                     d.tipoevento = $("#tipo_evento").val(),
                     d.fechaVen_inicio = $("#fechaVen_inicio").val(),
                     d.fechaVen_fin = $("#fechaVen_fin").val(),
-                    d.evidencias = $('#evidencias').is(':checked') ? 1 : 0
+                    d.evidencias = $('#evidencias').is(':checked') ? 1 : 0,
+                    d.territorialF = $('#territorialF').val(),
+                    d.tecnicof = $('#tecnicoF').val(),
+                    d.bancof = $('#bancoF').val()
                 }
             },
             columns : [
@@ -141,6 +147,13 @@ $(document).ready(function() {
                             $('td', row).eq(col).css('background-color', '#ae2b2b');
                         
                     }
+                    //Semáforo no aplica para eventos cerrados
+                    if(data.nombreEstatus == 'Cerrado')
+                    {
+                        $('td', row).eq(col).css('color', '#3F4044');
+                        $('td', row).eq(col).css('background-color', '#fff');
+                    }
+
                 } else {
                     fnShowHide( 6,false )
                 }
@@ -606,13 +619,7 @@ $(document).ready(function() {
 				title: 'Aviso',
 				priority : 'danger'
                       });}
-			
-		
-			
-			
-			
-		
-		
+	
 		
         })
         $("#btnReasignarTecnico").on("click",function() {
@@ -1340,6 +1347,24 @@ function getTecnicos(id) {
     });
 }
 
+function getTecnicosf(id) {
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getTecnicosFiltro',
+        cache: true,
+        success: function(data){
+            console.log(data);
+        
+        $("#tecnicoF").html(data);
+		$("#tecnicoF").val(id);		
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
 function getEstatusServicio() {
 
 	$.ajax({
@@ -1517,6 +1542,21 @@ function getTipoEvento() {
     });
 }
 
+function getTerritoriosFilter(){
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getTerritoriales',
+        cache: false,
+        success: function(data){
+            $("#territorialF").html(data);
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
 function getEstatusEvento() {
     $.ajax({
         type: 'GET',
@@ -1543,6 +1583,26 @@ function getVersion() {
             console.log(data);
         
          $("#version").html(data);
+		 
+		 	
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
+function getBancosf() {
+
+	$.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getBancos',
+        cache: true,
+        success: function(data){
+            console.log(data);
+        
+         $("#bancoF").html(data);
 		 
 		 	
         },

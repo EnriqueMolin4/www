@@ -1303,7 +1303,7 @@
             $("#rowSubRechazos").hide();
             $("#btnUpdateEvento").attr('disabled',true);
 
-            if(  $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'callcenterADM'  ) {
+            if(  $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'callcenterADM' || $("#tipo_user").val() == 'supOp' ) {
                 $("#rollos_entregados").attr('readonly',false);
                 $("#rollos_instalar").attr('readonly',false);
                 $("#comentarios_cierre").attr('readonly',false);

@@ -50,7 +50,7 @@ class Almacen implements IConnections {
 	
 	function getModelosTPV() {
 		
-		$sql = "select *,getNameById(proveedor,'Proveedor') proveedorNombre from modelos";
+		$sql = "select * from modelos";
 		
 	
         try {
@@ -90,6 +90,21 @@ class Almacen implements IConnections {
             self::$logger->error ("File: almacen_db.php;	Method Name: getStatusModelos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
+
+	function getStatusInventario() {
+		
+		$sql = "select * from tipo_estatus_inventario WHERE estatus=1 ";
+		
+	
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: getStatusInventario();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+    }
+	
 	function getStatusUbicacion() {
 		
 		$sql = "select * from tipo_estatus_inventario where estatus=1";
@@ -138,12 +153,9 @@ class Almacen implements IConnections {
 		}
 
 		if( $estatusubicacion != '0' ) {
-			
 			$where .= " AND ei.id = $estatusubicacion ";
-
-			if($_SESSION['tipo_user'] != 'admin' ) //
-			{
-				if($_SESSION['tipo_user'] != 'AL' && $_SESSION['tipo_user'] != 'CA') {
+			if($_SESSION['tipo_user'] != 'admin') {
+				if($_SESSION['tipo_user'] != 'AL') {
 					
 					$where .= "  AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen AND estatus=1) ";	
 				}
@@ -220,7 +232,7 @@ class Almacen implements IConnections {
 				-- group by inv.id
 				$filter ";
 			 		
-				self::$logger->error($sql);
+		 
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -579,6 +591,20 @@ class Almacen implements IConnections {
         }
 	}
 
+	function getubicacionAlta() {
+		
+
+		$sql = "SELECT * from tipo_ubicacion where status=1 AND almacen=0  order by nombre DESC";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: getubicacion();	Functionality: Get Ubicaciones;	Log:" . $e->getMessage () );
+        }
+	}
+
 	function getHistoria($params,$total) {
 		$start = $params['start'];
 		$length = $params['length'];
@@ -592,7 +618,12 @@ class Almacen implements IConnections {
 
 		if($id == '') {
 			$id = -1;
-		}																	
+		}
+
+	 
+																						
+   
+		
 		
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
@@ -761,7 +792,6 @@ class Almacen implements IConnections {
 				$where
 				ORDER BY du.nombre,du.apellidos
 				";
-		self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -803,10 +833,7 @@ class Almacen implements IConnections {
 	function getAlmacen() {
 		
 		$where = '';
-	
-		if( $_SESSION['tipo_user'] != 'almacen' ) {
-			$where = ' AND id = 13';
-		}
+
 		
 		$sql = "SELECT id,nombre from tipo_ubicacion  WHERE almacen =1  $where ";
 		
@@ -921,8 +948,8 @@ class Almacen implements IConnections {
 				 t.no_serie,
 				 CASE WHEN t.tipo= 'TPV' THEN GetNameById(t.modelo,'Modelo') 
 				 	  WHEN t.tipo = 'SIM' THEN GetNameById(t.modelo,'Carrier')  
-				      WHEN t.tipo = 'INSUMO' THEN 'NO APLICA' END modelo,
-				 CASE WHEN t.tipo = 'INSUMO' THEN t.cantidad ELSE 'NO APLICA' END cantidad,
+				      WHEN t.tipo = 'INSUMOS' THEN 'NO APLICA' END modelo,
+				 CASE WHEN t.tipo = 'INSUMOS' THEN t.cantidad ELSE 'NO APLICA' END cantidad,
 				 CASE WHEN t.estatus = 1 THEN 'ACEPTADO' ELSE 'TRANSITO' END aceptada,
 				 IFNULL(tn.notas,'') notas,
 				 t.ultima_act,
@@ -1034,7 +1061,7 @@ class Almacen implements IConnections {
 	}
 
 	function existeInventarioInsumos($serie,$almacenId) {
-		$sql = " SELECT SUM(cantidad)   FROM inventario WHERE no_serie='$serie' AND ubicacion = $almacenId  ";
+		$sql = " SELECT IFNULL(SUM(cantidad),0)  FROM inventario WHERE no_serie='$serie' AND ubicacion = $almacenId  ";
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1211,7 +1238,7 @@ class Almacen implements IConnections {
 		$sql = " SELECT odt,ultima_act ultima_mod,afiliacion,tpv_instalado,tpv_retirado,ts.nombre servicio,CONCAT(c.nombre,c.apellidos) tecnico ,CONCAT(cm.nombre,cm.apellidos) modificado_por
 				  FROM `eventos`
 				  LEFT JOIN tipo_servicio ts ON ts.id = tipo_servicio
-				  LEFT JOIN detalle_usuarios  c ON c.cuenta_id = modificado_por
+				  LEFT JOIN detalle_usuarios  c ON c.cuenta_id = tecnico
 				  LEFT JOIN detalle_usuarios cm ON cm.cuenta_id = modificado_por
 				  WHERE ( 
 					`tpv_retirado` = '$serie' 
@@ -1260,9 +1287,10 @@ class Almacen implements IConnections {
 
 	function getTecnicoxPlaza($plaza) {
 
-		$sql = " SELECT detalle_usuarios.cuenta_id,CONCAT(detalle_usuarios.nombre,' ',detalle_usuarios.apellidos) nombre FROM cuentas,detalle_usuarios 
+		$sql = " SELECT detalle_usuarios.cuenta_id,CONCAT(detalle_usuarios.nombre,' ',detalle_usuarios.apellidos) nombre FROM cuentas,detalle_usuarios ,plaza_tecnico
 				 WHERE cuentas.id = detalle_usuarios.cuenta_id
-				 AND plaza=? 
+				 AND cuentas.id = plaza_tecnico.tecnico_id
+				 AND plaza_tecnico.plaza_id =? 
 				 AND cuentas.estatus=1
 			   ";
 			   
@@ -1515,6 +1543,36 @@ class Almacen implements IConnections {
 	function getProveedores() {
 		return array();
 	}
+
+	function searchUbicacion($search,$tipo) {
+
+		switch ($tipo) {
+			case "1":
+				$sql = " SELECT id,nombre FROM tipo_ubicacion WHERE status= 1 and almacen=1 AND nombre LIKE '%$search%' ";
+			break;	
+			case "2":
+				$sql = " SELECT c.id, concat(du.nombre,' ',du.apellidos) nombre FROM cuentas c,detalle_usuarios du WHERE c.id = du.cuenta_id AND c.tipo_user=3 AND du.nombre LIKE '%$search%' ";
+			break;
+			case "3":
+				$sql = " SELECT c.id, concat(du.nombre,' ',du.apellidos) nombre FROM cuentas c,detalle_usuarios du WHERE c.id = du.cuenta_id AND c.tipo_user=3 AND du.nombre LIKE '%$search%' ";
+			break;
+			case "4":
+				$sql = " SELECT id, comercio nombre FROM comercios WHERE  ( comercio LIKE '%$search%'  OR afiliacion LIKE '%$search%' ) ";
+			break;
+			case "5":
+				$sql = " SELECT id, nombre FROM tipo_ubicacion WHERE status= 1 and almacen=1 AND nombre LIKE '%$search%' ";
+			break;
+
+		}
+
+		try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute (array());
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: searchUbicacion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
 }
 //
 include 'DBConnection.php';
@@ -1646,6 +1704,17 @@ if($module == 'getSupervisores') {
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['cuenta_id'] . '">' . $row ['nombre'] . '</option>';
 	}
+	echo $val;
+}
+
+if($module == 'getubicacionAlta') {
+	$val = '<option value="0">Seleccionar</option>';
+    $rows = $Almacen->getubicacionAlta();
+
+	foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	}
+
 	echo $val;
 }
 
@@ -1816,13 +1885,28 @@ if($module == 'getStatus') {
 
 }
 
+if($module == 'getStatusInventario') {
+	$val = '<option value="0">Seleccionar</option>';
+    $rows = $Almacen->getStatusInventario();
+    foreach ( $rows as $row ) {
+         
+		$val .=  '<option value="' . $row ['id'] . '"  >' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
+}
+
 if($module == 'getStatusUbicacion') {
     $val = '<option value="0">Seleccionar</option>';
     $rows = $Almacen->getStatusUbicacion();
     foreach ( $rows as $row ) {
         if($_SESSION['tipo_user'] == 'AL' || $_SESSION['tipo_user'] == 'AN' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'CA' ) { 
 			$val .=  '<option value="' . $row ['id'] . '"  >' . $row ['nombre'] . '</option>';
-		} else {
+		} else if ($_SESSION['tipo_user'] == 'LA') {
+			if( $row ['id'] == '5' ) {
+				$val .=  '<option value="' . $row ['id'] . '"  >' . $row ['nombre'] . '</option>';
+			}
+		
+	    } else {
 			
 			if( $row ['id'] == '2' ||  $row ['id'] == '3') {
 				$val .=  '<option value="' . $row ['id'] . '"  >' . $row ['nombre'] . '</option>';
@@ -1875,6 +1959,17 @@ if($module == 'getAlmacen') {
 	echo $val;
 }
 
+if($module == 'buscarUbicacion') {
+
+	$term = $params['term'];
+	$tipoUbicacion = $params['tipoUbicacion'];
+
+	$rows = $Almacen->searchUbicacion($term,$tipoUbicacion);
+
+	echo json_encode($rows);
+
+}
+
 
 
 if($module == 'altaAlmacen') {
@@ -1882,78 +1977,146 @@ if($module == 'altaAlmacen') {
 	$fecha_alta = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
 	$inventario = $Almacen->getCantidadInsumos($params['insumo']);
+	$modelo = $params['producto'] == '1' ? $params['tpv'] : $params['carrier'];
 
-	if($params['producto'] == '3' && sizeof($inventario) > 0  ) {
+	$existeElavonUniverso = $Almacen->validateElavonUniverso( $params['noserie'] );
+	$existeInventario = $Almacen->existeInventario( $params['noserie'] );
 
-		$total = (int)$inventario[0]['cantidad'] + (int)$params['cantidad'];
-		$id = $inventario[0]['id'];
+	if($existeElavonUniverso != '0') {
 
-		$prepareStatement = "UPDATE `inventario` SET `cantidad` = ?,`modificado_por`= ? WHERE `id` = ? ;";
+		if(!$existeInventario) {
 
-		$arrayString = array (
-				$total,
-				$user,
-				$inventario[0]['id']
-		);
+			if($params['producto'] == '3' && sizeof($inventario) > 0  ) {
 
-		$Almacen->insert($prepareStatement,$arrayString);
+				$total = (int)$inventario[0]['cantidad'] + (int)$params['cantidad'];
+				$id = $inventario[0]['id'];
+
+				$prepareStatement = "UPDATE `inventario` SET `cantidad` = ?,`modificado_por`= ? WHERE `id` = ? ;";
+
+				$arrayString = array (
+						$total,
+						$user,
+						$inventario[0]['id']
+				);
+
+				$Almacen->insert($prepareStatement,$arrayString);
+
+			} else {
+				
+				$ubicacion = 0;
+
+				switch ($params['estatusinv'])
+				{
+					case "1" :
+						$ubicacion = 1;
+					break;
+					case "2" :
+						$ubicacion = 4;
+					break;
+					case "3" :
+						$ubicacion = 9;
+					break;
+					case "4" :
+						$ubicacion = 2;
+					break;
+					case "5" :
+						$ubicacion = 1;
+					break;
+
+
+				}
+
+				$anaquel = empty($params['anaquel']) ? 0 : $params['anaquel'];
+				$cajon = empty($params['cajon']) ? 0 : $params['cajon'];
+				$tarima = empty($params['tarima']) ? 0 : $params['tarima'];
+				$params['cantidad']= 1;
+
+				$prepareStatement = "INSERT INTO `inventario`
+								( `tipo`,`cve_banco`,`no_serie`,`modelo`,`conectividad`,`estatus`,`estatus_inventario`,`id_ubicacion`,`anaquel`,`caja`,`tarima`,
+								`cantidad`,`ubicacion`,`creado_por`,`fecha_entrada`,`fecha_creacion`,`fecha_edicion`,`modificado_por`)
+								VALUES
+								(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+							";
+				$arrayString = array (
+						$params['producto'],
+						$params['cve_banco'],
+						$params['noserie'],
+						$modelo,
+						$params['connect'],
+						$params['estatus'] ,
+						$params['estatusinv'],
+						$params['ubicacionid'],
+						$anaquel,
+						$cajon,
+						$tarima,
+						$params['cantidad'],
+						$ubicacion,
+						$user,
+						$fecha_alta,
+						$fecha_alta,
+						$fecha_alta,
+						$user
+				);
+			
+				$id = $Almacen->insert($prepareStatement,$arrayString);
+
+				if($params['estatusinv'] == '3' || $params['estatusinv'] == 2) 
+				{
+					$prepareStatement = "INSERT INTO `inventario_tecnico`
+								( `tecnico`,`no_serie`,`cantidad`,`aceptada`,`creado_por`,`fecha_creacion`,`fecha_modificacion`)
+								VALUES
+								(?,?,?,?,?,?,?);
+							";
+					$arrayString = array (
+						$params['ubicacionid'],
+						$params['noserie'],
+						$params['cantidad'],
+						1,
+						$user,
+						$fecha_alta,
+						$fecha_alta
+					);
+				
+					$Almacen->insert($prepareStatement,$arrayString);
+				}
+
+			}
+
+			if($params['producto'] == '3') {
+				$params['noserie'] = $id;
+			}
+
+			$prepareStatement = "INSERT INTO `historial`
+							( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)
+							VALUES
+							(?,?,?,?,?,?,?,?,?);
+						";
+			$arrayString = array (
+					$id,
+					$fecha_alta,
+					'ALTA',
+					1,
+					$params['noserie'],
+					$params['producto'],
+					$params['cantidad'],
+					$params['ubicacionid'],
+					$user
+			);
+
+			$Almacen->insert($prepareStatement,$arrayString);
+			$msg= 'Existe en Universo Elavon';
+		} else {
+			$msg= 'Ya Existe en Inventario ';
+			$id = '0';
+		}
 
 	} else {
 
-		$prepareStatement = "INSERT INTO `inventario`
-						( `tipo`,`cve_banco`,`no_serie`,`modelo`,`conectividad`,`estatus`,`anaquel`,`caja`,`tarima`,
-						`cantidad`,`carrier`,`ubicacion`,`insumo`,`creado_por`,`fecha_entrada`,`fecha_creacion`,`fecha_edicion`,`modificado_por`)
-						VALUES
-						(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
-					";
-		$arrayString = array (
-				$params['producto'],
-				$params['cve_banco'],
-				$params['noserie'],
-				$params['tpv'],
-				$params['connect'],
-				$params['estatus'] ,
-				$params['anaquel'],
-				$params['cajon'],
-				$params['tarima'],
-				$params['cantidad'],
-				$params['carrier'],
-				1,
-				$params['insumo'] ,
-				$user,
-				$fecha_alta,
-				$fecha_alta,
-				$fecha_alta,
-				$user
-		);
-	
-		$id = $Almacen->insert($prepareStatement,$arrayString);
-
+		$msg= 'No Existe en Universo Elavon';
+		$id = '0';
 	}
-
-	if($params['producto'] == '3') {
-		$params['noserie'] = $id;
-	}
-
-	$prepareStatement = "INSERT INTO `historial`
-					( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`producto`,`cantidad`,`id_ubicacion`)
-					VALUES
-					(?,?,?,?,?,?,?,?);
-				";
-	$arrayString = array (
-			$id,
-			$fecha_alta,
-			'ALTA',
-			1,
-			$params['noserie'],
-			$params['producto'],
-			$params['cantidad'],
-			NULL
-	);
-
-	$Almacen->insert($prepareStatement,$arrayString);
 	
-	echo json_encode(['id'=> $id,  'fecha_alta' => $fecha_alta ]);
+	echo json_encode(['id'=> $id,  'fecha_alta' => $fecha_alta, 'msg' => $msg, 'existe' => $existeInventario ]);
 } 
 
 if($module == 'updateInvProd') 
@@ -2403,7 +2566,18 @@ if($module == 'returnInvItem') {
 	$fecha_alta = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
 	$almacenId = $_SESSION['almacen'];
-	$item = $Almacen->getInventarioInfo($params['noserie']);
+	$noserie = preg_replace( "/[^a-zA-Z0-9]/", "",$params['noserie']); 
+	$item = $Almacen->getInventarioInfo($noserie);
+	
+	if( $almacenId=='14' || $almacenId=='15') {
+		$estatus_inventario = 5;
+		$ubicacion = $almacenId;
+		$id_ubicacion = $almacenId;
+	} else {
+		$estatus_inventario = 1;
+		$ubicacion = $almacenId;
+		$id_ubicacion = $almacenId;
+	}
 
 	if($item ) {
 
@@ -2414,9 +2588,9 @@ if($module == 'returnInvItem') {
 				$sql = " UPDATE `inventario` SET `estatus_inventario`=?,`ubicacion`=?,`id_ubicacion`=?,`modificado_por`=?,`fecha_edicion`=? WHERE `id`=? "; 
 		
 				$arrayString = array (
-					1,
-					1,
-					1,
+					$estatus_inventario,
+					$ubicacion,
+					$id_ubicacion,
 					$user,
 					$fecha_alta,
 					$item[0]['id']
@@ -2446,7 +2620,7 @@ if($module == 'returnInvItem') {
 		//	if($item[0]['estatus_inventario'] == '3') {
 
 				$query = " DELETE FROM inventario_tecnico  WHERE no_serie=?   ";
-				$Almacen->insert($query,array($params['noserie'] ));
+				$Almacen->insert($query,array($noserie));
 		//	}
 		
 
@@ -2462,10 +2636,10 @@ if($module == 'returnInvItem') {
 				$fecha_alta,
 				'ENTRADA',
 				$almacenId,
-				$params['noserie'],
+				$noserie,
 				$item[0]['tipo'],
 				1,
-				0,
+				$id_ubicacion,
 				$user
 			);
 		
@@ -3749,18 +3923,12 @@ if ($module == 'InventarioEditar')
 		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
 		
 		$ModeloId = $Almacen->getModeloId($Modelo->getValue());
-
 		$ConectividadId = $Almacen->getConectividadId($Conectividad->getValue());
 		$EstatusId = $Almacen->getEstatusId($Estatus->getValue());
 		$Estatus_ubicacionId = $Almacen->getEstatusInvId($Estatus_ubicacion->getValue());
 		$ubicacionId = $Almacen->getAlmacenId($ubicacion->getValue());
 		
 		$valido = 0;
-
-		if($Tipo->getValue() == 2)
-		{
-			$ModeloId = $Almacen->getCarrierId($Modelo->getValue());
-		}
 		
 		/*if ($_SESSION['almacen'] != $almacenId)
 		{
@@ -3777,16 +3945,14 @@ if ($module == 'InventarioEditar')
 		
 		if ($valido == 0)
 		{
-			/*
-				if($Tipo->getValue() == 'TPV')
-				{
-					$TipoId = "1";
-				}
-				else if ($Tipo->getValue() == 'SIM')
-				{
+			/*if($Tipo->getValue() == 'TPV')
+			{
+				$TipoId = "1";
+			}
+			else if ($Tipo->getValue() == 'SIM')
+			{
 				$TipoId = "2";
-				} 
-			*/
+			} */
 			$TipoId =$Tipo->getValue();
 			
 			if (!is_null($No_serie))
@@ -3835,6 +4001,8 @@ if ($module == 'UpdateInventario')
 		$fecha
 	);
 
+
+
 	 if($info[2]) {
 		 $campoUpdate .= " ,modelo=? ";
 		 array_push($arrayString,$info[2]);
@@ -3864,10 +4032,9 @@ if ($module == 'UpdateInventario')
 			$campoUpdate
 			WHERE no_serie=?" ;
 
+	
 
 	$id = $Almacen->insert($sql,$arrayString);
-
-	print_r($id);
 	
 	$msg = "actualizó en ";
 	

@@ -114,10 +114,10 @@ $(document).ready(function() {
         rowCallback: function( row, data, index,full){
            
              fnShowHide( 4,true )
-                 var fechamodificacion = moment(data.fecha_entrada)
+                 var fechamodificacion = moment(data.fecha_edicion)
                  var now = moment();
                  var diff = moment.duration(fechamodificacion.diff(now));
-                 var col = this.api().column(4).index('visible');
+                 var col = this.api().column(8).index('visible');
 
                  if(now.diff(fechamodificacion, 'days') >= 15  ) {
                  
