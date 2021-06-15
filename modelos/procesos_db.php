@@ -302,7 +302,33 @@ class Procesos implements IConnections {
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: almacen_db.php;	Method Name: getAlmacenxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
-	}
+	} 
+
+	function getAplicativoxNombre($aplicativo) {
+		$sql = "SELECT id FROM tipo_aplicativo WHERE nombre LIKE '%$aplicativo%' ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getAlmacenxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+		}
+	} 
+
+
+	function getComercioxAfiliacion($afiliacion) {
+		$sql = "SELECT id FROM comercios WHERE afiliacion = ? ";
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute (array($afiliacion));
+			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getAlmacenxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+		}
+	} 
+	
 
 	function existeEvento($odt) {
 		$sql = "SELECT id,tecnico,afiliacion,estatus_servicio  FROM eventos WHERE odt = '$odt' ";
@@ -373,11 +399,12 @@ class Procesos implements IConnections {
 
 	function getEventosCerrados($odt) {
 
-		$sql = "SELECT *  
+		$sql = "SELECT *  ,tv.nombre nombreVersion
 				FROM eventos 
 				LEFT JOIN eventos_tpvretirado et ON et.odt = eventos.odt 
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.tecnico
 				LEFT JOIN cuentas c ON c.id = eventos.tecnico
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
 				WHERE eventos.sync=0  AND eventos.odt=? ";
 		
         try {
@@ -436,6 +463,83 @@ class Procesos implements IConnections {
             self::$logger->error ("File: eventos_db.php;	Method Name: existeUniversoElavon();	Functionality: Get Image by ODT;	Log:" . $e->getMessage () );
         }
 
+	}
+
+	function existeInventario($serie) {
+		$sql = " SELECT * FROM inventario WHERE no_serie=? ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($serie));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: procesos_db.php;	Method Name: existeElavon();	Functionality: Get inventario;	Log:" . $e->getMessage () );
+        }
+
+	}
+
+	function getModeloId($modelo) {
+		$sql = " SELECT * FROM modelos WHERE modelo LIKE '%$modelo%' ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($modelo));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: procesos_db.php;	Method Name: getModeloId();	Functionality: Get inventario;	Log:" . $e->getMessage () );
+        }
+
+	}
+
+	function getConectividadId($modelo) {
+		$sql = " SELECT * FROM tipo_conectividad WHERE nombre=? ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($modelo));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: procesos_db.php;	Method Name: getConectividadId();	Functionality: Get inventario;	Log:" . $e->getMessage () );
+        }
+
+	}
+
+	function getCarrierId($modelo) {
+		$sql = " SELECT * FROM carriers  WHERE nombre=? ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($modelo));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: procesos_db.php;	Method Name: getCarrierId();	Functionality: Get inventario;	Log:" . $e->getMessage () );
+        }
+
+	}
+
+	function getComercioId($afiliacion) {
+		$sql = " SELECT * FROM comercios  WHERE afiliacion=? ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($afiliacion));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: procesos_db.php;	Method Name: getComercioId();	Functionality: Get inventario;	Log:" . $e->getMessage () );
+        }
+
+	}
+
+	function getGeolocalizacion($comercio) {
+		$sql = "SELECT latitud,longitud  FROM comercios WHERE afiliacion = ? ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($comercio));
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getGeolocalizacion();	Functionality: Get Geoocalizacion;	Log:" . $e->getMessage () );
+        }
 	}
 }
 
