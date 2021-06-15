@@ -40,7 +40,7 @@ foreach($eventos as $evento) {
     $sim = $evento['sim_instalado'];
     $simr = $evento['sim_retirado'];
     
-    $geolocalizacion = $Procesos->getGeolocalizacion($evento['comercio']);
+    $geolocalizacion = $Procesos->getGeolocalizacion($evento['afiliacion']);
 
     $latitud = $geolocalizacion['latitud'];
     $longitud = $geolocalizacion['longitud'];
@@ -72,86 +72,132 @@ foreach($eventos as $evento) {
         'longitud' => floatval($longitud)
     ];
 
-    if(!empty($noserie) ) {
+    if($evento['tipo_servicio'] == '8' || $evento['tipo_servicio'] == '14' || $evento['tipo_servicio'] == '33' || $evento['tipo_servicio'] == '45'   )
+    {
+        if(!empty($noserie) ) {
 
-        $serieData = $Procesos->getSeriesData($noserie);
-        $conectividad = $serieData['conectividad'];
-        $modelo = $serieData['modelo'];
-        $marca = $serieData['marca'];
-        $aplicativo = '17'; //$evento['aplicativo'];
-        $version = '1.10.7 Get Net'; //$eventos['version'];
-        $bateria = 1;
-        $eliminador = 1;
-        $tapa = 1;
-        $cable = 1;
-        $base = 1;
-        $is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
-        $afiliacionamex = $evento['afiliacionamex'];
-        $conclusionesamex = '';
+            $serieData = $Procesos->getSeriesData($noserie);
+            $conectividad = $serieData['conectividad'];
+            $modelo = $serieData['modelo'];
+            $marca = $serieData['marca'];
+            $aplicativo = '17'; //$evento['aplicativo'];
+            $version = '1.10.7 Get Net'; //$eventos['nombreVersion'];
+            $bateria = 1;
+            $eliminador = 1;
+            $tapa = 1;
+            $cable = 1;
+            $base = 1;
+            $is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
+            $afiliacionamex = $evento['afiliacionamex'];
+            $conclusionesamex = '';
 
-        $unidades = [
-            'tipoUnidad' => 1,
-            'noSerie' => $noserie,
-            'noSim' => $sim,
-            'conectividad' => (int) $conectividad,
-            'aplicativo' => (int) $aplicativo,
-            'version' => $version,
-            'bateria' => (bool) $bateria,
-            'eliminador' => (bool) $eliminador,
-            'tapa' => (bool) $tapa,
-            'cable' => (bool) $cable,
-            'base' => (bool) $base,
-            'isAmex' => (bool) $is_amex,
-            'idAmex' => $idamex,
-            'afiliacionAmex' => $afiliacionamex,
-            'conclusionesAmex' => $conclusionesAmex,
-            'marca' => (int) $marca,
-            'modelo' => (int)  $modelo,
-            'isInstalacionSim' => (bool) $isinstalacionSim
-        ];
+            $unidades = [
+                'tipoUnidad' => 1,
+                'noSerie' => $noserie,
+                'noSim' => $simr,
+                'conectividad' => (int) $conectividad,
+                'aplicativo' => (int) $aplicativo,
+                'version' => $version,
+                'bateria' => (bool) $bateria,
+                'eliminador' => (bool) $eliminador,
+                'tapa' => (bool) $tapa,
+                'cable' => (bool) $cable,
+                'base' => (bool) $base,
+                'isAmex' => (bool) $is_amex,
+                'idAmex' => $idamex,
+                'afiliacionAmex' => $afiliacionamex,
+                'conclusionesAmex' => $conclusionesAmex,
+                'marca' => (int) $marca,
+                'modelo' => (int)  $modelo,
+                'isInstalacionSim' => (bool) 1 //$isinstalacionSim
+            ];
 
-        $json['unidades'] =array($unidades) ;
-    }
+            $json['unidades'] =array($unidades) ;
+        }
 
-    if(!empty($noserier) ) {
+    } else {
 
-        $serieData = $Procesos->getSeriesData($noserier);
-        $conectividad = $serieData['conectividad'];
-        $modelo = $serieData['modelo'];
-        $marca = $serieData['marca'];
-        $aplicativo = '17'; //$evento['aplicativo'];
-        $version = '1.10.7 Get Net'; //$eventos['version'];
-        $bateria = 1;
-        $eliminador = 1;
-        $tapa = 1;
-        $cable = 1;
-        $base = 1;
-        $is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
-        $afiliacionamex = $evento['afiliacionamex'];
-        $conclusionesamex = '';
+        if(!empty($noserie) ) {
 
-        $unidades = [
-            'tipoUnidad' => 2,
-            'noSerie' => $noserier,
-            'noSim' => $simr,
-            'conectividad' => (int) $conectividad,
-            'aplicativo' => (int) $aplicativo,
-            'version' => $version,
-            'bateria' => (bool) $bateria,
-            'eliminador' => (bool) $eliminador,
-            'tapa' => (bool) $tapa,
-            'cable' => (bool) $cable,
-            'base' => (bool) $base,
-            'isAmex' => (bool) $is_amex,
-            'idAmex' => $idamex,
-            'afiliacionAmex' => $afiliacionamex,
-            'conclusionesAmex' => $conclusionesAmex,
-            'marca' => (int) $marca,
-            'modelo' => (int)  $modelo,
-            'isInstalacionSim' => (bool) $isinstalacionSim
-        ];
+            $serieData = $Procesos->getSeriesData($noserie);
+            $conectividad = $serieData['conectividad'];
+            $modelo = $serieData['modelo'];
+            $marca = $serieData['marca'];
+            $aplicativo = '17'; //$evento['aplicativo'];
+            $version = '1.10.7 Get Net'; //$eventos['version'];
+            $bateria = 1;
+            $eliminador = 1;
+            $tapa = 1;
+            $cable = 1;
+            $base = 1;
+            $is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
+            $afiliacionamex = $evento['afiliacionamex'];
+            $conclusionesamex = '';
 
-        $json['unidades'][] = $unidades;
+            $unidades = [
+                'tipoUnidad' => 1,
+                'noSerie' => $noserie,
+                'noSim' => $sim,
+                'conectividad' => (int) $conectividad,
+                'aplicativo' => (int) $aplicativo,
+                'version' => $version,
+                'bateria' => (bool) $bateria,
+                'eliminador' => (bool) $eliminador,
+                'tapa' => (bool) $tapa,
+                'cable' => (bool) $cable,
+                'base' => (bool) $base,
+                'isAmex' => (bool) $is_amex,
+                'idAmex' => $idamex,
+                'afiliacionAmex' => $afiliacionamex,
+                'conclusionesAmex' => $conclusionesAmex,
+                'marca' => (int) $marca,
+                'modelo' => (int)  $modelo,
+                'isInstalacionSim' => (bool) 1 //$isinstalacionSim
+            ];
+
+            $json['unidades'] =array($unidades) ;
+        }
+
+        if(!empty($noserier) ) {
+
+            $serieData = $Procesos->getSeriesData($noserier);
+            $conectividad = $serieData['conectividad'];
+            $modelo = $serieData['modelo'];
+            $marca = $serieData['marca'];
+            $aplicativo = '17'; //$evento['aplicativo'];
+            $version = '1.10.7 Get Net'; //$eventos['version'];
+            $bateria = 1;
+            $eliminador = 1;
+            $tapa = 1;
+            $cable = 1;
+            $base = 1;
+            $is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
+            $afiliacionamex = $evento['afiliacionamex'];
+            $conclusionesamex = '';
+
+            $unidades = [
+                'tipoUnidad' => 2,
+                'noSerie' => $noserier,
+                'noSim' => $simr,
+                'conectividad' => (int) $conectividad,
+                'aplicativo' => (int) $aplicativo,
+                'version' => $version,
+                'bateria' => (bool) $bateria,
+                'eliminador' => (bool) $eliminador,
+                'tapa' => (bool) $tapa,
+                'cable' => (bool) $cable,
+                'base' => (bool) $base,
+                'isAmex' => (bool) $is_amex,
+                'idAmex' => $idamex,
+                'afiliacionAmex' => $afiliacionamex,
+                'conclusionesAmex' => $conclusionesAmex,
+                'marca' => (int) $marca,
+                'modelo' => (int)  $modelo,
+                'isInstalacionSim' => (bool) 1 //$isinstalacionSim
+            ];
+
+            $json['unidades'][] =$unidades ;
+        }
     }
 
     
@@ -189,7 +235,7 @@ foreach($eventos as $evento) {
         
         $imagesUp = $api->putImg("provider/api/files",$token->token,$images,$odt,$idtecnico);
 
-        echo json_encode([ 'evento' => $cierre, 'img' => $imagesUp]);
+        echo json_encode([ 'evento' => $cierre, 'img' => $imagesUp, 'json' => $json]);
     
 
 }
