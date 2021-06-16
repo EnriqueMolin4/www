@@ -232,7 +232,7 @@ class Almacen implements IConnections {
 				-- group by inv.id
 				$filter ";
 			 		
-		 
+		 	//self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
