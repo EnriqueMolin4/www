@@ -66,9 +66,9 @@
                     </div>          
                 </div>
                 <div class="row pt-3 pl-4">
-                    <div class="col">
-                        <input type="checkbox" class="form-check-input searchEvento" id="evidencias">
-                        <label class="form-check-label" for="evidencias">CON EVIDENCIAS</label>
+                    <div class="col col-evidencias">
+                        <input type="checkbox" class="form-check-input searchEvento lblEvidencias" id="evidencias">
+                        <label class="form-check-label lblEvidencias" for="evidencias">CON EVIDENCIAS</label>
                     </div>
                     <?php if ($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor') { ?>
                     <div class="col">
