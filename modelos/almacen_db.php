@@ -87,7 +87,7 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getStatusModelos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getStatus();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -408,7 +408,7 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getTipoServicios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getTipoFallas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -547,7 +547,7 @@ class Almacen implements IConnections {
             $stmt->execute (array($id));
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getInsumos();	Functionality: Get Insumos price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getInsumosId();	Functionality: Get Insumos price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -573,7 +573,7 @@ class Almacen implements IConnections {
             $stmt->execute (array($insumo,$tecnico));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getCantidadInsumos();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getCantidadInsumosTecnico();	Functionality: Get Insumos quantity;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -601,7 +601,7 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getubicacion();	Functionality: Get Ubicaciones;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getubicacionAlta();	Functionality: Get Ubicaciones;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -619,12 +619,7 @@ class Almacen implements IConnections {
 		if($id == '') {
 			$id = -1;
 		}
-
-	 
-																						
-   
-		
-		
+													
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
 		}
@@ -856,7 +851,7 @@ class Almacen implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: almacen_db.php;	Method Name: getinvInsumo();	Functionality: Search No_Serie;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: getInvId();	Functionality: Search No_Serie;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1068,7 +1063,7 @@ class Almacen implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: almacen_db.php;	Method Name: existeInventario();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: existeInventarioInsumos();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1182,7 +1177,7 @@ class Almacen implements IConnections {
 			$stmt->execute (array($noserie));
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: almacen_db.php;	Method Name: getTraspasosbyId();	Functionality: Search No_Serie;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: validateElavonUniverso();	Functionality: Search No_Serie;	Log:". $sql . $e->getMessage () );
 		}
 	}
 	
@@ -1537,7 +1532,7 @@ class Almacen implements IConnections {
             $stmt->execute (array());
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getDetallePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getProducto();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	function getProveedores() {
