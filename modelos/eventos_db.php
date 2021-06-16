@@ -2846,7 +2846,6 @@ if($module == 'cerrarEvento') {
 	$rechazo = $params['rechazo'];
 	$subrechazo = $params['subrechazo'];
 	$cancelado = $params['cancelado'];
-	
 	$tpv = strlen($params['tpv']) > 0 ? $params['tpv'] : null;
 	$tvpInModelo = $params['tvpInModelo'];
 	$tpvInConnect = $params['tpvInConnect'];
@@ -2879,6 +2878,16 @@ if($module == 'cerrarEvento') {
 	$faltaEvidencia = $params['faltaEvidencia'];
 	$faltaInformacion = $params['faltaInformacion'];
 	$faltaUbicacion = $params['faltaUbicacion'];
+
+	$tpvYaInstalada = $Eventos->serieInstalada($tpv);
+
+	if ($tpvYaInstalada)
+	{
+		echo "instalada";
+	}
+	else{
+		echo "no instalada";
+	}
 	
 	$prepareStatement = "UPDATE `eventos` SET 
 						`estatus`=?,
