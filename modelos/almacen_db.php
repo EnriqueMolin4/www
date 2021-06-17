@@ -2119,6 +2119,46 @@ if($module == 'updateInvProd')
 	$fecha_alta = date("Y-m-d H:i:s");
 	$fecha = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
+	$historial_estatus = '';
+
+	switch ($params['estatus']) {
+		case '2':
+			$historial_estatus = 'CAMBIO ESTATUS A OBSOLETO';
+		break;
+		case '3':
+			$historial_estatus = 'CAMBIO ESTATUS A DISPONIBLE-USADO';
+		break;
+		case '5':
+			$historial_estatus = 'CAMBIO ESTATUS A DISPONIBLE-NUEVO';
+		break;
+		case '6':
+			$historial_estatus = 'CAMBIO ESTATUS A EN REPARACION';
+		break;
+		case '7':
+			$historial_estatus = 'CAMBIO ESTATUS A DAÑADA';
+		break;
+		case '8':
+			$historial_estatus = 'CAMBIO ESTATUS A IRREPARABLE';
+		break;
+		case '12':
+			$historial_estatus = 'CAMBIO ESTATUS A EN TRANSITO';
+		break;
+		case '13':
+			$historial_estatus = 'CAMBIO ESTATUS A INSTALADO';
+		break;
+		case '14':
+			$historial_estatus = 'CAMBIO ESTATUS A EN PLAZA';
+		break;
+		case '15':
+			$historial_estatus = 'CAMBIO ESTATUS A EN DIAGNOSTICO';
+		break;
+		case '16':
+			$historial_estatus = 'CAMBIO ESTATUS A QUEBRANTO';
+		break;
+		case '17':
+			$historial_estatus = 'CAMBIO ESTATUS A DESTRUCCION';
+		break;
+	}
 	
 	$prepareStatement = "UPDATE `inventario` 
 						SET `modelo` = ?, 
@@ -2174,7 +2214,7 @@ if($module == 'updateInvProd')
 		$arrayString = array (
 				$getIdInv[0]['id'],
 				$fecha_alta,
-				'CAMBIO ESTATUS',
+				$historial_estatus,
 				$params['ubicacion'],
 				$params['noserie'],
 				$getIdInv[0]['tipo'],
