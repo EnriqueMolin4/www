@@ -203,7 +203,7 @@ class Reportes implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getStatusx();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;	Method Name: getEstatus();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -218,7 +218,7 @@ class Reportes implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getStatusUbicacion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;	Method Name: getubicacion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -330,7 +330,7 @@ class Reportes implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: reportes_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: reportes_db.php;	Method Name: getAlmaceninventario();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 

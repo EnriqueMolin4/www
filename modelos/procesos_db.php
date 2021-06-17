@@ -131,7 +131,7 @@ class Procesos implements IConnections {
 			$stmt->execute(array($tipo));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: procesos_db.php;	Method Name: getProcesos();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -145,7 +145,7 @@ class Procesos implements IConnections {
             $stmt->execute (array($tipo));
             return  $stmt->fetch ( PDO::FETCH_ASSOC  );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getCargasEventos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: procesos_db.php;	Method Name: getOlderCargas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -159,7 +159,7 @@ class Procesos implements IConnections {
             $stmt->execute (array($tipo));
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0  );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getCargasEventos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: procesos_db.php;	Method Name: getCargasEnProceso();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -312,7 +312,7 @@ class Procesos implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: getAlmacenxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: procesos_db.php;	Method Name: getAplicativoxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	} 
 
@@ -325,7 +325,7 @@ class Procesos implements IConnections {
 			$stmt->execute (array($afiliacion));
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: procesos_db.php;	Method Name: getAlmacenxNombre();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: procesos_db.php;	Method Name: getComercioxAfiliacion();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	} 
 	
@@ -412,7 +412,7 @@ class Procesos implements IConnections {
             $stmt->execute (array($odt));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getInventarioElavonData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: procesos_db.php;	Method Name: getEventosCerrados();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 
 	}
@@ -435,7 +435,7 @@ class Procesos implements IConnections {
             $stmt->execute (array($noserie));
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: getInventarioElavonData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: procesos_db.php;	Method Name: getSeriesData();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -473,7 +473,7 @@ class Procesos implements IConnections {
             $stmt->execute (array($serie));
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: procesos_db.php;	Method Name: existeElavon();	Functionality: Get inventario;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: procesos_db.php;	Method Name: existeInventario();	Functionality: Get inventario;	Log:" . $e->getMessage () );
         }
 
 	}

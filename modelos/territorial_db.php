@@ -203,7 +203,7 @@ class Territorial implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: territorial_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:".$sql . $e->getMessage () );
+			self::$logger->error ("File: territorial_db.php;	Method Name: getTablePlaza();	Functionality: Get Table;	Log:".$sql . $e->getMessage () );
 		}
 
 	}
@@ -264,7 +264,7 @@ class Territorial implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: territorial_db.php;	Method Name: getTableTerritorios();	Functionality: Get Territorios;	Log:".$sql . $e->getMessage () );
+			self::$logger->error ("File: territorial_db.php;	Method Name: getTableSupervisores();	Functionality: Get Territorios;	Log:".$sql . $e->getMessage () );
 		}
 	}
 	
@@ -278,7 +278,7 @@ class Territorial implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: territorial_db.php;	Method Name: getSupervisores();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: territorial_db.php;	Method Name: getTerritorios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -343,7 +343,7 @@ class Territorial implements IConnections {
 			$stmt->execute ();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: territorial_db.php;	Method Name: buscarComercio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: territorial_db.php;	Method Name: buscarTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
