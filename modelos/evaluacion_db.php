@@ -305,7 +305,7 @@ class Evaluacion implements IConnections {
 				$stmt->execute();
 				return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 			} catch ( PDOException $e ) {
-				self::$logger->error ("File: evaluacion_db.php;	Method Name: getTableDetalle();	Functionality: Get Table;	Log:" . $e->getMessage () );
+				self::$logger->error ("File: evaluacion_db.php;	Method Name: getDetalleEvaluacion();	Functionality: Get Table;	Log:" . $e->getMessage () );
 			}
 
 	}

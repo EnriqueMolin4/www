@@ -27,7 +27,7 @@ class Evaluacion implements IConnections {
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: sfa_ordersdmin_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: evaluacion_dbold.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
 	private function execute_ins($prepareStatement, $arrayString) {
@@ -37,7 +37,7 @@ class Evaluacion implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: sfa_ordersdmin_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: evaluacion_dbold.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 	}
 	function insert($prepareStatement, $arrayString) {
@@ -60,7 +60,7 @@ class Evaluacion implements IConnections {
 		}
 		catch ( PDOException $e )
 		{
-			self::$logger->error ("File: evaluacion_db.php;  	Method Name: getPreguntas();	Functionality: Get questions From Preguntas;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: evaluacion_dbold.php;  	Method Name: getPreguntas();	Functionality: Get questions From Preguntas;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -76,7 +76,7 @@ class Evaluacion implements IConnections {
 		}
 		catch ( PDOException $e )
 		{
-			self::$logger->error ("File: evaluacion_db.php;  	Method Name: getOpciones();	Functionality: Get options From respuestas;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: evaluacion_dbold.php;  	Method Name: getOpciones();	Functionality: Get options From respuestas;	Log:" . $e->getMessage () );
 		}
 	}
 

@@ -86,7 +86,7 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getStatusModelos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getStatus();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 	
@@ -265,7 +265,7 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getTipoServicios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getTipoFallas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -730,7 +730,7 @@ class Almacen implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getEstatusId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getAccesoriosId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -754,7 +754,7 @@ class Almacen implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getLastTraspasoId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 	
@@ -778,7 +778,7 @@ class Almacen implements IConnections {
 			$stmt->execute ();
 			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getEstatusId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: inventarioelavon_db.php;	Method Name: getAlmacenId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 

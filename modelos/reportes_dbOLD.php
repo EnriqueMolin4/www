@@ -76,7 +76,7 @@ class Reportes implements IConnections {
             $stmt->execute (array($inicio,$final));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getVo();	Functionality: Get VO Eventos;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;	Method Name: getEventos();	Functionality: Get VO Eventos;	Log:" . $e->getMessage () );
         }
 	}
 

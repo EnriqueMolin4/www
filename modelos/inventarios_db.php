@@ -66,7 +66,7 @@ class Inventarios implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: inventarios_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: inventarios_db.php;	Method Name: getBancos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -112,7 +112,7 @@ class Inventarios implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: inventarios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getInvTpv();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
     }
     
@@ -151,7 +151,7 @@ class Inventarios implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: inventarios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getInvSim();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -190,7 +190,7 @@ class Inventarios implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: inventarios_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getInvInsumos();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -281,7 +281,7 @@ class Inventarios implements IConnections {
 			$stmt->execute(array( $params['noSerie']));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: inventarios_db.php;	Method Name: getHistoricoTpv();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: inventarios_db.php;	Method Name: getHistoricoInsumos();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 

@@ -71,7 +71,7 @@ class Comercios implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: comercios_db.php;	Method Name: getEstados();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: comercios_db.php;	Method Name: getBancos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 

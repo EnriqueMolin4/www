@@ -437,7 +437,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getHistorialODT();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getHistorialEventos();	Functionality: Get Historia;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -806,7 +806,7 @@ class Eventos implements IConnections {
 			$stmt->execute (array($id));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieSimTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
