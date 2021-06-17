@@ -299,6 +299,14 @@
                             </div>
                             
                         </div>
+						<div class="row showcausacambio">
+                            <div class="col-sm-3">           
+                                <label for="causas_cambio" class="col-form-label-sm">Causas de Cambio</label>
+                                <select  class="form-control form-control-sm" id="causas_cambio" aria-describedby="causas_cambio">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
                         
                         <div class="row">
                             <div class="col">           
@@ -440,6 +448,7 @@
             getModelos();
             getConectividad();
             getCarrier();
+			getCausasCambios();
 
             //GET info from URL
             const queryString = window.location.search;
@@ -834,6 +843,12 @@
                                                 $("#divBtnCV").show();
                                                 $("#comentarios_valid").show();
                                             }
+											
+											if( element.tipo_servicio == '2' ) {
+                                                $(".showcausacambio").show();
+                                            } else {
+                                                $(".showcausacambio").hide();
+                                            }
 
                                             tipodeUsuario(element.estatus);
                                     })  
@@ -914,6 +929,8 @@
             var faltaEvidencia = $("#faltaEvidencia").prop('checked') ? 1 : 0 ;
             var faltaInformacion = $("#faltaInformacion").prop('checked') ? 1 : 0 ;
             var faltaUbicacion = $("#faltaUbicacion").prop('checked') ? 1 : 0 ;
+			
+			var causacambio = $("#causas_cambio").val();
             
             //Validar si es obligatorio la TVP INStalada
             if( PermisosEvento.tvp_instalada == '1' &&  estatus == '13' ) {
@@ -989,6 +1006,14 @@
                 validar++;
                 msg += "Se necesita mas información en las observaciones (minimo 200 caracteres) \n ";
             }
+			
+			//Validar cuando sea Cambio que pongan la causa 
+            if( estatus == '2' || estatus == '8' || estatus == '13' || estatus == '14' || estatus == '17' || estatus == '26' || estatus == '30' || estatus == '33' || estatus == '45') {
+                if(causacambio == '0' ) {
+                    validar++;
+                    msg += "Se necesita La causa de cambio  \n ";
+                }
+            }
 
 			if(validar == 0 ) {
 				var dnd = { module: 'cerrarEvento',eventoId : eventoId, odt : odt,comentario: comentario,estatus:estatus,foliotelecarga:foliotelecarga, odtGetNet : odtGetNet, odtNotificado : odtNotificado,
@@ -997,7 +1022,7 @@
                             simInstalado:sim_instalado, simRetirado: sim_retirado,producto: producto,version: version,aplicativo:aplicativo,receptorservicio:receptorservicio, 
                             tvpInModelo:tvpInModelo,tpvInConnect:tpvInConnect ,tvpReModelo, tvpReModelo, tpvReConnect: tpvReConnect, simInData:simInData, simReData:simReData,tecnico:tecnico, 
                             rollosInstalar:rollosInstalar, rollosInstalados:rollosInstalados,servicioId:servicioId,fechaatencion:fecha_atencion,horallegada:hora_llegada,horasalida: hora_salida, 
-                            faltaSerie:faltaSerie,faltaEvidencia:faltaEvidencia,faltaInformacion:faltaInformacion,faltaUbicacion:faltaUbicacion };
+                            faltaSerie:faltaSerie,faltaEvidencia:faltaEvidencia,faltaInformacion:faltaInformacion,faltaUbicacion:faltaUbicacion,causacambio: causacambio  };
 				
 				 $.ajax({
 					type: 'POST',
@@ -1787,6 +1812,26 @@
                     var demo = error;
                 }
             });
+        }
+		
+		function getCausasCambios() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getCausasCambio',
+                cache: true,
+                success: function(data){
+                    console.log(data);
+                
+                $("#causas_cambio").html(data);
+  
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+
         }
 </script> 
 </body>

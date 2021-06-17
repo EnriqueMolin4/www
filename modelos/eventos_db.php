@@ -205,7 +205,7 @@ class Eventos implements IConnections {
 				$filter ";
 
 		//self::$logger->error ($sql);
-		self::$logger->error($sql);
+		//self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -1422,6 +1422,19 @@ class Eventos implements IConnections {
 			self::$logger->error("File: eventos_db.php;	Method Name: getBancos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
+	
+	function getCausasCambio()
+	{
+		$sql = "SELECT id,nombre from tipo_causas_cambio ";
+		   self::$logger->error ($sql);
+		   try {
+			   $stmt = self::$connection->prepare ($sql );
+			   $stmt->execute (array());
+			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		   } catch ( PDOException $e ) {
+			   self::$logger->error ("File: eventos_db.php;	Method Name: getCausasCambio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+		   }
+	}
 
 }
 //
@@ -2039,9 +2052,15 @@ if($module == 'getAplicativo') {
   
 }
 
-
-
-
+if($module == 'getCausasCambio') {
+	$rows = $Eventos->getCausasCambio();
+	  $val = '<option value="0" selected>Seleccionar</option>';
+	  foreach ( $rows as $row ) {
+		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	  }
+	  echo $val;
+  
+}
 
 if($module == 'getNumSerieTecnico') {
 	$rows = $Eventos->getNumSerieTecnico($params['tecnico_id']);

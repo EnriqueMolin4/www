@@ -44,6 +44,7 @@ foreach($eventos as $evento) {
 
     $latitud = $geolocalizacion['latitud'];
     $longitud = $geolocalizacion['longitud'];
+    $causacambio = $evento['causacambio'];
 
 
     //
@@ -66,7 +67,7 @@ foreach($eventos as $evento) {
         'rollos' => (int) 20,
         'getnet' => (int) $getnet,
         'caja' => (int) $caja,
-        'causa' => (int) $causa,
+        'causa' => (int) $causacambio,
         'comentario' => $comentario,
         'latitud' => floatval($latitud),
         'longitud' => floatval($longitud)

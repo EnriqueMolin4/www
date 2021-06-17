@@ -80,6 +80,14 @@ $(document).ready(function() {
                 "width": "15%",
             },
             {
+                "targets": [ 5 ],
+                "width": "10%",
+            },
+            {
+                "targets": [ 8 ],
+                "width": "10%",
+            },
+            {
                 "targets": [10],
                 "mRender": function ( data,type, row ) 
                 {
