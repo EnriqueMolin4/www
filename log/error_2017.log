@@ -31912,3 +31912,101 @@
 				group by id,img.totalImg,du.nombre,du.apellidos
 				 ORDER BY   fecha_vencimiento   ASC
 				 LIMIT  0 , 5 
+17.06.2021 10:04:54 SELECT 
+				  
+		h.fecha_movimiento,
+		h.tipo_movimiento,
+		tu.nombre ubicacionStatus,
+		h.cantidad,
+		h.ubicacion,
+		CASE WHEN h.ubicacion = 1 THEN tu.nombre 
+			 WHEN h.ubicacion = 2 THEN c.comercio 
+			 WHEN h.ubicacion = 9 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 12 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 4 THEN c.comercio
+		END id_ubicacion,
+		h.modified_by,
+		CONCAT(du2.nombre,' ' ,du2.apellidos) modificadoPor
+		FROM historial h 
+		LEFT JOIN tipo_estatus_inventario te ON te.id = h.ubicacion
+		LEFT JOIN tipo_ubicacion tu ON tu.id = h.ubicacion
+		LEFT JOIN comercios c ON c.id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du ON du.cuenta_id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du2 ON du2.cuenta_id = h.modified_by
+		WHERE no_serie = '0' 
+		 
+17.06.2021 10:04:54 SELECT 
+				  
+		h.fecha_movimiento,
+		h.tipo_movimiento,
+		tu.nombre ubicacionStatus,
+		h.cantidad,
+		h.ubicacion,
+		CASE WHEN h.ubicacion = 1 THEN tu.nombre 
+			 WHEN h.ubicacion = 2 THEN c.comercio 
+			 WHEN h.ubicacion = 9 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 12 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 4 THEN c.comercio
+		END id_ubicacion,
+		h.modified_by,
+		CONCAT(du2.nombre,' ' ,du2.apellidos) modificadoPor
+		FROM historial h 
+		LEFT JOIN tipo_estatus_inventario te ON te.id = h.ubicacion
+		LEFT JOIN tipo_ubicacion tu ON tu.id = h.ubicacion
+		LEFT JOIN comercios c ON c.id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du ON du.cuenta_id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du2 ON du2.cuenta_id = h.modified_by
+		WHERE no_serie = '0' 
+		 
+17.06.2021 10:05:18 SELECT 
+				  
+		h.fecha_movimiento,
+		h.tipo_movimiento,
+		tu.nombre ubicacionStatus,
+		h.cantidad,
+		h.ubicacion,
+		CASE WHEN h.ubicacion = 1 THEN tu.nombre 
+			 WHEN h.ubicacion = 2 THEN c.comercio 
+			 WHEN h.ubicacion = 9 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 12 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 4 THEN c.comercio
+		END id_ubicacion,
+		h.modified_by,
+		CONCAT(du2.nombre,' ' ,du2.apellidos) modificadoPor
+		FROM historial h 
+		LEFT JOIN tipo_estatus_inventario te ON te.id = h.ubicacion
+		LEFT JOIN tipo_ubicacion tu ON tu.id = h.ubicacion
+		LEFT JOIN comercios c ON c.id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du ON du.cuenta_id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du2 ON du2.cuenta_id = h.modified_by
+		WHERE no_serie = '314556745' 
+		 
+17.06.2021 10:05:18 SELECT 
+				  
+		h.fecha_movimiento,
+		h.tipo_movimiento,
+		tu.nombre ubicacionStatus,
+		h.cantidad,
+		h.ubicacion,
+		CASE WHEN h.ubicacion = 1 THEN tu.nombre 
+			 WHEN h.ubicacion = 2 THEN c.comercio 
+			 WHEN h.ubicacion = 9 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 12 THEN CONCAT(du.nombre,' ' ,du.apellidos)
+			 WHEN h.ubicacion = 4 THEN c.comercio
+		END id_ubicacion,
+		h.modified_by,
+		CONCAT(du2.nombre,' ' ,du2.apellidos) modificadoPor
+		FROM historial h 
+		LEFT JOIN tipo_estatus_inventario te ON te.id = h.ubicacion
+		LEFT JOIN tipo_ubicacion tu ON tu.id = h.ubicacion
+		LEFT JOIN comercios c ON c.id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du ON du.cuenta_id = h.id_ubicacion
+		LEFT JOIN detalle_usuarios du2 ON du2.cuenta_id = h.modified_by
+		WHERE no_serie = '314556745' 
+		 
+17.06.2021 04:24:07 SELECT id,nombre from tipo_causas_cambio 
+18.06.2021 10:31:01 select id,nombre from tipo_user where status=1  
+18.06.2021 10:31:03 File: usuarios_db.php;	Method Name: getAlmacen();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')
+				 GROUP BY  tipo_ubicacion.id,tipo_ubicacion.nombre' at line 5
+18.06.2021 10:59:09 select id,nombre from tipo_user where status=1  
+18.06.2021 10:59:35 select id,nombre from tipo_user where status=1  

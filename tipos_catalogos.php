@@ -168,7 +168,6 @@
                           priority : 'danger'
                       });
                     } 
-                    
                     if( $("#newParametro").val().length > 0 ) {
                         $.ajax({
                             type: 'POST',
