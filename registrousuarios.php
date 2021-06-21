@@ -10,7 +10,6 @@
         </nav>
         <!-- page-content  -->
         <main class="page-content">
-
             <div id="overlay" class="overlay"></div>
             <div class="page-title">
                 <h3>USUARIOS</h3>
@@ -64,8 +63,8 @@
                         <th width="200px">NOMBRE</th>
                         <th width="200px">CORREO</th>
                         <th>TIPO</th>
-                        <th>PLAZA</th>
-                        <th width="200px">TERRITORIAL</th>
+                        <th>CLAVE</th>
+                        <th width="200px">SUPERVISOR</th>
                         <th width="200px">FECHA ALTA</th>
                         <th>ESTATUS</th>
                         <th>ACCION</th>
@@ -182,7 +181,7 @@
     <script src="js/main.js"></script>
     <script src="js/jquery.rotate.1-1.js"></script>
     <script>
-    var usuarios;
+    var usuarios, almacen;
         $(document).ready(function() {
             ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "registrousuarioslink")
            // getSupervisores();
