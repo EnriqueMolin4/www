@@ -344,7 +344,7 @@ class Reportes implements IConnections {
         $filter = "";
         $param = "";
         $where = "";
-
+		$campoFecha = $params['customRadioInline'];
         $fecha_alta         = $params['fecha_alta'];
         $fecha_hasta        = $params['fecha_hasta'];
         $estado             = isset($params['estado']) ? $params['estado'] : array();
@@ -354,7 +354,6 @@ class Reportes implements IConnections {
         $fecha_cierre       = $params['fecha_cierre'];
         $fecha_cierre_hasta       = $params['hasta_fc'];
     
-
 
         if( sizeof($estado) > 0) {
 
@@ -383,14 +382,20 @@ class Reportes implements IConnections {
 				$where .= " AND eventos.estatus_servicio in ($estatus_servicioList) ";
 			}
         } 
+		
+		if( $campoFecha == 'Alta' ){
+			$campoFecha = "DATE(eventos.fecha_alta)";
+		} else {
+			$campoFecha = "DATE(eventos.fecha_cierre)";
+		}
 
-        if($fecha_alta != '') {
+        /* if($fecha_alta != '') {
             $where .= " AND DATE(eventos.fecha_alta) >= '$fecha_alta' ";
         }
 
         if($fecha_hasta != '') {
             $where .= " AND DATE(eventos.fecha_alta) <= '$fecha_hasta' ";
-        }
+        } */
 
         if ($fecha_cierre != '') 
         {
