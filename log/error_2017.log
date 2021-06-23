@@ -32010,3 +32010,262 @@
 				 GROUP BY  tipo_ubicacion.id,tipo_ubicacion.nombre' at line 5
 18.06.2021 10:59:09 select id,nombre from tipo_user where status=1  
 18.06.2021 10:59:35 select id,nombre from tipo_user where status=1  
+23.06.2021 11:42:27 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+23.06.2021 11:42:27 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+23.06.2021 11:48:26 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+23.06.2021 11:48:26 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+23.06.2021 11:49:21 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+23.06.2021 11:49:21 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+23.06.2021 11:55:55 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1","2","3","4","5","6","7","8","9","10","11","12","13","14","16","17","19","21","24","27","46","0");
+23.06.2021 11:58:22 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2021-06-08' AND '2021-06-23'
+				WHERE DATE(eventos.fecha_cierre) BETWEEN '2021-06-08' AND '2021-06-23'
+                 AND c.estado in (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)  AND eventos.tipo_servicio in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,19,21,24,27,46,0)  AND eventos.servicio IN ( 1,2,3,5,6,8,9,10,11,13,14,15,16,17,19,20,21,22,24,25,26,27,31,32,33,35,36,38,39,43,44,46,47,51,62,65,66,70,71,72,73,74,75,76,77,78)  AND eventos.estatus_servicio in (0,13,14,15,16)  
+				 
+                
+23.06.2021 12:06:44 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2021-06-07' AND '2021-06-23'
+				WHERE DATE(eventos.fecha_cierre) BETWEEN '2021-06-07' AND '2021-06-23'
+                 AND c.estado in (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)  AND eventos.tipo_servicio in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,19,21,24,27,46,0)  AND eventos.servicio IN ( 1,2,3,5,6,8,9,10,11,13,14,15,16,17,19,20,21,22,24,25,26,27,31,32,33,35,36,38,39,43,44,46,47,51,62,65,66,70,71,72,73,74,75,76,77,78)  AND eventos.estatus_servicio in (0,13,14,15,16)  
+				 
+                
+23.06.2021 12:08:29 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2021-06-07' AND '2021-06-08'
+				WHERE DATE(eventos.fecha_cierre) BETWEEN '2021-06-07' AND '2021-06-08'
+                 AND c.estado in (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)  AND eventos.tipo_servicio in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,19,21,24,27,46,0)  AND eventos.servicio IN ( 1,2,3,5,6,8,9,10,11,13,14,15,16,17,19,20,21,22,24,25,26,27,31,32,33,35,36,38,39,43,44,46,47,51,62,65,66,70,71,72,73,74,75,76,77,78)  AND eventos.estatus_servicio in (0,13,14,15,16)  
+				 
+                
+23.06.2021 12:09:03 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2021-06-07' AND '2021-06-10'
+				WHERE DATE(eventos.fecha_cierre) BETWEEN '2021-06-07' AND '2021-06-10'
+                 AND c.estado in (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33)  AND eventos.tipo_servicio in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,17,19,21,24,27,46,0)  AND eventos.servicio IN ( 1,2,3,5,6,8,9,10,11,13,14,15,16,17,19,20,21,22,24,25,26,27,31,32,33,35,36,38,39,43,44,46,47,51,62,65,66,70,71,72,73,74,75,76,77,78)  AND eventos.estatus_servicio in (0,13,14,15,16)  
+				 
+                
