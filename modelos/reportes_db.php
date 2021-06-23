@@ -408,31 +408,65 @@ class Reportes implements IConnections {
         }
 
         $sql = "SELECT
-                    eventos.odt,eventos.afiliacion,ts.nombre servicioNombre,tss.nombre subservicioNombre,eventos.fecha_alta,eventos.fecha_vencimiento,eventos.fecha_cierre,c.comercio,eventos.colonia,
-                    eventos.municipio,eventos.estado,eventos.direccion,eventos.telefono,eventos.hora_atencion,eventos.hora_comida,eventos.fecha_asignacion,eventos.receptor_servicio,eventos.fecha_atencion,
-                    eventos.hora_llegada,eventos.hora_salida,eventos.descripcion,ts.nombre nombreServicio,
-                    CONCAT(u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
-                    te.nombre estatus,eventos.id_caja,eventos.afiliacionamex,eventos.amex,tv.nombre version,ta.nombre aplicativo,eventos.producto,eventos.rollos_instalar,eventos.rollos_entregados,
-                    eventos.tpv_instalado,eventos.tpv_retirado,eventos.sim_instalado,eventos.sim_retirado,eventos.comentarios,eventos.comentarios_cierre,eventos.comentarios_validacion,
-                    eventos.folio_telecarga,
-                CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
-                CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,  
-                CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
-                CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
-                CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) modificado_por
-                FROM eventos
-                JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
-                JOIN comercios c ON c.id = eventos.comercio
-                JOIN tipo_estatus te ON te.id = eventos.estatus
-                JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
-                JOIN tipo_subservicios tss ON tss.id = eventos.servicio
-                LEFT JOIN tipo_version tv ON tv.id = eventos.version
-                LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
-                LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
-                LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
-                -- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
-                -- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
                 -- WHERE eventos.fecha_alta BETWEEN '$fecha_alta' AND '$fecha_hasta'
+				WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
                 $where 
 				 
                 ";

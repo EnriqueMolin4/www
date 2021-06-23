@@ -84,7 +84,7 @@
 
                     </br>
 
-                    <div class="row">
+                   <!--  <div class="row">
                         <div class="col-sm-3">
                             <label for="fecha_cierre">FECHA CIERRE</label>
                             <input type="text" class="form-control form-control-sm" id="fecha_cierre" placeholder="Seleccionar Fecha" name="fecha_cierre" value="">
@@ -95,7 +95,7 @@
                             <label for="hasta_fc">HASTA</label>
                             <input type="text" class="form-control form-control-sm" id="hasta_fc" placeholder="Seleccionar Fecha" name="hasta_fc" value="" >
                         </div>
-                   </div>
+                   </div> -->
 
                     <br />
                     <div class="row">
