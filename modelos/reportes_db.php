@@ -344,7 +344,7 @@ class Reportes implements IConnections {
         $filter = "";
         $param = "";
         $where = "";
-		$campoFecha = $params['customRadioInline'];
+		$campoFecha = $params['customRadioInline1'];
         $fecha_alta         = $params['fecha_alta'];
         $fecha_hasta        = $params['fecha_hasta'];
         $estado             = isset($params['estado']) ? $params['estado'] : array();
@@ -389,13 +389,9 @@ class Reportes implements IConnections {
 			$campoFecha = "DATE(eventos.fecha_cierre)";
 		}
 
-        /* if($fecha_alta != '') {
-            $where .= " AND DATE(eventos.fecha_alta) >= '$fecha_alta' ";
+         if($fecha_hasta != '') {
+            // $where .= " AND DATE(eventos.fecha_alta) >= '$fecha_alta' ";
         }
-
-        if($fecha_hasta != '') {
-            $where .= " AND DATE(eventos.fecha_alta) <= '$fecha_hasta' ";
-        } */
 
         if ($fecha_cierre != '') 
         {
