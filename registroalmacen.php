@@ -37,6 +37,9 @@
                 <div class="col-sm-6">
                     <button class="btn btn-warning btn-sm" id="btnUpdateExcelInventarios">Actualizar Series</button>
                     <a href="layouts/LayoutCargaMasivaInventario.xlsx" class="btn btn-primary" download>Descargar Layout</a>
+					<button type="button" class="btn btn-success btn-sm" id="btnAltaAlmacen">
+					Nueva Alta Almacen
+					</button>
                 </div>  
                
             </div> <br> 

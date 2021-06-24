@@ -121,7 +121,7 @@ $(document).ready(function() {
         ],
         rowCallback: function( row, data, index,full){
            
-             fnShowHide( 4,true )
+             fnShowHide( 8,true )
                  var fechamodificacion = moment(data.fecha_edicion)
                  var now = moment();
                  var diff = moment.duration(fechamodificacion.diff(now));
@@ -405,6 +405,14 @@ $(document).ready(function() {
             } else {
                 msg += "La Ubicacion no coincide con el Estatus de Inventario EN COMERCIO";
             }
+		} else if (estatusinventario == '5') {
+			
+			if(ubicacion == '14')
+			{
+				valido++;
+			} else {
+				msg += "La Ubicacion no coincide con el estatus de Inventario EN LABORATORIO";
+			}
         };
         
         if (valido > 0) {
@@ -688,6 +696,9 @@ $(document).ready(function() {
 
     })
 
+	 $("#btnAltaAlmacen").on("click", function() {
+        window.location.href = "altaalmacen.php";
+    })
 
 
 
