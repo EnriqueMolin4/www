@@ -217,8 +217,8 @@
                                         <th>MOVIMIENTO</th>
                                         <th>UBICACION</th>
                                         <th>CANTIDAD</th>
-                                        <th>UBICACION ID</th>
-										<th>MODIFICADO POR</th>
+                                        <th>USUARIO</th>
+										<th>UBICACION ID</th>
                                     </tr>
                                 </thead>
                                 <tbody>
