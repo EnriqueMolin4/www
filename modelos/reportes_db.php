@@ -238,7 +238,7 @@ class Reportes implements IConnections {
 		$almacen = $_SESSION['almacen'];
         $insumos = strpos($producto, 3);
 
-        if( in_array(3,$params['tipo_producto'])  ) {
+        /* if( in_array(3,$params['tipo_producto'])  ) {
 
             $queryInsumos = " UNION ALL
                     SELECT 
@@ -254,7 +254,7 @@ class Reportes implements IConnections {
                     WHERE it.tecnico = du.cuenta_id
                     AND it.no_serie in (SELECT codigo FROM tipo_insumos)
             ";
-        }
+        } */
 
 		if( $ubicacion != '0' ) {
 
@@ -298,31 +298,49 @@ class Reportes implements IConnections {
 			//$where .= " ( AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) OR tu.id = $almacen )";
 		}
 
-		$sql = " SELECT 
-						  CASE WHEN inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios' END tipoNombre,
-						  inv.no_serie,	
-						   CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN  inv.tipo= 4 THEN a.concepto END modelo,
-						   em.nombre estatus,
-						   ei.nombre estatus_inventario,
-						   CASE WHEN inv.ubicacion= 9 THEN CONCAT(du.nombre,' ',du.apellidos) ELSE tu.nombre END  ubicacion,
-							inv.fecha_edicion fecha_modificacion,
-							CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad END cantidad
-							FROM inventario inv
-							LEFT JOIN modelos m  ON m.id = inv.modelo
-							LEFT JOIN carriers c  ON c.id = inv.modelo
-							LEFT JOIN accesorios a ON a.id = inv.modelo
-							LEFT JOIN tipo_estatus_modelos em ON em.id = inv.estatus
-							LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
-							LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
-							LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
-							-- LEFT JOIN comercios c ON c.afiliacion = inv.id_ubicacion
-							WHERE inv.no_serie is not null
+        if(in_array(3,$params['tipo_producto']) )
+        {
+            $sql = "SELECT 
+            'Insumos' tipoNombre,
+            no_serie,
+            NULL modelo,
+            'DISPONIBLE_NUEVO' estatus,
+            'EN PLAZA'  estatus_inventario,
+            CONCAT(du.nombre,' ',du.apellidos) ubicacion,
+            fecha_modificacion,
+            it.cantidad
+            FROM inventario_tecnico it, detalle_usuarios du
+            WHERE it.tecnico = du.cuenta_id
+            AND it.no_serie in (SELECT codigo FROM tipo_insumos)";
+        }
+        else {
+            $sql = " SELECT CASE WHEN
+                inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios'
+                END tipoNombre,
+                inv.no_serie,
+                CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN inv.tipo = 4 THEN a.concepto
+                END modelo,
+                em.nombre estatus,
+                ei.nombre estatus_inventario,
+                CASE WHEN inv.ubicacion = 9 THEN CONCAT(du.nombre, ' ', du.apellidos) WHEN inv.ubicacion = 2 THEN CONCAT('Af:',cm.afiliacion,' : ',cm.comercio) END ubicacion,
+                inv.fecha_edicion fecha_modificacion,
+                CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad
+                END cantidad
+                FROM inventario inv
+            LEFT JOIN modelos m ON m.id = inv.modelo
+            LEFT JOIN carriers c ON c.id = inv.modelo
+            LEFT JOIN accesorios a ON a.id = inv.modelo
+            LEFT JOIN tipo_estatus_modelos em ON em.id = inv.estatus
+            LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
+            LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
+            LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
+            LEFT JOIN comercios cm ON cm.id = inv.id_ubicacion
+            WHERE inv.no_serie IS NOT NULL
                             $where
-                            $queryInsumos
-					        ORDER BY ubicacion ";
+                            
+					        ORDER BY inv.no_serie ";
+        }
 
-
-				
 		self::$logger->error ($sql.' '.$estatusubicacion);
 		
 		try {
@@ -484,7 +502,7 @@ class Reportes implements IConnections {
         $sql = "SELECT * FROM `tipo_estatus` WHERE `tipo` = 12 Order by id ";
   
       
-         
+
          
          try {
              $stmt = self::$connection->prepare ($sql );
@@ -753,14 +771,12 @@ if ( $module == 'reporte_detevento' ) {
 
     $rows = $Reportes->getDetEvento($params, true);
 
-
-
-    $headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
+    $headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR');
 
         $documento = new Spreadsheet();
         $documento 
             ->getProperties()
-            ->setCreator("Sistema SAE")
+            ->setCreator("Sistema SAES")
             ->setLastModifiedBy('SEA')
             ->setTitle('Archivo explorado desde MySQL') 
             ->setDescription('Un archivo de Excel exportado desde MySQL por SAE');   
@@ -782,7 +798,20 @@ if ( $module == 'reporte_detevento' ) {
         {
             $counter = 1;
             foreach ($fields as $index => $value) {
-                $value = $counter == 2 ? "'$value" : $value;
+                //$value = $counter == 2 ? "'$value" : $value;
+				if( $counter == 2 ) {
+					$value ="'$value";
+				} else if ( $counter == 34 ){
+					$value = empty($value) ? "" : "'$value";
+				} else if ( $counter == 35 ) {
+					$value = $value == 'No Legible' ? "" : $value;
+					$value = empty($value) ? "" : "'$value";
+				} else if ( $counter == 36 ){
+					$value = empty($value) ? "" : "'$value";
+				} else if ( $counter == 37 ){
+					$value = empty($value) ? "" : "'$value";
+				}			
+				
                 $hojaDeProductos->setCellValueByColumnAndRow($counter, $numeroDeFila, $value);
                 $counter++;
             }
@@ -800,6 +829,12 @@ if ( $module == 'reporte_detevento' ) {
         exit;
 
 }
+
+
+
+
+
+
 
 
 ?>
