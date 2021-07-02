@@ -80,10 +80,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script type="text/javascript">
 
-
+    
     $(document).ready(function() {
-        timer();
         
+        timer();
         function submitBtn()
         {
             setTimeout(function()
