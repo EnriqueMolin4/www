@@ -13,7 +13,7 @@ class Api {
     function __construct() {
 
         self::$client = new Client([
-            'base_uri' => 'https://sgse.microformas.com.mx/' ,
+            'base_uri' => 'https://sgse.microformas.com.mx/' , //URI base 
             'verify' => false
         ]);
     }
