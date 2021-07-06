@@ -14,7 +14,7 @@ class Api {
 
         self::$client = new Client([
             'base_uri' => 'https://sgse.microformas.com.mx/' , //URI base 
-            'verify' => false
+            'verify' => false//
         ]);
     }
 
