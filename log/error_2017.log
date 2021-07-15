@@ -34815,3 +34815,929 @@
 30.06.2021 04:36:30 File: almacen_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2021-06-29 15:12:35',	'RETIRADO',	9,	'901965409',	1,	1,	'432',	432), (210746,	74' at line 36
 30.06.2021 04:55:07 File: almacen_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2021-06-29 14:45:21',	'ALTA',	1,	'328535110',	1,	1,	'1',	327);%'  OR inv.no_seri' at line 36
 30.06.2021 04:55:07 File: almacen_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2021-06-29 14:45:21',	'ALTA',	1,	'328535110',	1,	1,	'1',	327);%'  OR inv.no_seri' at line 36
+09.07.2021 01:47:01 File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[HY000]: General error: 1449 The user specified as a definer ('sinttecom'@'localhost') does not exist
+09.07.2021 01:47:16 File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[HY000]: General error: 1449 The user specified as a definer ('sinttecom'@'localhost') does not exist
+09.07.2021 01:48:03 File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[HY000]: General error: 1449 The user specified as a definer ('sinttecom'@'localhost') does not exist
+09.07.2021 01:53:01 File: comercios_db.php;	Method Name: getMunicipio();	Functionality: Get Municipio;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'GRoup by municipios.Id, municipios.nombre,cp_santander.territorial_banco,territo' at line 4
+12.07.2021 01:01:05  SELECT CASE WHEN
+                inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios'
+                END tipoNombre,
+                inv.no_serie,
+                CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN inv.tipo = 4 THEN a.concepto
+                END modelo,
+                em.nombre estatus,
+                ei.nombre estatus_inventario,
+                CASE WHEN inv.ubicacion = 9 THEN CONCAT(du.nombre, ' ', du.apellidos) WHEN inv.ubicacion = 2 THEN CONCAT('Af:',cm.afiliacion,' : ',cm.comercio) END ubicacion,
+                inv.fecha_edicion fecha_modificacion,
+                CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad
+                END cantidad
+                FROM inventario inv
+            LEFT JOIN modelos m ON m.id = inv.modelo
+            LEFT JOIN carriers c ON c.id = inv.modelo
+            LEFT JOIN accesorios a ON a.id = inv.modelo
+            LEFT JOIN tipo_estatus_modelos em ON em.id = inv.estatus
+            LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
+            LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
+            LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
+            LEFT JOIN comercios cm ON cm.id = inv.id_ubicacion
+            WHERE inv.no_serie IS NOT NULL
+                             AND inv.tipo in ( 2 )
+                            
+					        ORDER BY inv.no_serie  0
+12.07.2021 01:36:11 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 01:36:11 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 01:36:21 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1");
+12.07.2021 01:36:22 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '' AND ''
+				WHERE DATE(eventos.fecha_alta) BETWEEN '' AND ''
+                 AND eventos.tipo_servicio in (1)  
+				 
+                
+12.07.2021 03:52:49 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 03:52:49 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 03:53:20 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1","2","3","4","5","6","7","8","9","10","11","12","13","14","16","17","19","21","24","27","46","47","48","0");
+12.07.2021 03:53:21 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 03:53:21 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 03:53:23 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("2");
+12.07.2021 03:53:26 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '' AND ''
+				WHERE DATE(eventos.fecha_alta) BETWEEN '' AND ''
+                 AND eventos.tipo_servicio in (2)  AND eventos.servicio IN ( 2)  AND DATE(eventos.fecha_cierre) >= 'Array'   AND DATE(eventos.fecha_cierre) <= 'Array'   
+				 
+                
+12.07.2021 04:07:05 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 04:07:05 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 04:07:09 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1");
+12.07.2021 04:10:14 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 04:10:14 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 04:10:18 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1");
+12.07.2021 04:10:21 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1","2");
+12.07.2021 04:10:29 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '' AND ''
+				WHERE DATE(eventos.fecha_cierre) BETWEEN '' AND ''
+                 AND eventos.tipo_servicio in (1,2)  AND eventos.servicio IN ( 1,2)  
+				 
+                
+12.07.2021 04:22:16 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 04:22:16 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 04:22:19 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1");
+12.07.2021 04:22:19 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1","2");
+12.07.2021 04:22:22 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '' AND ''
+				-- WHERE Array BETWEEN '' AND ''
+                 AND eventos.tipo_servicio in (1,2)  AND eventos.servicio IN ( 1,2)  WHERE eventos.odt IS NOT NULL  
+				 
+                
+12.07.2021 04:25:55 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 04:25:55 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 04:26:00 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1");
+12.07.2021 04:26:00 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1","2");
+12.07.2021 04:26:03 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '' AND ''
+				-- WHERE Array BETWEEN '' AND ''
+                 WHERE eventos.odt IS NOT NULL  AND eventos.tipo_servicio in (1,2)  AND eventos.servicio IN ( 1,2)  
+				 
+                
+12.07.2021 04:28:31 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ("1","2","3","4","5","6","7","8","9","10","11","12","13","14","16","17","19","21","24","27","46","47","48","0");
+12.07.2021 04:28:31 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 04:28:31 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 04:28:34 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2020-12-02' AND '2020-12-05'
+				-- WHERE Alta BETWEEN '2020-12-02' AND '2020-12-05'
+                 WHERE DATE(eventos.fecha_alta) BETWEEN '2020-12-02' AND '2020-12-05' 
+				 
+                
+12.07.2021 04:33:26 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 04:33:26 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 04:34:05 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '' AND ''
+				-- WHERE Array BETWEEN '' AND ''
+                 WHERE eventos.odt IS NOT NULL  AND c.estado in (27)  
+				 
+                
+12.07.2021 04:42:11 File: almacen_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:Select du.nombre,du.apellidos,pt.tecnico_id,st.territorio_id,st.supervisor_id
+				FROM cuentas c,detalle_usuarios du 
+				RIGHT JOIN plaza_tecnico pt ON du.cuenta_id = pt.tecnico_id
+				RIGHT JOIN territorio_plaza tp ON pt.plaza_id = tp.plaza_id
+				RIGHT JOIN supervisor_territorio st ON st.territorio_id = tp.territorio_id
+				WHERE du.cuenta_id is not null 
+				AND c.id = c.cuenta_id
+				AND c.estatus=1
+				 
+				ORDER BY du.nombre,du.apellidos
+				SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.cuenta_id' in 'where clause'
+12.07.2021 04:42:12 File: almacen_db.php;	Method Name: getTraspasos();	Functionality: Search No_Serie;	Log:SELECT *, CASE WHEN trasp != total THEN 'ACEPTADO' ELSE 'EN TRANSITO' END estatus FROM ( SELECT 
+				t1.no_guia,
+				t1.codigo_rastreo,
+				CASE WHEN GetNameById(t1.origen,'AlmacenTraspaso') IS NULL THEN  CONCAT(nombre,' ',ifnull(apellidos,''))  ELSE GetNameById(t1.origen,'AlmacenTraspaso')  END origen,
+				CASE WHEN t1.destino = 0 THEN CONCAT(nombre,' ',ifnull(apellidos,''))  ELSE GetNameById(t1.destino,'AlmacenTraspaso') END destino,
+				MAX(t1.fecha_creacion) fecha_creacion ,
+				count(*) total,
+				(Select count(*) total FROM traspasos t2 WHERE t2.no_guia= t1.no_guia and estatus = 0 ) trasp
+				FROM traspasos t1
+				LEFT JOIN detalle_usuarios ON t1.cuenta_id = detalle_usuarios.cuenta_id
+				WHERE t1.id != -1 
+				  
+				GROUP BY t1.no_guia,t1.codigo_rastreo,t1.origen,t1.destino,nombre,apellidos ) traspasos ;
+				 LIMIT  0 , 5 SQLSTATE[HY000]: General error: 1449 The user specified as a definer ('sinttecom'@'localhost') does not exist
+12.07.2021 05:23:36 File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[HY000]: General error: 1449 The user specified as a definer ('sinttecom'@'localhost') does not exist
+12.07.2021 05:23:38 File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[HY000]: General error: 1449 The user specified as a definer ('sinttecom'@'localhost') does not exist
+12.07.2021 05:26:19 File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[HY000]: General error: 1449 The user specified as a definer ('sinttecom'@'localhost') does not exist
+12.07.2021 05:26:48 File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[HY000]: General error: 1449 The user specified as a definer ('sinttecom'@'localhost') does not exist
+12.07.2021 05:38:26 File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2021-04-14 00:33:42',	10,	'P3292094',	410), (2,	2,	'2020-12-03 09:00:00',	16,	'P' at line 29
+12.07.2021 05:39:53 SELECT id,nombre from tipo_causas_cambio 
+12.07.2021 05:40:39 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+12.07.2021 05:40:39 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+12.07.2021 05:40:45 SELECT
+				eventos.odt,
+				eventos.afiliacion,
+				ts.nombre servicioNombre,
+				tss.nombre subservicioNombre,
+				eventos.fecha_alta,
+				eventos.fecha_vencimiento,
+				eventos.fecha_cierre,
+				c.comercio,
+				eventos.colonia,
+				eventos.municipio,
+				eventos.estado,
+				eventos.direccion,
+				eventos.telefono,
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+				eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion,
+				ts.nombre nombreServicio,
+				CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre,
+				te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado,
+				eventos.tpv_retirado,
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios,
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+				eventos.folio_telecarga,
+				CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+				CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+				CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+				CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '' AND ''
+				-- WHERE Array BETWEEN '' AND ''
+                 WHERE eventos.odt IS NOT NULL  
+				 
+                
+13.07.2021 11:20:52 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+13.07.2021 11:20:52 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+13.07.2021 11:21:11 SELECT
+				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
+	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
+	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
+	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
+	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
+	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus, eventos.id_caja,
+	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
+       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
+	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
+	   eventos.comentarios_validacion, eventos.folio_telecarga,
+       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
+	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
+                LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
+                LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
+                LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2020-12-03' AND '2021-04-03'
+				-- WHERE Alta BETWEEN '2020-12-03' AND '2021-04-03'
+                 WHERE DATE(eventos.fecha_alta) BETWEEN '2020-12-03' AND '2021-04-03' 
+				 
+                
+13.07.2021 11:29:02 SELECT
+				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
+	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
+	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
+	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
+	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
+	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus, eventos.id_caja,
+	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
+       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
+	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
+	   eventos.comentarios_validacion, eventos.folio_telecarga,
+       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
+	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
+                LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
+                LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
+                LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2021-01-01' AND '2021-07-31'
+				-- WHERE Alta BETWEEN '2021-01-01' AND '2021-07-31'
+                 WHERE DATE(eventos.fecha_alta) BETWEEN '2021-01-01' AND '2021-07-31' 
+				 
+                
+13.07.2021 11:29:15 SELECT
+				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
+	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
+	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
+	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
+	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
+	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus, eventos.id_caja,
+	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
+       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
+	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
+	   eventos.comentarios_validacion, eventos.folio_telecarga,
+       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
+	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
+                LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
+                LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
+                LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2020-04-01' AND '2021-07-31'
+				-- WHERE Alta BETWEEN '2020-04-01' AND '2021-07-31'
+                 WHERE DATE(eventos.fecha_alta) BETWEEN '2020-04-01' AND '2021-07-31' 
+				 
+                
+13.07.2021 11:37:41 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+13.07.2021 11:37:41 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+13.07.2021 11:38:06 SELECT
+				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
+	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
+	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
+	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
+	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
+	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus, eventos.id_caja,
+	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
+       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
+	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
+	   eventos.comentarios_validacion, eventos.folio_telecarga,
+       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
+	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
+                LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
+                LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
+                LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2021-07-10' AND '2021-07-13'
+				-- WHERE Alta BETWEEN '2021-07-10' AND '2021-07-13'
+                 WHERE DATE(eventos.fecha_alta) BETWEEN '2021-07-10' AND '2021-07-13' 
+				 
+                
+14.07.2021 11:17:33 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+14.07.2021 11:17:34 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+14.07.2021 11:17:37 SELECT
+				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
+	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
+	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
+	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
+	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
+	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus,tee.nombre estatus_visita, eventos.id_caja,
+	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
+       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
+	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
+	   eventos.comentarios_validacion, eventos.folio_telecarga,
+       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
+	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+                JOIN tipo_estatus tee ON tee.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
+                LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
+                LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
+                LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2020-12-03' AND '2021-01-10'
+				 WHERE Alta BETWEEN '2020-12-03' AND '2021-01-10'
+                 WHERE DATE(eventos.fecha_alta) BETWEEN '2020-12-03' AND '2021-01-10' 
+				 
+                
+14.07.2021 11:17:37 File: reportes_db.php;   Method Name: getDetEvento(); Funcitonality: Get Report To CVS;    Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE DATE(eventos.fecha_alta) BETWEEN '2020-12-03' AND '2021-01-10'' at line 38
+14.07.2021 11:19:15 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+14.07.2021 11:19:15 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+14.07.2021 11:19:20 SELECT
+				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
+	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
+	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
+	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
+	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
+	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus,tee.nombre estatus_visita, eventos.id_caja,
+	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
+       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
+	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
+	   eventos.comentarios_validacion, eventos.folio_telecarga,
+       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
+	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+                JOIN tipo_estatus tee ON tee.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
+                LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
+                LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
+                LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2020-12-03' AND '2021-01-10'
+				 WHERE Alta BETWEEN '2020-12-03' AND '2021-01-10'
+                 WHERE DATE(eventos.fecha_alta) BETWEEN '2020-12-03' AND '2021-01-10' 
+				 
+                
+14.07.2021 11:19:20 File: reportes_db.php;   Method Name: getDetEvento(); Funcitonality: Get Report To CVS;    Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE DATE(eventos.fecha_alta) BETWEEN '2020-12-03' AND '2021-01-10'' at line 38
+14.07.2021 11:27:23 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+14.07.2021 11:27:23 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+14.07.2021 11:27:39 SELECT
+				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
+	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
+	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
+	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
+	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
+	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus,tee.nombre estatus_visita, eventos.id_caja,
+	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
+       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
+	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
+	   eventos.comentarios_validacion, eventos.folio_telecarga,
+       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
+	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+                JOIN tipo_estatus tee ON tee.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
+                LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
+                LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
+                LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2020-10-03' AND '2021-07-15'
+				 WHERE Alta BETWEEN '2020-10-03' AND '2021-07-15'
+                 WHERE DATE(eventos.fecha_alta) BETWEEN '2020-10-03' AND '2021-07-15' 
+				 
+                
+14.07.2021 11:27:39 File: reportes_db.php;   Method Name: getDetEvento(); Funcitonality: Get Report To CVS;    Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE DATE(eventos.fecha_alta) BETWEEN '2020-10-03' AND '2021-07-15'' at line 38
+14.07.2021 11:32:00 SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ();
+14.07.2021 11:32:00 File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+14.07.2021 11:32:13 SELECT
+				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
+	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
+	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
+	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
+	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
+	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus,tee.nombre estatus_visita, eventos.id_caja,
+	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
+       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
+	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
+	   eventos.comentarios_validacion, eventos.folio_telecarga,
+       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
+	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
+				FROM eventos
+				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+				JOIN comercios c ON c.id = eventos.comercio
+				JOIN tipo_estatus te ON te.id = eventos.estatus
+                JOIN tipo_estatus tee ON tee.id = eventos.estatus
+				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
+                LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
+                LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
+                LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                -- WHERE eventos.fecha_alta BETWEEN '2020-10-03' AND '2021-07-14'
+				 WHERE DATE(eventos.fecha_alta) BETWEEN '2020-10-03' AND '2021-07-14'
+                 
+				 
+                
