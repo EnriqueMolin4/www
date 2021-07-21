@@ -443,7 +443,7 @@ class Reportes implements IConnections {
 				JOIN tipo_estatus te ON te.id = eventos.estatus
                 JOIN tipo_estatus tee ON tee.id = eventos.estatus
 				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
-				JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+				LEFT JOIN tipo_subservicios tss ON tss.id = eventos.servicio
 				LEFT JOIN tipo_version tv ON tv.id = eventos.version
 				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por

@@ -1,7 +1,7 @@
 <?php
 
 //$conexion = new mysqli('localhost','admin_ramsses','Sinttecom1!','admin_sinttecom');
-$conexion = new mysqli('localhost','root','','sinttecomdev3');
+$conexion = new mysqli('localhost','root','','sinttecomv3');
 
 if ($conexion->connect_error) {
     die("La conexion fallo: " . $conexion->connect_error);

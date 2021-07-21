@@ -204,7 +204,7 @@ class Eventos implements IConnections {
 				$order
 				$filter ";
 
-		//self::$logger->error ($sql);
+		self::$logger->error ($sql);
 		//self::$logger->error($sql);
 		
 		try {
@@ -240,6 +240,7 @@ class Eventos implements IConnections {
 				ts.nombre servicioNombre,
 				CASE WHEN servicio = '' OR  servicio is null THEN 0 ELSE GetNameById(servicio,'TipoSubServicio') END subservicioNombre  ,
 				te.nombre  estatusNombre ,
+				tcc.nombre causaCambio,
 				IFNULL(tpvIn.modelo,0)  tvpInModelo,
                 IFNULL(tpvIn.conectividad,0) tvpInConectividad,
 				IFNULL(tpvRe.modelo,0)  tvpReModelo,
@@ -261,6 +262,7 @@ class Eventos implements IConnections {
 				LEFT JOIN inventario simIn ON eventos.sim_instalado= simIn.no_serie
 				LEFT JOIN inventario simRe ON eventos.sim_retirado = simRe.no_serie
 				LEFT JOIN checklist_evento cevento ON cevento.odt = eventos.odt AND cevento.tecnico = eventos.tecnico
+				LEFT JOIN tipo_causas_cambio tcc ON eventos.causacambio = tcc.id
 				where eventos.id = $id ";
 		
         try {
@@ -887,6 +889,19 @@ class Eventos implements IConnections {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusCancelado();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		   }
 	}
+	function getEstatusCambio() {
+ 
+		$sql = "SELECT * FROM `tipo_causas_cambio`  Order by nombre ";
+  
+	 
+		 try {
+			 $stmt = self::$connection->prepare ($sql );
+			 $stmt->execute (array());
+			 return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		 } catch ( PDOException $e ) {
+			 self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusCambio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		 }
+  }
 	
 	function getEstatusRechazo() {
  
@@ -1984,6 +1999,16 @@ if($module == 'getEstatusServicio') {
 
 if($module == 'getEstatusCancelado') {
 	$rows = $Eventos->getEstatusCancelado();
+	  $val = '<option value="0">Seleccionar</option>';
+	  foreach ( $rows as $row ) {
+		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	  }
+	  echo $val;
+  
+}
+
+if($module == 'getEstatusCambio') {
+	$rows = $Eventos->getEstatusCambio();
 	  $val = '<option value="0">Seleccionar</option>';
 	  foreach ( $rows as $row ) {
 		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';

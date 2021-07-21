@@ -385,7 +385,14 @@
                             </select>
                         </div>
                     </div>
+                    
                     <div class="row">
+                        <div class="col-sm-4" id="rowCausasCambio" style="display: none;">           
+                            <label for="causaCambio" class="col-form-label-sm">CAUSA CAMBIO</label>
+                            <select  class="form-control form-control-sm" id="causaCambio" aria-describedby="causaCambio" >
+                                <option value="0">Seleccionar</option>
+                            </select>
+                        </div>
                         <div class="col-sm-4" id="rowRechazos" style="display: none;">           
                             <label for="rechazo" class="col-form-label-sm">RECHAZO</label>
                             <select  class="form-control form-control-sm" id="rechazo" aria-describedby="rechazo" >

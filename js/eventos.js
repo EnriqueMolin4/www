@@ -12,6 +12,7 @@ $(document).ready(function() {
 		getRechazos();
 		getSubRechazos();
         getCancelado();
+        getCausasCambio();
         getProductos();
 		getAplicativo();
         getVersion();
@@ -453,6 +454,11 @@ $(document).ready(function() {
                                     $("#sim_instalado").val(element.sim_instalado);
                                     $("#sim_retirado").val(element.sim_retirado);
                                     $("#estatus_servicio").val(element.estatus_servicio);
+                                    $("#causaCambio").val(element.causacambio);
+                                   
+                                    $("#rechazo").val(element.rechazo);
+                                    $("#subrechazo").val(element.subrechazo);
+                                    $("#cancelado").val(element.cancelado);
 
                                     //tipodeUsuario(element.estatus);
                                     
@@ -517,14 +523,20 @@ $(document).ready(function() {
 									{
 										$("#divBtnCV").show();
 										$("#comentarios_valid").show();
-										
+                                        $("#rowRechazos").hide();
+                                        $("#rowSubRechazos").hide();
+                                        $("#rowCancelado").hide();
+									
 									} else if (element.estatus_servicio == '14')
 									{
-										
+                                        //$("#rowCausasCambio").show();
+                                        $("#rowCancelado").show();
 									}else if (element.estatus_servicio == '15')
 									{
 										$("#divBtnCV").show();
 										$("#comentarios_valid").show();
+                                        $("#rowRechazos").show();
+                                        $("#rowSubRechazos").show();
 									}
                             })  
                         }         
@@ -1407,7 +1419,26 @@ function getCancelado() {
         }
     });
 	
+}
 
+function getCausasCambio() {
+	
+	$.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getEstatusCambio',
+        cache: true,
+        success: function(data){
+            console.log(data);
+        
+         $("#causaCambio").html(data);
+		 	
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+	
 }
 
 function getRechazos() {
