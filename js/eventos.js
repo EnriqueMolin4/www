@@ -1777,6 +1777,9 @@ function cleartext() {
     $("#sim_retirado").val("");
     $("#estatus_servicio").val("");
     $("#folio_telecarga").val("");
+    $("#rechazo").val("");
+    $("#subrechazo").val("");
+    $("#cancelado").val("");
 
  
 
