@@ -186,7 +186,7 @@ class Eventos implements IConnections {
 				$order
 				$filter ";
 
-		//self::$logger->error ($sql);
+		self::$logger->error ($sql);
 		//self::$logger->error($sql);
 		
 		try {
