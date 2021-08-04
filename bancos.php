@@ -9,39 +9,28 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content p4">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>BANCOS</h3>
-            </div>
-            
             <div class="container-fluid p-5">
-            <div class="row">
-                <button class="btn btn-success" id="btnNewBanco">Nuevo Banco</button>
-            </div><br>
-
-            <div class="row p-2 panel-white">
-                <div class="table-responsive">
-                    
-               
-            <table id="bancos"  class="table table-md table-bordered  table-responsive">
+            <div class="row"><h3>Bancos</h3>
+			
+            </div>
+            <table id="bancos"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
-                        <th width="200px">Id</th>
-                        <th width="300px">BANCO</th>
-                        <th width="300px">CVE</th>
-                        <th width="300px">STATUS</th>
-                        <th>ACCION</th>
+                        <th>Id</th>
+                        <th>Banco</th>
+                        <th>CVE</th>
+                        <th>STATUS</th>
+                        <th>Accion</th>
                     </tr>
                 </thead>
                 <tbody>
                 
                 </tbody>
             </table>
-            </div>
-
             <input type="hidden" id="bancoId" value="0">
-            </div>
+            <button class="btn btn-success" id="btnNewBanco">Nuevo Banco</button>
             </div>
 
             <!-- MODAL -->
@@ -49,7 +38,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">NUEVO BANCO</h5>
+                        <h5 class="modal-title">Nuevo Banco</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -58,7 +47,7 @@
                         <form id="frm" name="frm">
                             <div class="row">
                                 <div class="col-sm-4">           
-                                    <label for="banco" class="col-form-label-sm">BANCO</label>
+                                    <label for="banco" class="col-form-label-sm">Banco</label>
                                     <input type="text" class="form-control form-control-sm" id="banco" name="banco" aria-describedby="banco">
                                 </div>
 
@@ -153,10 +142,10 @@
                             "mRender": function ( data,type, row ) {
                                 var boton = "";
                                 
-                            if(row.status == '1'){
-                                    boton =  '<a href="#" title="Editar" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x "></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a>';
+                            if(row.estatus == '1'){
+                                    boton =  '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
                                 } else {
-                                    boton = '<a href="#" title="Editar" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x "></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
+                                    boton = '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
                             }
 
                                 return boton;

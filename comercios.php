@@ -3,7 +3,7 @@
     <div class="page-wrapper ice-theme sidebar-bg bg1 toggled">
             <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
                     <i class="fas fa-bars"></i>
-            </a>
+                  </a>
         <nav id="sidebar" class="sidebar-wrapper">
 
                 <?php include("menu.php") ?>
@@ -12,67 +12,58 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h2>COMERCIOS</h2>
-            </div><br>
-            <?php  
-                if( searchMenuEdit($_SESSION['Modules'],'url','comercios') == '1') { ?>
+            <div class="container-fluid p-5">
+                <h2>Comercios</h2>
+                <hr>
+				<?php  
+				if( searchMenuEdit($_SESSION['Modules'],'url','comercios') == '1') { ?>
                 <div class="row">
-                    <div class="col">
-                        <button class="btn btn-success editCom" data="0" id="btnNuevoComercio" name="btnNuevoComercio">Nuevo Comercio</button></div>
-                </div><br>
-                 <?php } ?>
-            <div class="container-fluid p-2 panel-white">
-                
-				
+                    <div class="col-md-12 text-left">
+                        <button class="btn btn-primary editCom" data="0" id="btnNuevoComercio" name="btnNuevoComercio">Nuevo Comercio</button></div>
+                </div>
+				 <?php } ?>
                 <br />
-                
-                      
-				        <div class="panel-body">
-                            <div class="table-responsive">
-                    
-                                <table id="example"  class="table table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>BANCO</th>
-                                            <th width="20%">COMERCIO</th>
-                                            <th>AFILIACION</th>
-                                            <th width="200px">RESPONSABLE</th>
-                                            <th>TIPO COMERCIO</th>
-                                            <th>TERRITORIAL BANCO</th>
-                                            <th>TERRITORIAL SINTTECOM</th>
-                                            <th width="100px">TELEFONO</th>
-                                            <th>ACCION</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                <div class="row">
+				
+                    <table id="example"  class="table table-md table-bordered ">
+                        <thead>
+                            <tr>
+                                <th>Banco</th>
+                                <th>Comercio</th>
+                                <th>Afiliacion</th>
+                                <th>Responsable</th>
+                                <th>Tipo Comercio</th>
+                                <th>Territorial Banco</th>
+                                <th>Territorial Sinttecom</th>
+                                <th>Telefono</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>BANCO</th>
-                                            <th width="20%">COMERCIO</th>
-                                            <th>AFILIACION</th>
-                                            <th width="200px">RESPONSABLE</th>
-                                            <th>TIPO COMERCIO</th>
-                                            <th>TERRITORIAL BANCO</th>
-                                            <th>TERRITORIAL SINTTECOM</th>
-                                            <th width="100px">TELEFONO</th>
-                                            <th>ACCION</th>
-                                        </tr>
-                                    </tfoot>    
-                                </table>
-                            </div>
-                        
-                    </div>
-                
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Banco</th>
+                                <th>Comercio</th>
+                                <th>Afiliacion</th>
+                                <th>Responsable</th>
+                                <th>Tipo Comercio</th>
+                                <th>Territorial Banco</th>
+                                <th>Territorial Sinttecom</th>
+                                <th>Telefono</th>
+                                <th>Accion</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
 				<input type="hidden" value="<?php echo searchMenuEdit($_SESSION['Modules'],'url','comercios'); ?>"  id="permusr">
                 <!-- MODAL -->
                 <div class="modal fade" tabindex="-1" role="dialog" id="editComercio" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">REGISTRO DE COMERCIO</h5>
+                        <h5 class="modal-title">Registro de Comercio</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -81,44 +72,44 @@
                     <form id="frm" name="frm">
                         <div class="row">
                             <div class="col">           
-                                <label for="cve_banco" class="col-form-label-sm">CLAVE BANCARIA</label>
+                                <label for="cve_banco" class="col-form-label-sm">Clave Bancaria</label>
                                 <select id="cve_banco" name="cve_banco" class="form-control form-control-sm">
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
                             <div class="col">           
-                                <label for="afiliacion" class="col-form-label-sm">AFILIACION</label>
+                                <label for="afiliacion" class="col-form-label-sm">Afilacion</label>
                                 <input type="text" class="form-control form-control-sm" id="afiliacion" name="afiliacion" aria-describedby="afiliacion" >
                             </div>
                             <div class="col">           
-                                <label for="comercio" class="col-form-label-sm ">NOMBRE COMERCIO</label>
+                                <label for="comercio" class="col-form-label-sm ">Nombre Comercio</label>
                                 <input type="text" class="form-control form-control-sm cambioMay" id="comercio" aria-describedby="comercio" >
                             </div>
                         
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="responsable" class="col-form-label-sm">RESPONSABLE</label>
+                                <label for="responsable" class="col-form-label-sm">Responsable</label>
                                 <input type="text" class="form-control form-control-sm cambioMay" id="responsable" aria-describedby="responsable" >
                             </div>
                             <div class="col">           
-                                <label for="propietario" class="col-form-label-sm">PROPIETARIO</label>
+                                <label for="propietario" class="col-form-label-sm">Propietario</label>
                                 <input type="text" class="form-control form-control-sm cambioMay" id="propietario" aria-describedby="propietario" >
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="cp" class="col-form-label-sm">CODIGO POSTAL</label>
+                                <label for="cp" class="col-form-label-sm">Codigo Postal</label>
                                 <input type="text" class="form-control form-control-sm" id="cp" name="cp" aria-describedby="cp" >
                             </div>
                             <div class="col">           
-                                <label for="estado" class="col-form-label-sm">ESTADO</label>
+                                <label for="estado" class="col-form-label-sm">Estado</label>
                                 <select id="estado" name="estado" class="form-control form-control-sm">
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
                             <div class="col">           
-                                <label for="ciudad" class="col-form-label-sm">CIUDAD</label>
+                                <label for="ciudad" class="col-form-label-sm">Ciudad</label>
                                 <select id="ciudad" name="ciudad" class="form-control form-control-sm">
                                     <option value="0">Seleccionar</option>
                                 </select>
@@ -126,23 +117,23 @@
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="direccion" class="col-form-label-sm">DIRECCION</label>
+                                <label for="direccion" class="col-form-label-sm">Direccion</label>
                                 <input type="text" class="form-control form-control-sm cambioMay" id="direccion" name="direccion" aria-describedby="direccion" >
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="colonia" class="col-form-label-sm">COLONIA</label>
+                                <label for="colonia" class="col-form-label-sm">Colonia</label>
                                 <input type="text" class="form-control form-control-sm cambioMay" id="colonia" name="colonia" aria-describedby="colonia" >
                             </div>
 
                             <div class="col">           
-                                <label for="territorial_banco" class="col-form-label-sm">TERRITORIO BANCO</label>
+                                <label for="territorial_banco" class="col-form-label-sm">Territorio Banco</label>
                                 <input type="text" class="form-control form-control-sm" id="territorial_banco" name="territorial_banco" aria-describedby="territorial_banco" >
 
                             </div>
                             <div class="col">           
-                                <label for="territorial_sinttecom" class="col-form-label-sm">TERRITORIO SINTTECOM</label>
+                                <label for="territorial_sinttecom" class="col-form-label-sm">Territorio Sinttecom</label>
                                 <input type="text" class="form-control form-control-sm" id="territorial_sinttecom" name="territorial_sinttecom" aria-describedby="territorial_sinttecom" >
                             </div>
                         </div>
@@ -152,11 +143,11 @@
                                 <input type="text" class="form-control form-control-sm" id="rfc" aria-describedby="rfc" >
                             </div>
                             <div class="col">           
-                                <label for="telefono" class="col-form-label-sm">TELEFONO</label>
+                                <label for="telefono" class="col-form-label-sm">Telefono</label>
                                 <input type="text" class="form-control form-control-sm" id="telefono" name="telefono" aria-describedby="telefono" >
                             </div>
                             <div class="col">           
-                                <label for="tipo_comercio" class="col-form-label-sm">TIPO COMERCIO</label>
+                                <label for="tipo_comercio" class="col-form-label-sm">Tipo Comercio</label>
                                 <select id="tipo_comercio" name="tipo_comercio" class="form-control form-control-sm">
                                     <option>Seleccionar</option>
                                     <option value="1">NORMAL</option>
@@ -164,37 +155,37 @@
                                 </select>
                             </div>
                             <div class="col">           
-                                <label for="razon_social" class="col-form-label-sm">RAZON SOCIAL</label>
+                                <label for="razon_social" class="col-form-label-sm">Razon Social</label>
                                 <input type="text" class="form-control form-control-sm" id="razon_social" aria-describedby="razon_social" >
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="email_comercio" class="col-form-label-sm">EMAIL COMERCIO</label>
+                                <label for="email_comercio" class="col-form-label-sm">Email Comercio</label>
                                 <input type="email"  class="form-control form-control-sm" id="email_comercio" name="email_comercio" aria-describedby="email_comercio" >
                             </div>
                             <div class="col">           
-                                <label for="email_ejecutivo" class="col-form-label-sm">EMAIL EJECUTIVO</label>
+                                <label for="email_ejecutivo" class="col-form-label-sm">Email Ejecutivo</label>
                                 <input type="email" class="form-control form-control-sm" id="email_ejecutivo" name="email_ejecutivo" aria-describedby="email_ejecutivo" >
                             </div>
  
                         </div>
                         <div class="row">
                             <div class="col-sm-3">           
-                                <label for="hora_general" class="col-form-label-sm">HORARIO GENERAL INICIO</label>
+                                <label for="hora_general" class="col-form-label-sm">Horario General Inicio</label>
                                 <input type="time" class="form-control form-control-sm" id="hora_general_inicio" name="hora_general_inicio" aria-describedby="hora_general" >
                             </div>
                             <div class="col-sm-3">           
-                                <label for="hora_general" class="col-form-label-sm">HORARIO GENERAL FIN</label>
+                                <label for="hora_general" class="col-form-label-sm">Horario General Fin</label>
                                 <input type="time" class="form-control form-control-sm" id="hora_general_fin" name="hora_general_fin" aria-describedby="hora_general" >
                             </div>
                             <div class="col-sm-3">           
-                                <label for="hora_comida_inicio" class="col-form-label-sm">HORA DE COMIDA INICIO</label>
+                                <label for="hora_comida_inicio" class="col-form-label-sm">Hora de Comida Inicio</label>
                                 <input type="time" class="form-control form-control-sm" id="hora_comida_inicio" name="hora_comida_inicio" aria-describedby="hora_comida" >
                                 
                             </div>
                             <div class="col-sm-3">
-                            <label for="hora_comida_fin" class="col-form-label-sm">HORA DE COMIDA FIN</label>
+                            <label for="hora_comida_fin" class="col-form-label-sm">Hora de Comida Fin</label>
                                 <input type="time" class="form-control form-control-sm" id="hora_comida_fin" name="hora_comida_fin" aria-describedby="hora_comida" >
                             </div>
                         </div>
@@ -232,11 +223,11 @@
     <script src="js/main.js"></script>
     <script type="text/javascript">
 
-            jQuery.validator.addMethod("notEqual", function(value, element, param) {
-            return this.optional(element) || value != param;
-            }, "Please specify a different (non-default) value");
+    jQuery.validator.addMethod("notEqual", function(value, element, param) {
+    return this.optional(element) || value != param;
+    }, "Please specify a different (non-default) value");
 
-            $(document).ready(function () {
+  $(document).ready(function () {
         getBancos();
 		permission();
 		
@@ -288,12 +279,12 @@
                         console.log(row.estatus)
 					
                       if(row.activo == '1'){
-                        boton += '<a title="Editar Comercio" href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x "></i>';
+                        boton += '<a href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x " style="color:blue"></i>';
 						if($("#permusr").val() == '1') {
-						boton += '</a><a title="Desactivar comercio" href="#" class="delCom" data="'+data+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a>';
+						boton += '</a><a href="#" class="delCom" data="'+data+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
 						}
                       } else {
-                        boton = '<a title="Editar Comercio" href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x"></i></a><a title="Activar comercio" href="#" class="actCom" data="'+data+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
+                        boton = '<a href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="actCom" data="'+data+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
                       }
 					  
 					 
@@ -339,35 +330,35 @@
         };
         var messages = {
             cve_banco: {
-                notEqual: "Favor de Selecionar un Banco"
+                notEqual: "Favor de selecionar un Banco"
             },
             email_comercio:  {
-                required: "Favor de Ingresar el Email",
-                email: "Favor de Ingresar un Email Válido"
+                required: "Favor de poner el Email",
+                email: "Favor de poner un Email Valido"
             },
             email_ejecutivo:  {
-                required: "Favor de Ingresar el Email",
-                email: "Favor de Ingresar un Email Válido"
+                required: "Favor de poner el Email",
+                email: "Favor de poner un Email Valido"
             },
             telefono:  {
-                required: "Favor de Capturar un Teléfono",
-                digits: "Favor de Ingresar Solo números"
+                required: "Favor de capturar un Telefono",
+                digits: "Favor de poner solo numeros"
                
             },
             cp: {
                 required: "Favor de poner el Codigo Postal",
-                minlength: "Favor de poner un Codigo Postal válido",
+                minlength: "Favor de poner un Codigo Postal valido",
                 digits: "Favor de poner solo numeros"
                
             },
             afiliacion: {
                 required: "Favor de llenar el campo de afiliacion",
-                minlength: "Favor de poner una Afiliación válida",
-                digits: "Favor de poner solo números"
+                minlength: "Favor de poner una Afiliación valida",
+                digits: "Favor de poner solo numeros"
                
             },
             direccion: {
-                required: "Favor de llenar el campo de dirección"
+                required: "Favor de llenar el campo de direccion"
             },
             colonia: {
                 required: "Favor de llenar el campo de colonia"
@@ -401,8 +392,8 @@
                     'email_ejecutivo' : $("#email_ejecutivo").val(),
                     'territorial_banco' : $("#territorial_banco").val(),
                     'territorial_sinttecom' : $("#territorial_sinttecom").val(),
-                    'hora_general' : $("#hora_general").val(),
-                    'hora_comida' : $("#hora_comida").val(),
+                    'hora_general' : $("#hora_general_inicio").val() + '|' + $("#hora_general_fin").val() ,
+                    'hora_comida' : $("#hora_comida_inicio").val() + '|' + $("#hora_comida_fin").val(),
                     'razon_social' : $("#razon_social").val(),
                     'cp': $("#cp").val()
                 }
@@ -414,9 +405,9 @@
                     cache: false,
                     success: function(data){
                         var info = JSON.parse(data)
-                        mensaje = "Se Ha Creado Con Éxito El Comercio"
+                        mensaje = "Se ha creado con Exito el Comercio"
                         if(info.id == '0') {
-                            mensaje = "Se Modifico Con Éxito El Comercio"
+                            mensaje = "Se Modifico con Exito el Comercio"
                         }
 
                         $.toaster({
@@ -445,9 +436,9 @@
                 data: { module:'delCom', id: id},
                 cache: false,
                 success: function(data){
-                    var info = JSON.parse(data)
+                    var info = JSON.parse(data);
                     $.toaster({
-                            message: 'Se deshabilitó el Comercio ',
+                            message: 'Se deshabilito el Comercio ',
                             title: 'Aviso',
                             priority : 'warning'
                         });  
@@ -472,7 +463,7 @@
                 success: function(data){
                     var info = JSON.parse(data);
                     $.toaster({
-                            message: 'Se habilitó el Comercio ',
+                            message: 'Se habilito el Comercio ',
                             title: 'Aviso',
                             priority : 'success'
                         });  
@@ -508,9 +499,9 @@
             });
 
             if(comercioId == '0') {
-                $(this).find(".modal-title").text("NUEVO COMERCIO");
+                $(this).find(".modal-title").text("Nuevo Comercio");
             } else {
-                $(this).find(".modal-title").text("EDITAR COMERCIO");
+                $(this).find(".modal-title").text("Editar Comercio");
                 $.ajax({
                     type: 'GET',
                     url: 'modelos/comercios_db.php', // call your php file
@@ -564,33 +555,33 @@
         $("#estado").on('change', function() {
             getMunicipio('0');
         })
-            });
+  });
 
-            function cleartext() {
-            $("#cvebancaria").val("")
-            $("#comercio").val("")
-            $("#propietario").val("")
-            $("#estado").val("");
-            $("#responsable").val("")
-            $("#tipo_comercio").val("");
-            $("#ciudad").val("")
-            $("#colonia").val("")
-            $("#afiliacion").val("")
-            $("#telefono").val("")
-            $("#direccion").val("");
-            $("#rfc").val("")
-            $("#email").val("")
-            $("#email_ejecutivo").val("")
-            $("#territorial_banco").val("")
-            $("#territorial_sinttecom").val("")
-            $("#hora_general").val("")
-            $("#hora_comida").val("")
-            $("#razon_social").val("")
-            $("#cp").val("")
+  function cleartext() {
+    $("#cvebancaria").val("")
+    $("#comercio").val("")
+    $("#propietario").val("")
+    $("#estado").val("");
+    $("#responsable").val("")
+    $("#tipo_comercio").val("");
+    $("#ciudad").val("")
+    $("#colonia").val("")
+    $("#afiliacion").val("")
+    $("#telefono").val("")
+    $("#direccion").val("");
+    $("#rfc").val("")
+    $("#email").val("")
+    $("#email_ejecutivo").val("")
+    $("#territorial_banco").val("")
+    $("#territorial_sinttecom").val("")
+    $("#hora_general").val("")
+    $("#hora_comida").val("")
+    $("#razon_social").val("")
+    $("#cp").val("")
 
-            }
+}
 
-            function getBancos() {
+function getBancos() {
     $.ajax({
         type: 'GET',
         url: 'modelos/comercios_db.php', // call your php file
@@ -603,9 +594,9 @@
             var demo = error;
         }
     });
-            }
+}
 
-            function getEstado(cp) {
+function getEstado(cp) {
     $.ajax({
         type: 'GET',
         url: 'modelos/comercios_db.php', // call your php file
@@ -617,7 +608,7 @@
                 var estado = $("#estado").val();
                 getMunicipio() 
             } else {
-                alert('No Existe el Codigo Postal En El Sistema')
+                alert('No Existe el Codigo Postal en el Sistema')
                 $("#cp").val('');
             }
            
@@ -627,9 +618,9 @@
             var demo = error;
         }
     });
-            } 
+} 
 
-            function getMunicipio() {
+function getMunicipio() {
     var cp = $("#cp").val();
     $.ajax({
         type: 'GET',
@@ -651,9 +642,9 @@
             var demo = error;
         }
     });
-            }
+}
 
-            function permission() {
+function permission() {
 	
 	var perm = $("#permusr").val();
 	
@@ -682,7 +673,7 @@
 		$("#cp").attr('disabled',true);
 	}
 
-            }
+}
 
 </script> 
 </body>

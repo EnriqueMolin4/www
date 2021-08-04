@@ -11,35 +11,24 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>REGISTRO PARA ALMACEN</h3>
-            </div>
-             <div class="row p-2">
-                    <div class="col-md-8">
-                        <label for="excelMasivo" class="col-form-label-sm">Carga Masiva Inventario</label> 
-                        <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
-                        <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
-                    </div>
-                </div>
-            <div class="container-fluid p-5 panel-white">
-            
-               
+            <div class="container-fluid p-5">
+            <h3>Registro para Almacen</h3>
+                
                 <div class="row">
                     <div id="avisos" class="display:none;" style="background-color:red;"></div>
                 </div>
                 <div class="row">
                     <div class="col">           
-                        <label for="cve_banco" class="col-form-label-sm">CVE BANCO</label>
+                        <label for="cve_banco" class="col-form-label-sm">Cve Banco</label>
                         <select id="cve_banco" name="cve_banco" class="form-control form-control-sm">
                         </select>
                     </div>
                     <div class="col">           
-                        <label for="almacen_producto" class="col-form-label-sm">PRODUCTO</label>
+                        <label for="almacen_producto" class="col-form-label-sm">Producto</label>
                         <select id="almacen_producto" name="almacen_producto" class="form-control form-control-sm">
                             <option value="0">Seleccionar</option>
                             <option value="1">TPV</option>
                             <option value="2">SIM</option>
-                            <option value="3">Insumo</option>
                         </select>
                     </div>
                     
@@ -49,34 +38,34 @@
             <div style=" padding: 10px; display:none;" id="altatpv">
                 <div class="row">
                     <div class="col" id="tpvbk">           
-                        <label for="select-modelo_tpv" class="col-form-label-sm">MODELOS TPV </label>
+                        <label for="select-modelo_tpv" class="col-form-label-sm">Modelos TPV </label>
                         <select class="form-control form-control-sm" id= "select-modelo_tpv" name="select-modelo_tpv"></select>
                     </div>
                     <div class="col" id="carrierbk">           
-                        <label for="select-carrier" class="col-form-label-sm">CARRIER </label>
+                        <label for="select-carrier" class="col-form-label-sm">Carrier </label>
                         <select class="form-control form-control-sm" id= "select-carrier" name="select-carrier"></select>
                     </div>
                     <div class="col" id="insumobk">           
-                        <label for="select-insumo" class="col-form-label-sm">INSUMO </label>
+                        <label for="select-insumo" class="col-form-label-sm">Insumo </label>
                         <select class="form-control form-control-sm" id= "select-insumo" name="select-insumo"></select>
                     </div>
                     <div class="col" id="noseriebk">           
-                        <label for="almacen-no_serie" class="col-form-label-sm">NO. DE SERIE*</label>
+                        <label for="almacen-no_serie" class="col-form-label-sm">No. de Serie*</label>
                         <input type="text" class="form-control form-control-sm" id="almacen-no_serie" aria-describedby="almacen-no_serie">
                     </div>
                     <div class="col" id="cantidadbk">           
-                        <label for="almacen-cantidad" class="col-form-label-sm">CANTIDAD</label>
+                        <label for="almacen-cantidad" class="col-form-label-sm">Cantidad</label>
                         <input type="text" class="form-control form-control-sm" id="almacen-cantidad" aria-describedby="almacen-cantidad">
                     </div>
                     <div class="col" id="fabricantebk">           
-                        <label for="almacen-fabricante" class="col-form-label-sm">FABRICANTE</label>
-                        <select class="form-control form-control-sm" id="almacen-fabricante" name="almacen-fabricante" readonly>
+                        <label for="almacen-fabricante" class="col-form-label-sm">Fabricante</label>
+                        <select class="form-control form-control-sm" id="almacen-fabricante" name="almacen-fabricante">
                         <option value="0">Seleccionar</option>
                         </select>
                     </div>
                     <div class="col" id="connectbk">           
-                        <label for="almacen-connect" class="col-form-label-sm">CONECTIVIDAD</label>
-                        <select class="form-control form-control-sm" id="almacen-connect" name="almacen-connect" readonly>
+                        <label for="almacen-connect" class="col-form-label-sm">Conectividad</label>
+                        <select class="form-control form-control-sm" id="almacen-connect" name="almacen-connect">
                         <option value="0">Seleccionar</option>
                         </select>
                     </div>
@@ -89,35 +78,36 @@
             <div style=" padding: 10px; display:none;" id="altaalmacen">
                 <div class="row">
                     <div class="col">           
-                        <label for="select-estatus" class="col-form-label-sm">ESTATUS* </label>
+                        <label for="select-estatus" class="col-form-label-sm">Estatus* </label>
                         <select class="form-control form-control-sm" id= "select-estatus" name="select-estatus">
                         </select>
                     </div>
-					<div class="col">
-						<label for="select-estatus_inventario" class="col-form-label-sm">ESTATUS INVENTARIO</label>
-						<select class="form-control form-control-sm" id= "select-estatus_inventario" name="select-estatus_inventario">
+                    <div class="col">           
+                        <label for="select-estatus_inventario" class="col-form-label-sm">Estatus Inventario</label>
+                        <select class="form-control form-control-sm" id= "select-estatus_inventario" name="select-estatus_inventario">
                         </select>
-					</div>
-                    <div class="col">
-						<label for="almacen-idubicacion" class="col-form-label-sm">UBICACION</label>
-						<input type="text" class="form-control form-control-sm" id="almacen-idubicacion" aria-describedby="almacen-idubicacion">
+                    </div>
+                    <div class="col">           
+                        <label for="almacen-idubicacion" class="col-form-label-sm">Ubicacion </label>
+                        <input type="text" class="form-control form-control-sm" id="almacen-idubicacion" aria-describedby="almacen-idubicacion">
                         <input type="hidden" value="0" id="ubicacionId">
-					</div>
+                    </div>
+                   
                 </div>
-				<div class="row">
-					<div class="col" id="tarimabk">           
-                        <label for="almacen-tarima" class="col-form-label-sm">TARIMA</label>
+                <div class="row">
+                    <div class="col" id="tarimabk">           
+                        <label for="almacen-tarima" class="col-form-label-sm">Tarima</label>
                         <input type="text" class="form-control form-control-sm" id="almacen-tarima" aria-describedby="almacen-tarima">
                     </div>
                     <div class="col" id="anaquelbk">           
-                        <label for="almacen-anaquel" class="col-form-label-sm">ANAQUEL</label>
+                        <label for="almacen-anaquel" class="col-form-label-sm">Anaquel</label>
                         <input type="text" class="form-control form-control-sm" id="almacen-anaquel" aria-describedby="almacen-anaquel">
                     </div>
                     <div class="col" id="cajonbk">           
-                        <label for="almacen-cajon" class="col-form-label-sm">CAJON</label>
+                        <label for="almacen-cajon" class="col-form-label-sm">Cajon</label>
                         <input type="text" class="form-control form-control-sm" id="almacen-cajon" aria-describedby="almacen-cajon">
                     </div>
-				</div>
+                </div>
             </div>
             <div class="row">
                 <div class="col" style="padding-left:30px;padding-top:10px;">  
@@ -129,7 +119,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">IMAGENES</h5>
+                    <h5 class="modal-title">Imagenes</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -167,8 +157,7 @@
     <script type="text/javascript" src="js/jquery.toaster.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
     <script src="js/main.js"></script>
-	<!-- <script type="text/javascript" src="js/almacen.js"></script> -->
-	<script>
+    <script>
     var infoAjax = 0;
     $(document).ready(function() {
         

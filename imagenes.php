@@ -11,11 +11,8 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                 <h3>IMAGENES</h3>
-            </div>
-            <div class="container-fluid p-5 panel-white">
-               
+            <div class="container-fluid p-5">
+                <h3>Imagenes</h3>
 					 
                     <div class="row">
                         <div id="avisos" class="display:none;" style="background-color:red;"></div>
@@ -24,20 +21,20 @@
                     <div id="progress"></div>
                     <div class="row">
                         <div class="col-sm-4">           
-                            <label for="odt" class="col-form-label-sm">ESCRIBE LA ODT</label>
+                            <label for="odt" class="col-form-label-sm">Escribe la ODT</label>
                             <input type="text" class="form-control form-control-sm" id="odt" aria-describedby="odt"  style="text-transform:uppercase" >
                         </div>
                         <div class="col" style="padding-left:30px;padding-top:30px;">  
                             <button class="btn btn-primary" id="btnImagenes">Mostrar</button>
                         </div>
                     </div>
-                    <br/><hr>
+                    <br/>
                     <div class="row">
                         <div class="col-sm-4">
                             <input type="file" class="form-control-file" id="fileToUpload" accept="image/*"  multiple>
                         </div>
                         <div class="col-sm-4" >  
-                            <button class="btn btn-primary" id="btnSaveImagenes">AGREGAR IMAGEN</button>
+                            <button class="btn btn-primary" id="btnSaveImagenes">Agregar Imagen</button>
                         </div>
                     </div>
                 
@@ -47,7 +44,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">IMAGENES</h5>
+                    <h5 class="modal-title">Imagenes</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>

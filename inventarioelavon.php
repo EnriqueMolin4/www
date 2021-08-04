@@ -9,31 +9,30 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content pt-1">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay">
            
             </div>
-            <div class="page-title">
-                <h3>INVENTARIO UNIVERSO ELAVON</h3>
-            </div><br>
+            <div class="container-fluid p-5">
+            <h3>Inventario Universo Elavon</h3>
             <div class="row">
-                <div class="col">
-                        <label for="excelMasivo" class="col-form-label-sm">CARGA MASIVA INVENTARIO</label> 
+                <div class="col-md-7">
+                        <label for="excelMasivo" class="col-form-label-sm">Carga Masiva Inventario</label> 
                         <input class="input-file" type="file" id="excelMasivoInventarios" name="excelMasivoInventarios">
                         <button class="btn btn-success btn-sm" id="btnCargarExcelInventarios">Cargar</button>
                     </div>
+				<div class="col-sm-3">
+					<a href="layouts/LayoutMasivoInventarioElavon.xlsx" class="btn btn-primary" download>Descargar Layout</a>
+				</div>
+                <div class="col-md-2">  
+                    <a href="#" class="btn btn-dark" id="btnNuevoEvento">Agregar Nuevo</a>
+                </div>
             </div> 
-             <div class="row">
-                   <div class="col">  
-                    <a href="#" class="btn btn-success" id="btnNuevoEvento">Agregar Nuevo</a>
-                    </div>
-                </div><br>
-            <div class="container-fluid p-5 panel-white">
-            
-            <h5>BUSQUEDA</h5>
+
+            <h5>Busqueda</h5>
                 <div class="row  mb-4">
                     <div class="col">
-                        <label for="tipo_producto" class="col-form-label-sm">TIPO</label>
+                        <label for="tipo_producto" class="col-form-label-sm">Tipo</label>
                         <select id="tipo_producto" name="tipo_producto" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                                 <option value="1">TPV</option>
@@ -41,7 +40,7 @@
                         </select>
                     </div>     
                     <div class="col">
-                        <label for="tipo_estatus" class="col-form-label-sm">ESTATUS</label>
+                        <label for="tipo_estatus" class="col-form-label-sm">Estatus</label>
                         <select id="tipo_estatus" name="tipo_estatus" class="form-control form-control-sm searchInventario">
                             <option value="0" selected>Seleccionar</option>
                             <option value="PERTENECE A ELAVON">PERTENECE A ELAVON</option>
@@ -57,23 +56,21 @@
 				<div class="d-flex justify-content-end">
 
 				</div>
-                <div class="table-responsive">
-                    <table id="inventario"  class="table table-md table-bordered table-responsive">
-                        <thead>
-                            <tr>
-                                <th width="300px">TIPO</th>
-                                <th width="300px">NO SERIE</th>
-                                <th width="300px">FABRICANTE</th>
-                                <th width="300px">ESTATUS</th>
-                                <th width="300px">ACCION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <table id="inventario"  class="table table-md table-bordered ">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>No Serie</th>
+                            <th>Fabricante</th>
+                            <th>Estatus</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     
-                        </tbody>
+                    </tbody>
             
-                    </table>
-                </div>
+                </table>
                 <br />
 				<input type="hidden" id="userPerm" value="<?php echo isset($_SESSION['tipo_user']) ? $_SESSION['tipo_user'] : 0 ; ?>">
             </div>
@@ -84,13 +81,12 @@
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">EDITAR REGISTRO</h5>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col">           
-                                <label for="tipo" class="col-form-label-sm">TIPO</label>
+                                <label for="tipo" class="col-form-label-sm">Tipo</label>
                                 <select id="tipo" name="tipo" class="form-control form-control-sm">
                                     <option value="0">SELECCIONAR</option>
                                     <option value="1">TPV</option>
@@ -98,7 +94,7 @@
                                 </select>
                             </div>
                             <div class="col" id="colFabricante">           
-                                <label for="fabricante" class="col-form-label-sm">FABRICANTE</label>
+                                <label for="fabricante" class="col-form-label-sm">Fabricante</label>
                                 <select id="fabricante" name="fabricante" class="form-control form-control-sm">
                                     <option value="0">SELECCIONAR</option>
                                     <option value="INGENICO">INGENICO</option>
@@ -108,12 +104,12 @@
                                 </select>
                             </div>
                             <div class="col" id="colCarrier">           
-                                <label for="carrier" class="col-form-label-sm">CARRIER</label>
+                                <label for="carrier" class="col-form-label-sm">Carrier</label>
                                 <select id="carrier" name="carrier" class="form-control form-control-sm">
                                     <option value="0">SELECCIONAR</option>
                                     <option value="TELCEL">TELCEL</option>
                                     <option value="MOVISTAR">MOVISTAR</option>
-                                    <option value="MOVISTAR">M2M</option>
+                                    <option value="M2M">M2M</option>
                                     <option value="AT&T">AT&T</option>
                                     <option value="UNO">UNO</option>
                                 </select>
@@ -121,12 +117,12 @@
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="serie" class="col-form-label-sm">NO SERIE</label>
+                                <label for="serie" class="col-form-label-sm">No. Serie</label>
                                 <input id="serie" name="serie" class="form-control form-control-sm">
                                  
                             </div>
                             <div class="col">           
-                                <label for="estatus" class="col-form-label-sm">ESTATUS</label>
+                                <label for="estatus" class="col-form-label-sm">Estatus</label>
                                 <select id="estatus" name="estatus" class="form-control form-control-sm">
                                     <option value="0" selected>Seleccionar</option>
                                     <option value="PERTENECE A ELAVON" data-id="3">PERTENECE A ELAVON</option>
@@ -141,7 +137,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-danger  pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cerrar</button>
-                        <button class="btn btn-success" id="btnCargar"> Cargar</a>
+                        <a class="btn btn-success  pull-left" id="btnCargar"><span class="glyphicon glyphicon-remove"></span> Cargar</a>
                     </div>
                 </div>
             </div>

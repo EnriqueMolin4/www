@@ -11,26 +11,30 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>MODELOS TPV</h3>
+            <div class="container-fluid p-5">
+            <div class="row"><h3>Modelos TPV</h3>
+			<?php if( searchMenuEdit($_SESSION['Modules'],'url','registrousuarios') == '1') { ?>
+                <div class="col"> 
+               <!--  <label for="excelMasivo" class="col-form-label-sm">Carga Masiva Usuarios</label> 
+                <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
+                <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button> -->
+                </div>
+              <!--   <div class="col">
+                    <a href="layouts/Template_Masivo_Usuarios.csv" download>Template pra Carga Masiva</a>
+                </div> -->
+			<?php  } ?>
             </div>
-            <div class="container-fluid p-4">
-            <div class="row p-2">
-                <button class="btn btn-success" id="btnNewModel">Nuevo Modelo</button>
-            </div><br>
-			<div class="row panel-white p-4">
-                <div class="table-responsive">
-                    <table id="modelos"  class="table table-md table-bordered table-responsive">
+            <table id="modelos"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
-                        <th width="200px">ID</th>
-                        <th width="200px">MODELO</th>
-                        <th width="200px">PROVEEDOR</th>
-                        <th width="200px">CONECTIVIDAD</th>
-                        <th width="200px">NO. LARGO</th>
-                        <th width="200px">CLAVE BANCO</th>
-                        <th width="200px">ESTATUS</th>
-                        <th width="200px">ACCION</th>
+                        <th>Id</th>
+                        <th>Modelo</th>
+                        <th>Proveedor</th>
+                        <th>Conectividad</th>
+                        <th>No Largo</th>
+                        <th>Clave Banco</th>
+                        <th>Estatus</th>
+                        <th>Accion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,21 +42,19 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th width="200px">ID</th>
-                        <th width="200px">MODELO</th>
-                        <th width="200px">PROVEEDOR</th>
-                        <th width="200px">CONECTIVIDAD</th>
-                        <th width="200px">NO. LARGO</th>
-                        <th width="200px">CLAVE BANCO</th>
-                        <th width="200px">ESTATUS</th>
-                        <th width="200px">ACCION</th>
+                        <th>Id</th>
+                        <th>Modelo</th>
+                        <th>Proveedor</th>
+                        <th>Conectividad</th>
+                        <th>No Largo</th>
+                        <th>Clave Banco</th>
+                        <th>Estatus</th>
+                        <th>Accion</th>
                     </tr>
                 </tfoot>
             </table>
-                </div>
-            
             <input type="hidden" id="modelId" value="0">
-                </div>
+            <button class="btn btn-success" id="btnNewModel">Nuevo Modelo</button>
             </div>
 
             <!-- MODAL -->
@@ -60,7 +62,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">NUEVO MODELO</h5>
+                        <h5 class="modal-title">Nuevo Modelo</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -69,19 +71,19 @@
                         <form id="frm" name="frm">
                             <div class="row">
                                 <div class="col-sm-4">           
-                                    <label for="modelo" class="col-form-label-sm">MODELO</label>
+                                    <label for="modelo" class="col-form-label-sm">Modelo</label>
                                     <input type="text" class="form-control form-control-sm" id="modelo" name="modelo" aria-describedby="modelo">
                                 </div>
 
                                 <div class="col-sm-4">           
-                                    <label for="proveedor" class="col-form-label-sm">PROVEEDOR</label>
+                                    <label for="proveedor" class="col-form-label-sm">Proveedor</label>
                                     <select id="proveedor" name="proveedor" class="form-control form-control-sm" required>
                                         <option value="0">Seleccionar</option>
                                     </select>
                                 </div>
 
                                 <div class="col-sm-4">           
-                                    <label for="conectividad" class="col-form-label-sm">CONECTIVIDAD</label>
+                                    <label for="conectividad" class="col-form-label-sm">Conectividad</label>
                                     <select name="conectividad" id="conectividad" class="form-control form-control-sm">
                                      
                                     </select>
@@ -90,12 +92,15 @@
                             </div> 
                             <div class="row">
                                 <div class="col-sm-4">           
-                                    <label for="no_largo" class="col-form-label-sm">NO LARGO</label>
+                                    <label for="no_largo" class="col-form-label-sm">No Largo</label>
                                     <input value="0" type="text" class="form-control form-control-sm" id="no_largo" name="no_largo">
                                 </div>
                                 <div class="col-sm-4">           
-                                    <label for="clave_elavon" class="col-form-label-sm">CLAVE BANCO</label>
-                                    <input value="0" type="text" class="form-control form-control-sm" id="clave_elavon" name="clave_elavon">
+                                    <label for="bancos" class="col-form-label-sm">Banco</label>
+              
+									  <select id="bancos" name="bancos" class="form-control form-control-sm" required>
+                                        <option value="0">Seleccionar</option>
+                                    </select>
                                 </div>
                             </div>
                             
@@ -120,7 +125,7 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
-    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
     <script src="js/Chart.bundle.min.js"></script>
@@ -132,9 +137,10 @@
     <script>
     var modelos;
         $(document).ready(function() {
-            ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "catalogoxmodeloslink")
+            ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "registrousuarioslink", "catalogoxmodeloslink")
             getProveedor();
-            getConectividad();       
+            getConectividad();     
+			getBancos();
 
                 modelos = $('#modelos').DataTable({
                     language: {
@@ -159,7 +165,7 @@
                         { data: 'proveedor' },
                         { data: 'conectividad' }, 
                         { data: 'no_largo' },
-                        { data: 'clave_elavon' },
+                        { data: 'cve_banco' },
                         { data: 'estatus'}
                         //{ data: 'id'}
                         
@@ -186,9 +192,9 @@
                                 var boton = "";
                                 
                             if(row.estatus == '1'){
-                                    boton =  '<a title="Desactivar" href="#" class="EditModel" data="'+row.Id+'"><i class="fas fa-edit fa-2x "></i></a><a href="#" class="DelModel" data="'+row.Id+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a>';
+                                    boton =  '<a href="#" class="EditModel" data="'+row.Id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelModel" data="'+row.Id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
                                 } else {
-                                    boton = '<a title="Activar" href="#" class="EditModel" data="'+row.Id+'"><i class="fas fa-edit fa-2x "></i></a><a href="#" class="AddModel" data="'+row.Id+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
+                                    boton = '<a href="#" class="EditModel" data="'+row.Id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="AddModel" data="'+row.Id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
                             }
 
                                 return boton;
@@ -214,7 +220,7 @@
                 var messages = {
                    
                     modelo: {
-                        required: "Favor de capturar el Modelo",
+                        required: "Favor de Capturar el Modelo",
                     },
                      proveedor: {
                         required: "Favor de seleccionar proveedor",
@@ -239,7 +245,7 @@
                     var index = $(this).parent().parent().index() ;
                     var data = modelos.row( index ).data();
                     var id = data.Id;
-                    $(".modal-title").html("EDITAR MODELO")
+                    $(".modal-title").html("Editar Modelo")
                     $("#modelId").val(id);
                     $("#btnGrabarModel").html('Editar');
                     $.ajax({
@@ -278,7 +284,7 @@
                         success: function(data, textStatus, jqXHR){
                             var info = JSON.parse(data);
                             $.toaster({
-                                    message: 'Se deshabilitó el Modelo ',
+                                    message: 'Se deshabilito el Modelo ',
                                     title: 'Aviso',
                                     priority : 'success'
                                 });  
@@ -304,9 +310,9 @@
                         success: function(data, textStatus, jqXHR){
                             var info = JSON.parse(data);
                             $.toaster({
-                                    message: 'Se habilitó el Modelo  ',
+                                    message: 'Se habilito el Modelo  ',
                                     title: 'Aviso',
-                                    priority : 'success'
+                                    priority : 'danger'
                                 });  
                             modelos.ajax.reload();
                         },
@@ -343,6 +349,7 @@
                                  conectividad: $("#conectividad").val(),
                                  no_largo:  $("#no_largo").val(),
                                  clave_elavon: $("#clave_elavon").val(),
+								 cve: $("#bancos").val(),
                                  modelid: $("#modelId").val()
                             };
 
@@ -392,7 +399,7 @@
                                         else
                                         {
                                             $.toaster({
-                                            message: "Debes elegir Tipo de Conectividad",
+                                            message: "Debes Elegir Tipo de Conectividad",
                                             title: 'Aviso',
                                             priority : 'warning'
                                             });  
@@ -402,7 +409,7 @@
                                     } else {
                                          
                                         $.toaster({
-                                            message: "Debes elegir El Proveedor",
+                                            message: "Debes Elegir El Proveedor",
                                             title: 'Aviso',
                                             priority : 'warning'
                                         });  
@@ -520,7 +527,7 @@
                 $(document).on("click","#btnNewModel", function() 
                 {
                     cleartext();
-                    $(".modal-title").html("NUEVO MODELO DE TPV");
+                    $(".modal-title").html("Nuevo Modelo de TPV");
 
                     $("#btnGrabarModel").html('Registrar');
 
@@ -599,6 +606,24 @@
                 success: function(data, textStatus, jqXHR){
                     
                     $("#conectividad").html(data);
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert(textStatus)
+                }
+            });
+        }
+		
+		function getBancos() {/* Obtención del conectividad para Modelos */
+
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/catalogosxmodelos_db.php', // call your php file
+                data: { module: 'getBancos' },
+                cache: false,
+                success: function(data, textStatus, jqXHR){
+                    
+                    $("#bancos").html(data);
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

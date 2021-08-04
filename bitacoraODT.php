@@ -10,30 +10,34 @@
         </nav>
        
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>BITACORA ODT</h3>
+            <div class="container-fluid p-5">
+            <div class="row">
+				
+                <div class="col"> <h3>Bitácora ODT</h3><br>
+                <!-- <label for="excelMasivo" class="col-form-label-sm">Carga Masiva Usuarios</label>  
+                <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
+                <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
+                </div>
+                <div class="col">
+                    <a href="layouts/Template_Masivo_Usuarios.csv" download>Template pra Carga Masiva</a>
+                </div>-->
+			    </div>
             </div>
-            <div class="container-fluid p-4 panel-white">
-            
-            
             <div class="row">
                 <div class="col">
-                    <div class="table-responsive">
-                        
-                    
-                    <table id="bitacora"  class="table table-md table-bordered table-responsive" style="width:100%">
+                    <table id="bitacora"  class="table table-md table-bordered " style="width:100%">
                         <thead>
                             <tr>
                                 <th>ODT</th>
-                                <th>COMERCIO</th>
-                                <th>ALTA</th>
-                                <th>ESTATUS</th>
-                                <th>NIVEL</th>
-                                <th>ULTIMA ACT</th>
-                                <th>MODIFICADO POR</th>
-                                <th>HISTORIA SERIE</th>
+                                <th>Comercio</th>
+                                <th>Alta</th>
+                                <th>Estatus</th>
+                                <th>Nivel</th>
+                                <th>Última Act.</th>
+                                <th>Modificado Por</th>
+                                <th>Serie Historia</th>
                             
                                 
                             </tr>
@@ -44,47 +48,44 @@
                         <tfoot>
                             <tr>
                                 <th>ODT</th>
-                                <th>COMERCIO</th>
-                                <th>ALTA</th>
-                                <th>ESTATUS</th>
-                                <th>NIVEL</th>
-                                <th>ULTIMA ACT</th>
-                                <th>MODIFICADO POR</th>
-                                <th>HISTORIA SERIE</th>
+                                <th>Comercio</th>
+                                <th>Alta</th>
+                                <th>Estatus</th>
+                                <th>Nivel</th>
+                                <th>Última Act.</th>
+                                <th>Modificado Por</th>
+                                <th>Serie Historia</th>
                                 
                                 
                             </tr>
                         </tfoot>
                     </table>
-                    </div>
                 <!--<input type="hidden" id="userId" value="0">
                 <button class="btn btn-success" id="btnNewUser">Nuevo Usuario</button>-->
                 </div>
             </div>
-        </div>
+
             <!-- MODAL -->
             <div class="modal fade" tabindex="-1" role="dialog" id="showHistoria" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h3>HISTORIA</h3>
+                <h5 class="modal-title">Historia</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 				<div class="modal-body">
-                <div class="table-responsive">
-                    
                 
-                    <table id="historia"  class="display table table-md table-bordered table-responsive" width="100%">
+                    <table id="historia"  class="display table table-md table-bordered " width="100%">
                         <thead>
                             <tr>
-                                <th>NO SERIE</th>
-                                <th>FECHA MOVIMIENTO</th>
-                                <th>MOVIMIENTO</th>
-                                <th>PRODUCTO</th>
-                                <th>UBICACION</th>
-                                <th>MODIFICADO POR</th>
+                            <th>No. Serie</th>
+                                <th>Fecha Movimiento</th>
+                                <th>Movimiento</th>
+                                <th>Producto</th>
+                                <th>Ubicacion</th>
+                                <th>Modificado Por</th>
                                 
                             </tr>
                         </thead>
@@ -93,17 +94,16 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>NO SERIE</th>
-                                <th>FECHA MOVIMIENTO</th>
-                                <th>MOVIMIENTO</th>
-                                <th>PRODUCTO</th>
-                                <th>UBICACION</th>
-                                <th>MODIFICADO POR</th>
+                                <th>No. Serie</th>
+                                <th>Fecha Movimiento</th>
+                                <th>Movimiento</th>
+                                <th>Producto</th>
+                                <th>Ubicacion</th>
+                                <th>Modificado Por</th>
                                
                             </tr>
                         </tfoot>
                     </table>
-                    </div>
             
 					<div class="modal-footer">
 						<input type="hidden" value="0" id="tpv_instalado" name="tpv_instalado">
@@ -138,7 +138,7 @@
     <script>
     var bitacora;
         $(document).ready(function() {
-            ResetLeftMenuClass("submenureportes","ulsubmenureportes","bitacoraodtlink");
+            ResetLeftMenuClass("submenureportes", "ulsubmenureportes", "repbitacoraodtlink")
            
                
 

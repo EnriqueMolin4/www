@@ -11,12 +11,12 @@
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-5">
-            <h3>EVIDENCIAS</h3>
+            <h3>Evidencias</h3>
             
                 <h5>ODT</h5>
                 <div class="row">
                     <div class="col">
-                        <label for="evidencia_odt" class="col-form-label-sm">VENCIMIENTO DESDE</label>
+                        <label for="evidencia_odt" class="col-form-label-sm">Vencimiento Desde</label>
                         <input type="text" class="form-control form-control-sm searchODT" id="evidencia_odt" aria-describedby="evidencia_odt">
                         <a href="#" id="btnBuscar" name="btnBuscar" class="btn btn-success">Buscar</a>
                     </div>

@@ -157,7 +157,7 @@
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="tecnico" class="col-form-label-sm">Tecnico</label><?php if ( $_SESSION['tipo_user'] == 'supOp' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
+                                <label for="tecnico" class="col-form-label-sm">Tecnico</label><?php if ($_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
                                 <input type="text" class="form-control form-control-sm" id="tecnico" aria-describedby="tecnico" readonly>
                             </div>
                             <div class="col">           
@@ -219,19 +219,19 @@
                         </div>
                         <div class="row">
                             <div class="col">           
-                                    <label for="version" class="col-form-label-sm">Version</label>
+                                    <label for="version" class="col-form-label-sm">Version Instalada</label>
                                     <select  class="form-control form-control-sm" id="version" aria-describedby="version" readonly>
                                         <option value="0">Seleccionar</option>
                                     </select>
                             </div>
                             <div class="col">           
-                                    <label for="aplicativo" class="col-form-label-sm">Aplicativo</label>
+                                    <label for="aplicativo" class="col-form-label-sm">Aplicativo Instalado</label>
                                     <select  class="form-control form-control-sm" id="aplicativo" aria-describedby="aplicativo" readonly>
                                         <option value="0">Seleccionar</option>
                                     </select>
                             </div>
                             <div class="col">           
-                                <label for="producto" class="col-form-label-sm">Producto</label>
+                                <label for="producto" class="col-form-label-sm">Producto Instalado</label>
                                 <select  class="form-control form-control-sm" id="producto" aria-describedby="producto" disabled>
                                     <option value="0">Seleccionar</option>
                                 </select>
@@ -240,11 +240,32 @@
                                 <label for="rollos_instalar" class="col-form-label-sm">Rollos a Entregar</label>
                                 <input type="text" class="form-control form-control-sm" id="rollos_instalar" aria-describedby="rollos_instalar" readonly>
                             </div>
+                           
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col">           
+                                    <label for="version_ret" class="col-form-label-sm">Version Retirada</label>
+                                    <select  class="form-control form-control-sm" id="version_ret" aria-describedby="version" readonly>
+                                        <option value="0">Seleccionar</option>
+                                    </select>
+                            </div>
+                            <div class="col">           
+                                    <label for="aplicativo_ret" class="col-form-label-sm">Aplicativo Retirado</label>
+                                    <select  class="form-control form-control-sm" id="aplicativo_ret" aria-describedby="aplicativo" readonly>
+                                        <option value="0">Seleccionar</option>
+                                    </select>
+                            </div>
+                            <div class="col">           
+                                <label for="producto_ret" class="col-form-label-sm">Producto Retirado</label>
+                                <select  class="form-control form-control-sm" id="producto_ret" aria-describedby="producto" readonly>
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
                             <div class="col">           
                                 <label for="rollos_entregados" class="col-form-label-sm">Rollos Entregados</label>
                                 <input type="text" class="form-control form-control-sm" id="rollos_entregados" aria-describedby="rollos_entregados" readonly>
                             </div>
-                            
                         </div>
                         <div class="row">
                             <div class="col">           
@@ -299,7 +320,7 @@
                             </div>
                             
                         </div>
-						<div class="row showcausacambio">
+                        <div class="row showcausacambio">
                             <div class="col-sm-3">           
                                 <label for="causas_cambio" class="col-form-label-sm">Causas de Cambio</label>
                                 <select  class="form-control form-control-sm" id="causas_cambio" aria-describedby="causas_cambio">
@@ -307,7 +328,6 @@
                                 </select>
                             </div>
                         </div>
-                        
                         <div class="row">
                             <div class="col">           
                                 <label for="comentarios_cierre" class="col-form-label-sm">Comentarios de Cierre</label>
@@ -448,7 +468,7 @@
             getModelos();
             getConectividad();
             getCarrier();
-			getCausasCambios();
+            getCausasCambios();
 
             //GET info from URL
             const queryString = window.location.search;
@@ -768,8 +788,11 @@
                                             $("#tpv").val(element.tpv_instalado);
                                             $("#tpv_retirado").val(element.tpv_retirado); 
                                             $("#version").val(element.version);
+                                            $("#version_ret").val(element.version_ret);
                                             $("#aplicativo").val(element.aplicativo);
+                                            $("#aplicativo_ret").val(element.aplicativo_ret);
                                             $("#producto").val(element.producto);
+                                            $("#producto_ret").val(element.producto_ret);
                                             $("#rollos_instalar").val(element.rollos_instalar);
                                             $("#rollos_entregados").val(element.rollos_entregados);
                                             $("#sim_instalado").val(element.sim_instalado);
@@ -842,15 +865,28 @@
                                             {
                                                 $("#divBtnCV").show();
                                                 $("#comentarios_valid").show();
+                                                $("#rowRechazos").show();
+                                                
+                                                $("#rowSubRechazos").show();
                                             }
-											
-											if( element.tipo_servicio == '2' ) {
+
+                                            if( element.tipo_servicio == '2' || element.tipo_servicio == '8' || element.tipo_servicio == '13' || element.tipo_servicio == '14' ||  element.tipo_servicio == '26' || element.tipo_servicio == '30' || element.tipo_servicio == '33' || element.tipo_servicio == '45') {
                                                 $(".showcausacambio").show();
                                             } else {
                                                 $(".showcausacambio").hide();
                                             }
 
+                                            
+                                            $("#cancelado").val(element.cancelado);
+
                                             tipodeUsuario(element.estatus);
+                                            if (element.estatus_servicio == '15' )
+                                            {
+                                                $("#rowRechazos").show();
+                                                $("#rowSubRechazos").show();
+                                                $("#rechazo").val(element.rechazo);
+                                                $("#subrechazo").val(element.subrechazo);
+                                            }
                                     })  
 
                                     $("#divEvento").show();
@@ -869,7 +905,7 @@
                  
             })
 
-            $("#btnUpdateEvento").on("click",function() {
+        $("#btnUpdateEvento").on("click",function() {
             var validar = 0;
             var msg = '';
 
@@ -880,6 +916,8 @@
             var foliotelecarga = $("#folio_telecarga").val();
             var version = $("#version").val();
             var aplicativo = $("#aplicativo").val();
+            var version_ret = $("#version_ret").val();
+            var aplicativo_ret = $("#aplicativo_ret").val();
             var receptorservicio = $("#receptor_servicio").val();
             var tecnico = 	$("#tecnicoid").val();
 			var servicioId = $("#servicioId").val();
@@ -900,9 +938,9 @@
 			var tvpRetBase = $("#tvpRetBase").is(":checked") ? 1 : 0;
 			
 			// Rechazo
-			var rechazo = $("#rechazo").is(":checked") ? 1 : 0;
-			var subrechazo = $("#subrechazo").is(":checked") ? 1 : 0;
-			var cancelado = $("#cancelado").is(":checked") ? 1 : 0;
+			var rechazo = $("#rechazo").val();
+			var subrechazo = $("#subrechazo").val();
+			var cancelado = $("#cancelado").val();
 			
 			//DTOS ACtulizables
             var tpv = $("#tpv").val();
@@ -919,6 +957,7 @@
             var sim_retirado = 	$("#sim_retirado").val();
             var simReData = $("#simReData").val();
             var producto = 	$("#producto").val();
+            var producto_ret = 	$("#producto_ret").val();
 
             //Rollos
             var rollosInstalar = $("#rollos_instalar").val();
@@ -929,8 +968,8 @@
             var faltaEvidencia = $("#faltaEvidencia").prop('checked') ? 1 : 0 ;
             var faltaInformacion = $("#faltaInformacion").prop('checked') ? 1 : 0 ;
             var faltaUbicacion = $("#faltaUbicacion").prop('checked') ? 1 : 0 ;
-			
-			var causacambio = $("#causas_cambio").val();
+
+            var causacambio = $("#causas_cambio").val();
             
             //Validar si es obligatorio la TVP INStalada
             if( PermisosEvento.tvp_instalada == '1' &&  estatus == '13' ) {
@@ -1006,23 +1045,28 @@
                 validar++;
                 msg += "Se necesita mas información en las observaciones (minimo 200 caracteres) \n ";
             }
-			
-			//Validar cuando sea Cambio que pongan la causa 
-            if( estatus == '2' || estatus == '8' || estatus == '13' || estatus == '14' || estatus == '17' || estatus == '26' || estatus == '30' || estatus == '33' || estatus == '45') {
-                if(causacambio == '0' ) {
-                    validar++;
-                    msg += "Se necesita La causa de cambio  \n ";
-                }
-            }
+
+            //Validar cuando sea Cambio que pongan la causa 
+            if(estatus == '14' || estatus == '15') {
+				//No Aplica
+			} else {
+            
+				if( servicioId == '2' || servicioId == '8' || servicioId == '13' || servicioId == '14' ||  servicioId == '26' || servicioId == '30' || servicioId == '33' || servicioId == '45') {
+					if(causacambio == '0' ) {
+						validar++;
+						msg += "Se necesita La causa de cambio  \n ";
+					}
+				}
+			}
 
 			if(validar == 0 ) {
 				var dnd = { module: 'cerrarEvento',eventoId : eventoId, odt : odt,comentario: comentario,estatus:estatus,foliotelecarga:foliotelecarga, odtGetNet : odtGetNet, odtNotificado : odtNotificado,
 							odtDescarga: odtDescarga, tvpRetBateria: tvpRetBateria, tvpRetEliminador: tvpRetEliminador, tvpRetTapa: tvpRetTapa, tvpRetCable: tvpRetCable, tvpRetBase: tvpRetBase,
 							rechazo: rechazo, subrechazo: subrechazo,cancelado: cancelado,tpv:tpv,tpvRetirado : tpv_retirado,idCaja: idcaja,afiliacionAmex:afiliacion_amex ,idamex:idamex,
-                            simInstalado:sim_instalado, simRetirado: sim_retirado,producto: producto,version: version,aplicativo:aplicativo,receptorservicio:receptorservicio, 
+                            simInstalado:sim_instalado, simRetirado: sim_retirado,producto: producto,version: version,aplicativo: aplicativo,producto_ret: producto_ret,version_ret: version_ret,aplicativo_ret:aplicativo_ret,receptorservicio:receptorservicio, 
                             tvpInModelo:tvpInModelo,tpvInConnect:tpvInConnect ,tvpReModelo, tvpReModelo, tpvReConnect: tpvReConnect, simInData:simInData, simReData:simReData,tecnico:tecnico, 
                             rollosInstalar:rollosInstalar, rollosInstalados:rollosInstalados,servicioId:servicioId,fechaatencion:fecha_atencion,horallegada:hora_llegada,horasalida: hora_salida, 
-                            faltaSerie:faltaSerie,faltaEvidencia:faltaEvidencia,faltaInformacion:faltaInformacion,faltaUbicacion:faltaUbicacion,causacambio: causacambio  };
+                            faltaSerie:faltaSerie,faltaEvidencia:faltaEvidencia,faltaInformacion:faltaInformacion,faltaUbicacion:faltaUbicacion,causacambio: causacambio };
 				
 				 $.ajax({
 					type: 'POST',
@@ -1032,14 +1076,14 @@
 					success: function(data){    
 							 
                             Swal.fire({
-                                title: 'Cierre de Eventos',
+                                title: 'Cierre de Eventos ',
                                 text: "Cerrado Existosamente Deseas<br> Enviar el Evento al Banco?",
                                 showDenyButton: true,
                                 confirmButtonText: `Enviar`,
                                 denyButtonText: `No`,
                                 icon: 'success',
                             }).then((result) => {
-                                if (result.isConfirmed) {    
+                                if (result.isConfirmed) { 
                                     sendInfoBanco(odt)
                                 } else if (result.isDenied) {
                                     window.location.href = "eventos.php";
@@ -1094,7 +1138,61 @@
             }
         })
 
+            //Update SERIE RETIRADA INSTALADA INFO
+            $("#tpvInDataModelo").on('change', function() {
+                
+                updateSerieData($("#tpv").val(), 'modelo',$("#tpvInDataModelo").val() );
+
+            })
+
+            $("#tpvInDataConnect").on('change', function() {
+                
+                updateSerieData($("#tpv").val(), 'conectividad',$("#tpvInDataConnect").val() );
+
+            })
+
+            $("#tpvReDataModelo").on('change', function() {
+                
+                updateSerieData($("#tpv_retirado").val(), 'modelo',$("#tpvReDataModelo").val() );
+
+            })
+
+
+            $("#tpvReDataConnect").on('change', function() {
+                
+                updateSerieData($("#tpv_retirado").val(), 'conectividad',$("#tpvReDataConnect").val() );
+
+            })
+
         });
+
+        function updateSerieData(tpv,tipo,dato) {
+
+            if(tpv.length > 0 && dato > 0 ) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'modelos/eventos_db.php', // call your php file
+                    data: { module: 'updSerie', tpv: tpv, tipo: tipo, dato: dato },
+                    dataType: "json",
+                    success: function(data) {
+                         
+                        $.toaster({
+                            message: data,
+                            title: 'Aviso',
+                            priority : 'success'
+                        });
+                    },
+                    error: function(error) {
+                         
+                        $.toaster({
+                            message: error.responseText,
+                            title: 'Aviso',
+                            priority : 'success'
+                        });
+                    }
+                })
+            }
+        }
 
         function sendInfoBanco(odt) {
 
@@ -1106,11 +1204,30 @@
                 dataType: "json",
                 success: function(data) {
                     var msg = 'Se envio la odt '+odt+' con Exito';
-                   if(data.evento.result != '201') {
+
+              
+                    
+                   if(data.evento.result.status == '400') 
+                   {
+                        msg = " LA ODT presenta algunos campos erroneos \n"
+                       $.each(data.evento.result.messages, function(index,message) {
+                            msg += message;
+                       })
+
+                       Swal.fire({
+                        text: msg,
+                        confirmButtonText: `OK`,
+                        denyButtonText: `No`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {    
+                                //window.location.href = "eventos.php";
+                            }  
+                        });
+                   } else if(data.evento.result == '201') {
                         
                         Swal.fire({
-                        text: data.evento.result.messages[0],
-                        confirmButtonText: `Volver a Enviar`,
+                        text: msg,
+                        confirmButtonText: `OK`,
                         denyButtonText: `No`,
                         }).then((result) => {
                             if (result.isConfirmed) {    
@@ -1118,24 +1235,52 @@
                             }  
                         });
 
-                   } else {
+                   } else if (data.evento.result.status == 410 ) {
+						msg = " LA ODT presenta algunos campos erroneos \n"
+                        $.each(data.evento.result.messages, function(index,message) {
+                            msg += message+" \n ";
+                       })
 
                         Swal.fire({
                             text: msg,
                             confirmButtonText: `OK`,
                         }).then((result) => {
                             if (result.isConfirmed) {    
-                                window.location.href = "eventos.php";
+                                //window.location.href = "eventos.php";  
                             }  
                         });
-                   }
+                   } else if (data.evento.result.status == 404 ) {
+						msg = " LA ODT presenta algunos campos erroneos \n"
+                        $.each(data.evento.result.messages, function(index,message) {
+                            msg += message+" \n ";
+                        })
+
+                        Swal.fire({
+                            text: msg,
+                            confirmButtonText: `OK`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {    
+                                //window.location.href = "eventos.php";
+                            }  
+                        });
+                    } else {
+
+                        Swal.fire({
+                            text: data.evento.result,
+                            confirmButtonText: `OK`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {    
+                                //window.location.href = "eventos.php";
+                            }  
+                        });
+                    } 
 
                 },
                 error: function(error){
                     alert(error.responseText)
                 }
-            })  
-        }
+            }) 
+		}
 
         function existeFecha(fecha){
             var fechaf = fecha.split("-");
@@ -1328,7 +1473,7 @@
             $("#rowSubRechazos").hide();
             $("#btnUpdateEvento").attr('disabled',true);
 
-            if(  $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'callcenterADM' || $("#tipo_user").val() == 'supOp' ) {
+            if(  $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'callcenterADM'  ) {
                 $("#rollos_entregados").attr('readonly',false);
                 $("#rollos_instalar").attr('readonly',false);
                 $("#comentarios_cierre").attr('readonly',false);
@@ -1338,6 +1483,9 @@
                 $("#producto").attr('disabled',false)
                 $("#version").attr('readonly',false)
                 $("#aplicativo").attr('readonly',false)
+                $("#producto_ret").attr('readonly',false)
+                $("#version_ret").attr('readonly',false)
+                $("#aplicativo_ret").attr('readonly',false)
                 $("#receptor_servicio").attr('readonly',false);
                 //CIERRES CALLCENTER
                 $("#tecnico").attr('readonly',false);
@@ -1376,6 +1524,9 @@
                 $("#producto").attr('disabled',true)
                 $("#version").attr('readonly',true)
                 $("#aplicativo").attr('readonly',true)
+                $("#producto_ret").attr('readonly',true);
+                $("#version_ret").attr('readonly',true)
+                $("#aplicativo_ret").attr('readonly',true)
                 $("#receptor_servicio").attr('readonly',true);
 
                 $("#odtGetNet").attr('disabled',true)
@@ -1490,6 +1641,9 @@
             $("#version").val("");
             $("#aplicativo").val("");
             $("#producto").val("");
+            $("#version_ret").val("");
+            $("#aplicativo_ret").val("");
+            $("#producto_ret").val("");
             $("#rollos_instalar").val("");
             $("#rollos_entregados").val("");
             $("#sim_instalado").val("");
@@ -1611,7 +1765,8 @@
                 success: function(data){
                     console.log(data);
                 
-                $("#producto").html(data);
+                    $("#producto").html(data);
+                    $("#producto_ret").html(data);
                     
                 },
                 error: function(error){
@@ -1721,7 +1876,8 @@
                 success: function(data){
                     console.log(data);
                 
-                $("#version").html(data);
+                    $("#version").html(data);
+                    $("#version_ret").html(data);
                 
                     
                 },
@@ -1741,7 +1897,8 @@
                 success: function(data){
                     console.log(data);
                 
-                $("#aplicativo").html(data);
+                    $("#aplicativo").html(data);
+                    $("#aplicativo_ret").html(data);
                 
                     
                 },
@@ -1813,8 +1970,8 @@
                 }
             });
         }
-		
-		function getCausasCambios() {
+
+        function getCausasCambios() {
 
             $.ajax({
                 type: 'GET',

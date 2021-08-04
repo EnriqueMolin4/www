@@ -9,43 +9,41 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>EXPEDIENTES</h3>
-            </div>
-            <div class="row">
+            <div class="container-fluid p-5">
+                <h3>Expediente</h3>
+            
+                    <div id="container" class="container">
+                        <div class="row mx-md-n5">
                             <div class="col py-3 px-md-5 bordered col-example">
                                 <button class="btn btn-success" id="btnNuevoExpediente" name="btnNuevoExpediente">Nuevo Expediente</button>
                             </div>
                         </div>
-            <div class="container-fluid p-1 panel-white">
-                
-                <div class="table-responsive">
-                    <table id="expedientes"  class="table table-md table-bordered ">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>NOMBRE</th>
-                                <th>CORREO</th>
-                                <th>PUESTO</th>
-                                <th>FECHA ALTA</th>
-                                <th>ESTATUS</th>
-                                <th>ACCION</th>       
-                            </tr>
-                        </thead>
-                        <tbody>
+                        <table id="expedientes"  class="table table-md table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Puesto</th>
+                                    <th>Fecha Alta</th>
+                                    <th>Estatus</th>
+                                    <th>Accion</th>       
+                                </tr>
+                            </thead>
+                            <tbody>
                             
-                        </tbody>
+                            </tbody>
                         </table>
-                </div>   
+                        
 
                         <!-- MODAL Avisos -->
                         <div class="modal fade" tabindex="-1" role="dialog" id="showExpediente">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">CREACION EVENTO</h5>
+                                        <h5 class="modal-title">Creación Evento</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                         </button>
@@ -53,43 +51,43 @@
                                 <div class="modal-body">
                                     <form id="formExpediente" name="formExpediente">
                                         <ul class="nav nav-tabs">
-                                            <li class="nav-item"><a  href="#principal" class="nav-link active" data-toggle="tab">PRINCIPAL</a></li>
-                                            <li class="nav-item"><a href="#papeleria" class="nav-link" data-toggle="tab">PAPELERIA</a></li>
-                                            <li class="nav-item"><a href="#bancarios" class="nav-link" data-toggle="tab">DATOS BANCARIOS</a></li>
-                                            <li class="nav-item"><a href="#beneficiarios" class="nav-link" data-toggle="tab">BENEFICIARIOS</a></li>
-                                            <li class="nav-item"><a href="#baja" class="nav-link" data-toggle="tab">BAJA</a></li>
-                                            <li class="nav-item"><a href="#reingreso" class="nav-link" data-toggle="tab">REINGRESO</a></li>
+                                            <li class="nav-item"><a  href="#principal" class="nav-link active" data-toggle="tab">Principal</a></li>
+                                            <li class="nav-item"><a href="#papeleria" class="nav-link" data-toggle="tab">Papeleria</a></li>
+                                            <li class="nav-item"><a href="#bancarios" class="nav-link" data-toggle="tab">Datos Bancarios</a></li>
+                                            <li class="nav-item"><a href="#beneficiarios" class="nav-link" data-toggle="tab">Beneficiarios</a></li>
+                                            <li class="nav-item"><a href="#baja" class="nav-link" data-toggle="tab">Baja</a></li>
+                                            <li class="nav-item"><a href="#reingreso" class="nav-link" data-toggle="tab">Reingreso</a></li>
                                         </ul>
                                         <div class="tab-content ">
                                             
                                                 <div class="tab-pane active" id="principal">
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="exp_nombre" class="col-form-label-sm">NOMBRE</label>
+                                                            <label for="exp_nombre" class="col-form-label-sm">Nombre</label>
                                                             <input id="exp_nombre" name="exp_nombre" class="form-control form-control-sm" >
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="ticket" class="col-form-label-sm">FECHA INGRESO</label>
+                                                            <label for="ticket" class="col-form-label-sm">Fecha Ingreso</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_ingreso" name="doc_ingreso">
                                                         </div>
                                                         <div class="col">           
-                                                            <label for="ticket" class="col-form-label-sm">FECHA ALTA</label>
+                                                            <label for="ticket" class="col-form-label-sm">Fecha Alta</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_alta" name="doc_alta">
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="ticket" class="col-form-label-sm">CAPACITACION</label>
+                                                            <label for="ticket" class="col-form-label-sm">Capacitacion</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_capacitacion" name="doc_capacitacion">
                                                         </div>
                                                         <div class="col">           
-                                                            <label for="ticket" class="col-form-label-sm">FECHA ENTREGA UNIFORME</label>
+                                                            <label for="ticket" class="col-form-label-sm">Fecha Entrega Uniforme</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_uniforme" name="doc_uniforme">
                                                         </div>
                                                         <div class="col">           
-                                                            <label for="ticket" class="col-form-label-sm">TALLA</label>
+                                                            <label for="ticket" class="col-form-label-sm">Talla</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_talla" name="doc_talla">
                                                         </div>
                                                     </div>
@@ -273,21 +271,21 @@
                                                 <div class="tab-pane" id="bancarios">
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="doc_banco" class="col-form-label-sm">BANCO</label>
+                                                            <label for="doc_banco" class="col-form-label-sm">Banco</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_banco" name="doc_banco" aria-describedby="doc_ingreso">
                                                         </div>
                                                         <div class="col">           
-                                                            <label for="doc_cuenta" class="col-form-label-sm">CUENTA</label>
+                                                            <label for="doc_cuenta" class="col-form-label-sm">Cuenta</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_cuenta" name="doc_cuenta" aria-describedby="doc_alta">
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="doc_clabe" class="col-form-label-sm">CLABE</label>
+                                                            <label for="doc_clabe" class="col-form-label-sm">Clabe</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_clabe" name="doc_clabe" aria-describedby="doc_ingreso">
                                                         </div>
                                                         <div class="col">           
-                                                            <label for="doc_tarjeta" class="col-form-label-sm">TARJETA</label>
+                                                            <label for="doc_tarjeta" class="col-form-label-sm">Tarjeta</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_tarjeta" name="doc_tarjeta" aria-describedby="doc_alta">
                                                         </div>
                                                     </div>
@@ -295,11 +293,11 @@
                                                 <div class="tab-pane" id="beneficiarios">
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="doc_nombrebeneficiario" class="col-form-label-sm">NOMBRE</label>
+                                                            <label for="doc_nombrebeneficiario" class="col-form-label-sm">Nombre</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_nombrebeneficiario" name="doc_nombrebeneficiario" aria-describedby="doc_ingreso">
                                                         </div>
                                                         <div class="col">           
-                                                            <label for="doc_parentesco" class="col-form-label-sm">PARENTEZCO</label>
+                                                            <label for="doc_parentesco" class="col-form-label-sm">Parentesco</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_parentesco" name="doc_parentesco" aria-describedby="doc_alta">
                                                         </div>
                                                     </div>
@@ -317,13 +315,13 @@
                                                 <div class="tab-pane" id="baja">
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="doc_fechabaja" class="col-form-label-sm">FECHA BAJA</label>
+                                                            <label for="doc_fechabaja" class="col-form-label-sm">Fecha Baja</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_fechabaja" name="doc_fechabaja" aria-describedby="doc_ingreso">
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="doc_motivobaja" class="col-form-label-sm">MOTIVO</label>
+                                                            <label for="doc_motivobaja" class="col-form-label-sm">Motivo</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_motivobaja" name="doc_motivobaja" aria-describedby="doc_ingreso">
                                                         </div>
                                                     </div>
@@ -331,7 +329,7 @@
                                                 <div class="tab-pane" id="reingreso">
                                                     <div class="row">
                                                         <div class="col">           
-                                                            <label for="doc_reingreso" class="col-form-label-sm">REINGRESO</label>
+                                                            <label for="doc_reingreso" class="col-form-label-sm">ReIngreso</label>
                                                             <input type="text" class="form-control form-control-sm" id="doc_reingreso" name="doc_reingreso" aria-describedby="doc_ingreso">
                                                         </div>
                                                     </div>
@@ -349,33 +347,30 @@
                                 </div> 
                             </div>
                         </div>
-            </div>
+                    </div>
 
             </div>
         </main>
         <!-- page-content" -->
     </div>
     <!-- page-wrapper -->
-        <!-- using online scripts -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-            crossorigin="anonymous"></script>
+
     <!-- using online scripts -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-            crossorigin="anonymous"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-            crossorigin="anonymous"></script>
-        <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-        <script src="js/jquery-ui.min.js"></script>
-        <script src="js/moment-with-locales.js"></script>
-        <script src="js/Chart.bundle.min.js"></script>
-        <script type="text/javascript" src="js/jquery.datetimepicker.full.min.js"></script>
-        <script type="text/javascript" src="js/jquery.toaster.js"></script>
-        <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
-        <script src="js/main.js"></script>
-        <script type="text/javascript" src="js/peticiones.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/moment-with-locales.js"></script>
+    <script src="js/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/jquery.datetimepicker.full.min.js"></script>
+    <script type="text/javascript" src="js/jquery.toaster.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
+    <script src="js/main.js"></script>
+    <script type="text/javascript" src="js/expedientes.js"></script> 
 </body>
 
 </html>

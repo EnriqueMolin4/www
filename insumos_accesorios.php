@@ -14,10 +14,10 @@
            
             </div>
             <div class="container-fluid p-5">
-            <h3>Insumos & Accesorios</h3>
+            <h3>Insumos & Accesorios </h3>
 			<?php  
-			if( searchMenuEdit($_SESSION['Modules'],'url','insumos_accesorios') == '1') { ?>
-            <div class="row">
+			if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
+            <!--<div class="row">
                 <div class="col-sm-6">
                     <label for="excelMasivo" class="col-form-label-sm">Alta en Almacén Masivos</label> 
                     <input class="input-file" type="file" id="excelMasivoInventarios" name="excelMasivoInventarios">
@@ -29,10 +29,10 @@
             <div class="row">
                 <div class="col-sm-6">
                     <button class="btn btn-warning btn-sm" id="btnUpdateExcelInventarios">Actualizar Series</button>
-                </div>    
-            </div> <br> 
+                </div>   
+            </div>-->  <br> 
 		    <?php } ?>
-            <h5>Búsqueda</h5>
+            <h5>Busqueda</h5>
                 <div class="row  mb-4">
                     <div class="col-sm-3">
                         <label for="tipo_producto" class="col-form-label-sm">Tipo</label>
@@ -41,47 +41,19 @@
                                 <option value="3">Insumos</option>
                                 <option value="4">Accesorios</option>
                         </select>
-                    </div>  
-                    <!--<div class="col">
-                        <label for="tipo_ubicacion" class="col-form-label-sm">Ubicación</label>
-                        <select id="tipo_ubicacion" name="tipo_ubicacion" class="form-control form-control-sm searchInventario">
-                                <option value="0" selected>Seleccionar</option>
-                        </select>
                     </div>   
-					 <div class="col">
-                        <label for="tipo_estatusubicacion" class="col-form-label-sm">Estatus Ubicación</label>
-                        <select id="tipo_estatusubicacion" name="tipo_estatusubicacion" class="form-control form-control-sm searchInventario">
-                                <option value="0" selected>Seleccionar</option>
-                        </select>
-                    </div>   
-                    <div class="col">
-                        <label for="tipo_estatus" class="col-form-label-sm">Estatus</label>
-                        <select id="tipo_estatus" name="tipo_estatus" class="form-control form-control-sm searchInventario">
-                                <option value="0" selected>Seleccionar</option>
-                        </select>
-                    </div> -->  
                     
                 </div>
-				<!--<div class="d-flex justify-content-end">
-				<?php if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
-					<div class="col-sm-3 m-1">
-					<input type="text" class="form-control form-control-sm" id="txtNoSerieEntrada" name="txtNoSerieEntrada">
-					</div>
-					<div class="col-sm-2">
-					
-					<a href="#" class="btn btn-success" id="btnEntradaAlmacen">Entrada Almacén</a>
-					
-					</div>
-				<?php  } ?>
-				</div>-->
-                <table id="insumos"  class="table table-md table-bordered ">
+				
+                <table id="inventario"  class="table table-md table-bordered ">
                     <thead>
                         <tr>
                             <th>Tipo</th>
                             <th>Producto</th>
-							<th>Estatus</th>
-							<th>Estatus Ubicacion</th>
+                            <th>Estatus</th>
+                            <th>Ubicacion</th>
                             <th>Fecha Actualizacion</th>
+                            <th>Fecha Creacion</th>
                             <th>Cantidad</th>
                             <th>Accion</th>
                         </tr>
@@ -235,7 +207,7 @@
     <script type="text/javascript" src="js/jquery.toaster.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
     <script src="js/main.js"></script>
-    <script type="text/javascript" src="js/insumos.js"></script> 
+    <script type="text/javascript" src="js/insumosNEW.js"></script> 
 </body>
 
 </html>

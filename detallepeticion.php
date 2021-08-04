@@ -13,79 +13,72 @@
             <div id="overlay" class="overlay">
            
             </div>
-            <div class="page-title">
-                <h3>DETALLE DE PETICION</h3>
-            </div>
-            <div class="container-fluid p-4 panel-white">
-            
+            <div class="container" class="container">
+            <h3>Detalle Peticion</h3>
  
                 <div class="row p-3"> 
                     <div class="col-4">
-                        <p><h4>SUPERVISOR:</h4>   
-                            <span id="txtSupervisor" style="font-weight: bold;"></span>
+                        <p><h5>Supervisor:</h5>   
+                            <span id="txtSupervisor" style="font-size: 14px; font-weight: bold;"></span>
                         </p>
                     </div>   
                     <div class="col-4">
-                       <p><h4>CREADO POR: </h4>   
-                            <span id="txtCreadopor" style="font-weight: bold;"></span>
+                       <p><h5>Creado Por: </h5>   
+                            <span id="txtCreadopor" style="font-size: 14px; font-weight: bold;"></span>
                         </p>
                     </div> 
                     <div class="col-4">
-                       <p><h4>FECHA: </h4>   
-                            <span id="txtFecha" style="font-weight: bold;"></span>
+                       <p><h5>Fecha: </h5>   
+                            <span id="txtFecha" style="font-size: 14px; font-weight: bold;"></span>
                         </p>
                     </div>
                 </div>
-               <div class="table-responsive">
-
-                    <table class="table table-md table-bordered table-responsive " id="tplDetalle" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th width="200px">TECNICO</th>
-                                <th width="200px">TIPO</th>
-                                <th width="200px">INSUMO</th>
-                                <th width="200px">CONECTIVIDAD</th>
-                                <th width="200px">VERSION</th>
-                                <th width="200px">CANTIDAD</th>   
-                                <th width="200px">ACCION</th>                         
-                            </tr>
-                        </thead>
+               
+                <table class="table table-md table-bordered " id="tplDetalle" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>TECNICO</th>
+                            <th>TIPO</th>
+                            <th>INSUMO</th>
+                            <th>CONECTIVIDAD</th>
+                            <th>VERSION</th>
+                            <th>CANTIDAD</th>   
+                            <th>ACCION</th>                         
+                        </tr>
+                    </thead>
                     <tbody>
                     
                     </tbody>                    
-                    </table>
-                </div>
-
-
+                </table>
                 <div class="row p-2">
                     <div class="col-md-6">
                         <div class="form-group ">
-                            <label for="no_guia">No. GUIA:</label>
+                            <label for="no_guia">No Guia:</label>
                             <input class="form-control"  id="no_guia">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group ">
-                            <label for="codigo_rastreo">CODIGO RASTREO:</label>
+                            <label for="codigo_rastreo">Codigo Rastreo:</label>
                             <input class="form-control"  id="codigo_rastreo">
                         </div>
                     </div>
-                </div>  
+                </div>	
                 <div class="row p-2">
                     
                     <div class="form-group ">
-                        <label for="comment">COMENTARIOS:</label>
+                        <label for="comment">Comentarios:</label>
                         <textarea class="form-control" rows="3" cols="100" id="comentario"></textarea>
                     </div>
                
                 </div>
                 <div class="row p-3">
                     <div class="col-5 mb-2 row">
-                        <button type="button" class="btn btn-warning mb-3 " id="btnRegresar" style="margin-right: 10px;">Regresar</button>
-                        <button type="button" class="btn btn-success mb-3 " id="btnEnvio">Generar Envio</button>
-                    </div>
+                        <button type="button" class="btn btn-warning mb-3 " id="btnRegresar">Regresar</button> 
+						<button type="button" class="btn btn-success mb-3 " id="btnEnvio">Generar Envio</button>
+					</div>
                 </div>
-                
+				
 
                 <br />
                 <input type="hidden" id="peticionId" name="peticionId" value="0">
@@ -126,10 +119,10 @@
                             <table class="table"   id="tplSeries" style="width:100%">
                             <thead>
                                     <tr>
-                                        <th>No. SERIE</th>
-                                        <th>MODELO</th>
-                                        <th>PRODUCTO</th>
-                                        <th>ACCION</th>                   
+                                        <th>NoSerie</th>
+                                        <th>Modelo</th>
+                                        <th>Producto</th>
+                                        <th>Accion</th>                   
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -188,8 +181,8 @@
             searching: true,
             responsive: true,
             lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
-            order: [[ 0, "ASC" ]],  
-            dom: 'lfrtip',    
+            order: [[ 0, "ASC" ]],	
+            dom: 'lfrtip',	  
             ajax: {
                 url: 'modelos/almacen_db.php',
                 type: 'POST',
@@ -320,7 +313,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Es necesario ingresar la guía y el código rastreo.', 
+                    text: 'Es necesario poner la Guia y el codigo rastreo',
                     footer: 'Volver a intentar'
                 })
             }
@@ -333,7 +326,7 @@
             if( $("#sPend").html() != $("#sLoad").html()  ) {
 
                 Swal.fire({
-                    title: 'La petición no esta completa deseas:',
+                    title: 'La peticion no esta completa deseas:',
                     showDenyButton: true,
                     showCancelButton: true,
                     confirmButtonText: `Grabar`,
@@ -433,7 +426,7 @@
             error: function(error){
                 var demo = error;
             }
-        })      
+        })		
     }
 
     function loadInfo(peticionId) {
@@ -457,7 +450,7 @@
                 error: function(error){
                     var demo = error;
                 }
-        })      
+        })		
     }
 
     
@@ -476,7 +469,7 @@
                 error: function(error){
                     var demo = error;
                 }
-        })      
+        })		
     }
 
     function validarSerie(serie,tbl) {
@@ -509,7 +502,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Esta serie ya no esta en el almacén o no es del Tipo Seleccionado',
+                            text: 'Esta serie ya no esta en el almacen o no es del Tipo Seleccionado',
                             footer: 'Favor de contactar con almacenista'
                         })
                     }
@@ -527,10 +520,10 @@
             Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Es necesario ingresar el Producto',
+                    text: 'Es necesario poner el Producto',
                     footer: 'Volver a intentar'
                 })
-        }   
+        }	
     }
 
     </script> 

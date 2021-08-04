@@ -12,7 +12,7 @@
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-5">
-            <h3>CP x Plazas (<?php echo $_GET['nombre']; ?> )</h3>
+            <h3>CP x Territorio (<?php echo $_GET['nombre']; ?> )</h3>
             <!--
                 <div class="row">
                         <div class="col-sm-5"> 
@@ -25,7 +25,7 @@
                         </div>
                 </div>
                 -->
-                <a href="plazas.php" class="btn btn-primary">Regresar</a>
+                <a href="territorios.php" class="btn btn-primary">Regresar</a>
                 <fieldset>
                     <legend>Agregar CP</legend>
                     <div class="row">
@@ -62,7 +62,7 @@
                         </tbody>
                     </table>
                 </div> 
-                <input type="hidden" id="plazaId" name="plazaId" value="<?php echo $_GET['plazaId']; ?>">
+                <input type="hidden" id="territorioId" name="territorioId" value="<?php echo $_GET['territorioId']; ?>">
             </div>
    
         </main>
@@ -105,11 +105,11 @@
                     order: [[ 0, "asc" ]],
                     lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
                     ajax: {
-                        url: 'modelos/plazas_db.php',
+                        url: 'modelos/territorial_db.php',
                         type: 'POST',
                         data: function( d ) {
                             d.module = 'getTableCP',
-                            d.plazas = $("#plazaId").val()
+                            d.territorio = $("#territorioId").val()
                         }
                     },
                     columns : [

@@ -9,15 +9,14 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay">
            
             </div>
-            <div class="page-title">
-                <h3>INVENTARIO TECNICO</h3>
-            </div><br>
-            <div class="container-fluid p-1 panel-white">
-            <h5>BUSQUEDA</h5>
+            <div class="container-fluid p-5">
+            <h3>Inventario Tecnico</h3>
+           
+            <h5>Busqueda</h5>
                 <div class="row  mb-4">
                     <div class="col">
                         <label for="tipo_producto" class="col-form-label-sm">Tipo</label>
@@ -30,58 +29,44 @@
                         </select>
                     </div>  
                     <div class="col">
-                        <label for="tecnico" class="col-form-label-sm">TECNICO</label>
+                        <label for="tecnico" class="col-form-label-sm">Tecnico</label>
                         <select id="tecnico" name="tecnico" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>  
                     <div class="col">
-                        <label for="estatus" class="col-form-label-sm">ESTATUS</label>
+                        <label for="estatus" class="col-form-label-sm">Estatus</label>
                         <select id="estatus" name="estatus" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>    
                 </div>
                 <div class="row">
-                <?php if( searchMenuEdit($_SESSION['Modules'],'url','inventariotecnico') == '1') { ?>
+				<?php if( searchMenuEdit($_SESSION['Modules'],'url','inventariotecnico') == '1') { ?>
                     <div class="col">
-                        <a href="#" class="btn btn-success" id="btnCrearTraspasoDañado">Crear Envio Hacia Almacen</a>
+                        <a href="#" class="btn btn-success" id="btnCrearTraspasoDañado">Crear Envio hacia Almacen</a>
                     </div>
-                <?php } ?>
+				<?php } ?>
                 </div>
-                <div class="d-flex justify-content-end">
-                    <div class="col-sm-3 m-1">
-                        <input type="text" class="form-control form-control-sm" id="txtNoSerieEntrada" name="txtNoSerieEntrada">
-                    </div>
-                    <div class="col-sm-2">
-                        <a href="#" class="btn btn-success" id="btnEntradaAlmacen">Entrada Almacén</a>
-                    </div>
-                    
-                </div>
-                <br>
-                <div class="table-responsive">
-                    
-                
-                <table id="inventario"  class="table table-md table-bordered table-responsive">
+                <table id="inventario"  class="table table-md table-bordered ">
                     <thead>
                         <tr>
-                            <th width="200px">TECNICO</th>
-                            <th width="200px">PRODUCTO</th>
-                            <th width="200px">NO SERIE</th>
-                            <th width="200px">MODELO</th>
-                            <th>CANTIDAD</th>
-                            <th width="200px">ESTATUS</th>
-                            <th width="200px">FECHA ACTUALIZACION</th>
-                            <th width="100px">ACCION</th>
+                            <th>Tecnico</th>
+                            <th>Producto</th>
+                            <th>No Serie</th>
+							<th>Modelo</th>
+                            <th>Cantidad</th>
+                            <th>Estatus</th>
+                            <th>Fecha Actualizacion</th>
+                            <th>Accion</th>
                         </tr>
                     </thead>
                     <tbody>
                     
                     </tbody>
                 </table>
-            </div>
                 <br />
-                <input type="hidden" id="almacenId" name="almacenId" value="<?php echo $_SESSION['almacen']; ?>">
+				<input type="hidden" id="almacenId" name="almacenId" value="<?php echo $_SESSION['almacen']; ?>">
                 <input type="hidden" id="tecnicoId" name="tecnicoId" value="0">
                 
             </div>
@@ -93,21 +78,21 @@
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">NUEVO ENVIO</h5>
+                    <h5 class="modal-title">Nuevo Envio</h5>
     
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col">ORIGEN TECNICO: <span id="desdeEnvio"></span></div>
-                        <div class="col">DESTINO ALMACEN : ALMACEN MTY</div>
+                        <div class="col">Origen Tecnico: <span id="desdeEnvio"></span></div>
+                        <div class="col">Destino Almacen : Almacen MTY</div>
                     </div>
                     <br \>
                     <div class="form-group">
-                        <label for="noGuia">NO GUIA:</label>
+                        <label for="noGuia">No Guia:</label>
                         <input type="text" class="form-control" id="noGuia">
                     </div>
                     <div class="form-group">
-                        <label for="codigoRastreo">CODIGO RASTREO:</label>
+                        <label for="codigoRastreo">Codigo Rastreo:</label>
                         <input type="text" class="form-control" id="codigoRastreo">
                     </div>                
                 </div>
@@ -119,11 +104,11 @@
             </div> 
         </div>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="showHistoria" data-backdrop="static" data-keyboard="false">
+	<div class="modal fade" tabindex="-1" role="dialog" id="showHistoria" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">HISTORIA</h5>
+                    <h5 class="modal-title">Historia</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -133,11 +118,11 @@
                         <table id="historia"  class="display table table-md table-bordered " width="100%">
                             <thead>
                                 <tr>
-                                    <th>FECHA MOVIMIENTO</th>
-                                    <th>PRODUCTO</th>
-                                    <th>CANTIDAD</th>
-                                    <th>ESTATUS UBICACION</th>
-                                    <th>UBICACION</th>
+                                    <th>Fecha Movimiento</th>
+                                    <th>Movimiento</th>
+                                    <th>Cantidad</th>
+                                    <th>Estatus Ubicacion</th>
+                                    <th>Ubicacion</th>
                                     <th>Id</th>
                                 </tr>
                             </thead>
@@ -146,11 +131,11 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>FECHA MOVIMIENTO</th>
-                                    <th>PRODUCTO</th>
-                                    <th>CANTIDAD</th>
-                                    <th>ESTATUS UBICACION</th>
-                                    <th>UBICACION</th>
+                                    <th>Fecha Movimiento</th>
+                                    <th>Movimiento</th>
+                                    <th>Cantidad</th>
+                                    <th>Estatus Ubicacion</th>
+                                    <th>Ubicacion</th>
                                     <th>Id</th>
                                 </tr>
                             </tfoot>
