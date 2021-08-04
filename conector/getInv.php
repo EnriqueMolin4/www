@@ -1,13 +1,17 @@
 <?php
-error_reporting( error_reporting() & ~E_NOTICE ); //undefined Problem
+//error_reporting( error_reporting() & ~E_NOTICE ); //undefined Problem
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include("api.php");
 include('../modelos/procesos_db.php');
 
 $token = $api->getToken();
 //echo $token->token;
 
-$params = [ 'StatusId'=>'17','PageSize'=>'300'];
-$odt = $api->get('provider/api/units',$token->token,$params);
+$params = [ 'StatusId'=>'17','PageSize'=>'200'];
+$odt = $api->get('gntps/api/Units',$token->token,$params);
 
 /* $json =  json_encode($odt);
 echo $json->message; */
@@ -20,7 +24,7 @@ $currentPage = $odt->result->meta->page;
 foreach($odt->result->data as $inv) {
 
     
-
+		
         echo "<p>".$inv->NO_SERIE."</p>";
         echo "<p>".$inv->MODELO."</p>";
         echo "<p>".$inv->MARCA."</p>";
@@ -70,7 +74,7 @@ foreach($odt->result->data as $inv) {
                 1
             );
         
-          // $Procesos->insert($sql,$arrayString);
+           //$Procesos->insert($sql,$arrayString);
         }
 
         if( $existeInv) {
@@ -86,7 +90,7 @@ foreach($odt->result->data as $inv) {
                 $inv->NO_SERIE
             );
 
-          //  $id =  $Procesos->insert($sql,$arrayString);
+           // $id =  $Procesos->insert($sql,$arrayString);
 
         } else {
             $prepareStatement = "INSERT INTO `inventario`
@@ -112,7 +116,7 @@ foreach($odt->result->data as $inv) {
                     1
             );
 
-         //   $Procesos->insert($prepareStatement,$arrayString);
+            //$Procesos->insert($prepareStatement,$arrayString);
         }
 }
     

@@ -1,24 +1,44 @@
 <?php
-error_reporting( error_reporting() & ~E_NOTICE ); //undefined Problem
-include("api.php");
-include('../modelos/procesos_db.php');
+//error_reporting( error_reporting() & ~E_NOTICE ); //undefined Problem
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+require __DIR__ . '/api.php';
+require __DIR__ . '/../modelos/procesos_db.php';
 
 $token = $api->getToken();
 //echo $token->token;
-
-$params = [ 'StartDate'=>'1/06/2021','EndDate'=>'10/06/2021','IdStatusOdt'=> '1,3,6,7,8','PageSize' => 100 ];
-$odt = $api->get('provider/api/odts/GetServicesProvider',$token->token,$params);
+ 
+$fechaObtener = date('Y-m-d');
+$fechaFrom = date('d/m/Y', strtotime($fechaObtener. ' - 2 days'));
+$fechaTo = date('d/m/Y', strtotime($fechaObtener. ' + 1 days'));
+echo $fechaFrom." ".$fechaTo." \n "; 
+$params = [ 'StartDate'=>$fechaFrom,'EndDate'=>$fechaTo,'IdStatusOdt'=> '3,13,31' ];
+$odt = $api->get('gntps/api/odts/GetServicesProvider',$token->token,$params);
 
 $json =  json_encode($odt);
 //echo $json;
 $format = "Y-m-d\TH:i:s";
 $fecha = date('Y-m-d H:i:s');
-echo count($odt->result->data). "<br>";
+//echo count($odt->result->data);
+echo json_encode($odt->result->meta)." \n ";
+
+$totalcount = $odt->result->meta->totalCount;
+$pagesize = $odt->result->meta->pageSize;
+$currentpage = $odt->result->meta->currentPage;
+$totalpages = $odt->result->meta->totalPages;
+$hasNextPage = $odt->result->meta->hasNextPage;
+$hasPreviousPage = $odt->result->meta->hasPreviousPage;
 
 
+$params = [ 'StartDate'=>$fechaFrom,'EndDate'=>$fechaTo,'IdStatusOdt'=> '3,13,31','PageSize'=> $totalcount ];
+$odt = $api->get('gntps/api/odts/GetServicesProvider',$token->token,$params);
+echo "TOTAL a BAJAR ".count($odt->result->data)." \n ";
+echo $fecha."---- INICIO DESCARGA ODT  en Total son $totalcount  \n ";
 foreach ($odt->result->data as $object) {
-    
-   // echo $object->ID_AR;
+  // echo $object->TIPO_COMERCIO_2." \n ";
+    //echo json_encode($object);
+  
     $user = 1;
     $ODT = $object->ODT;
     $Afiliacion = $object->AFILIACION;
@@ -27,12 +47,14 @@ foreach ($odt->result->data as $object) {
     $Colonia = $object->COLONIA;
     $Ciudad = $object->POBLACION;
     $Estado = $object->ESTADO;
+	$Id_ar = $object->ID_AR;
 
     $date = DateTime::createFromFormat($format, $object->FECHA_ALTA);
     $FechaAlta = $date->format("Y-m-d H:i:s");
     
     $date = DateTime::createFromFormat($format, $object->FECHA_VENCIMIENTO );
     $FechaVencimiento = $date->format("Y-m-d H:i:s"); 
+	$FechaCierreSistema = NULL;					   
     
 
     $Descripcion = $object->DESCRIPCION;  
@@ -84,10 +106,10 @@ foreach ($odt->result->data as $object) {
     $SLASistema = $object->SLA_FIJO;  
     $Nivel2 = $object->NIVEL_SLA; //NO 
     $TelefonosenCampo = $object->TELEFONOS_EN_CAMPO;  
-    $TipoComercio = $object->TIPO_COMERCIO_2;
+    $TipoComercio = $object->TIPO_COMERCIO_2 == 'NORMAL' ? 1 : 0;
     $AfiliacionAmex = $object->AFILIACION_AMEX; 
     $IdAmex = $object->IDAMEX; 
-    $Producto = $object->PRODUCTO;
+    $Producto = $Procesos->getProductoxNombre( $object->PRODUCTO );
     $MotivoCancelacion = $object->MOTIVO_CANCELACION;  //NO
     $MotivoRechazo = $object->MOTIVO_CANCELACION;//NO
     $Email = $object->EMAIL;//NO 
@@ -100,7 +122,7 @@ foreach ($odt->result->data as $object) {
     $Divisa = $object->DIVISA;
     $Cargador = $object->CARGADOR;
     $Base = $object->BASE;
-    $RollosEntregados = $object->ROLLOS_ENTREGADOS; 
+    $RollosEntregados = 0; //$object->ROLLOS_ENTREGADOS; 
     $Cablecorriente = $object->CABLE_CORRIENTE; 
     $Zona = $object->ZONA;
     $MarcaTerminalSale = $object->MODELO_INSTALADO; //NO
@@ -119,7 +141,7 @@ foreach ($odt->result->data as $object) {
     $CantidadArchivos = $object->CANTIDAD_ARCHIVOS;
     $AreaCarga = $object->AREA_CARGA;
     $AltaPor = $object->ALTA_POR;
-    $TipoCarga = $object->TIPO_CARGO;
+    $TipoCarga = $object->TIPO_CARGA;
     $CerradoPor = $object->CERRADO_POR;
     $VoltajeNeutro = $object->VOLTAJE_NEUTRO;
     $FechaInicioSlaInv = $object->FECHA_INICIO_SLA_INV;
@@ -131,12 +153,13 @@ foreach ($odt->result->data as $object) {
 		$AreaCierre = $object->AREA_CIERRA;
 
     $clienteExiste = $Procesos->getClientesByAfiliacion($Afiliacion);
-
+    
+   
     if( sizeof($clienteExiste) == 0 ) {
                     
       //$estado = $Procesos->getEstadoxNombre($Estado);
       //$ciudad = $Procesos->getCiudadxNombre($Ciudad,$estado);
-      $datafieldsCustomers = array('comercio','propietario','estado','responsable','tipo_comercio','ciudad','colonia',
+      $datafieldsCustomers = array('comercio','estado','responsable','tipo_comercio','ciudad','colonia',
       'afiliacion','telefono','direccion','rfc','email','email_ejecutivo','territorial_banco',
       'razon_social','cve_banco','cp','estatus','activo','fecha_alta');
 
@@ -146,7 +169,6 @@ foreach ($odt->result->data as $object) {
 
       $arrayString = array (
           $Comercio,
-          $Propietario,
           $Estado, 
           $Atiendeencomercio,
           $TipoComercio,
@@ -167,7 +189,7 @@ foreach ($odt->result->data as $object) {
           $fecha 
       );
   
-      $newCustomerId = $Procesos->insert($sql,$arrayString);
+     $newCustomerId = $Procesos->insert($sql,$arrayString);
       
 
     }  else {
@@ -204,10 +226,11 @@ foreach ($odt->result->data as $object) {
     } else {
         $newTipoServicioId = $TipoServicio;
     }
-
+	
     $existeEvento = $Procesos->existeEvento($ODT);
-    $existe = sizeof($existeEvento) == '0' ? 'Se va a Insertar' : 'Ya Existe ';
-    echo $existe. " ".$ODT." <br>";
+	echo $Id_ar."".$ODT." ".$object->TIPO_SERVICIO." ".$FechaAlta." ".sizeof($existeEvento)." \n";
+	
+	
     if(sizeof($existeEvento) == '0') {
       $fecha = date ( 'Y-m-d H:m:s' );
 
@@ -268,9 +291,10 @@ foreach ($odt->result->data as $object) {
       );
  
       
-      $newId = $Procesos->insert($sqlEvento,$arrayStringEvento);
+       $newId = $Procesos->insert($sqlEvento,$arrayStringEvento);
       
       if($newId) {
+            echo $ODT." ".$object->TIPO_SERVICIO." ".$FechaAlta." \n ";
             //GRABAR HISTORIA EVENTOS 
             
             $datafieldsHistoria = array('evento_id','fecha_movimiento','estatus_id','odt', 'modified_by');
@@ -283,13 +307,13 @@ foreach ($odt->result->data as $object) {
             
             $Procesos->insert($sqlHistoria, $arrayStringHistoria);
           
-    }
+    }  
       
       
-  } 
+  }  
 
 }
 
-
+echo $fecha."---- FIN DESCARGA ODT  ";
 
 ?>
