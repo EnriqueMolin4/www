@@ -7,56 +7,47 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link rel="stylesheet" href="css/loginStyle.css">
+        <style>
+        @import url("//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");
+        body { 
+            background: ; 
+            background: -webkit-linear-gradient(to bottom, #FFB88C,#FFFFFF );  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to bottom, #FFB88C,#FFFFFF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        .login-block{
+        background: #2B3A42;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to bottom, #2B3A42,#FFB88C );  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to bottom,  #2B3A42,#FFB88C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        float:left;
+        width:100%;
+        padding : 50px 0;
+        }
+        .banner-sec{background:url(images/logoImagen.png)  no-repeat left bottom; background-size:cover; min-height:500px; border-radius: 0 10px 10px 0; padding:0;}
+        .container{background:#fff; border-radius: 10px; box-shadow:15px 20px 0px rgba(0,0,0,0.1);}
+        .carousel-inner{border-radius:0 10px 10px 0;}
+        .carousel-caption{text-align:left; left:5%;}
+        .login-sec{padding: 50px 30px; position:relative;}
+        .login-sec .copy-text{position:absolute; width:80%; bottom:20px; font-size:13px; text-align:center;}
+        .login-sec .copy-text i{color:#FEB58A;}
+        .login-sec .copy-text a{color:#E36262;}
+        .login-sec h2{margin-bottom:30px; font-weight:800; font-size:30px; color: #DE6262;}
+        .login-sec h2:after{content:" "; width:100px; height:5px; background:#FEB58A; display:block; margin-top:20px; border-radius:3px; margin-left:auto;margin-right:auto}
+        .btn-login{background: #DE6262; color:#fff; font-weight:600;}
+        .banner-text{width:70%; position:absolute; bottom:40px; padding-left:20px;}
+        .banner-text h2{color:#fff; font-weight:600;}
+        .banner-text h2:after{content:" "; width:100px; height:5px; background:#FFF; display:block; margin-top:20px; border-radius:3px;}
+        .banner-text p{color:#fff;}
+        </style>
         
     </head>
     <body>
-        
-        <div class="register-photo">
-            <div class="form-container">
-                <div class="image-holder"></div>
-                <form class="login-form" method="post" action="sesiones/validacion.php">
-                    <center><img src="images/LOGOSS_2.png" width="200px">    <br><br>
-                    <!-- <h2 class="text-center"><strong>SAES</strong></h2> -->
-                    <h2>SISTEMA DE ADMINISTRACIÓN DE EQUIPOS Y SERVICIOS</h2></center><br><hr>
-                    <h6>Entrar al sistema</h6><br>
-                    <div class="form-group"><input class="form-control" id="user" type="user" name="user" placeholder="USUARIO"></div><br>
-                    <div class="form-group"><input class="form-control" id="pass" type="password" name="pass" placeholder="CONTRASEÑA"></div><br>
-                    <div class="form-check">
-                        <button type="submit" class="btn btn-login float-right">Entrar</button>
-                    </div>
-                    <!-- 
-                        <div class="form-group"><input class="form-control" type="password" name="password-repeat" placeholder="Password (repeat)"></div>
-                        <div class="form-group">
-                        <div class="form-check"><label class="form-check-label"><input class="form-check-input" type="checkbox">I agree to the license terms.</label></div>
-                        </div>
-                        <div class="form-group"><button class="btn btn-success btn-block" type="submit">Sign Up</button></div><a class="already" href="#">You already have an account? Login here.</a>
-                     -->
-                </form>
-            </div>
-        </div>
-        
-        <!-- <section class="login-block">
+        <section class="login-block">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 login-sec">
-                       
-                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            
-                            <div class="carousel-inner" role="listbox">
-                                <div class="carousel-item active">
-                                
-                                </div>
-                                
-                            </div>     
-                        
-                        </div>
-
-                    </div>
-                    <div class="col-md-8 banner-sec">
-                        <img src="images/logoTexto.png"> 
-                        <h6 class="text-center">Sistema de Administración de Eventos</h6>
-                        <h6 class="text-center">Gestión-Control de Inventarios</h6>
+                        <img src="images/LogoSAESTexto.png"> 
+                        <h6 class="text-center">Sistema de Administración</h6>
+                        <h6 class="text-center">de Eventos y servicios</h6>
                         <form class="login-form" method="POST" action="sesiones/validacion.php">
                             <div class="form-group">
                                 <label for="exampleInputEmail1" class="text-uppercase">Usuario</label>
@@ -67,12 +58,28 @@
                                 <label for="exampleInputPassword1" class="text-uppercase">Contraseña</label>
                                 <input type="password" class="form-control" placeholder="" id="pass" name="pass">
                             </div>
+                            <div class="form-check">
                             
+                                <button type="submit" class="btn btn-login float-right">Entrar</button>
+                            </div>
                             
                         </form>
+
+                    </div>
+                    <div class="col-md-8 banner-sec">
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            
+                            <div class="carousel-inner" role="listbox">
+                                <div class="carousel-item active">
+                                
+                                </div>
+                                
+                            </div>	   
+                        
+                        </div>
                     </div>
                 </div>
-        </section> -->
+        </section>
 		 <?php 
            if(isset($_GET['msg']) && $_GET['msg'] == '1')
            {

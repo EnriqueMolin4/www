@@ -6,25 +6,21 @@
                     <i class="fas fa-bars"></i>
                   </a>
         <nav id="sidebar" class="sidebar-wrapper">
-			<?php include("menu.php"); ?>
-		</nav>
+            <?php include("menu.php"); ?>
+        </nav>
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>TERRITORIOS</h3>
-            </div>
-            <div class="container-fluid p-4 panel-white">
-            
+            <div class="container-fluid p-5">
+            <h3>Territorios</h3>
             <div class="row">
-                <div class="col p-4">  
-                    <div class="table-responsive">
-                        <table id="territorios"  class="table table-md table-bordered table-responsive">
+                <div class="col-sm-12 p-4">  
+                    <table id="territorios"  class="table table-md table-bordered ">
                         <thead>
                             <tr>
-                                <th width="400px">TERRITORIO</th>
-                                <th width="400px">ESTATUS</th>
-                                <th width="400px">ACCION</th>
+                                <th>TERRITORIO</th>
+                                <th>ESTATUS</th>
+                                <th>ACCION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,20 +28,17 @@
                         </tbody>
                         
                     </table>
-                    </div>
                 </div>
                 
             </div>
             
-                
-            </div>
-            <div class="panel-footer p-4">
                 <fieldset class="border p-2">
-                    <legend><h4>AGREGAR TERRITORIO</h4></legend>
+                    <legend>AGREGAR TERRITORIO</legend>
                     <div class="row">
-                        <div class="col-md-4">
-                             <label for="territorio" class="col-form-label-sm">TERRITORIO</label>
-                                <input type="text" id="territorio" name="territorio"  class="form-control form-control-sm"><br>
+                        <div class="col-md-12 p-4">
+ 
+                            <label for="territorio" class="col-form-label-sm">TERRITORIO</label>
+                            <input type="text" id="territorio" name="territorio">
                             <button class="btn btn-success btn-sm" id="btnAddCP">AGREGAR</button>
                         </div>
                     </div>
@@ -107,13 +100,7 @@
                     {
                         "targets": [2],
                         "mRender": function ( data,type, row ) {
-                            var boton = '<a title="Desactivar" href="#" class="editRelacion" data="'+row.id+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a>';
-
-                            if (row.status == '0') {
-                               boton = '<a title="Activar" href="#" class="editRelacion" data="'+row.id+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
-                            }
-                            return boton;
-                            //return '<a href="#" class="editRelacion" data="'+row.id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
+                            return '<a href="#" class="editRelacion" data="'+row.id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
                         }
                     }
                 ]

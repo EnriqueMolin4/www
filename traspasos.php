@@ -13,60 +13,51 @@
             <div id="overlay" class="overlay">
            
             </div>
-            <div class="page-title">
-               <h3>TRASPASOS</h3> 
-            </div><br>
+            <div class="container-fluid p-5">
+            <h3>Trapasos</h3>
             <div class="row">
-            <?php if( searchMenuEdit($_SESSION['Modules'],'url','traspasos') == '1') { ?>
-                <div class="col-sm-6">
-                    <label for="excelMasivo" class="col-form-label-sm">CREACION TRASPASOS MASIVOS</label> 
+			<?php if( searchMenuEdit($_SESSION['Modules'],'url','traspasos') == '1') { ?>
+                <div class="col-sm-8">
+                    <label for="excelMasivo" class="col-form-label-sm">Creacion Traspasos Masivos</label> 
                     <input class="input-file" type="file" id="excelMasivoTraspasos" name="excelMasivoAsignacion">
-                    <button class="btn btn-success btn-sm" id="btnCargarExcelTraspasos">CARGAR</button>
+                    <button class="btn btn-success btn-sm" id="btnCargarExcelTraspasos">Cargar</button>
                 </div>
-            <?php } ?>
-            </div><br>
-
-
-            <div class="container-fluid p-1 panel-white">
-            
-            <br>
-            <h5>BUSQUEDA</h5>
+				<div class="col-sm-4">
+					<a href="layouts/LayoutCargaMasivaTraspasos.xlsx" class="btn btn-primary" download>Descargar Layout</a>
+				</div>
+			<?php } ?>
+            </div>
+            <h5>Busqueda</h5>
                 <div class="row  mb-4"> 
                     <div class="col">
-                        <label for="almacen" class="col-form-label-sm">ALMACENES</label>
+                        <label for="almacen" class="col-form-label-sm">Almacenes</label>
                         <select id="almacen" name="almacen" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>   
                     <div class="col">
-                        <label for="tecnico" class="col-form-label-sm">TECNICO</label>
+                        <label for="tecnico" class="col-form-label-sm">Tecnico</label>
                         <select id="tecnico" name="tecnico" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>   
                 </div>
-
-                <div class="table-responsive">
+                <table id="traspasos"  class="table table-md table-bordered ">
+                    <thead>
+                        <tr>
+                            <th>No Guia</th>
+                            <th>C Rastreo</th>
+                            <th>Origen</th>
+                            <th>Destino</th>
+                            <th>Estatus</th>
+                            <th>Fecha</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody> 
                     
-                
-                    <table id="traspasos"  class="table table-bordered table-responsive">
-                        <thead>
-                            <tr>
-                                <th width="200px">NO GUIA</th>
-                                <th width="2500px">C RASTREOS</th>
-                                <th width="250px">ORIGEN</th>
-                                <th width="300px">DESTINO</th>
-                                <th width="250px">ESTATUS</th>
-                                <th width="250px">FECHA</th>
-                                <th>ACCION</th>
-                            </tr>
-                        </thead>
-                        <tbody> 
-                    
-                        </tbody>
-                    </table>
-
-                </div>
+                    </tbody>
+                </table>
                 <br />
                 <input type="hidden" id="no_guia" name="no_guia" value="0">
 				<input type="hidden" id="userPerm" value="<?php echo isset($_SESSION['tipo_user']) ? $_SESSION['tipo_user'] : 0 ; ?>">
@@ -92,13 +83,11 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Detalle Traspaso -->
     <div class="modal fade" tabindex="-1" role="dialog" id="showDetalle" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog mw-100 w-75" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">TRASPASOS</h5>
+                    <h5 class="modal-title">Traspaso</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -106,36 +95,31 @@
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
-                            <div class="col-mb-6 p-2"><p class="text-uppercase">NO SERIE: <span class="font-weight-bold" id="noGuia_det"></span></p></div>
-                            <div class="col-mb-4 p-2"><p class="text-uppercase">CODIGO RASTREO: <span class="font-weight-bold" id="codigorastreo_det"></span></p></div>
+                            <div class="col-mb-6 p-2"><p class="text-uppercase">No Serie: <span class="font-weight-bold" id="noGuia_det"></span></p></div>
+                            <div class="col-mb-4 p-2"><p class="text-uppercase">Codigo Rastreo: <span class="font-weight-bold" id="codigorastreo_det"></span></p></div>
                         </div>
                         <div class="row">
-                            <div class="col-mb-6 p-2"><p class="text-uppercase ">ORIGEN: <span class="font-weight-bold" id="origen_det"></span></p></div>
-                            <div class="col-mb-4 p-2"><p class="text-uppercase">DESTINO: <span class="font-weight-bold" id="destino_det"></span></div>
+                            <div class="col-mb-6 p-2"><p class="text-uppercase ">Origen: <span class="font-weight-bold" id="origen_det"></span></p></div>
+                            <div class="col-mb-4 p-2"><p class="text-uppercase">Destino: <span class="font-weight-bold" id="destino_det"></span></div>
                         </div>
-                    </div> 
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table id="traspasositems"  class="table" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th width="300px">TIPO</th>
-                                        <th width="300px">NO SERIE</th>
-                                        <th width="300px">INSUMO</th>
-                                        <th width="300px">CANTIDAD</th>
-                                        <th width="300px">NOTAS</th>
-                                        <th width="300px">ACEPTADA</th>
-                                        <th width="300px">FECHA ACTUALIZACION</th>
-                                        <th width="300px">ACCION</th>
-                                    </tr>
-                                </thead>
-                                <tbody> 
-                                
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>  
-                    
+                    </div>   
+                    <table id="traspasositems"  class="table table-md table-bordered " style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>No Serie</th>
+                                <th>Modelo</th>
+                                <th>Cantidad</th>
+                                <th>Notas</th>
+                                <th>Aceptada</th>
+                                <th>Fecha Actualizacion</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                        
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" value="0" id="noGuia" name="noGuia">

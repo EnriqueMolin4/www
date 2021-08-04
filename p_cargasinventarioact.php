@@ -22,7 +22,7 @@
                             <th>ARCHIVO</th>
                             <th>TOTAL</th>
                             <th>PROCESADOS</th>
-                            <th>YA EXISTEN BD</th>
+                            <th>NO PROCESADOS</th>
                             <th>CREADO</th>
                             <th>ULTIMA MODIFICACION</th>
                         </tr>

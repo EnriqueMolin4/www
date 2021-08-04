@@ -11,27 +11,24 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>TERRITORIOS</h3>
-            </div>
-            <div class="container-fluid p-3 panel-white">
-            
+            <div class="container-fluid p-5">
+            <h3>Territorios</h3>
             <div class="row">
                 <div class="col-sm-4 p-4">           
-                    <label for="territorial" class="col-form-label-sm">TERRITORIOS</label>
+                    <label for="territorial" class="col-form-label-sm">Territorios</label>
                     <select id="territorial" name="territorial" class="form-control form-control-sm">
                         <option value="0">Seleccionar</option>
                     </select>
                 </div>
                 <div class="col-sm-4 p-4">           
-                    <label for="supervisores" class="col-form-label-sm">SUPERVISORES</label><br>
-                    <select hidden id="supervisores" name="supervisores" class="form-control form-control-sm" multiple>
+                    <label for="supervisores" class="col-form-label-sm">Supervisores</label>
+                    <select id="supervisores" name="supervisores" class="form-control form-control-sm" multiple>
                         <option value="0">Seleccionar</option>
                     </select>
                 </div>
                 <div class="col-sm-4 p-4">           
-                    <label for="plazas" class="col-form-label-sm">PLAZAS</label><br>
-                    <select hidden id="plazas" name="plazas" class="form-control form-control-sm" multiple>
+                    <label for="plazas" class="col-form-label-sm">Plazas</label>
+                    <select id="plazas" name="plazas" class="form-control form-control-sm" multiple>
                         <option value="0">Seleccionar</option>
                     </select>
                 </div>
@@ -41,9 +38,9 @@
                     <table id="cp"  class="table table-md table-bordered ">
                         <thead>
                             <tr>
-                                <th>TERRITORIO</th>
-                                <th>SUPERVISOR</th>
-                                <th>ACCION</th>
+                                <th>Territorio</th>
+                                <th>Supervisor</th>
+                                <th>Accion</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,12 +53,12 @@
             </div>
             
                 <fieldset class="border p-2">
-                    <legend><h3>Agregar Código Postal</h3></legend>
+                    <legend>Agregar Codigo Postal</legend>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12 p-4">
  
                             <label for="newCP" class="col-form-label-sm">Codigo Postal</label>
-                            <input type="text" id="newCP" name="newCP" class="form-control form-control-sm"><br>
+                            <input type="text" id="newCP" name="newCP">
                             <button class="btn btn-success btn-sm" id="btnAddCP">Agregar</button>
                         </div>
                     </div>
@@ -88,7 +85,6 @@
     <script type="text/javascript" src="js/jquery.toaster.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
     <script src="js/main.js"></script>
-    <script src="js/bootstrap-multiselect.min.js"></script>
     <script src="js/jquery.rotate.1-1.js"></script>
     <script>
     var territorial,plazas,territorios;
@@ -113,13 +109,13 @@
                         }
                 },
                 columns : [
-                    { data: 'nombre' },
+                    { data: 'territorio' },
                     { data: 'supervisor'},
                     { data: 'id'}
                 ],
                 aoColumnDefs: [
                     {
-                        "targets": [2],
+                        "targets": [3],
                         "mRender": function ( data,type, row ) {
                             return '<a href="#" class="editRelacion" data="'+row.id+'"><i class="fas fa-times fa-2x" style="color:green"></i></a>';
                         }
@@ -383,8 +379,6 @@
                 success: function(data, textStatus, jqXHR){
                     
                     $("#supervisores").html(data);
-
-                    $("#supervisores").multiselect();
                     
                     
                 },
@@ -404,7 +398,6 @@
                 success: function(data, textStatus, jqXHR){
                     
                     $("#plazas").html(data);
-                    $("#plazas").multiselect();
                     
                     
                 },
@@ -423,23 +416,6 @@
 
 
     </script> 
-
-    <style>
-        .multiselect {
-          background-color: initial;
-          border: 1px solid #ced4da;
-          width: 450px;
-          height: auto;
-
-        }
-
-        .multiselect-container
-        {
-            height: 300px  ;  
-            overflow-x: hidden;
-            overflow-y: scroll; 
-        }
-    </style>
   
 </body>
 

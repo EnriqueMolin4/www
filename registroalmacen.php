@@ -9,18 +9,16 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay">
            
             </div>
-            <div class="page-title">
-                <h3>ALMACEN</h3>
-            </div>
-            <br>
-            <?php  
-            if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
+            <div class="container-fluid p-5">
+            <h3>Almacén</h3>
+			<?php  
+			if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-4">
                     <label for="excelMasivo" class="col-form-label-sm">Alta en Almacén Masivos</label> 
                     <input class="input-file" type="file" id="excelMasivoInventarios" name="excelMasivoInventarios">
                     <button class="btn btn-success btn-sm" id="btnCargarExcelInventarios">Cargar</button>
@@ -33,31 +31,26 @@
                 </div>
                 
             </div>
-            <div class="row">
+            <div class="row pt-2">
                 <div class="col-sm-6">
                     <button class="btn btn-warning btn-sm" id="btnUpdateExcelInventarios">Actualizar Series</button>
-                    <a href="layouts/LayoutCargaMasivaInventario.xlsx" class="btn btn-primary" download>Descargar Layout</a>
-					<button type="button" class="btn btn-success btn-sm" id="btnAltaAlmacen">
-					Nueva Alta Almacen
-					</button>
-                </div>  
-               
+                    <a href="layouts/LayoutCargaMasivaInventario.xlsx" class="btn btn-primary btn-sm" download>Descargar Layout</a>
+                    <button type="button" class="btn btn-success btn-sm" id="btnAltaAlmacen">
+                        Nueva Alta Almacen 
+                    </button>
+                </div> 
             </div> <br> 
-            <?php } ?>
-
-            <div class="container-fluid p-2 panel-white">
-            
-            <br>
-            <h5>BUSQUEDA</h5>
-                <div class="row">
+		    <?php } ?>
+            <h5>Busqueda</h5>
+                <div class="row  mb-4">
                     <div class="col">
-                        <label for="banco" class="col-form-label-sm">BANCO</label>
+                        <label for="banco" class="col-form-label-sm">Banco</label>
                         <select id="banco" name="banco" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>  
                     <div class="col">
-                        <label for="tipo_producto" class="col-form-label-sm">TIPO</label>
+                        <label for="tipo_producto" class="col-form-label-sm">Tipo</label>
                         <select id="tipo_producto" name="tipo_producto" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                                 <option value="1">TPV</option>
@@ -67,64 +60,60 @@
                         </select>
                     </div>  
                     <div class="col">
-                        <label for="tipo_ubicacion" class="col-form-label-sm">UBICACION</label>
+                        <label for="tipo_ubicacion" class="col-form-label-sm">Ubicación</label>
                         <select id="tipo_ubicacion" name="tipo_ubicacion" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>   
-                     <div class="col">
-                        <label for="tipo_estatusubicacion" class="col-form-label-sm">ESTATUS UBICACION</label>
+					 <div class="col">
+                        <label for="tipo_estatusubicacion" class="col-form-label-sm">Estatus Ubicación</label>
                         <select id="tipo_estatusubicacion" name="tipo_estatusubicacion" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>   
                     <div class="col">
-                        <label for="tipo_estatus" class="col-form-label-sm">ESTATUS</label>
+                        <label for="tipo_estatus" class="col-form-label-sm">Estatus</label>
                         <select id="tipo_estatus" name="tipo_estatus" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>   
                     
-                </div><br>
-                <div class="d-flex justify-content-end">
-                <?php if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
-                    <div class="col-sm-3 m-1">
-                        <input type="text" class="form-control form-control-sm" id="txtNoSerieEntrada" name="txtNoSerieEntrada">
-                    </div>
-                    <div class="col-sm-2">
-                    
-                        <a href="#" class="btn btn-success" id="btnEntradaAlmacen">Entrada Almacén</a>
-                    
-                    </div>
-                <?php  } ?>
                 </div>
-                    <div class="table-responsive">
-                        
+				<div class="d-flex justify-content-end">
+				<?php if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
+					<div class="col-sm-3 m-1">
+					<input type="text" class="form-control form-control-sm" id="txtNoSerieEntrada" name="txtNoSerieEntrada">
+					</div>
+					<div class="col-sm-2">
+					
+					<a href="#" class="btn btn-success" id="btnEntradaAlmacen">Entrada Almacén</a>
+					
+					</div>
+				<?php  } ?>
+				</div>
+                <table id="inventario"  class="table table-md table-bordered " style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Banco</th>
+                            <th>Tipo</th>
+                            <th>No Serie</th>
+                            <th>Modelo</th>
+                            <th>Conectividad</th>
+                            <th>Estatus</th>
+							<th>Estatus Ubicacion</th>
+                            <th>Ubicacion</th>
+                            <th>Fecha Actualizacion</th>
+                            <th>Cantidad</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     
-                        <table id="inventario"  class="table table-md table-bordered table-responsive ">
-                            <thead>
-                                <tr>
-                                    <th>BANCO</th>
-                                    <th>TIPO</th>
-                                    <th width="300px">NO. SERIE</th>
-                                    <th >MODELO</th>
-                                    <th >CONECTIVIDAD</th>
-                                    <th width="300px">ESTATUS</th>
-                                    <th>ESTATUS UBICACION</th>
-                                    <th>UBICACION</th>
-                                    <th width="300px">FECHA ACTUALIZACION</th>
-                                    <th>CANTIDAD</th>
-                                    <th>ACCION</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    
-                            </tbody>
+                    </tbody>
             
-                        </table>
-                    </div>
+                </table>
                 <br />
-                <input type="hidden" id="userPerm" value="<?php echo isset($_SESSION['tipo_user']) ? $_SESSION['tipo_user'] : 0 ; ?>">
+				<input type="hidden" id="userPerm" value="<?php echo isset($_SESSION['tipo_user']) ? $_SESSION['tipo_user'] : 0 ; ?>">
             </div>
         </main>
         <!-- page-content" -->
@@ -146,31 +135,30 @@
             </div>
         </div>
     </div>
-    <!-- Modal Historial -->
     <div class="modal fade" tabindex="-1" role="dialog" id="showHistoria" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" style="max-width: 1350px!important;" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">HISTORIA</h5>
+                <h5 class="modal-title">Historia</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-                <div class="modal-body">
+				<div class="modal-body">
                 
-                    <div class="row">
-                        <div class="table-responsive">
-                        <table id="table_eventos" class="table" style="width:100%;">
+					<div class="row">
+                        <div class="col">
+                        <table id="table_eventos" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>ODT</th>
-                                    <th width="300px">ULTIMA MODIFICACION</th>
-                                    <th>AFILIACION</th>
-                                    <th>TPV INSTALADO</th>
-                                    <th>TPV RETIRADO</th>
-                                    <th>SERVICIO</th>
-                                    <th>TECNICO</th>
-                                    <th width="300px">MODIFICADO POR</th>
+                                    <th>Última Modificación</th>
+                                    <th>Afiliación</th>
+                                    <th>Tpv Instalado</th>
+                                    <th>Tpv Retirado</th>
+                                    <th>Servicio</th>
+                                    <th>Técnico</th>
+                                    <th>Modificado Por</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -183,118 +171,112 @@
                     </div>
                             
                     <br>
-                    <hr>
                     <!-- Tabla Inventario -->
                 
                     <div class="row">
-                        <div class="table-responsive">
-                            <table id="table_serieinfo" class="table" style="width: 100%;">
+                        <div class="col">
+                            <table id="table_serieinfo" class="table table-striped table-bordered">
                             <thead>
                                     <tr>
-                                        <th>NO SERIE</th>
-                                        <th>MODELO</th>
-                                        <th>CONECTIVIDAD</th>
-                                        <th>ANAQUEL</th>
-                                        <th>CAJA</th>
-                                        <th>TARIMA</th>
-                                        <th>CVE BANCO</th>
+                                        <th>No Serie</th>
+                                        <th>Modelo</th>
+                                        <th>Conectividad</th>
+                                        <th>Anaquel</th>
+                                        <th>Caja</th>
+                                        <th>Tarima</th>
+                                        <th>Cve Banco</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     
                                 </tbody>
                             </table>
-                        </div>                         
-                    </div>
-                    <br>
-                    <hr>
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table id="table_inventario" class="table" style="width:100%;">
+
+                            <table id="table_inventario" class="table table-striped table-bordered" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>FECHA</th>
-                                        <th>MOVIMIENTO</th>
-                                        <th>UBICACION</th>
-                                        <th>CANTIDAD</th>
-                                        <th>USUARIO</th>
-										<th>UBICACION ID</th>
+                                        <th>Fecha</th>
+                                        <th>Movimiento</th>
+                                        <th>Ubicacion</th>
+                                        <th>Cantidad</th>
+                                        <th>Ubicacion</th>
+										<th>Modificado Por </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     
                                 </tbody>
                             </table>
-                        </div>
+                        </div>    
                     </div>
             
-                    <div class="modal-footer">
-                        <input type="hidden" value="0" id="noSerie" name="noSerie">
+					<div class="modal-footer">
+						<input type="hidden" value="0" id="noSerie" name="noSerie">
                         <input type="hidden" value="0" id="ubicacionId" name="ubicacionId">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" tabindex="-1" role="dialog" id="showDetalle" data-backdrop="static" data-keyboard="false">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" tabindex="-1" role="dialog" id="showDetalle" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">DETALLE DE LA SERIE</h5>
+                <h5 class="modal-title">Detalle de serie</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-4">           
-                            <label for="noserie" class="col-form-label-sm">No SERIE</label>
-                            <input type="text" class="form-control form-control-sm" id="det-noserie" aria-describedby="odt" readonly>
-                        </div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-4">           
+							<label for="noserie" class="col-form-label-sm">No Serie</label>
+							<input type="text" class="form-control form-control-sm" id="det-noserie" aria-describedby="odt" readonly>
+						</div>
                         <div class="col-md-4" id="divModelo">           
-                            <label for="det-modelo" class="col-form-label-sm">MODELO</label>
-                             <select id="det-modelo" name="det-modelo" class="form-control form-control-sm"></select>
-                        </div>
-                        <div class="col-md-4" id="divCarrier">           
-                            <label for="det-modelo" class="col-form-label-sm">CARRIER</label>
-                             <select id="det-carrier" name="det-carrier" class="form-control form-control-sm"></select>
-                        </div>
+							<label for="det-modelo" class="col-form-label-sm">Modelo</label>
+							 <select id="det-modelo" name="det-modelo" class="form-control form-control-sm"></select>
+						</div>
+						<div class="col-md-4" id="divCarrier">           
+							<label for="det-modelo" class="col-form-label-sm">Carrier</label>
+							 <select id="det-carrier" name="det-carrier" class="form-control form-control-sm"></select>
+						</div>
                         <div class="col-md-4">           
-                            <label for="det-conectividad" class="col-form-label-sm">CONECTIVIDAD</label>
-                             <select id="det-conectividad" name="det-conectividad" class="form-control form-control-sm">
+							<label for="det-conectividad" class="col-form-label-sm">Conectividad</label>
+							 <select id="det-conectividad" name="det-conectividad" class="form-control form-control-sm">
                              </select>
-                        </div>
+						</div>
                     </div><br>
                     <div class="row">
-                        <div class="col-md-3">           
-                            <label for="estatus" class="col-form-label-sm">ESTATUS</label>
-                             <select id="det-estatus" name="det-estatus" class="form-control form-control-sm"></select>
-                        </div>
-                        <div class="col-md-3">           
-                            <label for="det-estatus_inventario" class="col-form-label-sm">ESTATUS INVENTARIO</label>
-                             <select id="det-estatus-inventario" name="det-estatus-inventario" class="form-control form-control-sm"></select>
-                        </div>
-                        <div class="col-md-3">           
-                            <label for="det-ubicacion" class="col-form-label-sm">UBICACION</label>
-                             <select id="det-ubicacion" name="det-ubicacion" class="form-control form-control-sm"></select>
-                        </div>
+						<div class="col-md-3">           
+							<label for="estatus" class="col-form-label-sm">Estatus</label>
+							 <select id="det-estatus" name="det-estatus" class="form-control form-control-sm"></select>
+						</div>
+						<div class="col-md-3">           
+							<label for="det-estatus_inventario" class="col-form-label-sm">Estatus Inventario</label>
+							 <select id="det-estatus-inventario" name="det-estatus-inventario" class="form-control form-control-sm"></select>
+						</div>
+						<div class="col-md-3">           
+							<label for="det-ubicacion" class="col-form-label-sm">Ubicacion</label>
+							 <select id="det-ubicacion" name="det-ubicacion" class="form-control form-control-sm"></select>
+						</div>
                         <div class="col-md-2">           
-                            <label for="det-qty" class="col-form-label-sm">CANTIDAD</label>
+							<label for="det-qty" class="col-form-label-sm">Cantidad</label>
                              <input type="text" class="form-control form-control-sm" id="det-qty" aria-describedby="qty" readonly>
-                        </div>
-                    </div>
-                    <br>
+						</div>
+					</div>
+					<br>
             
-                    <div class="modal-footer">
-                         
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+					<div class="modal-footer">
+						 
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <a href="#" class="btn btn-success" id="btnCambiarInv">Guardar Cambios</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
     <!-- page-wrapper -->
 
     <!-- using online scripts -->

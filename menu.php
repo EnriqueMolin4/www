@@ -1,14 +1,14 @@
-<div class="sidebar-content" >
+<div class="sidebar-content">
                 <!-- sidebar-brand  -->
-                <div class="sidebar-item sidebar-brand" style=";">
-                    <a href="index.php  "><img src="images/LOGOSAE2.png" width="98px" height="40px" style=""></a>
+                <div class="sidebar-item sidebar-brand">
+                    <a href="index.php  "><img src="images/LOGOSAE.fw.png" width="88px" height="40px"></a>
                     <div id="close-sidebar">
                          <i class="fas fa-bars"></i>
                       </div>
                 </div>
-                <center><div class="sidebar-item sidebar-header">
+                <div class="sidebar-item sidebar-header d-flex flex-nowrap">
                     <div class="user-pic">
-                        <img class="img-responsive img-rounded" src="images/LOGOSS_2.png" alt="User picture" width="auto">
+                        <img class="img-responsive img-rounded" src="images/user.jpg" alt="User picture">
                     </div>
                     <div class="user-info">
                         <span class="user-name"><?php echo $_SESSION['nombre']; ?>
@@ -20,18 +20,17 @@
                             <span>Online</span>
                         </span>
                     </div>
-                </div></center>
+                </div>
                 <!-- sidebar-menu  -->
                 <div class="sidebar-item sidebar-menu">
                
                     <ul>
-                        <li class="header-menu" >
-                            <span style="color: white">General</span>
+                        <li class="header-menu">
+                            <span>General</span>
                         </li>
                         <li>
                             <a href="index.php">
-                                <i class="fa fa-home"></<i>
-                                </i>
+                                <i class="fa fa-home"></i>
                                 <span class="menu-text">Inicio </span> 
                             </a>
                         </li>
@@ -102,7 +101,7 @@
                         ?>
                         <li class="sidebar-dropdown" id="submenurecursos">
                             <a href="#">
-                                <i class="fas fa-users-cog"></i>
+                                <i class="far fa-calendar-alt"></i>
                                 <span class="menu-text">Recursos Humanos</span>
                             </a>
                             <div class="sidebar-submenu" id="ulsubmenurecursos">
@@ -135,57 +134,46 @@
                                 if ( searchMenu($_SESSION['Modules'],'url','registroalmacen')) { 
                             ?>
                                     <li id="almacenlink">
-                                        <a href="registroalmacen.php">TPV | SIMS </a>
+                                        <a href="registroalmacen.php">General</a>
                                     </li>
                             <?php 
                             }
-							if (searchMenu($_SESSION['Modules'],'url','insumoaccesorios')) {
-							?>
-									<li id="insumoslink">
-										<a href="insumos_accesoriosNEW.php">Insumos | Accesorios </a>
-									</li>
-							<?php
-							}
                              if ( searchMenu($_SESSION['Modules'],'url','inventariotecnico')) { 
                             ?>
                                     <li id="cargastecnicolink">
-                                        <a href="inventariotecnico.php">Técnicos</a>
+                                        <a href="inventariotecnico.php">Tecnicos</a>
                                     </li>   
                              <?php 
                              }
                             if ( searchMenu($_SESSION['Modules'],'url','traspasos')) { 
                             ?>
                                     <li id="traspasoslink">
-                                        <a href="traspasos.php">Envíos</a>
+                                        <a href="traspasos.php">Envios</a>
                                     </li>  
 							<?php
 							}
                              if ( searchMenu($_SESSION['Modules'],'url','inventarioelavon')) { 
                             ?>  
                                     <li id="inventarioelavonlink">
-                                        <a href="inventarioelavon.php">Elavon Universo</a>
+                                        <a href="inventarioelavon.php">Inventario Elavon Universo</a>
                                     </li> 
                             <?php
                              }
-							   if ( searchMenu($_SESSION['Modules'],'url', 'peticionesenvio')){
-								   
-                             ?> 
-									<li id="peticioneslink">
+							  if ( searchMenu($_SESSION['Modules'],'url','peticiones')) { 
+                            ?>  
+                                    <li id="inventarioelavonlink">
                                         <a href="peticiones.php">Peticiones</a>
-                                    </li>
-							<?php
-							   }
-
-                                if ( searchMenu($_SESSION['Modules'],'url', 'tarjetastecnico')){
-
-							 ?>
-                                    <li id="tarjetaslink">
-                                        <a href="tarjetastecnico.php">Tarj. Tecnico</a>
-                                    </li>
-
+                                    </li> 
                             <?php
-                                }
-                            ?>
+                             }
+                             if ( searchMenu($_SESSION['Modules'],'url','tarjetastecnico')) { 
+                            ?>  
+                                    <li id="tarjetastecnicolink">
+                                        <a href="tarjetastecnico.php">Tarjetas Tecnicos</a>
+                                    </li> 
+                            <?php
+                             }
+                             ?> 
                                 </ul>
                             </div>
                         </li>
@@ -198,7 +186,7 @@
                         <li id="imageneslink">
                             <a href="imagenes.php">
                                 <i class="fa fa-images"></i>
-                                <span class="menu-text">Imágenes</span>
+                                <span class="menu-text">Imagenes</span>
                             </a>
                         </li>
                         <?php 
@@ -218,65 +206,64 @@
 
                         if ( searchMenu($_SESSION['Modules'],'group','Reportes') )   { 
                         ?>
-                        <li class="sidebar-dropdown" id="submenureportes">
+                        <li class="sidebar-dropdown">
                             <a href="#">
                                 <i class="fa fa-calendar-alt"></i>
                                 <span class="menu-text">Reportes</span>
                             </a>
-                            <div class="sidebar-submenu" id="ulsubmenureportes">
+                            <div class="sidebar-submenu">
                                 <ul>
 								<?php
 								if ( searchMenu($_SESSION['Modules'],'url','reporte_eventos') )   { 
 								?>
-                                    <li>
+                                    <li id="repeventoslink">
                                         <a href="reporteDetEv.php">Eventos</a>
                                     </li>
 								<?php 
 								}
 								if ( searchMenu($_SESSION['Modules'],'url','reporte_imagenestecnico') )   { 
 								?>
-                                    <li>
+                                    <li id="repimgtecnicolink">
                                         <a href="reporte_imagenestecnico.php">Imagenes por Tecnico</a>
                                     </li>
 								<?php 
 								}
 								if ( searchMenu($_SESSION['Modules'],'url','reporte_inventariocampo') )   { 
 								?>
-                                    <li>
+                                    <li id="repinvcampolink">
                                         <a href="reporte_inventariocampo.php">Inventario en Campo</a>
                                     </li>
 								<?php 
                                 }
                                 if ( searchMenu($_SESSION['Modules'],'url','reporte_almacen') )   { 
                                     ?>
-                                    <li>
+                                    <li id="repalmacenlink">
                                         <a href="reporte_almacen.php">Reporte Almacen</a>
                                     </li>
                                 <?php 
                                 }
 								if ( searchMenu($_SESSION['Modules'],'url','bitacoraODT') )   { 
                                     ?>
-                                    <li id="bitacoraodtlink">
+                                    <li id="repbitacoraodtlink">
                                         <a href="bitacoraODT.php">Bitacora ODT</a>
                                     </li>
                                 <?php 
                                 }
 								if ( searchMenu($_SESSION['Modules'],'url','buscarSerie') )   { 
                                     ?>
-                                    <li id="buscarserielink">
+                                    <li id="repbuscarserielink">
                                         <a href="rpt_series.php">Buscar Serie</a>
                                     </li>
                                 <?php 
                                 }
-								
-								if( searchMenu($_SESSION['Modules'], 'url', 'reporter'))  {
-								?>
-									<li id="reportedeteventolink">
-										<a href="reporte_detalle_evento.php">Reporte Detalle Evento</a>
-									</li>
-								
-								<?php
-								}
+								 if ( searchMenu($_SESSION['Modules'],'url','eventoSGS') )   { 
+                                    ?>
+                                    <li id="repeventosgslink">
+                                        <a href="eventos_sgs.php">Eventos SGS</a>
+                                    </li>
+                                <?php 
+								 }
+								 
 								?>
                                 </ul>
                             </div>
@@ -284,163 +271,84 @@
                         <?php 
                         }
 
-                        if ( searchMenu($_SESSION['Modules'],'group','Catalogos') )   
-                        { 
+                        if ( searchMenu($_SESSION['Modules'],'group','Catalogos') )   { 
                         ?>
-                            <li class="sidebar-dropdown" id="submenucatalogos">
-                                <a href="#">
-                                    <i class="fa fa-calendar"></i>
-                                    <span class="menu-text">Catálogos</span>
-                                </a>
+                        <li class="sidebar-dropdown" id="submenucatalogos">
+                            <a href="#">
+                                <i class="fa fa-calendar-alt"></i>
+                                <span class="menu-text">Catalogos</span>
+                            </a>
                             <div class="sidebar-submenu" id="ulsubmenucatalogos">
                                 <ul>
-								    <?php  if ( searchMenu($_SESSION['Modules'], 'url', 'bancos'))    {   ?>
-                                        <li id="bancoslink">
-                                            <a href="bancos.php">Bancos</a>
-                                        </li>
-                                    <?php }
-
-                                    if ( searchMenu($_SESSION['Modules'],'url','registrousuarios') )   {  ?>
-                                        <li id="registrousuarioslink">
-                                         <a href="registrousuarios.php">Usuarios</a>
-                                        </li>
-								    <?php } 
-									
-                                        if ( searchMenu($_SESSION['Modules'],'url','tecnicosxsupervisor') )  { 
-                                        
-								    ?>
-                                        <li id="tecnicosxsupervisorlink">
-                                        <a href="tecnicosxsupervisor.php">Tecnicos x Supervisor</a>
-                                        </li> 
-                                    <?php  }
+                                <?php  if ( searchMenu($_SESSION['Modules'],'url','bancos') )   {  ?>
+                                    <li id="bancoslink">
+                                        <a href="bancos.php">Bancos</a>
+                                    </li>
+								<?php } 
                                     
-                                        if ( searchMenu($_SESSION['Modules'],'url','parametros') )   { 
-                                         
-                                    ?>
-                                    <li id="parametroslink">
-                                        <a href="parametros.php">Parámetros</a>
+                                if ( searchMenu($_SESSION['Modules'],'url','registrousuarios') )   {  ?>
+                                    <li id="registrousuarioslink">
+                                        <a href="registrousuarios.php">Usuarios</a>
+                                    </li>
+								<?php } 
+									
+									if ( searchMenu($_SESSION['Modules'],'url','tecnicosxsupervisor') )   { 
+								?>
+                                    <li id="tecnicosxsupervisorlink">
+                                        <a href="tecnicosxsupervisor.php">Tecnicos x Supervisor</a>
                                     </li> 
-                                    <?php }
-
-
-                                     
-                                        if (searchMenu($_SESSION['Modules'],'url','tipos_catalogos') ) {
-                                        
-                                    ?>
-                                        <li id="vac_catalogolink">
-                                            <a href="tipos_catalogos.php">Versión, Aplicativo y Conectividad</a>
-                                        </li>
-                                    <?php }
-
-                                        if (searchMenu($_SESSION['Modules'], 'url', 'modelos') ) {
-                                        
-
-                                    ?>
-                                        <li id="catalogoxmodeloslink">
-                                            <a href="catalogosxmodelos.php">Modelos</a>
-                                        </li>
-                                    <?php }
-
-                                        if(searchMenu($_SESSION['Modules'], 'url', 'permisos')) {
-
-                                    ?>
-
-                                        <li id="permisoslink">
-                                        <a href="permisos.php">Permisos</a>
-                                        </li>
-                                    <?php }
-
-                                    	if (searchMenu($_SESSION['Modules'], 'url', 'catalogo_territorios')) {
-                                    		# code...
-                                    ?>
-                                    	<li id = "territorioslink">
-                                    		<a href="territorios.php">Territorios</a>
-                                    	</li>
-                                    <?php }
-                                    if (searchMenu($_SESSION['Modules'], 'url', 'catalogo_plazas')) {
-                                    		# code...
-                                    ?>
-                                    	<li id = "plazaslink">
-                                    		<a href="plazas.php">Plazas</a>
-                                    	</li>
-                                    <?php }
-
-									if (searchMenu($_SESSION['Modules'], 'url', 'cancelacionyrechazos')) {
-                                    		# code...
-                                    ?>
-                                    	<li id = "cancelyrechazoslink">
-                                    		<a href="cancelacion_rechazo.php">Cancelación y Rechazo</a>
-                                    	</li>
-
-                                    <?php }
-                                     if (searchMenu($_SESSION['Modules'], 'url', 'tarjetastecnico')) {
-                                         # code...
-                                     ?>
-                                        <li id = "tarjetastecnicolink">
-                                            <a href="tarjetastecnico.php">Tarjetas Técnico</a>
-                                        </li>
-                                    <?php }
+								<?php  }
+									if ( searchMenu($_SESSION['Modules'],'url','parametros') )   {  ?>
+                                    <li id="parametroslink">
+                                        <a href="parametros.php">Parametros</a>
+                                    </li> 
+                                <?php } 
+                                    if ( searchMenu($_SESSION['Modules'],'url','tipos_catalogos') )   {  ?>
+                                        <li id="tiposcatalogoslink">
+                                            <a href="tipos_catalogos.php">Version, Aplicativo y Conectividad</a>
+                                        </li> 
+                                    <?php 
+                                    } 
+                                    
+                                    if ( searchMenu($_SESSION['Modules'],'url','modelos') )   {  ?>
+                                            <li id="tiposcatalogoslink">
+                                                <a href="catalogosxmodelos.php">Modelos</a>
+                                            </li> 
+                                    <?php 
+                                    } 
+                                      if ( searchMenu($_SESSION['Modules'],'url','permisos') )   {  ?>
+                                            <li id="tiposcatalogoslink">
+                                                <a href="permisos.php">Permisos</a> 
+                                            </li>  
+                                    <?php
+                                    }
+                                        if ( searchMenu($_SESSION['Modules'],'url','plazas') )   {  ?>
+                                            <li id="plazaslink">
+                                                <a href="plazas.php"> Plazas</a>
+                                            </li> 
+                                    <?php 
+                                     }
+                                     if ( searchMenu($_SESSION['Modules'],'url','territorial') )   {  ?>
+                                         <li id="territorioslink">
+                                             <a href="territorios.php">Territorio</a>
+                                         </li> 
+                                    <?php 
+                                    } 
+                                   
+                                    if ( searchMenu($_SESSION['Modules'],'url','cancelacion_rechazo') )   {  ?>
+                                         <li id="cancelacion_rechazolink">
+                                             <a href="cancelacion_rechazo.php">Cancelacion Rechazos</a>
+                                         </li> 
+                                    <?php 
+                                    } 
                                     ?>
                                 </ul>
                             </div>
                         </li>
-                        <?php } 
-						
-						if ( searchMenu($_SESSION['Modules'],'group','Evaluacion') )
-						{
-						?> 
-							<li class="sidebar-dropdown" id="submenuevaluacion">
-								<a href="#">
-									<i class="fa fa-file-alt"></i>
-									<span class="menu-text" >Evaluacion</span>
-								</a>
-								<div class="sidebar-submenu" id="ulsubmenuevaluacion">
-									<ul>
-										<?php if ( searchMenu( $_SESSION['Modules'],'url','evaluacion' ) ) {?>
-										
-										<li id="evaluacionlink">
-											<a href="evaluacion.php">Test</a>
-										</li>
-										<?php }
-                                        if ( searchMenu( $_SESSION['Modules'], 'url', 'nuevaevaluacion' ) ) {
-                                        ?>
-                                        <li id="nuevaevaluacionlink">
-                                            <a href="nuevaevaluacion.php">Nueva Evaluación</a>
-                                        </li>
-										<?php }
-                                        if ( searchMenu( $_SESSION['Modules'], 'url', 'evaluacion_tecnica') ) {
-                                        ?>
-                                        <li id="evaluacionteclink" >
-                                            <a href="validar_evaluacion.php">Ver Evaluacion</a>
-                                        </li>
-                                    <?php }
-                                    ?>
-										
-									</ul>
-								</div>
-							</li>
-						<?php } 
-                        if ( searchMenu($_SESSION['Modules'], 'group','ResultadosEv') )
-                        {
+                        <?php 
+                        } 
                         ?>
-                            <li class="sidebar-dropdown" id="submenuresultados" >
-                                <a href="#">
-                                    <i class="fa fa-file-alt"></i>
-                                    <span class="menu-text">Resultados Evaluación</span>
-                                </a>
-                                <div class="sidebar-submenu" id="ulsubmenuresultados">
-                                    <ul>
-                                        <?php if (searchMenu($_SESSION['Modules'], 'url', 'resultados_evaluacion') ){
-                                        ?>
-                                    <li id="resultadoslink">
-                                        <a href="resultados_evaluacion.php">Ver Resultados</a>
-                                    </li>
-                                <?php } ?>
-                                </ul>
-                                </div>
-                            </li>
-                        <?php }
-                        ?>
+                       
                     </ul>
                 </div>
                 <!-- sidebar-menu  -->
@@ -459,27 +367,3 @@
         </a>
     </div>
 </div>
-<style>
-    .menu-text
-    {
-        color: white;
-    }
-    .fa-bars:before {
-    content: "\f0c9";
-    color: white;
-    }
-    .sidebar-bg.bg1 .sidebar-wrapper {
-    background-image: url(../img/bg1.jpg);
-    width: 13%;
-    }
-    .sidebar-wrapper .sidebar-menu ul li a .menu-text {
-    color: white;
-    display: inline-block;
-    font-size: 15px;
-    margin-bottom: 10px;
-    }
-    .menu-text {
-    
-    }
-
-</style>
