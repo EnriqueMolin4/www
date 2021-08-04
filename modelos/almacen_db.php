@@ -61,6 +61,21 @@ class Almacen implements IConnections {
             self::$logger->error ("File: almacen_db.php;	Method Name: getModelosTPV();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
+
+
+	function getAplicativo() {
+ 
+		$sql = "SELECT * FROM `tipo_aplicativo`   WHERE estatus = 1 and clave_elavon != 0 Order by nombre ";
+		//self::$logger->error($sql);
+		 try {
+			 $stmt = self::$connection->prepare ($sql );
+			 $stmt->execute (array());
+			 $result = $stmt->fetchAll ( PDO::FETCH_ASSOC );
+			 return $result;
+		 } catch ( PDOException $e ) {
+			 self::$logger->error ("File: almacen_db.php;	Method Name: getAplicativo();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		 }
+  	}
 	
 	
 	function getCarriers() {
@@ -199,6 +214,7 @@ class Almacen implements IConnections {
 				CASE WHEN inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios' END tipoNombre,
 				inv.no_serie,	
 				CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN  inv.tipo= 4 THEN a.concepto END modelo,
+				ta.nombre aplicativ,
 				tc.nombre conect,
 				em.nombre estatus,
 				ei.nombre estatus_inventario,
@@ -216,6 +232,7 @@ class Almacen implements IConnections {
 				inv.cve_banco
 				FROM inventario inv
 				LEFT JOIN modelos m  ON m.id = inv.modelo
+				LEFT JOIN tipo_aplicativo ta ON ta.id = inv.aplicativo
 				LEFT JOIN tipo_conectividad tc ON tc.id = inv.conectividad
 				LEFT JOIN carriers c  ON c.id = inv.modelo
 				LEFT JOIN accesorios a ON a.id = inv.modelo
@@ -232,7 +249,7 @@ class Almacen implements IConnections {
 				-- group by inv.id
 				$filter ";
 			 		
-		 	//self::$logger->error($sql);
+		 	self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -1029,6 +1046,19 @@ class Almacen implements IConnections {
 		}
 	}
 
+	function getAplicativoId($aplicativo){
+
+		$sql = "SELECT id From tipo_aplicativo WHERE nombre= '$aplicativo' AND estatus = 1 ";
+
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return $result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ){
+			self::$logger->error ("File: almacen_db.php;     Method Name: getAplicativoId(); 	Functionality: Search Products; Log:". $sql . $e->getMessage () );
+		}
+	}
+
 	function getEstatusInvId($estatus_ubicacion)
 	{
 		$sql = "SELECT id FROM tipo_estatus_inventario WHERE nombre = '$estatus_ubicacion' AND estatus=1 ";
@@ -1584,6 +1614,16 @@ if($module == 'getTable') {
     $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
 
 	echo json_encode($data); //$val;
+}
+
+if($module == 'getAplicativo') {
+	$rows = $Almacen->getAplicativo();
+	  $val = '<option value="0" selected>Seleccionar</option>';
+	  foreach ( $rows as $row ) {
+		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	  }
+	  echo $val;
+  
 }
 
 if($module == 'getTableInsumos'){
@@ -2162,6 +2202,7 @@ if($module == 'updateInvProd')
 	
 	$prepareStatement = "UPDATE `inventario` 
 						SET `modelo` = ?, 
+							`aplicativo` = ?, 
 							`conectividad` = ?, 
 							`estatus` = ?,
 							`ubicacion` = ?,  
@@ -2173,6 +2214,7 @@ if($module == 'updateInvProd')
 
 	$arrayString = array (
 			$params['modelo'],
+			$params['aplicativo'],
 			$params['conectividad'],
 			$params['estatus'],
 			$params['ubicacion'],
@@ -3952,12 +3994,14 @@ if ($module == 'InventarioEditar')
 		$No_serie = preg_replace( '/[^a-z0-9 ]/i', '', $No_serie);
 		
 		$Modelo = $hojaDeProductos->getCellByColumnAndRow(3, $indiceFila);
-		$Conectividad = $hojaDeProductos->getCellByColumnAndRow(4, $indiceFila);
-		$Estatus = $hojaDeProductos->getCellByColumnAndRow(5, $indiceFila);
-		$Estatus_ubicacion = $hojaDeProductos->getCellByColumnAndRow(6, $indiceFila);
-		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
+		$Aplicativo = $hojaDeProductos->getCellByColumnAndRow(4, $indiceFila);
+		$Conectividad = $hojaDeProductos->getCellByColumnAndRow(5, $indiceFila);
+		$Estatus = $hojaDeProductos->getCellByColumnAndRow(6, $indiceFila);
+		$Estatus_ubicacion = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
+		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(8, $indiceFila);
 		
 		$ModeloId = $Almacen->getModeloId($Modelo->getValue());
+		$AplicativoId = $Almacen->getAplicativoId($Aplicativo->getValue());
 		$ConectividadId = $Almacen->getConectividadId($Conectividad->getValue());
 		$EstatusId = $Almacen->getEstatusId($Estatus->getValue());
 		$Estatus_ubicacionId = $Almacen->getEstatusInvId($Estatus_ubicacion->getValue());
@@ -3998,6 +4042,7 @@ if ($module == 'InventarioEditar')
 				$TipoId,
 				$No_serie,
 				$ModeloId,
+				$AplicativoId,
 				$ConectividadId,
 				$EstatusId,
 				$Estatus_ubicacionId,
@@ -4044,18 +4089,23 @@ if ($module == 'UpdateInventario')
 	 }
 
 	 if($info[3]) {
-		$campoUpdate .= " ,conectividad=? ";
+		$campoUpdate .= " ,aplicativo=? ";
 		array_push($arrayString,$info[3]);
 	 }
+
 	 if($info[4]) {
-		$campoUpdate .= " ,estatus=? ";
+		$campoUpdate .= " ,conectividad=? ";
 		array_push($arrayString,$info[4]);
 	 }
 	 if($info[5]) {
+		$campoUpdate .= " ,estatus=? ";
+		array_push($arrayString,$info[4]);
+	 }
+	 if($info[6]) {
 		$campoUpdate .= " ,estatus_inventario=? ";
 		array_push($arrayString,$info[5]);
 	 }
-	 if($info[6]) {
+	 if($info[7]) {
 		$campoUpdate .= " ,ubicacion=? ";
 		array_push($arrayString,$info[6]);
 	 }
@@ -4070,6 +4120,8 @@ if ($module == 'UpdateInventario')
 	
 
 	$id = $Almacen->insert($sql,$arrayString);
+
+	print_r($id);
 	
 	$msg = "actualizó en ";
 	
