@@ -16,7 +16,7 @@ class DBConnection
             case 'dsd':
             	try {
 					
-				$dsn = "mysql:host=localhost;dbname=sinttecomv3;charset=utf8";
+				$dsn = "mysql:host=localhost;dbname=sinttecomdev3;charset=utf8";
 				$db_user = 'root';
 				$db_pass='';
 				$dbh = new PDO($dsn,  $db_user, $db_pass);
@@ -32,7 +32,7 @@ class DBConnection
 			case 'sinttecom':
             	try {
 					
-				$dsn = "mysql:host=localhost;dbname=sinttecomv3;charset=utf8";
+				$dsn = "mysql:host=localhost;dbname=sinttecomdev3;charset=utf8";
 				$db_user = 'root';
 				$db_pass='';
 				$dbh = new PDO($dsn,  $db_user, $db_pass);
