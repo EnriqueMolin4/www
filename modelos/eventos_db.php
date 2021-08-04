@@ -102,8 +102,6 @@ class Eventos implements IConnections {
 		$userId = $_SESSION['userid'];
 		$territorial = $_SESSION['territorial'];
 		$evidencias = $params['evidencias'];
-		//$territorio = $params['territorialF'];
-		$territorio = isset($params['territorialF']) ? $params['territorialF'] : array(); //filtro territorial
 		
 		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
 		$orderDir = $params['order'][0]['dir'];
@@ -133,24 +131,6 @@ class Eventos implements IConnections {
 		if($_SESSION['tipo_user'] == 'supOp' ) {
 			 $where .= " AND cp_territorios.territorio_id = $territorial ";
 		}
-		//filtro territorial
-		if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor'){
-
-			if( $params['territorialF'] != 0 )
-			{
-				//$where .= " AND cp_territorios.territorio_id = ".$params['territorialF'];
-				$where .= " AND cp_territorios.territorio_id = $territorio ";
-			}
-		}
-
-		if($params['tecnicof'] != 0){
-			$where .=" AND e.tecnico =".$params['tecnicof'];
-		}
-
-		if($params['bancof'] != 0)
-		{
-			$where .= " AND e.cve_banco = ".$params['bancof'];
-		}
 
 		if($evidencias == '1') {
 			$where .= " AND e.totalImg > 0 ";
@@ -170,6 +150,8 @@ class Eventos implements IConnections {
 			$where .=" OR e.estatus LIKE '".$params['search']['value']."%'  )";
 
 		}
+    
+     
 
 		$sql = "SELECT e.id,
 				e.odt,
@@ -191,12 +173,12 @@ class Eventos implements IConnections {
 				IFNULL(img.totalImg,0) totalImg,
 				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
 				e.tipo_servicio,
-				e.servicio servicioid
+				e.servicio servicioid,
+				e.sync
 				from eventos e
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
 				LEFT JOIN comercios c ON  e.comercio = c.id
 				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
-				LEFT JOIN territorios ON cp_territorios.territorio_id = territorios.id
 				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
 				WHERE date(e.fecha_alta) BETWEEN '$inicio' AND '$fin'
 				$where
@@ -204,7 +186,7 @@ class Eventos implements IConnections {
 				$order
 				$filter ";
 
-		self::$logger->error ($sql);
+		//self::$logger->error ($sql);
 		//self::$logger->error($sql);
 		
 		try {
@@ -240,7 +222,6 @@ class Eventos implements IConnections {
 				ts.nombre servicioNombre,
 				CASE WHEN servicio = '' OR  servicio is null THEN 0 ELSE GetNameById(servicio,'TipoSubServicio') END subservicioNombre  ,
 				te.nombre  estatusNombre ,
-				tcc.nombre causaCambio,
 				IFNULL(tpvIn.modelo,0)  tvpInModelo,
                 IFNULL(tpvIn.conectividad,0) tvpInConectividad,
 				IFNULL(tpvRe.modelo,0)  tvpReModelo,
@@ -262,7 +243,6 @@ class Eventos implements IConnections {
 				LEFT JOIN inventario simIn ON eventos.sim_instalado= simIn.no_serie
 				LEFT JOIN inventario simRe ON eventos.sim_retirado = simRe.no_serie
 				LEFT JOIN checklist_evento cevento ON cevento.odt = eventos.odt AND cevento.tecnico = eventos.tecnico
-				LEFT JOIN tipo_causas_cambio tcc ON eventos.causacambio = tcc.id
 				where eventos.id = $id ";
 		
         try {
@@ -414,21 +394,21 @@ class Eventos implements IConnections {
 		IFNULL(simIn.modelo, 0) simInCarrier,
 		IFNULL(simRe.modelo, 0) simReCarrier, modelos.modelo,
 		CONCAT(detalle_usuarios.nombre, '', detalle_usuarios.apellidos) usuario
-		FROM
-			eventos
-		LEFT JOIN tipo_aplicativo ON tipo_aplicativo.id = eventos.aplicativo
-		LEFT JOIN inventario ON inventario.no_serie = eventos.tpv_instalado
-		LEFT JOIN tipo_conectividad ON inventario.conectividad = tipo_conectividad.id
-		LEFT JOIN inventario tpvIn ON
-			eventos.tpv_instalado = tpvIn.no_serie
-		LEFT JOIN inventario tpvRe ON
-			eventos.tpv_retirado = tpvRe.no_serie
-		LEFT JOIN inventario simIn ON
-			eventos.sim_instalado = simIn.no_serie
-		LEFT JOIN inventario simRe ON
-			eventos.sim_retirado = simRe.no_serie
-		LEFT JOIN modelos ON inventario.modelo = modelos.id
-		LEFT JOIN detalle_usuarios ON detalle_usuarios.cuenta_id = eventos.modificado_por
+	FROM
+		eventos
+	LEFT JOIN tipo_aplicativo ON tipo_aplicativo.id = eventos.aplicativo
+	LEFT JOIN inventario ON inventario.no_serie = eventos.tpv_instalado
+	LEFT JOIN tipo_conectividad ON inventario.conectividad = tipo_conectividad.id
+	LEFT JOIN inventario tpvIn ON
+		eventos.tpv_instalado = tpvIn.no_serie
+	LEFT JOIN inventario tpvRe ON
+		eventos.tpv_retirado = tpvRe.no_serie
+	LEFT JOIN inventario simIn ON
+		eventos.sim_instalado = simIn.no_serie
+	LEFT JOIN inventario simRe ON
+		eventos.sim_retirado = simRe.no_serie
+	LEFT JOIN modelos ON inventario.modelo = modelos.id
+	LEFT JOIN detalle_usuarios ON detalle_usuarios.cuenta_id = eventos.modificado_por
 
 				WHERE eventos.odt = '$odt'
 				$where 
@@ -439,7 +419,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getHistorialEventos();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getHistorialODT();	Functionality: Get Historia;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -500,7 +480,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getTipoFallas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getTipoServicios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -541,7 +521,7 @@ class Eventos implements IConnections {
 	}
  
 	function getModelos($nserie) {
-		$sql = "SELECT id,modelo from modelos  ";
+		$sql = "SELECT id,modelo from modelos where estatus=1 ";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -553,7 +533,7 @@ class Eventos implements IConnections {
 	}
 
 	function getListaModelos() {
-		$sql = "SELECT id,modelo from modelos  ";
+		$sql = "SELECT id,modelo from modelos WHERE estatus=1  and clave_elavon != 0 ";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -565,7 +545,7 @@ class Eventos implements IConnections {
 	}
 
 	function getListaConectividad() {
-		$sql = "SELECT id,nombre from tipo_conectividad  ";
+		$sql = "SELECT id,nombre from tipo_conectividad WHERE estatus=1 and clave_elavon != 0 ";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -699,20 +679,6 @@ class Eventos implements IConnections {
 			self::$logger->error ("File: eventos_db.php;	Method Name: getTecnicos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
-
-	
-	function getTecnicosFilter() {
-		$sql = "SELECT *, cuentas.id tecnicoId from cuentas,detalle_usuarios WHERE cuentas.id = detalle_usuarios.cuenta_id AND tipo_user = 3 AND cuentas.estatus=1 order By detalle_usuarios.nombre";
-		
-		
-		try {
-			$stmt = self::$connection->prepare ($sql );
-			$stmt->execute ();
-			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getTecnicosFilter();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
-		}
-	}
  
 	function getUbicacion() {
 		$sql = "SELECT id,nombre from tipo_ubicacion ORDER BY id";
@@ -808,7 +774,7 @@ class Eventos implements IConnections {
 			$stmt->execute (array($id));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieSimTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -872,7 +838,7 @@ class Eventos implements IConnections {
 			   $stmt->execute (array());
 			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		   } catch ( PDOException $e ) {
-			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusServicio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		   }
 	}
 
@@ -889,19 +855,6 @@ class Eventos implements IConnections {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusCancelado();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		   }
 	}
-	function getEstatusCambio() {
- 
-		$sql = "SELECT * FROM `tipo_causas_cambio`  Order by nombre ";
-  
-	 
-		 try {
-			 $stmt = self::$connection->prepare ($sql );
-			 $stmt->execute (array());
-			 return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		 } catch ( PDOException $e ) {
-			 self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusCambio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
-		 }
-  }
 	
 	function getEstatusRechazo() {
  
@@ -919,7 +872,7 @@ class Eventos implements IConnections {
 
 	function getProductos() {
  
-		$sql = "SELECT * FROM `tipo_producto` ";
+		$sql = "SELECT * FROM `tipo_producto`  WHERE status = 1 and clave_elavon != 0  ";
   
 
 		 try {
@@ -1011,7 +964,7 @@ class Eventos implements IConnections {
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
 				
-            self::$logger->error ("File: eventos_db.php;	Method Name: getOdtEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getDetalleEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
  
@@ -1029,7 +982,7 @@ class Eventos implements IConnections {
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
 				
-            self::$logger->error ("File: eventos_db.php;	Method Name: getFormularioEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getDetalleEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1181,7 +1134,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: existeEvento();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1193,7 +1146,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: GetTecnicoById();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1289,6 +1242,18 @@ class Eventos implements IConnections {
         }
 	}
 
+	function getInventarioTecnicoNoserie($noserie) {
+		$sql = "select *  from inventario_tecnico  where no_serie = '$noserie' ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetch ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioTecnicoNoserie();	Functionality: Get Evento By Id;	Log:" . $e->getMessage () );
+        }
+	}
+
 	function getVersion() {
  
 		$sql = "SELECT * FROM `tipo_version`   WHERE estatus = 1  Order by nombre ";
@@ -1300,11 +1265,11 @@ class Eventos implements IConnections {
 		 } catch ( PDOException $e ) {
 			 self::$logger->error ("File: eventos_db.php;	Method Name: getVersion();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		 }
-  	}
+  }
   
   	function getAplicativo() {
  
-		$sql = "SELECT * FROM `tipo_aplicativo`   WHERE estatus = 1  Order by nombre ";
+		$sql = "SELECT * FROM `tipo_aplicativo`   WHERE estatus = 1 and clave_elavon != 0 Order by nombre ";
 
 		 try {
 			 $stmt = self::$connection->prepare ($sql );
@@ -1325,7 +1290,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getInventarioId();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1338,7 +1303,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: existHistorialMov();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: existHistorialMov();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1352,7 +1317,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getOdtById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getOdtById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 
 	}
@@ -1365,7 +1330,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getModeloConectividad();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getModeloConectividad();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1378,7 +1343,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getListaCarrier();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getListaCarrier();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1392,7 +1357,7 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_ASSOC );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getInfoExtra();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: api_db.php;	Method Name: getInfoExtra();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -1411,37 +1376,10 @@ class Eventos implements IConnections {
 
 	}
 
-	//para el filtro de territorial de eventos
-	function getTerritorialL()
-	{
-		$sql = "SELECT * FROM `territorios`   WHERE status = 1  Order by nombre ";
-
-		 try {
-			 $stmt = self::$connection->prepare ($sql );
-			 $stmt->execute (array());
-			 return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		 } catch ( PDOException $e ) {
-			 self::$logger->error ("File: eventos_db.php;	Method Name: getTerritorialL();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
-		 }
-	}
-
-	function getBancos()
-	{
-		$sql = " SELECT * FROM `bancos` WHERE status=1";
-
-		try{
-			$stmt = self::$connection->prepare($sql);
-			$stmt->execute(array());
-			return $stmt->fetchAll ( PDO::FETCH_ASSOC);
-		} catch ( PDOException $e){
-			self::$logger->error("File: eventos_db.php;	Method Name: getBancos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
-		}
-	}
-	
 	function getCausasCambio()
 	{
 		$sql = "SELECT id,nombre from tipo_causas_cambio ";
-		   self::$logger->error ($sql);
+		    
 		   try {
 			   $stmt = self::$connection->prepare ($sql );
 			   $stmt->execute (array());
@@ -1519,7 +1457,7 @@ if($module == 'getTipoServicios') {
 	echo $val;
 }
 	
-if($module == 'getTipoSubServicio') {
+	if($module == 'getTipoSubServicio') {
 
 	$arr = $params['servicio_id'];
 
@@ -1619,22 +1557,28 @@ if($module == 'cambiarODT') {
 		
 }
 
+if($module == 'updSerie') {
+
+	$tpv = $params['tpv'];
+	$tipo = $params['tipo'];
+	$dato = $params['dato'];
+
+	$prepareStatementinvIn = "UPDATE `inventario` SET `$tipo`=?  WHERE `no_serie`=?; ";
+		$arrayStringinvIn = array (
+			$dato,
+			$tpv
+		);
+
+	$Eventos->insert($prepareStatementinvIn,$arrayStringinvIn);
+
+	echo  "Se actualizo $tipo ";
+}
+
 if($module == 'getInfoExtra') {
 	$rows = $Eventos->getInfoExtra($params['odt']);
 
 	echo json_encode($rows);
 }
-
-if($module == 'getTerritoriales')
-{
-	$val = '<option value="0">Seleccionar</option>';
-    $rows = $Eventos->getTerritorialL();
-    foreach ( $rows as $row ) {
-		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
-	}
-	echo $val;
-}
-
 
 if($module == 'getEstados') {
     $val = '<option value="0">Seleccionar</option>';
@@ -1643,17 +1587,8 @@ if($module == 'getEstados') {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
 	}
 	echo $val;
-}
 
-if($module == 'getBancos') {
-    $val = '<option value="0">Seleccionar</option>';
-    $rows = $Eventos->getBancos();
-    foreach ( $rows as $row ) {
-		$val .=  '<option value="' . $row ['cve'] . '">' . $row ['banco'] . '</option>';
-	}
-	echo $val;
 }
-
 if($module == 'getEstadosNombre') {
     $val = '<option value="0" selected>Seleccionar</option>';
     $rows = $Eventos->getEstados();
@@ -1916,17 +1851,6 @@ if($module == 'getTecnicos') {
 	echo $val;
 }
 
-
-if($module == 'getTecnicosFiltro') {
-	
-	$rows = $Eventos->getTecnicosFilter();
-	$val = '<option value="0" selected>Seleccionar</option>';
-	foreach ( $rows as $row ) {
-		$val .=  '<option value="' . $row ['tecnicoId'] . '">' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
-	}
-	echo $val;
-}
-
 if($module == 'getUbicacion') {
 	
 	$rows = $Eventos->getUbicacion();
@@ -2007,16 +1931,6 @@ if($module == 'getEstatusCancelado') {
   
 }
 
-if($module == 'getEstatusCambio') {
-	$rows = $Eventos->getEstatusCambio();
-	  $val = '<option value="0">Seleccionar</option>';
-	  foreach ( $rows as $row ) {
-		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
-	  }
-	  echo $val;
-  
-}
-
 if($module == 'getEstatusRechazo') {
 	$rows = $Eventos->getEstatusRechazo();
 	  $val = '<option value="0">Seleccionar</option>';
@@ -2041,7 +1955,7 @@ if($module == 'getProductos') {
 	$rows = $Eventos->getProductos();
 	  $val = '<option value="0" selected>Seleccionar</option>';
 	  foreach ( $rows as $row ) {
-		  $val .=  '<option value="' . $row ['nombre'] . '">' . $row ['nombre'] . '</option>';
+		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
 	  }
 	  echo $val;
   
@@ -2077,6 +1991,7 @@ if($module == 'getAplicativo') {
   
 }
 
+
 if($module == 'getCausasCambio') {
 	$rows = $Eventos->getCausasCambio();
 	  $val = '<option value="0" selected>Seleccionar</option>';
@@ -2086,6 +2001,9 @@ if($module == 'getCausasCambio') {
 	  echo $val;
   
 }
+
+
+
 
 if($module == 'getNumSerieTecnico') {
 	$rows = $Eventos->getNumSerieTecnico($params['tecnico_id']);
@@ -2890,6 +2808,7 @@ if($module == 'cerrarEvento') {
 	$rechazo = $params['rechazo'];
 	$subrechazo = $params['subrechazo'];
 	$cancelado = $params['cancelado'];
+	
 	$tpv = strlen($params['tpv']) > 0 ? $params['tpv'] : null;
 	$tvpInModelo = $params['tvpInModelo'];
 	$tpvInConnect = $params['tpvInConnect'];
@@ -2904,6 +2823,7 @@ if($module == 'cerrarEvento') {
 	$simRetirado = !strlen($params['simRetirado'])  ? null : $params['simRetirado'];
 	$simReData = $params['simReData'];
 	$producto = $params['producto'];
+	$producto_ret = $params['producto_ret'];
 	$comentariocierre = $params['comentario'];
 
 	$fechaatencion = $params['fechaatencion'];
@@ -2911,7 +2831,9 @@ if($module == 'cerrarEvento') {
 	$horasalida = $params['horasalida'];
 
 	$version = $params['version'];
+	$version_ret = $params['version_ret'];
     $aplicativo = $params['aplicativo'];
+	$aplicativo_ret = $params['aplicativo_ret'];
 	$receptorservicio = $params['receptorservicio'];
 	$foliotelecarga = $params['foliotelecarga'];
 
@@ -2923,15 +2845,7 @@ if($module == 'cerrarEvento') {
 	$faltaInformacion = $params['faltaInformacion'];
 	$faltaUbicacion = $params['faltaUbicacion'];
 
-	$tpvYaInstalada = $Eventos->serieInstalada($tpv);
-
-	if ($tpvYaInstalada)
-	{
-		echo "instalada";
-	}
-	else{
-		echo "no instalada";
-	}
+	$causacambio = $params['causacambio'];
 	
 	$prepareStatement = "UPDATE `eventos` SET 
 						`estatus`=?,
@@ -2948,16 +2862,23 @@ if($module == 'cerrarEvento') {
 						`sim_retirado`=?,
 						`modificado_por`=?,
 						`producto`=? ,
+						`producto_ret`=? ,
 						`comentarios_cierre`=? ,
 						`version`=? ,
+						`version_ret`=? ,
 						`aplicativo`=? ,
+						`aplicativo_ret`=? ,
 						`receptor_servicio`=? ,
 						`folio_telecarga`=?,
 						`rollos_instalar`=?,
 						`rollos_entregados`=?,
 						`fecha_atencion`=?,
 						`hora_llegada`=?,
-						`hora_salida`=?    
+						`hora_salida`=?, 
+						`causacambio`=?, 
+						`rechazo`=?, 
+						`subrechazo`=?, 
+						`cancelado`=?   
 						 WHERE `odt`=? ; 
 						 ";
 
@@ -2976,9 +2897,12 @@ if($module == 'cerrarEvento') {
 		$simRetirado,
 		$user,
 		$producto,
+		$producto_ret,
 		$comentariocierre,
 		$version,
+		$version_ret,
 		$aplicativo,
+		$aplicativo_ret,
 		$receptorservicio,
 		$foliotelecarga,
 		$rollosInstalar,
@@ -2986,6 +2910,10 @@ if($module == 'cerrarEvento') {
 		$fechaatencion,
 		$horallegada,
 		$horasalida,
+		$causacambio,
+		$rechazo,
+		$subrechazo,
+		$cancelado,
 		$odt 
 	);
 
@@ -3138,16 +3066,94 @@ if($module == 'cerrarEvento') {
 		if ( strlen($tpvRetirado) > 0 ) {
 
 			$datosTPVRet = $Eventos->getInvNoserie($tpvRetirado);
-
-			if( $datosEvento[0]['tecnico'] != $tecnico ) {
-
+			$tpvElavon = $Eventos->getInvUniversoNoserie($tpvRetirado);
+			$tpvInvTecnico = $Eventos->getInventarioTecnicoNoserie($tpvRetirado);
+			$existeInventarioId = $Eventos->getInventarioId($tpvRetirado);
+			//Existe en Elavon Universo
+			if($tpvElavon) {
+				//Existe en INventario
 				if($datosTPVRet) {
 
-					$queryTVP = " UPDATE inventario SET modelo=?,conectividad=?,estatus=?,estatus_inventario=?,ubicacion=?,id_ubicacion=?,modificado_por=?,fecha_edicion=? WHERE no_serie=?";
-					$Eventos->insert($queryTVP,array($tvpReModelo,$tpvReConnect,15,3,9,$datosEvento[0]['tecnico'],$user,$fecha,$tpvRetirado));
-				} else {
+					if( $datosTPVRet['id_ubicacion'] !=  $tecnico ) {
 
-					$tpvElavon = $Eventos->getInvUniversoNoserie($tpvRetirado);
+						$queryTVP = " UPDATE inventario SET modelo=?,conectividad=?,estatus=?,estatus_inventario=?,ubicacion=?,id_ubicacion=?,modificado_por=?,fecha_edicion=? WHERE no_serie=?";
+						$Eventos->insert($queryTVP,array($tvpReModelo,$tpvReConnect,15,3,9,$tecnico,$user,$fecha,$tpvRetirado));
+
+						//GRABAR Historial RETIRO de COMERCIO
+						$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO');
+
+						if($existeHistorialMov == '0') {
+
+							$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+								
+							$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+							$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+						
+							$arrayString = array (
+								$existeInventarioId,
+								$fecha,
+								'RETIRADO',
+								2,
+								$tpvRetirado,
+								1,
+								1,
+								$datosEvento[0]['comercio'],
+								$user
+							);
+						
+							$Eventos->insert($sql,$arrayString);
+						}
+					
+					} 
+
+			
+
+					$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
+					$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
+
+					$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
+					$arrayString = array (
+						$datosEvento[0]['tecnico'],
+						$tpvRetirado,
+						1,
+						0,
+						1,
+						$datosEvento[0]['tecnico'],
+						$fecha,
+						$fecha
+					);
+
+					$existId = $Eventos->insert($sql,$arrayString);
+
+					if($existId) {
+						//GRABAR Historial Entrada INventario Tecnico
+						$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'ENTRADA INV TECNICO');
+
+						if($existeHistorialMov == '0') {
+
+							$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+								
+							$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+							$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+						
+							$arrayString = array (
+								$existeInventarioId,
+								$fecha,
+								'ENTRADA INV TECNICO',
+								9,
+								$tpvRetirado,
+								1,
+								1,
+								$tecnico,
+								$user
+							);
+						
+							$Eventos->insert($sql,$arrayString);
+						}
+					}
+					
+				
+				} else {
 
 					if($tpvElavon['estatus_modelo'] != '17') {
 						$datafieldsInventarios = array('tipo','no_serie','modelo','conectividad','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','fecha_entrada','fecha_creacion','fecha_edicion','modificado_por','cve_banco');
@@ -3174,33 +3180,216 @@ if($module == 'cerrarEvento') {
 						);
 
 						$id = $Eventos->insert($sql,$arrayStringD);
+
+						//GRABAR Historial RETIRO de COMERCIO
+						$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO');
+
+						if($existeHistorialMov == '0') {
+
+							$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+								
+							$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+							$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+						
+							$arrayString = array (
+								$existeInventarioId,
+								$fecha,
+								'RETIRADO',
+								2,
+								$tpvRetirado,
+								1,
+								1,
+								$datosEvento[0]['comercio'],
+								$user
+							);
+						
+							$Eventos->insert($sql,$arrayString);
+						}
+
+						$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
+						
+						$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
+
+						$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
+						$arrayString = array (
+							$datosEvento[0]['tecnico'],
+							$tpvRetirado,
+							1,
+							0,
+							1,
+							$datosEvento[0]['tecnico'],
+							$fecha,
+							$fecha
+						);
+
+						$Eventos->insert($sql,$arrayString);
+
+						//GRABAR Historial Entrada INventario Tecnico
+						$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'ENTRADA INV TECNICO');
+
+						if($existeHistorialMov == '0') {
+
+							$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+								
+							$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+							$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")";
+							$arrayString = array (
+								$existeInventarioId,
+								$fecha,
+								'ENTRADA INV TECNICO',
+								9,
+								$tpvRetirado,
+								1,
+								1,
+								$tecnico,
+								$user
+							);
+						
+							$Eventos->insert($sql,$arrayString);
+						}
+
 					}
+
+					
 				}
-			
+
+			}
+	
+		}
 
 		
+		
+		//Validar inventarios SIM Instalada
+		if( strlen($simInstalado) > 0 ) {
 
-				$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
+			//GRABAR Historial RETIRO de COMERCIO
+			$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'INSTALADO');
+
+			if($existeHistorialMov == '0') {
+
+				$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 					
-				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
-
-				$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
+				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+				$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+			
 				$arrayString = array (
-					$datosEvento[0]['tecnico'],
-					$tpvRetirado,
-					1,
-					0,
-					1,
-					$datosEvento[0]['tecnico'],
+					$existeInventarioId,
 					$fecha,
-					$fecha
+					'INSTALADO',
+					2,
+					$simInstalado,
+					1,
+					1,
+					$datosEvento[0]['comercio'],
+					$user
 				);
-
+			
 				$Eventos->insert($sql,$arrayString);
+			}
 
-				//Existe 
-				$existeInventarioId = $Eventos->getInventarioId($tpvRetirado);
-				$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO');
+			$datosSIM = $Eventos->getInvNoserie($simInstalado);
+			$simElavon = $Eventos->getInvUniversoNoserie($simInstalado);
+			$simInvTecnico = $Eventos->getInventarioTecnicoNoserie($simInstalado);
+			$existeInventarioId = $Eventos->getInventarioId($simInstalado);
+			//Existe en Elavon
+			if($simElavon) {
+
+				if($datosSIM) {
+
+					$querySIM = " UPDATE inventario SET modelo=?,estatus_inventario=?,ubicacion=?,modificado_por=?,id_ubicacion=?,fecha_edicion=? WHERE no_serie=?";
+					$Eventos->insert($querySIM,array($simInData,4,2,$_SESSION['userid'],$datosComercio[0]['id'],$fecha,$simInstalado));				
+					
+					// TVP INSTALADO QUITAR DEL INV TECNICO
+					$querySIM = " DELETE FROM inventario_tecnico  WHERE no_serie=? AND tecnico=?  ";
+					$Eventos->insert($querySIM,array($simInstalado,$datosEvento[0]['tecnico']));
+					//Grabar Historia
+					$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO TECNICO');
+
+					if($existeHistorialMov == '0') {
+
+						$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+						
+						$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+						$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+					
+						$arrayString = array (
+							$existeInventarioId,
+							$fecha,
+							'RETIRADO TECNICO',
+							2,
+							$simInstalado,
+							2,
+							1,
+							$datosEvento[0]['tecnico'],
+							$user
+						);
+					
+						$Eventos->insert($sql,$arrayString); 
+					}
+
+				}  else {
+					
+					if($simElavon['estatus_modelo'] != '17') {
+						
+						$datafieldsInv = array('tipo','cve_banco','no_serie','modelo','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','modificado_por','fecha_entrada','fecha_creacion','fecha_edicion');
+						$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInv), '?'));
+
+						$sql = "INSERT INTO inventario (" . implode(",", $datafieldsInv ) . ") VALUES (".$question_marks.")"; 
+						$arrayString = array (
+							$simElavon['tipo'],
+							'037',
+							$simInstalado,
+							$simInData,
+							$simElavon['estatus_modelo'],
+							4,
+							1,
+							2,
+							$datosComercio[0]['id'],
+							$user,
+							$user,
+							$fecha,
+							$fecha,
+							$fecha
+						);
+
+						$Eventos->insert($sql,$arrayString);
+						//Grabar Historia
+						$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO TECNICO');
+
+						if($existeHistorialMov == '0') {
+
+							$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+							
+							$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+							$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+						
+							$arrayString = array (
+								$existeInventarioId,
+								$fecha,
+								'RETIRADO TECNICO',
+								2,
+								$simInstalado,
+								2,
+								1,
+								$datosEvento[0]['tecnico'],
+								$user
+							);
+						
+							$Eventos->insert($sql,$arrayString); 
+						}
+					}
+				}
+			}	
+			
+		}
+		
+
+		
+			//Validar inventarios SIM Retirado
+			if( strlen($simRetirado) > 0 ) {
+
+				//GRABAR Historial RETIRO de COMERCIO
+				$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRO COMERCIO');
 
 				if($existeHistorialMov == '0') {
 
@@ -3212,114 +3401,122 @@ if($module == 'cerrarEvento') {
 					$arrayString = array (
 						$existeInventarioId,
 						$fecha,
-						'RETIRADO',
-						9,
+						'RETIRO COMERCIO',
+						2,
 						$tpvRetirado,
 						1,
 						1,
-						$datosEvento[0]['tecnico'],
+						$datosEvento[0]['comercio'],
 						$user
 					);
 				
 					$Eventos->insert($sql,$arrayString);
 				}
-			}
-		}
-
-		
-		
-		//Validar inventarios SIM Instalada
-		if( strlen($simInstalado) > 0 ) {
-
-			$datosSIM = $Eventos->getInvNoserie($simInstalado);
-
-			
-
-			if($datosSIM['id_ubicacion'] == $datosEvento[0]['comercio'] ) {
-
-					
-				$querySIM = " UPDATE inventario SET modelo=?,estatus_inventario=?,ubicacion=?,modificado_por=?,id_ubicacion=?,fecha_edicion=? WHERE no_serie=?";
-				$Eventos->insert($querySIM,array($simInData,4,2,$_SESSION['userid'],$datosComercio[0]['id'],$fecha,$simInstalado));
-				// TVP INSTALADO QUITAR DEL INV TECNICO
-				$querySIM = " DELETE FROM inventario_tecnico  WHERE no_serie=? AND tecnico=?  ";
-				$Eventos->insert($querySIM,array($simInstalado,$datosEvento[0]['tecnico']));
-
-				
-
-			}  else {
-				$simElavon = $Eventos->getInvUniversoNoserie($simInstalado);
-
-				if($simElavon['estatus_modelo'] != '17') {
-					
-					$datafieldsInv = array('tipo','cve_banco','no_serie','modelo','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','modificado_por','fecha_entrada','fecha_creacion','fecha_edicion');
-				
-					$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInv), '?'));
-
-					$sql = "INSERT INTO inventario (" . implode(",", $datafieldsInv ) . ") VALUES (".$question_marks.")"; 
-					$arrayString = array (
-						$simElavon['tipo'],
-						'037',
-						$simInstalado,
-						$simInData,
-						$simElavon['estatus_modelo'],
-						4,
-						1,
-						2,
-						$datosComercio[0]['id'],
-						$user,
-						$user,
-						$fecha,
-						$fecha,
-						$fecha
-					);
-
-					$Eventos->insert($sql,$arrayString);
-				}
-			}
-
-			//Existe 
-			$existeInventarioId = $Eventos->getInventarioId($simInstalado);
-			$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'INSTALADO');
-
-			if($existeHistorialMov == '0') {
-
-			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
-				
-				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
-				$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
-			
-				$arrayString = array (
-					$existeInventarioId,
-					$fecha,
-					'INSTALADO',
-					2,
-					$simInstalado,
-					2,
-					1,
-					$datosComercio[0]['id'],
-					$user
-				);
-			
-				$Eventos->insert($sql,$arrayString); 
-			}
-		}
-		
-
-		
-			//Validar inventarios SIM Retirado
-			if( strlen($simRetirado) > 0 ) {
 
 				$datosSIM = $Eventos->getInvNoserie($simRetirado);
+				$simElavon = $Eventos->getInvUniversoNoserie($simRetirado);
+				$simInvTecnico = $Eventos->getInventarioTecnicoNoserie($simRetirado);
+				$existeInventarioId = $Eventos->getInventarioId($simRetirado);
 
-				if($datosSIM['id_ubicacion'] == $datosEvento[0]['tecnico'] ) {
+				if($simElavon) {
 
-					$queryTVP = " UPDATE inventario SET modelo=?,estatus=?,estatus_inventario=?,ubicacion=?,modificado_por=?,id_ubicacion=?,fecha_edicion=? WHERE no_serie=?";
-					$Eventos->insert($queryTVP,array($simReData,15,3,9,$_SESSION['userid'],$datosEvento[0]['tecnico'],$fecha,$simRetirado));
+					if($datosSIM) {
+
+						$queryTVP = " UPDATE inventario SET modelo=?,estatus=?,estatus_inventario=?,ubicacion=?,modificado_por=?,id_ubicacion=?,fecha_edicion=? WHERE no_serie=?";
+						$Eventos->insert($queryTVP,array($simReData,15,3,9,$_SESSION['userid'],$datosEvento[0]['tecnico'],$fecha,$simRetirado));
+
+						$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
+							
+						$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
+
+						//GRABAR Historial RETIRO de COMERCIO
+						$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO');
+
+						if($existeHistorialMov == '0') {
+
+							$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+								
+							$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+							$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+						
+							$arrayString = array (
+								$existeInventarioId,
+								$fecha,
+								'ENTRADA INV TECNICO',
+								9,
+								$tpvRetirado,
+								1,
+								1,
+								$tecnico,
+								$user
+							);
+						
+							$Eventos->insert($sql,$arrayString);
+						}
+
+					} else 
+					{
+
+						$simElavon = $Eventos->getInvUniversoNoserie($simRetirado);
+
+						if($simElavon['estatus_modelo'] != '17') {
+							
+							$datafieldsInv = array('tipo','cve_banco','no_serie','modelo','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','modificado_por','fecha_entrada','fecha_creacion','fecha_edicion');
+						
+							$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInv), '?'));
+
+							$sql = "INSERT INTO inventario (" . implode(",", $datafieldsInv ) . ") VALUES (".$question_marks.")"; 
+							$arrayString = array (
+								$simElavon['tipo'],
+								'037',
+								$simRetirado,
+								$simReData,
+								$simElavon['estatus_modelo'],
+								3,
+								1,
+								9,
+								$tecnico,
+								$user,
+								$user,
+								$fecha,
+								$fecha,
+								$fecha
+							);
+
+							$Eventos->insert($sql,$arrayString);
+
+							//GRABAR Historial RETIRO de COMERCIO
+							$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'ENTRADA INV TECNICO');
+
+							if($existeHistorialMov == '0') {
+
+								$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+									
+								$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+								$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+							
+								$arrayString = array (
+									$existeInventarioId,
+									$fecha,
+									'ENTRADA INV TECNICO',
+									9,
+									$tpvRetirado,
+									1,
+									1,
+									$tecnico,
+									$user
+								);
+							
+								$Eventos->insert($sql,$arrayString);
+							}
+
+							
+						}
+					}
 
 					$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
-						
 					$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
-
+					
 					$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
 					$arrayString = array (
 						$datosEvento[0]['tecnico'],
@@ -3333,67 +3530,8 @@ if($module == 'cerrarEvento') {
 					);
 
 					$Eventos->insert($sql,$arrayString);
-				} else {
-
-					$simElavon = $Eventos->getInvUniversoNoserie($simRetirado);
-
-					if($simElavon['estatus_modelo'] != '17') {
-						
-						$datafieldsInv = array('tipo','cve_banco','no_serie','modelo','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','modificado_por','fecha_entrada','fecha_creacion','fecha_edicion');
-					
-						$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInv), '?'));
-
-						$sql = "INSERT INTO inventario (" . implode(",", $datafieldsInv ) . ") VALUES (".$question_marks.")"; 
-						$arrayString = array (
-							$simElavon['tipo'],
-							'037',
-							$simRetirado,
-							$simReData,
-							$simElavon['estatus_modelo'],
-							3,
-							1,
-							9,
-							$tecnico,
-							$user,
-							$user,
-							$fecha,
-							$fecha,
-							$fecha
-						);
-
-						$Eventos->insert($sql,$arrayString);
-
-						
-					}
 				}
 
-				//Existe 
-				$existeInventarioId = $Eventos->getInventarioId($simRetirado);
-				$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO');
-
-				if($existeHistorialMov == '0') {
-
-					$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
-						
-					$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
-					$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
-				
-					$arrayString = array (
-						$existeInventarioId,
-						$fecha,
-						'RETIRADO',
-						9,
-						$simRetirado,
-						1,
-						1,
-						$tecnico,
-						$user
-					);
-				
-					$Eventos->insert($sql,$arrayString);
-				}
-
-				
 			}
 		
 		 
