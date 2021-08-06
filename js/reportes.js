@@ -17,13 +17,14 @@ $(document).ready(function() {
             format:'Y-m-d'
         });
 
-
-        
+        $("#tipo_producto").multiselect({
+            includeSelectAllOption: true,
+            allSelectedText: 'Todos'
+        })
+        $('#tipo_producto').multiselect('refresh');
 
 })
-
-    $('#tipo_producto').multiselect({includeSelectAllOption: true,
-                    allSelectedText: 'Todos'});
+    
 
 function getTipoEvento() {
     $.ajax({
@@ -82,8 +83,7 @@ function getEstatus()
         cache: false,
         success: function(data){
         $("#tipo_estatus").html(data);   
-        $("#tipo_estatus").multiselect({
-            nonSelectedText: 'Seleccionar',
+		$("#tipo_estatus").multiselect({
             includeSelectAllOption: true,
             allSelectedText: 'Todos'
         })
@@ -104,11 +104,10 @@ function getubicacion()
         cache: false,
         success: function(data){
         $("#tipo_estatusubicacion").html(data);   
-        $("#tipo_estatusubicacion").multiselect({
-            nonSelectedText: 'Seleccionar',
+		$("#tipo_estatusubicacion").multiselect({
             includeSelectAllOption: true,
             allSelectedText: 'Todos'
-        });
+        }); 
         console.data;       
         },
         error: function(error){
@@ -126,11 +125,11 @@ function getubi()
         cache: false,
         success: function(data){
         $("#tipo_ubicacion").html(data);   
-        $("#tipo_ubicacion").multiselect({
-            nonSelectedText: 'Seleccionar',
+		$("#tipo_ubicacion").multiselect({
+            
             includeSelectAllOption: true,
             allSelectedText: 'Todos'
-        });
+        }); 
         console.data;       
         },
         error: function(error){

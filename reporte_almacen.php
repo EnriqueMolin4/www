@@ -9,20 +9,17 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>REPORTE ALMACEN</h3>
-            </div>
-            <div class="container-fluid p-4 panel-white">
-            
+            <div class="container-fluid p-5">
+            <h3>Reporte Almacén</h3>
 			
-            <h5>BUSQUEDA</h5>
-            <div id="container" class="col">
+            <h5>Busqueda</h5>
+            <div id="container" class="container">
                 <form action="modelos/reportes_db.php">
                     <div class="row">
                         <div class="col-sm-3">
-                            <label for="tipo_producto" class="col-form-label-sm">TIPO</label><br>
+                            <label for="tipo_producto" class="col-form-label-sm">Tipo</label><br>
                             <select hidden id="tipo_producto" name="tipo_producto[]" class="custom-select form-control-sm searchInventario" multiple>
                                     <option value="1">TPV</option>
                                     <option value="2">SIM</option>
@@ -30,23 +27,23 @@
                                     <option value="4">Accesorios</option>
                             </select>
                         </div>   
-                       
+                        
                         <div class="col-sm-3">
-                            <label for="tipo_estatusubicacion" class="col-form-label-sm">ESTATUS UBICACION</label><br>
+                            <label for="tipo_estatusubicacion" class="col-form-label-sm">Ubicación</label><br>
                                 <select hidden id="tipo_estatusubicacion" name="tipo_estatusubicacion[]" class="custom-select form-control-sm searchInventario" multiple>
-                                        <option value="0" selected >Seleccionar</option>
-                                </select>
-                        </div>
-						 <div class="col-sm-3">
-                            <label for="tipo_ubicacion" class="col-form-label-sm">ALMACENES / LABORATORIO</label><br>
-                                <select hidden id="tipo_ubicacion" name="tipo_ubicacion[]" class="custom-select form-control-sm searchInventario" multiple>
-										<option value="0" selected >Seleccionar</option>
+                                        <option value="0" selected>Seleccionar</option>
                                 </select>
                         </div>
                         <div class="col-sm-3">
-                            <label for="tipo_estatus" class="col-form-label-sm">ESTATUS</label><br>
+                            <label for="tipo_ubicacion" class="col-form-label-sm">Almacenes | Laboratorio</label><br>
+                                <select hidden id="tipo_ubicacion" name="tipo_ubicacion[]" class="custom-select form-control-sm searchInventario" multiple>
+                                    <option value="0" selected>Seleccionar</option>
+                                </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="tipo_estatus" class="col-form-label-sm">Estatus</label><br>
                                 <select hidden id="tipo_estatus" name="tipo_estatus[]" class="custom-select form-control-sm searchInventario" multiple>
-                                        <option value="0" selected>Seleccionar </option>
+                                        <option value="0" selected>Seleccionar</option>
                                 </select>
                         </div>
                         
