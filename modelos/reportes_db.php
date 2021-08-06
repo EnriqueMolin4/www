@@ -34,7 +34,7 @@ class Reportes implements IConnections {
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: reportes_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: usuarios_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
 	private function execute_ins($prepareStatement, $arrayString) {
@@ -44,7 +44,7 @@ class Reportes implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: reportes_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: usuarios_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 	}
 	function insert($prepareStatement, $arrayString) {
@@ -203,7 +203,7 @@ class Reportes implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getEstatus();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;	Method Name: getStatusx();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -218,7 +218,7 @@ class Reportes implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getubicacion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;	Method Name: getStatusUbicacion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -238,7 +238,7 @@ class Reportes implements IConnections {
 		$almacen = $_SESSION['almacen'];
         $insumos = strpos($producto, 3);
 
-        /* if( in_array(3,$params['tipo_producto'])  ) {
+        if( in_array(3,$params['tipo_producto'])  ) {
 
             $queryInsumos = " UNION ALL
                     SELECT 
@@ -254,7 +254,7 @@ class Reportes implements IConnections {
                     WHERE it.tecnico = du.cuenta_id
                     AND it.no_serie in (SELECT codigo FROM tipo_insumos)
             ";
-        } */
+        }
 
 		if( $ubicacion != '0' ) {
 
@@ -298,49 +298,31 @@ class Reportes implements IConnections {
 			//$where .= " ( AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) OR tu.id = $almacen )";
 		}
 
-        if(in_array(3,$params['tipo_producto']) )
-        {
-            $sql = "SELECT 
-            'Insumos' tipoNombre,
-            no_serie,
-            NULL modelo,
-            'DISPONIBLE_NUEVO' estatus,
-            'EN PLAZA'  estatus_inventario,
-            CONCAT(du.nombre,' ',du.apellidos) ubicacion,
-            fecha_modificacion,
-            it.cantidad
-            FROM inventario_tecnico it, detalle_usuarios du
-            WHERE it.tecnico = du.cuenta_id
-            AND it.no_serie in (SELECT codigo FROM tipo_insumos)";
-        }
-        else {
-            $sql = " SELECT CASE WHEN
-                inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios'
-                END tipoNombre,
-                inv.no_serie,
-                CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN inv.tipo = 4 THEN a.concepto
-                END modelo,
-                em.nombre estatus,
-                ei.nombre estatus_inventario,
-                CASE WHEN inv.ubicacion = 9 THEN CONCAT(du.nombre, ' ', du.apellidos) WHEN inv.ubicacion = 2 THEN CONCAT('Af:',cm.afiliacion,' : ',cm.comercio) END ubicacion,
-                inv.fecha_edicion fecha_modificacion,
-                CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad
-                END cantidad
-                FROM inventario inv
-            LEFT JOIN modelos m ON m.id = inv.modelo
-            LEFT JOIN carriers c ON c.id = inv.modelo
-            LEFT JOIN accesorios a ON a.id = inv.modelo
-            LEFT JOIN tipo_estatus_modelos em ON em.id = inv.estatus
-            LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
-            LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
-            LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
-            LEFT JOIN comercios cm ON cm.id = inv.id_ubicacion
-            WHERE inv.no_serie IS NOT NULL
+		$sql = " SELECT 
+						  CASE WHEN inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios' END tipoNombre,
+						  inv.no_serie,	
+						   CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN  inv.tipo= 4 THEN a.concepto END modelo,
+						   em.nombre estatus,
+						   ei.nombre estatus_inventario,
+						   CASE WHEN inv.ubicacion= 9 THEN CONCAT(du.nombre,' ',du.apellidos) ELSE tu.nombre END  ubicacion,
+							inv.fecha_edicion fecha_modificacion,
+							CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad END cantidad
+							FROM inventario inv
+							LEFT JOIN modelos m  ON m.id = inv.modelo
+							LEFT JOIN carriers c  ON c.id = inv.modelo
+							LEFT JOIN accesorios a ON a.id = inv.modelo
+							LEFT JOIN tipo_estatus_modelos em ON em.id = inv.estatus
+							LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
+							LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
+							LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
+							-- LEFT JOIN comercios c ON c.afiliacion = inv.id_ubicacion
+							WHERE inv.no_serie is not null
                             $where
-                            
-					        ORDER BY inv.no_serie ";
-        }
+                            $queryInsumos
+					        ORDER BY ubicacion ";
 
+
+				
 		self::$logger->error ($sql.' '.$estatusubicacion);
 		
 		try {
@@ -348,7 +330,7 @@ class Reportes implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: reportes_db.php;	Method Name: getAlmaceninventario();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -362,7 +344,7 @@ class Reportes implements IConnections {
         $filter = "";
         $param = "";
         $where = "";
-		$campoFecha = $params['customRadioInline1'];
+        $campoFecha = $params['customRadioInline1'];
         $fecha_alta         = $params['fecha_alta'];
         $fecha_hasta        = $params['fecha_hasta'];
         $estado             = isset($params['estado']) ? $params['estado'] : array();
@@ -371,7 +353,7 @@ class Reportes implements IConnections {
         $estatus_servicio   = isset($params['estatus_servicio']) ? $params['estatus_servicio'] : array();
         $fecha_cierre       = $params['fecha_cierre'];
         $fecha_cierre_hasta       = $params['hasta_fc'];
-    
+
 
         if( sizeof($estado) > 0) {
 
@@ -400,15 +382,15 @@ class Reportes implements IConnections {
 				$where .= " AND eventos.estatus_servicio in ($estatus_servicioList) ";
 			}
         } 
-		
-		if( $campoFecha == 'Alta' ){
-			$campoFecha = "DATE(eventos.fecha_alta)";
-		} else {
-			$campoFecha = "DATE(eventos.fecha_cierre)";
-		}
 
-         if($fecha_hasta != '') {
-            // $where .= " AND DATE(eventos.fecha_alta) >= '$fecha_alta' ";
+        if( $campoFecha == 'Alta') {
+            $campoFecha = "DATE(eventos.fecha_alta)";
+        } else {
+            $campoFecha = "DATE(eventos.fecha_cierre)";
+        }
+
+        if($fecha_hasta != '') {
+           // $where .= " AND DATE(eventos.fecha_alta) <= '$fecha_hasta' "
         }
 
         if ($fecha_cierre != '') 
@@ -420,43 +402,78 @@ class Reportes implements IConnections {
         {
             $where .= " AND DATE(eventos.fecha_cierre) <= '$fecha_cierre_hasta'  ";
         }
-        $sql = "SELECT
-				eventos.odt, eventos.afiliacion, ts.nombre servicioNombre, tss.nombre subservicioNombre,
-	   eventos.fecha_alta, eventos.fecha_vencimiento, eventos.fecha_cierre, c.comercio, eventos.colonia,
-	   eventos.municipio, eventos.estado, eventos.direccion, eventos.telefono, eventos.hora_atencion,
-	   eventos.hora_comida, eventos.fecha_asignacion, eventos.receptor_servicio, eventos.fecha_atencion,
-	   eventos.hora_llegada, eventos.hora_salida, eventos.descripcion, ts.nombre nombreServicio,
-	   CONCAT( u.nombre,' ',IFNULL(u.apellidos, '')) tecnicoNombre, te.nombre estatus,tee.nombre estatus_visita, eventos.id_caja,
-	   eventos.afiliacionamex, eventos.amex, tv.nombre version, ta.nombre aplicativo, eventos.producto,
-       eventos.rollos_instalar, eventos.rollos_entregados, eventos.tpv_instalado, eventos.tpv_retirado,
-	   eventos.sim_instalado, eventos.sim_retirado, eventos.comentarios, eventos.comentarios_cierre,
-	   eventos.comentarios_validacion, eventos.folio_telecarga,
-       tcc.nombre CausasCambio,tc.nombre Cancelacion, tr.nombre Rechazo, tsr.nombre Subrechazo, he.fecha_movimiento FechaValidacion,
-	   CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
-	   CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
-	   CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
-	   CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
-	   CONCAT(du.nombre,' ',IFNULL(du.apellidos, '')) modificado_por
-				FROM eventos
-				LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
-				JOIN comercios c ON c.id = eventos.comercio
-				JOIN tipo_estatus te ON te.id = eventos.estatus
-                JOIN tipo_estatus tee ON tee.id = eventos.estatus
-				JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
-				LEFT JOIN tipo_subservicios tss ON tss.id = eventos.servicio
+
+        $sql = "SELECT  
+				eventos.odt, 
+				eventos.afiliacion, 
+				ts.nombre servicioNombre, 
+				tss.nombre subservicioNombre, 
+				eventos.fecha_alta, 
+				eventos.fecha_vencimiento, 
+				eventos.fecha_cierre, 
+				c.comercio, 
+				eventos.colonia, 
+				eventos.municipio, 
+				eventos.estado, 
+				eventos.direccion, 
+				eventos.telefono, 
+				eventos.hora_atencion,
+				eventos.hora_comida,
+				eventos.fecha_asignacion,
+				eventos.receptor_servicio,
+				eventos.fecha_atencion,
+                eventos.hora_llegada,
+				eventos.hora_salida,
+				eventos.descripcion, 
+				ts.nombre nombreServicio,			  
+				CONCAT( u.nombre,' ', IFNULL(u.apellidos, '')) tecnicoNombre, 
+                tes.nombre estatus_servicio,
+                te.nombre estatus,
+				eventos.id_caja,
+				eventos.afiliacionamex,
+				eventos.amex,
+				tv.nombre version,
+				ta.nombre aplicativo,
+				eventos.producto,
+				eventos.rollos_instalar,
+				eventos.rollos_entregados,
+				eventos.tpv_instalado, 
+				eventos.tpv_retirado, 
+				eventos.sim_instalado,
+				eventos.sim_retirado,
+				eventos.comentarios, 
+				eventos.comentarios_cierre,
+				eventos.comentarios_validacion,
+                eventos.folio_telecarga,
+				tcc.nombre CausasCambio,
+				tc.nombre Cancelacion, 
+				tr.nombre Rechazo, 
+				tsr.nombre Subrechazo, 
+				he.fecha_movimiento FechaValidacion,
+                CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
+                CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
+                CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
+                CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) modificado_por															
+                FROM eventos
+                LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+                JOIN comercios c ON c.id = eventos.comercio 
+                JOIN tipo_estatus te ON te.id = eventos.estatus_servicio
+                JOIN tipo_estatus tes ON tes.id = eventos.estatus
+                JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
+                Left JOIN tipo_subservicios tss ON tss.id= eventos.servicio
 				LEFT JOIN tipo_version tv ON tv.id = eventos.version
-				LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
-				LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
-				LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
-                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+                LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
+                LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
+				LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
                 LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
                 LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
                 LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
                 LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
-				-- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
-				-- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
-                -- WHERE eventos.fecha_alta BETWEEN '$fecha_alta' AND '$fecha_hasta'
-				 WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
+                -- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
+                -- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
+                WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
                 $where 
 				 
                 ";
@@ -478,14 +495,14 @@ class Reportes implements IConnections {
         $sql = "SELECT * FROM `tipo_estatus` WHERE `tipo` = 12 Order by id ";
   
       
-
+         
          
          try {
              $stmt = self::$connection->prepare ($sql );
              $stmt->execute (array());
              return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
          } catch ( PDOException $e ) {
-             self::$logger->error ("File: reportes_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+             self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
          }
   }
     
@@ -672,14 +689,18 @@ if($module == 'getEstatusServicio') {
 {
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="Reporte_Almacen.csv"');
+
     $rows = $Reportes->getAlmaceninventario($params);
     echo 'TipoNombre,No_Serie,Modelo,Estatus,Estatus_Inventario,Ubicacion,Fecha_Edicion,Cantidad,Id'.PHP_EOL;
+
     foreach ($rows as $row)
     {
         echo $row['tipoNombre'] . "," . $row['no_serie'] . "," . $row['modelo'] . "," . $row['estatus'] . "," . $row['estatus_inventario'] . "," . $row['ubicacion'] . "," . $row['fecha_edicion'] . "," . $row['cantidad'] . "," . $row['id'] . PHP_EOL;
     }
+
     /*$rowsTotal = $Reportes->getAlmaceninventario($params,false);*/
     /*$data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+
 	//echo json_encode($data); //$val;
 } */
 
@@ -747,12 +768,15 @@ if ( $module == 'reporte_detevento' ) {
 
     $rows = $Reportes->getDetEvento($params, true);
 
-    $headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR');
+	//$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
+	$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR');																																																																																																																																																																																 
+
+    //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO', 'DESCRIPCION', 'TECNICO', 'ESTATUS', 'TPV INSTALADA', 'TPV RETIRADA', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION');
 
         $documento = new Spreadsheet();
         $documento 
             ->getProperties()
-            ->setCreator("Sistema SAES")
+            ->setCreator("Sistema SAE")
             ->setLastModifiedBy('SEA')
             ->setTitle('Archivo explorado desde MySQL') 
             ->setDescription('Un archivo de Excel exportado desde MySQL por SAE');   
@@ -775,19 +799,18 @@ if ( $module == 'reporte_detevento' ) {
             $counter = 1;
             foreach ($fields as $index => $value) {
                 //$value = $counter == 2 ? "'$value" : $value;
-				if( $counter == 2 ) {
-					$value ="'$value";
-				} else if ( $counter == 34 ){
-					$value = empty($value) ? "" : "'$value";
-				} else if ( $counter == 35 ) {
-					$value = $value == 'No Legible' ? "" : $value;
-					$value = empty($value) ? "" : "'$value";
-				} else if ( $counter == 36 ){
-					$value = empty($value) ? "" : "'$value";
-				} else if ( $counter == 37 ){
-					$value = empty($value) ? "" : "'$value";
-				}			
-				
+                if( $counter == 2  ) {
+                    $value ="'$value";
+                } else if ( $counter == 33 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 34 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 35 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 36 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } 
+
                 $hojaDeProductos->setCellValueByColumnAndRow($counter, $numeroDeFila, $value);
                 $counter++;
             }
@@ -805,12 +828,6 @@ if ( $module == 'reporte_detevento' ) {
         exit;
 
 }
-
-
-
-
-
-
 
 
 ?>
