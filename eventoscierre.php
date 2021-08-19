@@ -157,7 +157,10 @@
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="tecnico" class="col-form-label-sm">Tecnico</label><?php if ($_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?><a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
+                                <label for="tecnico" class="col-form-label-sm">Tecnico </label>
+								<?php if ( $_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?>
+									<a href="#" id="btnReasignarTecnico"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> 
+								<?php } ?>  
                                 <input type="text" class="form-control form-control-sm" id="tecnico" aria-describedby="tecnico" readonly>
                             </div>
                             <div class="col">           
@@ -1059,6 +1062,28 @@
 				}
 			}
 
+            if(estatus == '14') {
+
+                if(cancelado == '0') {
+                    validar++;
+                    msg += "Se necesita la causa de cancelacion ";
+                }
+            } 
+
+            if(estatus == '15') {
+
+                if(rechazo == '0') {
+                    validar++;
+                    msg += "Se necesita la causa de rechazo ";
+
+                    
+                } else if (subrechazo == '0') {
+                    validar++;
+                    msg += "Se necesita la causa de subrechazo ";
+                }
+            }
+
+
 			if(validar == 0 ) {
 				var dnd = { module: 'cerrarEvento',eventoId : eventoId, odt : odt,comentario: comentario,estatus:estatus,foliotelecarga:foliotelecarga, odtGetNet : odtGetNet, odtNotificado : odtNotificado,
 							odtDescarga: odtDescarga, tvpRetBateria: tvpRetBateria, tvpRetEliminador: tvpRetEliminador, tvpRetTapa: tvpRetTapa, tvpRetCable: tvpRetCable, tvpRetBase: tvpRetBase,
@@ -1473,7 +1498,7 @@
             $("#rowSubRechazos").hide();
             $("#btnUpdateEvento").attr('disabled',true);
 
-            if(  $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'callcenterADM'  ) {
+            if(  $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'callcenterADM' || $("#tipo_user").val() == 'supOp'  ) {
                 $("#rollos_entregados").attr('readonly',false);
                 $("#rollos_instalar").attr('readonly',false);
                 $("#comentarios_cierre").attr('readonly',false);

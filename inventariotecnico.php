@@ -55,6 +55,8 @@
                             <th>Producto</th>
                             <th>No Serie</th>
 							<th>Modelo</th>
+                            <th>Conectividad</th>
+                            <th>Aplicativo</th>
                             <th>Cantidad</th>
                             <th>Estatus</th>
                             <th>Fecha Actualizacion</th>
@@ -143,6 +145,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" value="0" id="noSerie" name="noSerie">
+                    <!-- <input type="hidden" value="0" id="Tec" name="Tec"> -->
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>
            </div>
@@ -159,6 +162,11 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
+
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>

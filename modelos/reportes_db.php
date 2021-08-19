@@ -272,7 +272,7 @@ class Reportes implements IConnections {
 		}
 		
 		if( $estatus != '0' ) {
-			$where .= " AND inv.id_estatus in  ( $estatus ) ";
+			$where .= " AND inv.estatus in  ( $estatus ) ";
 		}
 
 		if( $producto != '0' ) {
@@ -298,7 +298,7 @@ class Reportes implements IConnections {
 			//$where .= " ( AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) OR tu.id = $almacen )";
 		}
 
-		$sql = " SELECT 
+		$sql = "SELECT 
 						  CASE WHEN inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios' END tipoNombre,
 						  inv.no_serie,	
 						   CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN  inv.tipo= 4 THEN a.concepto END modelo,
@@ -330,7 +330,7 @@ class Reportes implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: almacen_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: almacen_db.php;	Method Name: getAlmaceninventario();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 

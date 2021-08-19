@@ -102,6 +102,7 @@ class Eventos implements IConnections {
 		$userId = $_SESSION['userid'];
 		$territorial = $_SESSION['territorial'];
 		$evidencias = $params['evidencias'];
+		$territorio = isset($params['territorialF']) ? $params['territorialF'] : array(); //filtro territorial
 		
 		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
 		$orderDir = $params['order'][0]['dir'];
@@ -130,6 +131,25 @@ class Eventos implements IConnections {
    
 		if($_SESSION['tipo_user'] == 'supOp' ) {
 			 $where .= " AND cp_territorios.territorio_id = $territorial ";
+		}
+		//filtro territorial
+		if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor'){
+
+			if( $params['territorialF'] != 0 )
+			{
+				//$where .= " AND cp_territorios.territorio_id = ".$params['territorialF'];
+				$where .= " AND cp_territorios.territorio_id = $territorio ";
+			}
+		}
+
+		//filtro tecnico
+		if($params['tecnicof'] != 0){
+			$where .=" AND e.tecnico =".$params['tecnicof'];
+		}
+
+		if($params['bancof'] != 0)
+		{
+			$where .= " AND e.cve_banco = ".$params['bancof'];
 		}
 
 		if($evidencias == '1') {
@@ -394,21 +414,21 @@ class Eventos implements IConnections {
 		IFNULL(simIn.modelo, 0) simInCarrier,
 		IFNULL(simRe.modelo, 0) simReCarrier, modelos.modelo,
 		CONCAT(detalle_usuarios.nombre, '', detalle_usuarios.apellidos) usuario
-	FROM
-		eventos
-	LEFT JOIN tipo_aplicativo ON tipo_aplicativo.id = eventos.aplicativo
-	LEFT JOIN inventario ON inventario.no_serie = eventos.tpv_instalado
-	LEFT JOIN tipo_conectividad ON inventario.conectividad = tipo_conectividad.id
-	LEFT JOIN inventario tpvIn ON
-		eventos.tpv_instalado = tpvIn.no_serie
-	LEFT JOIN inventario tpvRe ON
-		eventos.tpv_retirado = tpvRe.no_serie
-	LEFT JOIN inventario simIn ON
-		eventos.sim_instalado = simIn.no_serie
-	LEFT JOIN inventario simRe ON
-		eventos.sim_retirado = simRe.no_serie
-	LEFT JOIN modelos ON inventario.modelo = modelos.id
-	LEFT JOIN detalle_usuarios ON detalle_usuarios.cuenta_id = eventos.modificado_por
+			FROM
+				eventos
+			LEFT JOIN tipo_aplicativo ON tipo_aplicativo.id = eventos.aplicativo
+			 JOIN inventario ON inventario.no_serie = eventos.tpv_instalado
+			LEFT JOIN tipo_conectividad ON inventario.conectividad = tipo_conectividad.id
+			LEFT JOIN inventario tpvIn ON
+				eventos.tpv_instalado = tpvIn.no_serie
+			LEFT JOIN inventario tpvRe ON
+				eventos.tpv_retirado = tpvRe.no_serie
+			LEFT JOIN inventario simIn ON
+				eventos.sim_instalado = simIn.no_serie
+			LEFT JOIN inventario simRe ON
+				eventos.sim_retirado = simRe.no_serie
+			LEFT JOIN modelos ON inventario.modelo = modelos.id
+			LEFT JOIN detalle_usuarios ON detalle_usuarios.cuenta_id = eventos.modificado_por
 
 				WHERE eventos.odt = '$odt'
 				$where 
@@ -419,7 +439,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getHistorialODT();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getHistorialEventos();	Functionality: Get Historia;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -788,6 +808,19 @@ class Eventos implements IConnections {
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieComercio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		}
+	}
+
+	function getTecnicosFilter() {
+		$sql = "SELECT *, cuentas.id tecnicoId from cuentas,detalle_usuarios WHERE cuentas.id = detalle_usuarios.cuenta_id AND tipo_user = 3 AND cuentas.estatus=1 order By detalle_usuarios.nombre";
+		
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: eventos_db.php;	Method Name: getTecnicosFilter();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
  
@@ -1389,6 +1422,48 @@ class Eventos implements IConnections {
 		   }
 	}
 
+	//para el filtro de territorial de eventos
+	function getTerritorialL()
+	{
+		$sql = "SELECT * FROM `territorios`   WHERE status = 1  Order by nombre ";
+
+		 try {
+			 $stmt = self::$connection->prepare ($sql );
+			 $stmt->execute (array());
+			 return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		 } catch ( PDOException $e ) {
+			 self::$logger->error ("File: eventos_db.php;	Method Name: getTerritorialL();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		 }
+	}
+
+	function getBancos()
+	{
+		$sql = " SELECT * FROM `bancos` WHERE status=1";
+
+		try{
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute(array());
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC);
+		} catch ( PDOException $e){
+			self::$logger->error("File: eventos_db.php;	Method Name: getBancos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		}
+	}
+
+	function getFechaAtencion($odt)
+	{
+		$sql = "SELECT eventos.fecha_atencion FROM eventos WHERE eventos.odt = '$odt' ";
+
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+			return $result;
+		} catch ( PDOException $e )
+		{
+			self::$logger->error ("File: eventos_db.php;	Method Name: getFechaAtencion();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
+		}
+	}
+
 }
 //
 include 'DBConnection.php';
@@ -1412,6 +1487,16 @@ if($module == 'getTable') {
     $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  $rowsTotal, "recordsFiltered" => $rowsTotal );
 
 	echo json_encode($data); //$val;
+}
+
+if($module == 'getTerritoriales')
+{
+	$val = '<option value="0">Seleccionar</option>';
+    $rows = $Eventos->getTerritorialL();
+    foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
 }
 
 if($module == 'getModeloConectividad') {
@@ -1457,7 +1542,7 @@ if($module == 'getTipoServicios') {
 	echo $val;
 }
 	
-	if($module == 'getTipoSubServicio') {
+if($module == 'getTipoSubServicio') {
 
 	$arr = $params['servicio_id'];
 
@@ -1475,6 +1560,15 @@ if($module == 'getTipoServicios') {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
 	}
 	echo $val;
+}
+
+if ($module == 'getFechaAtencion')
+{
+	$odt = $params['odt'];
+
+	$rows = $Eventos->getFechaAtencion($odt);
+
+	echo $rows;
 }
 
 
@@ -1496,13 +1590,11 @@ if($module == 'cambiarODT') {
 
 		$Eventos->insert($prepareStatement,$arrayString);
 
-
 		$prepareStatement = "UPDATE `img` SET `odt`=?  WHERE `odt`=? ; ";
 		$arrayString = array (
 				$params['newODT'],
 				$params['oldODT'] 
 		);
-	 
 		$Eventos->insert($prepareStatement,$arrayString);
 
 		$prepareStatement = "INSERT INTO `cambio_odt`
@@ -1557,6 +1649,43 @@ if($module == 'cambiarODT') {
 		
 }
 
+if($module == 'cambiarFechasOdt')
+{
+	$fecha = date("Y-m-d H:i:s");
+	$user = $_SESSION['userid'];
+ 
+	$sql = "UPDATE eventos SET fecha_atencion=?, fecha_alta=?, fecha_vencimiento=? where odt=? ;";
+
+	$arrayString = array (
+		$params['fechaAtencion'],
+		$params['fechaAlta'],
+		$params['fechaVen'],
+		$params['odt']
+	);
+
+	$id = $Eventos->insert($sql, $arrayString);
+
+
+	//Historico cambio fecha
+	$prepareStatement = "INSERT INTO historial_eventos ( evento_id, fecha_movimiento, estatus_id, odt, modified_by )
+						VALUES
+						(?,?,?,?,?);
+						";
+	$arrayStringHist = array (
+		$params['id'],
+		$fecha,
+		20,
+		$params['odt'],
+		$user
+	);
+
+	$Eventos->insert($prepareStatement, $arrayStringHist);
+
+	echo $id;
+
+
+}
+
 if($module == 'updSerie') {
 
 	$tpv = $params['tpv'];
@@ -1578,6 +1707,14 @@ if($module == 'getInfoExtra') {
 	$rows = $Eventos->getInfoExtra($params['odt']);
 
 	echo json_encode($rows);
+}
+if($module == 'getBancos') {
+    $val = '<option value="0">Seleccionar</option>';
+    $rows = $Eventos->getBancos();
+    foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['cve'] . '">' . $row ['banco'] . '</option>';
+	}
+	echo $val;
 }
 
 if($module == 'getEstados') {
@@ -1845,6 +1982,15 @@ if($module == 'getTecnicos') {
 	
 	$rows = $Eventos->getTecnicos();
 	$val = '<option value="0">Quitar Asignacion</option>';
+	foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['tecnicoId'] . '">' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
+	}
+	echo $val;
+}
+if($module == 'getTecnicosFiltro') {
+	
+	$rows = $Eventos->getTecnicosFilter();
+	$val = '<option value="0" selected>Seleccionar</option>';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['tecnicoId'] . '">' . $row ['nombre'] .' '. $row ['apellidos']. '</option>';
 	}
@@ -2778,7 +2924,61 @@ if($module =="saveVisitaTecnico") {
 	echo $newId;
 }
 
+if($module == "cambiarInConnect"){
+	$fecha = date ( 'Y-m-d H:m:s' );
+	$tpv = $params['tpv'];
+	$conectividadIn = $params['tpvInConnect'];
+	$aplicativoIn = $params['aplicativoIn'];
+	$aplicativoIn = (int) $aplicativoIn;
+	$message = '';
 
+	$prepareStatement = "UPDATE inventario SET
+						aplicativo=?,
+						conectividad=?
+						WHERE no_serie=? ;
+						";
+	$arrayString = array (
+			$aplicativoIn,
+			$conectividadIn,
+			$tpv
+	);
+
+	$upd = $Eventos->insert($prepareStatement, $arrayString);
+
+	print_r($arrayString);
+	
+	$message .= "Se actualizó la información de tpv en almacen";
+	
+	echo json_encode(['upd'=>$upd,'message' => $message]);
+
+}
+
+if($module == "cambiarReConnect"){
+	$fecha = date ( 'Y-m-d H:m:s' );
+	$tpv = $params['tpvRe'];
+	$conectividadOut = $params['tpvReConnect'];
+	$aplicativoOut = $params['aplicativoOut'];
+	$message = '';
+
+	$prepareStatement = "UPDATE inventario SET
+						aplicativo=?,
+						conectividad=?
+						WHERE no_serie=? ;
+						";
+	$arrayString = array (
+			$aplicativoOut,
+			$conectividadOut,
+			$tpv
+	);
+
+	$upd = $Eventos->insert($prepareStatement, $arrayString);
+
+	
+	$message .= "Se actualizó la información de tpv en almacen";
+	
+	echo json_encode(['upd'=>$upd,'message' => $message]);
+
+}
 
 
 if($module == 'cerrarEvento') {
@@ -2977,7 +3177,8 @@ if($module == 'cerrarEvento') {
 
 		$Eventos->insert($prepareStatementHistE, $arrayStringHE);
 	
-	if($estatus == '14' || $estatus == '15') {
+	if($estatus == '14' || $estatus == '15') 
+	{
 		
 		
 	} else {
@@ -2989,7 +3190,8 @@ if($module == 'cerrarEvento') {
 		
 		
 
-			if($datosTPV) {
+			if($datosTPV) 
+			{
 
 				$queryTVP = " UPDATE inventario SET modelo=?,conectividad=?,estatus_inventario=?,ubicacion=?,id_ubicacion=?,modificado_por=?,fecha_edicion=? WHERE no_serie=?";
 				$Eventos->insert($queryTVP,array($tvpInModelo,$tpvInConnect,4,2,$datosComercio[0]['id'],$_SESSION['userid'],$fecha,$tpv));
@@ -2999,7 +3201,9 @@ if($module == 'cerrarEvento') {
 
 			
 
-			}  else {
+			}  
+			else 
+			{
 
 					$tpvElavon = $Eventos->getInvUniversoNoserie($tpv);
 
@@ -3037,7 +3241,8 @@ if($module == 'cerrarEvento') {
 			$existeInventarioId = $Eventos->getInventarioId($tpv);
 			$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'INSTALADO');
 
-			if($existeHistorialMov == '0') {
+			if($existeHistorialMov == '0') 
+			{
 
 				$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 					
@@ -3063,7 +3268,8 @@ if($module == 'cerrarEvento') {
 		
 
 		//Validar inventarios TVP Retirado
-		if ( strlen($tpvRetirado) > 0 ) {
+		if ( strlen($tpvRetirado) > 0 ) 
+		{
 
 			$datosTPVRet = $Eventos->getInvNoserie($tpvRetirado);
 			$tpvElavon = $Eventos->getInvUniversoNoserie($tpvRetirado);
@@ -3072,7 +3278,8 @@ if($module == 'cerrarEvento') {
 			//Existe en Elavon Universo
 			if($tpvElavon) {
 				//Existe en INventario
-				if($datosTPVRet) {
+				if($datosTPVRet) 
+				{
 
 					if( $datosTPVRet['id_ubicacion'] !=  $tecnico ) {
 
@@ -3155,7 +3362,8 @@ if($module == 'cerrarEvento') {
 				
 				} else {
 
-					if($tpvElavon['estatus_modelo'] != '17') {
+					if($tpvElavon['estatus_modelo'] != '17') 
+					{
 						$datafieldsInventarios = array('tipo','no_serie','modelo','conectividad','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','fecha_entrada','fecha_creacion','fecha_edicion','modificado_por','cve_banco');
 							
 						$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInventarios), '?'));
@@ -3260,12 +3468,14 @@ if($module == 'cerrarEvento') {
 		
 		
 		//Validar inventarios SIM Instalada
-		if( strlen($simInstalado) > 0 ) {
+		if( strlen($simInstalado) > 0 ) 
+		{
 
 			//GRABAR Historial RETIRO de COMERCIO
 			$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'INSTALADO');
 
-			if($existeHistorialMov == '0') {
+			if($existeHistorialMov == '0') 
+			{
 
 				$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 					
@@ -3292,9 +3502,11 @@ if($module == 'cerrarEvento') {
 			$simInvTecnico = $Eventos->getInventarioTecnicoNoserie($simInstalado);
 			$existeInventarioId = $Eventos->getInventarioId($simInstalado);
 			//Existe en Elavon
-			if($simElavon) {
+			if($simElavon) 
+			{
 
-				if($datosSIM) {
+				if($datosSIM) 
+				{
 
 					$querySIM = " UPDATE inventario SET modelo=?,estatus_inventario=?,ubicacion=?,modificado_por=?,id_ubicacion=?,fecha_edicion=? WHERE no_serie=?";
 					$Eventos->insert($querySIM,array($simInData,4,2,$_SESSION['userid'],$datosComercio[0]['id'],$fecha,$simInstalado));				
@@ -3305,7 +3517,8 @@ if($module == 'cerrarEvento') {
 					//Grabar Historia
 					$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO TECNICO');
 
-					if($existeHistorialMov == '0') {
+					if($existeHistorialMov == '0') 
+					{
 
 						$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 						
@@ -3329,7 +3542,8 @@ if($module == 'cerrarEvento') {
 
 				}  else {
 					
-					if($simElavon['estatus_modelo'] != '17') {
+					if($simElavon['estatus_modelo'] != '17') 
+					{
 						
 						$datafieldsInv = array('tipo','cve_banco','no_serie','modelo','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','modificado_por','fecha_entrada','fecha_creacion','fecha_edicion');
 						$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInv), '?'));
@@ -3356,7 +3570,8 @@ if($module == 'cerrarEvento') {
 						//Grabar Historia
 						$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO TECNICO');
 
-						if($existeHistorialMov == '0') {
+						if($existeHistorialMov == '0') 
+						{
 
 							$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 							
@@ -3383,15 +3598,16 @@ if($module == 'cerrarEvento') {
 			
 		}
 		
-
 		
 			//Validar inventarios SIM Retirado
-			if( strlen($simRetirado) > 0 ) {
+		if( strlen($simRetirado) > 0 ) 
+		{
 
 				//GRABAR Historial RETIRO de COMERCIO
 				$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRO COMERCIO');
 
-				if($existeHistorialMov == '0') {
+				if($existeHistorialMov == '0') 
+				{
 
 					$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 						
@@ -3432,7 +3648,8 @@ if($module == 'cerrarEvento') {
 						//GRABAR Historial RETIRO de COMERCIO
 						$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'RETIRADO');
 
-						if($existeHistorialMov == '0') {
+						if($existeHistorialMov == '0') 
+						{
 
 							$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 								
@@ -3459,7 +3676,8 @@ if($module == 'cerrarEvento') {
 
 						$simElavon = $Eventos->getInvUniversoNoserie($simRetirado);
 
-						if($simElavon['estatus_modelo'] != '17') {
+						if($simElavon['estatus_modelo'] != '17') 
+						{
 							
 							$datafieldsInv = array('tipo','cve_banco','no_serie','modelo','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','modificado_por','fecha_entrada','fecha_creacion','fecha_edicion');
 						
@@ -3488,7 +3706,8 @@ if($module == 'cerrarEvento') {
 							//GRABAR Historial RETIRO de COMERCIO
 							$existeHistorialMov = $Eventos->existHistorialMov($existeInventarioId,'ENTRADA INV TECNICO');
 
-							if($existeHistorialMov == '0') {
+							if($existeHistorialMov == '0') 
+							{
 
 								$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 									
@@ -3532,7 +3751,7 @@ if($module == 'cerrarEvento') {
 					$Eventos->insert($sql,$arrayString);
 				}
 
-			}
+		}
 		
 		 
 	}

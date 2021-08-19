@@ -11,20 +11,19 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>INVENTARIO SIM</h3>
-            </div>
-            <div class="container-fluid p-5 panel-white">
-                
-                <div class="table-responsive">
-                    <table id="example"  class="table table-bordered table-responsive" style="width:100%">
+            <div class="container-fluid p-5">
+                <div class="row">
+                    <div class="col-md-5"><h3>Inventario SIM</h3></div>
+                </div>
+
+                    <table id="example"  class="table  table-bordered" style="width:100%">
                         <thead>
                         <tr>
-                            <th width="300px">NO SERIE</th>
-                            <th width="300px">CARRIER</th>
-                            <th width="300px">FECHA DE ALTA</th>
-                            <th width="300px">UBICACION FISICA</th>
-                            <th width="300px">HISTORIA</th>
+                            <th>No Serie</th>
+                            <th>Carrier</th>
+                            <th>Fecha de Alta</th>
+                            <th>Ubicacion Fisica</th>
+                            <th>Historia</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -32,15 +31,14 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>NO SERIE</th>
-                                <th>CARRIER</th>
-                                <th>FECHA DE ALTA</th>
-                                <th>UBICACION FISICA</th>
-                                <th>HISTORIA</th>
+                                <th>No Serie</th>
+                                <th>Carrier</th>
+                                <th>Fecha de Alta</th>
+                                <th>Ubicacion Fisica</th>
+                                <th>Historia</th>
                             </tr>
                         </tfoot>
                     </table>
-                </div>
                     <input type="hidden" id="noSerie" name="noSerie" value="0">
 
                 <!-- MODAL -->
@@ -48,65 +46,63 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">HISTORIA</h5>
+                        <h5 class="modal-title">Historia</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         
-                            <div class="table-responsive">
-                                <table id="historia-tpv"  class="table table-responsive" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>FECHA MOVIMIENTO</th>
-                                            <th>MOVIMIENTO</th>
-                                            <th>PRODUCTO</th>
-                                            <th>NO SERIE</th>
-                                            <th>UBICACION</th>
-                                            <th>Id_Ubicacion</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th width="200px">FECHA MOVIMIENTO</th>
-                                            <th>MOVIMIENTO</th>
-                                            <th>PRODUCTO</th>
-                                            <th width="200px">NO SERIE</th>
-                                            <th>UBICACION</th>
-                                            <th>Id_Ubicacion</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                            <table id="historia-tpv"  class="display table table-md table-bordered " style="width=100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Movimiento</th>
+                                        <th>Movimiento</th>
+                                        <th>Producto</th>
+                                        <th>No Serie</th>
+                                        <th>Ubicacion</th>
+                                        <th>Id_Ubicacion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Fecha Movimiento</th>
+                                        <th>Movimiento</th>
+                                        <th>Producto</th>
+                                        <th>No Serie</th>
+                                        <th>Ubicacion</th>
+                                        <th>Id_Ubicacion</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
                     <br />
-                        <h5>TRASPASO</h5>
+                        <h5>Traspaso</h5>
                         <div class="row">
                             <div class="col">
-                                <label for="hist-producto" class="col-form-label-sm">PRODUCTO</label>
+                                <label for="hist-producto" class="col-form-label-sm">Producto</label>
                                 <input type="text" class="form-control form-control-sm" id="hist-producto" aria-describedby="hist-producto" readonly>
                             </div>
                             <div class="col">
-                                <label for="hist-noserie" class="col-form-label-sm">NO. SERIE</label>
+                                <label for="hist-noserie" class="col-form-label-sm">No Serie</label>
                                 <input type="text" class="form-control form-control-sm" id="hist-noserie" aria-describedby="hist-noserie" readonly>
                             </div>
                             <div class="col">
-                                <label for="hist-desde" class="col-form-label-sm">DESDE</label>
+                                <label for="hist-desde" class="col-form-label-sm">Desde</label>
                                 <select id="hist-desde" name="hist-desde" class="form-control form-control-sm" readonly>         
                                 </select>
                             </div>
                             <div class="col">
                                 <div col="col">
-                                <label for="hist-hacia" class="col-form-label-sm">HACIA</label>
+                                <label for="hist-hacia" class="col-form-label-sm">Hacia</label>
                                 <select id="hist-hacia" name="hist-hacia" class="form-control form-control-sm">            
                                 </select>
                                 </div>
                             </div>
                             <div class="col">   
-                                <label for="hist-tecnico" class="col-form-label-sm">TECNICO</label>
+                                <label for="hist-tecnico" class="col-form-label-sm">Tecnico</label>
                                 <select id="hist-tecnico" name="hist-tecnico" class="form-control form-control-sm">
                                 <option value="0" selected>Seleccionar</option>            
                                 </select>

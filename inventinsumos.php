@@ -11,40 +11,34 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>INVENTARIO INSUMOS</h3>
-            </div><br>
-            <div class="container-fluid p-5 panel-white">
+            <div class="container-fluid p-5">
                 <div class="row">
-                    <div class="col-md-5"></div>
+                    <div class="col-md-5"><h3>Inventario Insumos</h3></div>
                 </div>
 
-                    <div class="table-responsive">
-                        <table id="example"  class="table table-bordered table-responsive" style="width:100%">
-                            <thead>
+                    <table id="example"  class="table  table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Insumos</th>
+                            <th>Cantidad</th>
+                            <th>Fecha de Alta</th>
+                            <th>Ubicacion Fisica</th>
+                            <th>Historia</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        </tbody>
+                        <tfoot>
                             <tr>
-                                <th width="300px">INSUMOS</th>
-                                <th width="300px">CANTIDAD</th>
-                                <th width="300px">FECHA DE ALTA</th>
-                                <th width="300px">UBICACION</th>
-                                <th width="300px">HISTORIA</th>
+                                <th>Insumos</th>
+                                <th>Cantidad</th>
+                                <th>Fecha de Alta</th>
+                                <th>Ubicacion Fisica</th>
+                                <th>Historia</th>
                             </tr>
-                            </thead>
-                            <tbody>
-                            
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th width="300px">INSUMOS</th>
-                                    <th width="300px">CANTIDAD</th>
-                                    <th width="300px">FECHA DE ALTA</th>
-                                    <th width="300px">UBICACION</th>
-                                    <th width="300px">HISTORIA</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    
+                        </tfoot>
+                    </table>
                     <input type="hidden" id="noSerie" name="noSerie" value="0">
 
                 <!-- MODAL -->
@@ -52,22 +46,21 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">HISTORIA</h5>
+                        <h5 class="modal-title">Historia</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                              
-                        <div class="table-responsive">
-                            <table id="historia-tpv"  class="table">
+                            <table id="historia-tpv"  class="display table table-md table-bordered "  style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th width="300px">FECHA MOVIMIENTO</th>
-                                        <th width="300px">MOVIMIENTO</th>
-                                        <th width="300px">PRODUCTO</th>
-                                        <th width="300px">CANTIDAD</th>
-                                        <th width="300px">UBICACION</th>
+                                        <th>Fecha Movimiento</th>
+                                        <th>Movimiento</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Ubicacion</th>
                              
                                     </tr>
                                 </thead>
@@ -75,35 +68,34 @@
                                 
                                 </tbody>
                             </table>
-                        </div>
                         
                     <br />
-                        <h5>TRASPASO</h5>
+                        <h5>Traspaso</h5>
                         <div class="row">
                             <div class="col">
-                                <label for="hist-noserie" class="col-form-label-sm">INSUMO</label>
+                                <label for="hist-noserie" class="col-form-label-sm">Insumo</label>
                                 <input type="text" class="form-control form-control-sm" id="hist-insumo" aria-describedby="hist-noserie" readonly>
                                 <input type="hidden" id="hist-id" aria-describedby="hist-id">
                                 <input type="hidden" id="producto-id" aria-describedby="producto-id">
                             </div>
                             <div class="col">
-                                <label for="hist-cantidad" class="col-form-label-sm">CANTIDAD</label>
+                                <label for="hist-cantidad" class="col-form-label-sm">Cantidad</label>
                                 <input type="text" class="form-control form-control-sm" id="hist-cantidad" aria-describedby="hist-cantidad">
                             </div>
                             <div class="col">
-                                <label for="hist-desde" class="col-form-label-sm">DESDE</label>
+                                <label for="hist-desde" class="col-form-label-sm">Desde</label>
                                 <select id="hist-desde" name="hist-desde" class="form-control form-control-sm">         
                                 </select>
                             </div>
                             <div class="col">
                                 <div col="col">
-                                <label for="hist-hacia" class="col-form-label-sm">HACIA</label>
+                                <label for="hist-hacia" class="col-form-label-sm">Hacia</label>
                                 <select id="hist-hacia" name="hist-hacia" class="form-control form-control-sm">            
                                 </select>
                                 </div>
                             </div>
                             <div class="col">   
-                                <label for="hist-tecnico" class="col-form-label-sm">TECNICO</label>
+                                <label for="hist-tecnico" class="col-form-label-sm">Tecnico</label>
                                 <select id="hist-tecnico" name="hist-tecnico" class="form-control form-control-sm">
                                 <option value="0" selected>Seleccionar</option>            
                                 </select>

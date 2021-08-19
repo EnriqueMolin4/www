@@ -8,31 +8,31 @@
             <?php require("menu.php"); ?> 
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
+            <div class="container-fluid p-5">
+                <h3>Nuevo Evento</h3>
 
-            <div class="page-title">
-                 <h3>NUEVO EVENTO</h3>
-            </div><br>
-
-            <div class="container-fluid p-1">
-                <div class="row">
-                    <div class="col-sm-5"> 
-                            <label for="excelMasivo" class="col-form-label-sm">CARGA MASIVA EVENTOS</label> 
-                            <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
-                            <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
-                    </div>
-                            <div class="col-sm-6">
-                                <a href="layouts/LayoutCargaMasivaEventos.xlsx" download>Template Carga Masiva Eventos</a>
-                            </div>
-                    </div>
-
-                    <div id="container" class="col-md-12 panel-white">
+                    <div id="container" class="container">
                     <br>
-                            
+                            <div class="row">
+                                    <div class="col-sm-5"> 
+                                        <label for="excelMasivo" class="col-form-label-sm">Carga Masiva Eventos</label> 
+                                        <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
+                                        <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <a href="layouts/LayoutCargaMasivaEventos.xlsx" download>Template Carga Masiva Eventos</a>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="button" class="btn btn-primary" id="btnProcesosActivos">
+                                            Proceso Activo <span class="badge badge-light" id="processBadge"></span>
+                                        </button>
+                                    </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-10">           
-                                    <label for="buscarComercio" class="col-form-label-sm">BUSCAR COMERCIO</label>
+                                    <label for="buscarComercio" class="col-form-label-sm">Buscar Comercio</label>
                                     <input type="text" class="form-control form-control-sm col-md-7" id="buscarComercio" placeholder="Buscar por Clave Banco, Afiliacion, Nombre Comercio" aria-describedby="buscarComercio">
                                 </div>
                             </div>
@@ -49,86 +49,86 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">           
-                                        <label for="cve_banco" class="col-form-label-sm">CVE BANCARIA</label>
+                                        <label for="cve_banco" class="col-form-label-sm">Cve Bancaria</label>
                                         <input type="text" class="form-control form-control-sm" id="cve_banco" aria-describedby="cve_banco" readonly>
                                     </div>
                                     <div class="col">           
-                                        <label for="afiliacion" class="col-form-label-sm">AFILIACION</label>
+                                        <label for="afiliacion" class="col-form-label-sm">Afilacion</label>
                                         <input type="text" class="form-control form-control-sm" id="afiliacion" aria-describedby="afiliacion" readonly>
                                     </div>
                                     <div class="col">           
-                                        <label for="comercio" class="col-form-label-sm">COMERCIO</label>
+                                        <label for="comercio" class="col-form-label-sm">Comercio</label>
                                         <input type="text" class="form-control form-control-sm" id="comercio" aria-describedby="comercio" readonly>
                                     </div>
                                     <div class="col">           
-                                        <label for="direccion" class="col-form-label-sm">DIRRECCION</label>
+                                        <label for="direccion" class="col-form-label-sm">Dirección</label>
                                         <input type="text" class="form-control form-control-sm" id="direccion" aria-describedby="direccion" readonly>
                                     </div>
                                     <div class="col">           
-                                        <label for="estado" class="col-form-label-sm">ESTADO</label>
+                                        <label for="estado" class="col-form-label-sm">Estado</label>
                                         <select id="estado" name="estado" class="form-control form-control-sm" readonly></select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">           
-                                        <label for="colonia" class="col-form-label-sm">COLONIA</label>
+                                        <label for="colonia" class="col-form-label-sm">Colonia</label>
                                         <input type="text" class="form-control form-control-sm" id="colonia" aria-describedby="colonia" readonly>
                                     </div>
                                     <div class="col">           
-                                        <label for="tipo_servicio" class="col-form-label-sm">TIPO DE SERVICIO</label>
+                                        <label for="tipo_servicio" class="col-form-label-sm">Tipo de Servicio</label>
                                         <select id="tipo_servicio" name="tipo_servicio" class="form-control form-control-sm">
                                             
                                         </select>
                                     </div>
                                     <div class="col">           
-                                    <label for="tipo_subservicio" class="col-form-label-sm">TIPO DE SUBSERVICIO</label>
+                                    <label for="tipo_subservicio" class="col-form-label-sm">Tipo de Sub Servicio</label>
                                         <select id="tipo_subservicio" name="tipo_subservicio" class="form-control form-control-sm">
                                         </select>
                                     </div>
                                      
                                     <div class="col">           
-                                        <label for="cantidad" class="col-form-label-sm">CANTIDAD</label>
+                                        <label for="cantidad" class="col-form-label-sm">Cantidad</label>
                                         <input type="text" class="form-control form-control-sm" id="cantidad" aria-describedby="cantidad">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">           
-                                        <label for="equipo_instalado" class="col-form-label-sm">EQUIPO INSTALADO</label>
+                                        <label for="equipo_instalado" class="col-form-label-sm">Equipo Instalado</label>
                                         <select id="equipo_instalado" name="equipo_instalado" class="form-control form-control-sm">
                                             
                                         </select>
                                     </div>
                                     <div class="col-md-3">           
-                                        <label for="municipio" class="col-form-label-sm">MUNICIPIO</label>
+                                        <label for="municipio" class="col-form-label-sm">Municipio</label>
                                         <select id="municipio" name="municipio" class="form-control form-control-sm" readonly></select>
                                     </div>
                                     <div class="col-md-3">           
-                                        <label for="telefono" class="col-form-label-sm">TELEFONO</label>
+                                        <label for="telefono" class="col-form-label-sm">Telefono</label>
                                         <input type="text" class="form-control form-control-sm" id="telefono" aria-describedby="telefono" readonly>
                                     </div>
                                     <div class="col-md-3">           
-                                        <label for="email" class="col-form-label-sm">EMAIL</label>
+                                        <label for="email" class="col-form-label-sm">Email</label>
                                         <input type="text" class="form-control form-control-sm" id="email" aria-describedby="email" readonly>
                                     </div>
                                     
                                 </div>
                                 <div class="row">
                                     <div class="col">           
-                                        <label for="responsable" class="col-form-label-sm">RESPONSABLE</label>
+                                        <label for="responsable" class="col-form-label-sm">Responsable</label>
                                         <input type="text" class="form-control form-control-sm" id="responsable" aria-describedby="responsable" readonly>
                                     </div>
                                     <div class="col">           
-                                        <label for="ticket" class="col-form-label-sm">TICKET</label>
+                                        <label for="ticket" class="col-form-label-sm">Ticket</label>
                                         <input type="text" class="form-control form-control-sm" id="ticket" aria-describedby="ticket">
                                     </div>
                                     <div class="col">           
-                                        <label for="hora_atencion" class="col-form-label-sm">HORA DE ATENCION</label>
+                                        <label for="hora_atencion" class="col-form-label-sm">Hora de Atención</label>
                                         <input type="text" class="form-control form-control-sm" id="hora_atencion-in" name="hora_atencion-in" aria-describedby="hora_atencion" autocomplete="off">
                                         <span>A</span>
                                         <input type="text" class="form-control form-control-sm" id="hora_atencion-fin" name="hora_atencion-fin" aria-describedby="hora_atencion" autocomplete="off">
                                     </div>
                                     <div class="col">           
-                                        <label for="hora_comida" class="col-form-label-sm">HORA DE COMIDA</label>
+                                        <label for="hora_comida" class="col-form-label-sm">Hora de Comida</label>
                                         <input type="text" class="form-control form-control-sm" id="hora_comida" name="hora_comida" aria-describedby="hora_comida" autocomplete="off">
                                         <span>A</span>
                                         <input type="text" class="form-control form-control-sm" id="hora_comida_fin" name="hora_comida_fin" aria-describedby="hora_comida_fin" autocomplete="off">
@@ -136,7 +136,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">           
-                                        <label for="comentarios" class="col-form-label-sm">COMENTARIOS</label>
+                                        <label for="comentarios" class="col-form-label-sm">Comentarios</label>
                                         <textarea  class="form-control form-control-sm" rows="5" id="comentarios" aria-describedby="comentarios"></textarea>
                                     </div>
                                 </div>
@@ -154,7 +154,7 @@
                             <div class="modal-dialog modal-md">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">CREACION EVENTO</h5>
+                                        <h5 class="modal-title">Creación Evento</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                         </button>
@@ -209,7 +209,7 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
-    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
     <script src="js/Chart.bundle.min.js"></script>

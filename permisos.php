@@ -9,23 +9,12 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>PERMISOS DE ROL DE USUARIO</h3>
-            </div>
-            <div class="row p-2">
-                <div class="col p-4">
-                    <button class="btn btn-success" id="btnNewPermiso">Nuevo Permiso</button>
-                </div>
-                
-                
-            </div>
-            <div class="container-fluid p-4 panel-white">
-            
-            <div class="row">
+            <div class="container-fluid p-5">
+            <div class="row"><h3>Permisos de Rol de Usuario</h3>
                 <div class="col-sm-12 p-4">           
-                    <label for="catalogo" class="col-form-label-sm">SELECCIONAR TIPO DE USUARIO</label>
+                    <label for="catalogo" class="col-form-label-sm"></label>
                     <select id="catalogo" name="catalogo" class="form-control form-control-sm">
                         <option value="0">Seleccionar</option>
                         
@@ -33,34 +22,31 @@
                     </select>
                 </div>
             </div>
-
-            <div class="table-responsive">
-                <table id="permisos"  class="table table-md table-bordered table-responsive">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th width="250px">USUARIO</th>
-                            <th width="250px">MODULO</th>
-                            <th width="250px">ESTATUS</th>
-                            <th width="250px">ACCION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <table id="permisos"  class="table table-md table-bordered ">
+                <thead>
+                    <tr>
+						<th>Id</th>
+						<th>Usuario</th>
+                        <th>Módulo</th>
+                        <th>Estatus</th>
+						<th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
                 
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>ID</th>
-                            <th width="250px">USUARIO</th>
-                            <th width="250px">MODULO</th>
-                            <th width="250px">ESTATUS</th>
-                            <th width="250px">ACCION</th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Id</th>
+						<th>Usuario</th>
+                        <th>Módulo</th>
+                        <th>Estatus</th>
+						<th>Acción</th>
+                    </tr>
+                </tfoot>
+            </table>
 
-            
+            <button class="btn btn-success" id="btnNewPermiso">Nuevo Permiso</button>
                 
             </div>
 
@@ -69,7 +55,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">NUEVO MODELO</h5>
+                        <h5 class="modal-title">Nuevo Modelo</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -78,14 +64,14 @@
                         <form id="frm" name="frm">
                             <div class="row">
                                 <div class="col-sm-4">           
-                                    <label for="menu" class="col-form-label-sm">MENU</label>
+                                    <label for="menu" class="col-form-label-sm">Menú</label>
                                     <select name="menu" id="menu" class="form-control form-control-sm">
                                         
                                     </select>
                                 </div>
 
                                 <div class="col-sm-4">          
-                                <label for="user" class="col-form-label-sm">TIPO DE USUARIO</label> 
+                                <label for="user" class="col-form-label-sm">Tipo de Usuario</label> 
                                 <select id="user" name="user" class="form-control form-control-sm">
                                     <option value="0">Seleccionar</option>
                              
@@ -127,7 +113,7 @@
     <script>
     var permisos;
         $(document).ready(function() {
-            ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "permisoslink")
+            ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "parametroslink", "tiposxcatalogoslink")
             
             getTiposUsuarios();
             getUsuariosTipos();
@@ -276,7 +262,7 @@
                         success: function(data){
                             if(data == "1") {
                                 $.toaster({
-                                    message: 'Se cambió el estatus con éxito  ',
+                                    message: 'Se desactivo/activo con éxito  ',
                                     title: 'Aviso',
                                     priority : 'success'
                                 });  
@@ -291,7 +277,7 @@
             $(document).on("click","#btnNewPermiso", function() 
                 {
                     
-                    $(".modal-title").html("ASIGNAR PERMISO");
+                    $(".modal-title").html("Asignar Permiso");
 
                     //$("#btnGrabarModel").html('Registrar');
 

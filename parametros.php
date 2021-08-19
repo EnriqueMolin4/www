@@ -11,14 +11,10 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>PARAMETROS</h3>
-            </div>
-            <div class="container-fluid p-4 panel-white">
-                
-            <div class="row p-4">
-                <div class="col-sm-12">           
-                    <label for="catalogo" class="col-form-label-sm">SELECCIONAR CATALOGO</label>
+            <div class="container-fluid p-5">
+            <div class="row">
+                <div class="col-sm-12 p-4">           
+                    <label for="catalogo" class="col-form-label-sm">Catalogo</label>
                     <select id="catalogo" name="catalogo" class="form-control form-control-sm">
                         <option value="0">Seleccionar</option>
                         <option value="tipo_evidencias">Evidencias</option>
@@ -28,14 +24,12 @@
                     </select>
                 </div>
             </div>
-
-            <div class="table-responsive">
-                <table id="parametros"  class="table table-md table-bordered table-responsive">
+            <table id="parametros"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
-                        <th width="400px" class="idsDeclarados">NOMBRE</th>
-                        <th width="400px">ESTATUS</th>
-                        <th width="400px">ACCION</th>
+                        <th class="idsDeclarados">Nombre</th>
+                        <th>Estatus</th>
+                        <th>Accion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,30 +37,25 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th width="400px">NOMBRE</th>
-                        <th width="400px">ESTATUS</th>
-                        <th width="400px">ACCION</th>
+                        <th>Nombre</th>
+                        <th>Estatus</th>
+                        <th>Accion</th>
                     </tr>
                 </tfoot>
             </table>
-            </div>
-            
-            
-            </div>
-            <div class="panel-footer p-4">
                 <fieldset class="border p-2">
-                    <legend><h4>AGREGAR PARAMETRO</h4></legend>
+                    <legend>Agregar Parámetro</legend>
                     <div class="row">
                         <div class="col-md-4">
                              
-                            <label for="newParametro" class="col-form-label-sm">PARAMETRO</label>
+                            <label for="newParametro" class="col-form-label-sm">Parametro</label>
                                 <input type="text" id="newParametro" name="newParametro" class="form-control form-control-sm" ><br>
                             <button class="btn btn-success btn-sm" id="btnAddParametro">Agregar</button>
                         </div>
                     </div>
                 </fieldset>
             </div>
-                
+   
         </main>
         <!-- page-content" -->
     </div>
@@ -211,7 +200,7 @@
                         success: function(data){
                             if(data == "1") {
                                 $.toaster({
-                                    message: 'Se cambió el estatus con éxito  ',
+                                    message: 'Se desactivo/activo con éxito  ',
                                     title: 'Aviso',
                                     priority : 'success'
                                 });  

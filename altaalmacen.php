@@ -41,6 +41,10 @@
                         <label for="select-modelo_tpv" class="col-form-label-sm">Modelos TPV </label>
                         <select class="form-control form-control-sm" id= "select-modelo_tpv" name="select-modelo_tpv"></select>
                     </div>
+                    <div class="col" id="aplicativobk">
+                        <label for="select-aplicativo" class="col-form-label-sm">Aplicativo</label>
+                        <select class="form-control form-control-sm" name="select-aplicativo" id="select-aplicativo"></select>
+                    </div>
                     <div class="col" id="carrierbk">           
                         <label for="select-carrier" class="col-form-label-sm">Carrier </label>
                         <select class="form-control form-control-sm" id= "select-carrier" name="select-carrier"></select>
@@ -57,7 +61,14 @@
                         <label for="almacen-cantidad" class="col-form-label-sm">Cantidad</label>
                         <input type="text" class="form-control form-control-sm" id="almacen-cantidad" aria-describedby="almacen-cantidad">
                     </div>
-                    <div class="col" id="fabricantebk">           
+                    
+                    <div class="col" id="ptidbk">           
+                        <label for="almacen-ptid" class="col-form-label-sm">PTID*</label>
+                        <input type="text" class="form-control form-control-sm" id="almacen-ptid" aria-describedby="almacen-ptid">
+                    </div>
+                </div>
+                <div class="row">
+            <div class="col" id="fabricantebk">           
                         <label for="almacen-fabricante" class="col-form-label-sm">Fabricante</label>
                         <select class="form-control form-control-sm" id="almacen-fabricante" name="almacen-fabricante">
                         <option value="0">Seleccionar</option>
@@ -69,12 +80,9 @@
                         <option value="0">Seleccionar</option>
                         </select>
                     </div>
-                    <div class="col" id="ptidbk">           
-                        <label for="almacen-ptid" class="col-form-label-sm">PTID*</label>
-                        <input type="text" class="form-control form-control-sm" id="almacen-ptid" aria-describedby="almacen-ptid">
-                    </div>
-                </div>
             </div>
+            </div>
+            
             <div style=" padding: 10px; display:none;" id="altaalmacen">
                 <div class="row">
                     <div class="col">           
@@ -164,6 +172,7 @@
         $("#almacenlink").addClass("active");     
         getBancos();
         getModelosTPV();
+        getAplicativo();
         getCarriers();
         getInsumos();
         getConectividad();
@@ -217,6 +226,7 @@
             $("#almacen-fabricante").val('0');
             $("#almacen-connect").val('0');
             $("#select-modelo_tpv").val('0');
+            $("#select-aplicativo").val('0');
             $("#select-carrier").val('0');
             $("#select-insumo").val('0');
             $("#almacen-ptid").val('');
@@ -230,6 +240,7 @@
                 case '1':
                 $("#carrierbk").hide();
                 $("#tpvbk").show();
+                $("#aplicativobk").show();
                 $("#ptidbk").hide();
                 $("#noseriebk").show();
                 $("#cantidadbk").hide();
@@ -250,6 +261,7 @@
                 $("#anaquelbk").hide();
                 $("#cajonbk").hide();
                 $("#tpvbk").hide();
+                $("#aplicativobk").hide();
                 $("#noseriebk").show();
                 $("#cantidadbk").hide();
                 $("#insumobk").hide();
@@ -259,6 +271,7 @@
                 case '3':
                 $("#carrierbk").hide();
                 $("#tpvbk").hide();
+                $("#aplicativobk").hide();
                 $("#noseriebk").hide();
                 $("#cantidadbk").show();
                 $("#insumobk").show();
@@ -291,7 +304,7 @@
                     
                     var dn= { 
                         module: 'altaAlmacen', cve_banco: $("#cve_banco").val(), 
-                        'tpv': $("#select-modelo_tpv").val(),  
+                        'tpv': $("#select-modelo_tpv").val(),  'aplicativo' : $("#select-aplicativo").val(),
                         'connect': $("#almacen-connect").val(),  'carrier': $("#select-carrier").val(), 
                         'insumo': $("#select-insumo").val() ,   'producto' : $("#almacen_producto").val(), 
                         'cantidad': $("#almacen-cantidad").val(), 'noserie': $("#almacen-no_serie").val(), 
@@ -439,7 +452,23 @@
     }
 
 
-
+    function getAplicativo() {
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/almacen_db.php', // call your php file
+        data: 'module=getAplicativo',
+        cache: false,
+        success: function(data){
+             
+            $("#select-aplicativo").html(data);
+            //tableInventario.ajax.reload();
+            
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
 
 
 
@@ -447,6 +476,7 @@
         $("#cve_banco").val("0")
         $("#almacen_producto").val("0")
         $("#select-modelo_tpv").val("0")
+        $("#select-aplicativo").val("0")
         $("#almacen-no_serie").val("");
         $("#select-estatus").val("0")
         $("#select-estatus_inventario").val("0");

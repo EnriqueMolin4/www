@@ -213,6 +213,10 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+
     <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
@@ -226,6 +230,7 @@
     jQuery.validator.addMethod("notEqual", function(value, element, param) {
     return this.optional(element) || value != param;
     }, "Please specify a different (non-default) value");
+    var fecha_hoy;  
 
   $(document).ready(function () {
         getBancos();
@@ -234,6 +239,7 @@
 		$(".cambioMay").on('change',function() {
 			$(this).val($(this).val().toUpperCase());
 		});
+        fecha_hoy = moment().format('YYYY-MM-DD');
 		
 		
         $('#example').DataTable({
@@ -244,11 +250,22 @@
             serverSide: true,
             order: [[ 1, "asc" ]],
             dom: 'lfrtiBp',
-            buttons: [
-                'pdf',
-                'excelHtml5',
-                'csv'
-            ],
+            buttons: [{
+            extend: 'excel',
+            title: 'Comercios_'+fecha_hoy,
+            exportOptions: {
+                orthogonal: 'sort',
+                columns: [0,1,2,3,4,5,6,7]
+            },
+            customizeData: function ( data ) {
+                for (var i=0; i<data.body.length; i++){
+                    for (var j=0; j<data.body[i].length; j++ )
+                    {
+                        data.body[i][j] = '\u200C' + data.body[i][j];
+                    }
+                }
+            }               
+            }],
             ajax: {
                 url: 'modelos/comercios_db.php',
                 type: 'POST',

@@ -142,10 +142,10 @@
                             "mRender": function ( data,type, row ) {
                                 var boton = "";
                                 
-                            if(row.estatus == '1'){
-                                    boton =  '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
+                                if(row.status == '1'){
+                                    boton =  '<a href="#" title="Editar" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x "></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a>';
                                 } else {
-                                    boton = '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
+                                    boton = '<a href="#" title="Editar" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x "></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
                             }
 
                                 return boton;

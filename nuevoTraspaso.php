@@ -13,25 +13,21 @@
             <div id="overlay" class="overlay">
            
             </div>
-            <div class="page-title">
-                <h3>NUEVO TRASPASO</h3>
-            </div>
-
-            <div class="container-fluid p-3 panel-white">
-                
+            <div class="container-fluid p-5">
+                <h3>Nuevo Traspaso</h3>
                 <div class="row  mb-4">
                     <div class="col">
-                        <label for="addtipo_traspaso" class="col-form-label-sm">TIPO TRASPASO</label>
+                        <label for="addtipo_traspaso" class="col-form-label-sm">Tipo Traspaso</label>
                         <select id="addtipo_traspaso" name="addtipo_traspaso" class="form-control form-control-sm">
                                 <option value="0" selected>Seleccionar</option>
-                                <option value="1">TECNICO</option>
-                                <option value="2">ALMACEN</option>
+                                <option value="1">Tecnico</option>
+                                <option value="2">Almacen</option>
                         </select>
                     </div>    
                 </div>
                 <div class="row  mb-4">
                     <div class="col-5">
-                        <label for="addtipo_producto" class="col-form-label-sm">TIPO</label>
+                        <label for="addtipo_producto" class="col-form-label-sm">Tipo</label>
                         <select id="addtipo_producto" name="addtipo_producto" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                                 <option value="1">TPV</option>
@@ -40,13 +36,13 @@
                         </select>
                     </div>  
                     <div class="col showTecnico">
-                        <label for="add-tecnico" class="col-form-label-sm">TECNICO</label>
+                        <label for="add-tecnico" class="col-form-label-sm">Tecnico</label>
                         <select id="add-tecnico" name="add-tecnico" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>   
                     <div class="col showAlmacen">
-                        <label for="add-almacen" class="col-form-label-sm">ALMACEN</label>
+                        <label for="add-almacen" class="col-form-label-sm">Almacen</label>
                         <select id="add-almacen" name="add-almacen" class="form-control form-control-sm">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
@@ -54,27 +50,27 @@
                 </div>
                 <div class="row  mb-4">
                     <div class="col-6 showNoSerie">
-                        <label for="add_no_serie" class="col-form-label-sm">NO. SERIE</label>
+                        <label for="add_no_serie" class="col-form-label-sm">No Serie</label>
                         <input type="text" class="form-control form-control-sm" id="add_no_serie" name="add_no_serie">
                     </div> 
                     <div class="col-6 showNoGuia">
-                        <label for="add_no_guia" class="col-form-label-sm">NO GUIA</label>
+                        <label for="add_no_guia" class="col-form-label-sm">No Guia</label>
                         <input type="text" class="form-control form-control-sm" id="add_no_guia" name="add_no_guia">
                     </div>  
                 </div>
                 <div class="row  mb-4 showInsumo">
                     <div class="col">
-                        <label for="add-insumo" class="col-form-label-sm">INSUMO</label>
+                        <label for="add-insumo" class="col-form-label-sm">Insumo</label>
                         <select id="add-insumo" name="add-insumo" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>  
                     <div class="col">
-                        <label for="cant-insumo" class="col-form-label-sm">INV ACTUAL</label>
+                        <label for="cant-insumo" class="col-form-label-sm">Inv Actual</label>
                         <input type="text" class="form-control form-control-sm" id="cant-insumo" name="cant-insumo" readonly> 
                     </div>  
                     <div class="col">
-                        <label for="add-cantidad" class="col-form-label-sm">CANTIDAD</label>
+                        <label for="add-cantidad" class="col-form-label-sm">Cantidad</label>
                         <input type="text" class="form-control form-control-sm" id="add_cantidad" name="add_cantidad">
                     </div>  
                    
@@ -93,7 +89,7 @@
                 </div> 
                 <div class="row">
                 <div class="col" style="padding-top:10px;">  
-                    <button class="btn btn-success" id="btnGrabar" name="btnGrabar">Grabar</button>
+                    <button class="btn btn-dark" id="btnGrabar" name="btnGrabar">Grabar</button>
                 </div>
             </div>
             </div>

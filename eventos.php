@@ -44,6 +44,26 @@
                         <input type="checkbox" class="form-check-input searchEvento" id="evidencias">
                         <label class="form-check-label" for="evidencias">Con evidencias</label>
                     </div>
+                    <?php if ($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor') { ?>
+                    <div class="col">
+                        <label for="territorialF" class="col-form-label-sm">TERRITORIAL</label>
+                        <select id="territorialF" name="territorialF" class="form-control form-control-sm searchEvento">
+                            <option value="0">Seleccionar</option>
+                        </select>
+                    </div>
+                    <?php } ?>
+                    <div class="col">
+                        <label for="tecnicoF" class="col-form-label-sm">TECNICO</label>
+                        <select name="tecnicoF" id="tecnicoF" class="form-control form-control-sm searchEvento">
+                            <option value="0" selected>Seleccionar</option> 
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="bancoF" class="col-form-label-sm">BANCO</label>
+                        <select name="bancoF" id="bancoF" class="form-control form-control-sm searchEvento">
+                            <option value="0" selected>Seleccionar</option> 
+                        </select>
+                    </div>
                 </div>
                 <br />
                 <table id="eventos"  class="display table table-md table-bordered"  cellspacing="0" width="100%">
@@ -245,7 +265,13 @@
                                 </select>
                                 <select  class="form-control form-control-sm" id="tpvInDataConnect" aria-describedby="tpvInDataConnect">
                                     <option value="0" selected>Seleccionar Conectividad</option>
-                                </select>
+                                </select><br>
+                                <div class="row">
+                                    <div class="col" id="cambiarInfoTpv">
+                                        <button type="button" id="btnUpdateAlmacen" class="btn btn-info" style="height: 30px;">Actualizar en Almacén</button>
+                                    </div>
+                                    
+                                </div>
                         </div>
 						<div class="col">           
                                 <label for="tpv_retirado" class="col-form-label-sm">Terminal Retirada</label>
@@ -289,7 +315,7 @@
                         </div>
                         <div class="col">           
                                 <label for="aplicativo" class="col-form-label-sm">Aplicativo</label>
-								<select  class="form-control form-control-sm" id="aplicativo" aria-describedby="aplicativo" readonly>
+								<select  class="form-control form-control-sm" id="aplicativo" aria-describedby="aplicativo">
                                     <option value="0">Seleccionar</option>
                                 </select>
                         </div>
@@ -315,7 +341,7 @@
                             </div>
                             <div class="col">           
                                     <label for="aplicativo_ret" class="col-form-label-sm">Aplicativo Retirado</label>
-                                    <select  class="form-control form-control-sm" id="aplicativo_ret" aria-describedby="aplicativo_ret" readonly>
+                                    <select  class="form-control form-control-sm" id="aplicativo_ret" aria-describedby="aplicativo_ret">
                                         <option value="0">Seleccionar</option>
                                     </select>
                             </div>
@@ -560,6 +586,54 @@
                     </div>
                 </div>
             </div>
+            <!-- MODAL Cambiar FECHAS -->
+            <div class="modal fade" tabindex="-3" role="dialog" id="fechaModal">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cambiar Fechas</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-3">           
+                                <label for="odtF" class="col-form-label-sm">ODT</label>
+                                <input type="text" class="form-control form-control-sm" id="odtF" aria-describedby="odtF" readonly>
+                            </div>
+                            <div class="col-sm-3">           
+                                <label for="fechaAtencion" class="col-form-label-sm">Fecha Atencion</label>
+                                <input type="text" class="form-control form-control-sm" id="fechaAtencion" aria-describedby="fechaAtencion">
+                                 
+                            </div>
+                            <div class="col-sm-3">           
+                                <label for="idOdt" class="col-form-label-sm"></label>
+                                <input type="hidden" class="form-control form-control-sm" id="idOdt" aria-describedby="idOdt" readonly>
+                                 
+                            </div>
+                             
+                        </div>   
+                        <div class="row">
+                            <div class="col-sm-3">           
+                                <label for="fechaAlta" class="col-form-label-sm">Fecha de Alta</label>
+                                <input type="text" class="form-control form-control-sm" id="fechaAlta" aria-describedby="fechaAlta">
+                                 
+                            </div>
+                             <div class="col-sm-3">           
+                                <label for="fechaVen" class="col-form-label-sm">Fecha de Vencimiento</label>
+                                <input type="text" class="form-control form-control-sm" id="fechaVen" aria-describedby="fechaVen">
+                            </div> 
+                        </div>     
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btnChgFechas">Cambiar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>  
+                    </div>
+                </div>
+            </div>
+
 			<!-- Modal Historia Evento ODT -->
 			<div class="modal fade" tabindex="-1" id="showHistoria" role="dialog" data-backdrop="static" data-keyboar="false">
 				
@@ -642,6 +716,11 @@
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.23/b-1.6.5/b-html5-1.6.5/fc-3.3.2/fh-3.1.8/datatables.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
+
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>

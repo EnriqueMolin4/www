@@ -10,11 +10,9 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>MAPA</h3>
-            </div>
-            <div class="container-fluid p-4 panel-white">
-                   
+            <div class="container-fluid p-5">
+                <h3>Mapa</h3>
+    
                         <div class="row">
                             <div id="avisos" class="display:none;" style="background-color:red;"></div>
                         </div>
@@ -22,7 +20,7 @@
                         <div id="progress"></div>
                         <div class="row">
                             <div class="col-sm-4">           
-                                <label for="tecnico" class="col-form-label-sm">BUSCAR TECNICO</label>
+                                <label for="tecnico" class="col-form-label-sm">Buscar Tecnico</label>
                                 <input type="text" class="form-control form-control-sm" id="tecnico" aria-describedby="tecnico">
                             </div>
                             <div class="col" style="padding-left:30px;padding-top:30px;">  
