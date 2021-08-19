@@ -1,12 +1,14 @@
 var infoAjax = 0;
 var tableInventario;
 var usrPerm;
+var fecha_hoy;
 var tblEventosHist,tblInventarioHist,eventos,inventarios;                                                        
 $(document).ready(function() {
     usrPerm = $("#userPerm").val();
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "almacenlink");
     getProcesosActivos();
     getModelos();
+    getAplicativo();
     getConectividad();
     getUbicacion();
     getEstatus();
@@ -25,7 +27,7 @@ $(document).ready(function() {
     $(".searchInventario").on('change',function() {
         tableInventario.ajax.reload();
     })
-
+   fecha_hoy =  moment().format('YYYY-MM-DD');
    //Inhabilitar entrada
 
 
@@ -40,11 +42,22 @@ $(document).ready(function() {
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
         order: [[ 0, "ASC" ]],        
         dom: 'lfrtiBp',
-        buttons: [
-            'pdf',
-            'excelHtml5',
-            'csv'
-        ],
+        buttons: [{
+            extend: 'excel',
+            title: 'Almacen_'+fecha_hoy,
+            exportOptions: {
+                orthogonal: 'sort',
+                columns: [0,1,2,3,4,5,6,7,8,9,10]
+            },
+            customizeData: function ( data ) {
+                for (var i=0; i<data.body.length; i++){
+                    for (var j=0; j<data.body[i].length; j++ )
+                    {
+                        data.body[i][j] = '\u200C' + data.body[i][j];
+                    }
+                }
+            }               
+            }],
         ajax: {
             url: 'modelos/almacen_db.php',
             type: 'POST',
@@ -62,6 +75,7 @@ $(document).ready(function() {
             { data: 'tipoNombre'},
             { data: 'no_serie'},
             { data: 'modelo' },
+            { data: 'aplicativ'},
             { data: 'conect'},
             { data: 'estatus' },
             { data: 'estatus_inventario' },
@@ -88,7 +102,7 @@ $(document).ready(function() {
                 "width": "10%",
             },
             {
-                "targets": [10],
+                "targets": [11],
                 "mRender": function ( data,type, row ) 
                 {
                     var id;
@@ -121,11 +135,11 @@ $(document).ready(function() {
         ],
         rowCallback: function( row, data, index,full){
            
-             fnShowHide( 8,true )
+             fnShowHide( 9,true )
                  var fechamodificacion = moment(data.fecha_edicion)
                  var now = moment();
                  var diff = moment.duration(fechamodificacion.diff(now));
-                 var col = this.api().column(8).index('visible');
+                 var col = this.api().column(9).index('visible');
 
                  if(now.diff(fechamodificacion, 'days') >= 30  ) 
                  {
@@ -139,6 +153,12 @@ $(document).ready(function() {
                  }else{
                      $('td', row).eq(col).css('background-color', '#00CC66');
                  }
+
+                 if(data.estatus == 'INSTALADO')
+                 {
+                    $('td', row).eq(col).css('background-color', '#fff');
+                 }
+
          }
     });
 
@@ -258,7 +278,7 @@ $(document).ready(function() {
             $.ajax({
                 type: 'GET',
                 url: 'modelos/almacen_db.php',
-                data: 'module=getSeriesIE&serie='+serie,
+                data: 'module=getSerieH&serie='+serie,
                 cahe: false,
                 success: function(data)
                 {
@@ -268,8 +288,9 @@ $(document).ready(function() {
                         .draw(); 
 
                     var info = JSON.parse(data);
-
+                    
                     var infoSerie = info.inventario;
+                    
                     $("#table_serieinfo").append('<tr><td>'+infoSerie.no_serie+'</td><td>'+infoSerie.modelo+'</td><td>'+infoSerie.conectividad+'</td><td>'+infoSerie.anaquel+'</td><td>'+infoSerie.caja+'</td><td>'+infoSerie.tarima+'</td><td>'+infoSerie.cve_banco+'</td></tr>');
 
                     tblEventosHist.rows.add(info.eventos)
@@ -279,10 +300,9 @@ $(document).ready(function() {
                    
 
                 },
-                error: function(error)
-                {
-                    var demo = error;
-                }
+                error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+                } 
             });
 
             $('#showHistoria').modal("show");
@@ -303,6 +323,7 @@ $(document).ready(function() {
         var data = tableInventario.row( index ).data()
         //Numero de serie
         $("#det-noserie").val(data.no_serie);
+        $("#tipo_prod").val(data.tipo);
 
         if(data.tipo == 1) {
             $("#divModelo").show();
@@ -311,9 +332,16 @@ $(document).ready(function() {
             $("#det-modelo option").filter(function() {
             return $(this).text() == data.modelo;
             }).prop('selected', true);
+
+            $("#divAplicativo").show();
+
+            $("#det-aplicativo option").filter(function() {
+                return $(this).text() == data.aplicativ;
+                }).prop('selected', true);
          
         } else if(data.tipo == 2 ) {
             $("#divModelo").hide();
+            $("#divAplicativo").hide();
             $("#divCarrier").show();
         
             
@@ -369,6 +397,8 @@ $(document).ready(function() {
         
         var noserie =           $("#det-noserie").val();
         var modelo =            $("#det-modelo").val() == '0' ? $("#det-carrier").val() : $("#det-modelo").val();
+        var tipo =              $("#tipo_prod").val();
+        var aplicativo =        $("#det-aplicativo").val();
         var conectividad =      $("#det-conectividad").val();
         var estatus =           $("#det-estatus").val();
         var estatusinventario = $("#det-estatus-inventario").val();
@@ -425,8 +455,8 @@ $(document).ready(function() {
         if (valido > 0) {
             $.ajax({
                 type: 'GET',
-                url: 'modelos/almacen_db.php', // call your php file
-                data: 'module=updateInvProd&noserie='+noserie+'&modelo='+modelo+'&conectividad='+conectividad+'&estatus='+estatus+'&ubicacion='+ubicacion+'&estatusinventario='+estatusinventario+'&cantidad='+cantidad,
+                url: 'modelos/almacen_db.php', // call your php file'
+                data: 'module=updateInvProd&noserie='+noserie+'&tipo='+tipo+'&modelo='+modelo+'&aplicativo='+aplicativo+'&conectividad='+conectividad+'&estatus='+estatus+'&ubicacion='+ubicacion+'&estatusinventario='+estatusinventario+'&cantidad='+cantidad,
                 cache: false,
                 success: function(data)
                 {
@@ -756,6 +786,24 @@ function getModelos() {
     });
 }
 
+function getAplicativo() {
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/almacen_db.php', // call your php file
+        data: 'module=getAplicativo',
+        cache: false,
+        success: function(data){
+             
+            $("#det-aplicativo").html(data);
+            //tableInventario.ajax.reload();
+            
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
 //Llamada a la función que tiene la información de los carriers
 function getCarriers() {
     $.ajax({
@@ -890,6 +938,7 @@ function cleartext() /* Función que limpia los campos del formulario */
 { 
     $("#det-noserie").val("");
     $("#det-modelo").val("0");
+    $("#det-aplicativo").val("0");
     $("#det-carrier").val('0');
     $("#det-conectividad").val("0");
     $("#det-estatus").val("0");

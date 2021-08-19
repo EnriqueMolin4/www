@@ -1,5 +1,7 @@
 var infoAjax = 0;
 var tableInventario;
+var fecha_hoy;
+
 $(document).ready(function() {
     
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "cargastecnicolink")
@@ -12,6 +14,8 @@ $(document).ready(function() {
         tableInventario.ajax.reload();
     })
 
+    fecha_hoy = moment().format('YYYY-MM-DD');   
+
 
     tableInventario = $('#inventario').DataTable({
         language: {
@@ -21,13 +25,24 @@ $(document).ready(function() {
         serverSide: true,
         searching: true,
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
-        order: [[ 0, "ASC" ]],        
+        order: [[ 0, "ASC" ]],		  
         dom: 'lfrtiBp',
-        buttons: [
-            'pdf',
-            'excelHtml5',
-            'csv'
-        ],
+        buttons: [{
+            extend: 'excel',
+            title: 'Inventario_Tecnico'+fecha_hoy,
+            exportOptions: {
+                orthogonal: 'sort',
+                columns: [0,1,2,3,4,5,6]
+            },
+            customizeData: function ( data ) {
+                for (var i=0; i<data.body.length; i++){
+                    for (var j=0; j<data.body[i].length; j++ )
+                    {
+                        data.body[i][j] = '\u200C' + data.body[i][j];
+                    }
+                }
+            }               
+            }],
         ajax: {
             url: 'modelos/almacen_db.php',
             type: 'POST',
@@ -42,7 +57,9 @@ $(document).ready(function() {
             { data: 'nombreTecnico'},
             { data: 'producto'},
             { data: 'no_serie'},
-            { data: 'modelo'},
+			{ data: 'modelo'},
+            { data: 'conectividad'},
+            { data: 'aplicativo'},
             { data: 'cantidad' },
             { data: 'estatus' },
             { data: 'fecha_modificacion' },
@@ -50,7 +67,7 @@ $(document).ready(function() {
         ],
         aoColumnDefs: [
             {
-                "targets": [7],
+                "targets": [9],
                 "mRender": function ( data,type, row ) {
                     var id;
                     var estatus = '';
@@ -60,6 +77,7 @@ $(document).ready(function() {
                         id = row.no_serie;
                     } else {
                         id = row.id;
+                        tecnico = row.nombreTecnico;
                     }
 
                     if(row.estatusId == '7' || row.estatusId == '16' || row.estatusId == '17' ) {
@@ -68,7 +86,7 @@ $(document).ready(function() {
                         }
                     }
 
-                    return '<a href="#" title="Detalle" class="mostrarHistoria" data="'+id+' "><i class="fas fa-info-circle fa-2x"></i></a> '+estatus;
+                    return '<a href="#" class="btn btn-success mostrarHistoria" data="'+id+tecnico+' ">Detalle</a> '+estatus;
                 }
             }
         ],
@@ -78,7 +96,7 @@ $(document).ready(function() {
                  var fechamodificacion = moment(data.fecha_modificacion)
                  var now = moment();
                  var diff = moment.duration(fechamodificacion.diff(now));
-                 var col = this.api().column(4).index('visible');
+                 var col = this.api().column(7).index('visible');
 
                  if(now.diff(fechamodificacion, 'days') >= 15  ) {
                  
@@ -95,8 +113,8 @@ $(document).ready(function() {
         var total = 0;
         var error = 0;
         var datos=[];
-        var noGuia = $("#noGuia").val();
-        var codigoRastreo = $("#codigoRastreo").val();
+		var noGuia = $("#noGuia").val();
+		var codigoRastreo = $("#codigoRastreo").val();
 
         if( $("#tecnico").val() == '0') {
             alerta += "Favor de Seleccionar una Tecnico \n";
@@ -149,7 +167,7 @@ $(document).ready(function() {
         
     })
 
-    $("#btnCrearTraspasoDañado").on('click',function(){ 
+    $("#btnCrearTraspasoDaÃ±ado").on('click',function(){ 
         var alerta = '';
         var dtAsig = $("#inventario").DataTable();
         var data = dtAsig.rows().data();
@@ -169,11 +187,11 @@ $(document).ready(function() {
             alerta += "Favor de Seleccionar Eventos para asignar \n";
             error++;
         } 
-        
-        if($("#tecnico").val() == '0') {
-            alerta += "Favor de Seleccionar EventoUn Tecnico \n";
-            error++;
-        }
+		
+		if($("#tecnico").val() == '0') {
+			alerta += "Favor de Seleccionar EventoUn Tecnico \n";
+			error++;
+		}
         
         if(error == 0) {
             var tecnicoNombre = $("#tecnico option:selected").text();
@@ -198,15 +216,15 @@ $(document).ready(function() {
         $(".showNoGuia").hide();
        
     })
-    
-    $('#historia').DataTable({
+	
+	$('#historia').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
         processing: true,
         serverSide: true,
         lengthMenu: [[5], [5]],
-        order: [[ 0, "ASC" ]],      
+        order: [[ 0, "ASC" ]],		
         dom: 'lfrtiBp',
         buttons: [
             'pdf',
@@ -217,30 +235,31 @@ $(document).ready(function() {
             url: 'modelos/almacen_db.php',
             type: 'POST',
             data: function( d ) {
-                d.module = 'getHistoria',
+                d.module = 'getHistoriaIT',
                 d.noSerie = $("#noSerie").val(),
                 d.tipo = $("#tipo_producto").val(),
                 d.tecnicoId = $("#tecnicoId").val()
+                //d.tecnicoNomb = $("#Tec").val()
             }
         },
         columns : [
             { data: 'fecha_movimiento'},
-            { data: 'producto' },
+            { data: 'tipo_movimiento' },
             { data: 'cantidad' },
-            { data: 'ubicacionNombre' },
+            { data: 'ubicacionStatus' },
             { data: 'id_ubicacion'},
-            { data: 'id'}     
+            { data: 'id_ubicacion'}     
         ],
         aoColumnDefs: [
             {
-                "targets": [4],
+                "targets": [5],
                 "visible": false,
                 "searchable": false
             }
         ]
     });
-    
-    $(document).on("click",".mostrarHistoria", function() {
+	
+	$(document).on("click",".mostrarHistoria", function() {
             
        
         var index = $(this).parent().parent().index() ;
@@ -468,8 +487,8 @@ $(document).ready(function() {
 
     $("#btnCancel").on('click', function() {
         cleartext();
-    });
-
+    })
+//BotÃ³n Entrada AlmacÃ©n
     $("#btnEntradaAlmacen").on("click",function() {
 
         var noserie = $("#txtNoSerieEntrada").val();
@@ -576,6 +595,8 @@ function getTecnicos(ter) {
         }
     });
 }
+
+
 
 function getCarriers() {
     $.ajax({

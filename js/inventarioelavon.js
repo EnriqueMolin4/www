@@ -1,6 +1,7 @@
 var infoAjax = 0;
 var tableInventario;
 var usrPerm;
+var fecha_hoy;
 $(document).ready(function() {
     usrPerm = $("#userPerm").val();
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "almacenlink")
@@ -18,6 +19,8 @@ $(document).ready(function() {
     $(".searchInventario").on('change',function() {
         tableInventario.ajax.reload();
     })
+
+    fecha_hoy = moment().format('YYYY-MM-DD');
 
    //Inhabilitar entrada
 
@@ -45,11 +48,22 @@ $(document).ready(function() {
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
         order: [[ 0, "ASC" ]],		  
         dom: 'lfrtiBp',
-        buttons: [
-            'pdf',
-            'excelHtml5',
-            'csv'
-        ],
+        buttons: [{
+            extend: 'excel',
+            filename: 'Inv_Elavon_'+fecha_hoy,
+            exportOptions: {
+                orthogonal: 'sort',
+                columns: [0,1,2,3]
+            },
+            customizeData: function ( data ) {
+                for (var i=0; i<data.body.length; i++){
+                    for (var j=0; j<data.body[i].length; j++ )
+                    {
+                        data.body[i][j] = '\u200C' + data.body[i][j];
+                    }
+                }
+            }               
+        }],
         ajax: {
             url: 'modelos/inventarioelavon_db.php',
             type: 'POST',

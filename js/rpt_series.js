@@ -1,7 +1,9 @@
 var infoAjax = 0;
-var tblEventos,tblInventario,eventos,inventarios;
+var tblEventos,tblInventario,eventos,inventario;
 $(document).ready(function() 
 {
+		ResetLeftMenuClass("submenureportes", "ulsubmenureportes","repbuscarserielink")
+		
 		tblEventos = $("#table_eventos").DataTable({
 										 
 			language: {
@@ -31,9 +33,9 @@ $(document).ready(function()
 			searching: false,
 			paging: false,
 			info: false,
-			"data" : (inventarios),
+			"data" : (inventario),
 			"columns": [
-				{ "width": "20%", "data": "no_serie" },
+				{ "data": "no_serie" },
 				{ "data": "modelo" },
 				{ "data": "conectividad" },
 				{ "data": "estatus" },
@@ -43,19 +45,17 @@ $(document).ready(function()
 				{ "data": "tarima" },
 				{ "data": "cantidad" },
 				{ "data": "ubicacion" },
-				{ "data": "ubicacionNombre" },
-				{ "data": "quien_modifica" },
+				{ "data": "id_ubicacion" },
+				{ "data": "modificado_por" },
 				{ "data": "fecha_edicion" }
 				
 				],
-			fixedColumns: true
 		});
 
         $(document).on("click","#btnSerie", function() 
         {
             var serie = $("#InSerie").val().toUpperCase();
-			
-			
+		
 
             if(serie.length > 0 ) 
             {

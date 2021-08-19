@@ -1,5 +1,6 @@
 var infoAjax = 0;
 var tableTraspasos,tableTraspasosItems;
+var fecha_hoy;
 $(document).ready(function() {
     
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "traspasoslink")
@@ -10,6 +11,8 @@ $(document).ready(function() {
         tableTraspasos.ajax.reload();
     })
 
+    fecha_hoy = moment().format('YYYY-MM-DD');
+
     tableTraspasos = $('#traspasos').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
@@ -19,19 +22,31 @@ $(document).ready(function() {
         searching: true,
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
         order: [[ 0, "ASC" ]],	
-        dom: 'lfrtiBp',	  
-        buttons: [
-            'pdf',
-            'excelHtml5',
-            'csv'
-        ],
+        dom: 'lfrtiBp',	    
+        buttons: [{
+            extend: 'excel',
+            title: 'Traspasos_SAES',
+            exportOptions: {
+                orthogonal: 'sort',
+                columns: [0,1,2,3,4,5]
+            },
+            customizeData: function ( data ) {
+                for (var i=0; i<data.body.length; i++){
+                    for (var j=0; j<data.body[i].length; j++ )
+                    {
+                        data.body[i][j] = '\u200C' + data.body[i][j];
+                    }
+                }
+            }               
+        }],
         ajax: {
             url: 'modelos/almacen_db.php',
             type: 'POST',
             data: function( d ) {
                 d.module = 'getTraspasos',
                 d.tecnico = $("#tecnico").val() ,
-                d.almacen = $("#almacen").val() 
+                d.almacen = $("#almacen").val(),
+                d.estatus = $("#estatus").val()
             }
         },
         columns : [
@@ -272,7 +287,7 @@ function getTecnicos() {
     $.ajax({
         type: 'GET',
         url: 'modelos/almacen_db.php', // call your php file
-        data: 'module=getTecnicos',
+        data: 'module=getTecnicosxAlmacen',
         cache: false,
         success: function(data){
            

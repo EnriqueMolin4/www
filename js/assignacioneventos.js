@@ -2,10 +2,9 @@ var infoAjax = 0;
 var tableAsignaciones;
 $(document).ready(function() {
         ResetLeftMenuClass("submenueventos", "ulsubmenueventos", "asignacioneventoslink")
-         $.datetimepicker.setLocale('es');
+		 $.datetimepicker.setLocale('es');
         getTipoEvento();
         getSupervisores()
-        getEstados();
         //getTecnicos();
         $("#fechaVen_inicio").datetimepicker({
             timepicker:false,
@@ -39,14 +38,12 @@ $(document).ready(function() {
                     d.tipoevento = $("#tipo_evento").val(),
                     d.fechaVen_inicio = $("#fechaVen_inicio").val(),
                     d.fechaVen_fin = $("#fechaVen_fin").val(),
-                    d.ciudade = $("#ciudad_e").val(),
                     d.supervisores = $("#supervisores").val()
                 }
             },
             columns : [
                 { data: 'odt'},
                 { data: 'afiliacion' },
-                { data: 'ciudad'},
                 { data: 'NombreComercio' },
                 { data: 'estatus' },
                 { data: 'TipoComercio' },
@@ -62,13 +59,13 @@ $(document).ready(function() {
                     
                 },
                 {
-                    "targets": [8],
+                    "targets": [7],
                     "mRender": function ( data,type, row ) {
                         return '<a href="#" class="btn btn-success btnInfo" data="'+row.id+'">Detalle</a>';
                     }
                 },
                 {
-                    "targets": [9],
+                    "targets": [8],
                     "mRender": function ( data,type, row ) {
                         return '<div class="checkbox"> <label><input type="checkbox"></label></div>';
                     }
@@ -94,7 +91,7 @@ $(document).ready(function() {
                     total++;
 
                     var valueToPush = new Object();
-                    valueToPush["ID"] = value.id;
+					valueToPush["ID"] = value.id;
                     valueToPush["ODT"] = value.odt;
                     valueToPush["Tecnico"] = $("#tecnico_asig").val();
                     datos.push(valueToPush);
@@ -153,7 +150,7 @@ $(document).ready(function() {
             $.ajax({
                 type: 'GET',
                 url: 'modelos/eventos_db.php', // call your php file
-                data: 'module=getEstados',
+                data: 'module=getstados',
                 cache: false,
                 success: function(data){
                 $("#estado").html(data);            
@@ -254,8 +251,7 @@ $(document).ready(function() {
        
     })
 
-  /*       
-        $( "#tecnico_asig" ).autocomplete({
+  /*       $( "#tecnico_asig" ).autocomplete({
             source: function( request, response ) {
               $.ajax( {
                 url: "modelos/assignacioneventos_db.php",
@@ -286,7 +282,7 @@ $(document).ready(function() {
                 var info = ui.item.data;
                 $("#tecnico_id").val(info.id);
             }
-    } ); */
+          } ); */
 
         $("#btnRegistrar").on('click', function() {
             alert("Grabar")
@@ -364,9 +360,7 @@ $(document).ready(function() {
         })
 
 
-      $("#estado_e").on("change", function() {
-                   getMunicipios();
-               }) 
+       
        
 
 
@@ -424,7 +418,7 @@ function getTecnicos() {
         success: function(data){
             console.log(data);
         $("#tecnico_asig").html(data);
-            
+			
         },
         error: function(error){
             var demo = error;
@@ -441,50 +435,12 @@ function getSupervisores() {
         success: function(data){
             console.log(data);
         $("#supervisores").html(data);
-         getTecnicos(); 
+		 getTecnicos();	
         },
         error: function(error){
             var demo = error;
         }
     });
-}
-
-function getEstados() 
-{
-    //var index = $(this).parent().parent().index();
-    //var data = tableAsignaciones
-    $.ajax({
-        type: 'GET',
-        url: 'modelos/assignacioneventos_db.php',
-        data: 'module=getEstados',
-        cache: false,
-        success: function(data){
-            console.log(data);
-            $("#estado_e").html(data);
-
-        },
-        error: function(error)
-        {
-            var demo = error;
-        }
-    });
-}
-
-function getMunicipios()
-{
-    var estado = $("#estado_e").val();
-    $.ajax({
-        type: 'GET',
-        url: 'modelos/assignacioneventos_db.php',
-        data: 'module=getMunicipios&estado='+estado,
-        cache: false,
-        success: function(data){
-            $("#ciudad_e").html(data);
-        },
-        error: function(error){
-            var demo = error;
-        }
-    })
 }
 
 function eventoAsignado(fecha) {

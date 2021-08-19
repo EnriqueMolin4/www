@@ -230,7 +230,8 @@ $(document).ready(function() {
 
         $("#btnRegistrar").on("click", function() {
 
-			if( $("#servicio-rollosentregados").val().length == 0 ) {
+			if( $("#servicio-rollosentregados").val().length == 0 ) 
+            {
 				$("#servicio-rollosentregados").val('0');
 			}
 				var dnd = { module: 'grabarCierre',odt : $("#odt").val(),odtid : $("#odtId").val(), afiliacion: $("#afiliacion").val() , estatus: $("#estatus").val(), fueratiempo: $("#cierre_evento-causa_fuera_tiempo").val()
@@ -419,7 +420,7 @@ function validateOdt() {
 						$("$subservicio").val("");
 						$("#servicio_descripcion").val("");
                         $.toaster({
-                            message: 'La ODT no coincide con la afiliaci�n',
+                            message: 'La ODT no coincide con la afiliación',
                             title: 'Aviso',
                             priority : 'danger'
                         });  

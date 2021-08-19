@@ -1,6 +1,7 @@
 var infoAjax = 0;
 var scriptSinFiltro;
 var tableEventos,PermisosEvento;
+var fecha_hoy;
 var validData = [];				 
 $(document).ready(function() {
 	var deg = 0;
@@ -22,6 +23,7 @@ $(document).ready(function() {
         getTerritoriosFilter();
         getTecnicosf();
         getBancosf();
+        getFechaAtencion();
         $("#fechaVen_inicio").datetimepicker({
 			timepicker:false,
             format:'Y-m-d'
@@ -36,7 +38,21 @@ $(document).ready(function() {
 			timepicker:false,
             format:'Y-m-d'
         });
+        fecha_hoy =  moment().format('YYYY-MM-DD');
 
+        $("#fechaAtencion").datetimepicker({
+            timepicker:true,
+            format: 'Y-m-d 00:00:00'
+        })
+
+        $("#fechaAlta").datetimepicker({
+            timepicker:true,
+            format:'Y-m-d 09:00:00'
+        })
+        $("#fechaVen").datetimepicker({
+            timepicker:true,
+            format:'Y-m-d 23:59:00'
+        })
 
         tableEventos = $('#eventos').DataTable({
             order: [[ 8, "desc" ]],
@@ -49,11 +65,22 @@ $(document).ready(function() {
             lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
 			order: [[ 6, "ASC" ]],		  
             dom: 'lfrtiBp',
-            buttons: [
-                'pdf',
-                'excelHtml5',
-                'csv'
-            ],
+            buttons: [{
+                extend: 'excel',
+                title: 'Eventos_'+fecha_hoy,
+                exportOptions: {
+                    orthogonal: 'sort',
+                        columns: [0,1,2,3,4,5,6,7,8,9,10,11]
+            },
+                customizeData: function ( data ) {
+                    for (var i=0; i<data.body.length; i++){
+                        for (var j=0; j<data.body[i].length; j++ )
+                        {
+                            data.body[i][j] = '\u200C' + data.body[i][j];
+                        }
+                    }
+                }               
+            }],
             ajax: {
                 url: 'modelos/eventos_db.php',
                 type: 'POST',
@@ -105,11 +132,12 @@ $(document).ready(function() {
                         var btnCambiarOdt = '<a href="#" title="Cambiar ODT" class="chgODT" data="'+row.odt+'"><i class="fas fa-exchange-alt fa-2x " style="color:red"></i></a>';
                         var btnHistoria = '<a href="#" class="mostrarHistoria" data="'+row.odt+'"><i class="fas fa-history fa-2x" style="color:#C17137"></i> </a>';
                         var btnCerrar = '<a href="#" class="endEvent" title="Cerrar evento" data="'+row.id+'"><i class="far fa-calendar fa-2x " style="color:#E04242"></i></a>';
+                        var btnDates = '<a href="#" class="editFecha" title="Cambiar Fechas" data="'+row.id+'"><i class="far fa-calendar-alt fa-2x " style="color:#3EA399"></i></a>';
                         if(row.nombreEstatus==='Cerrado' && $("#tipo_user").val() == 'callcenterADM')
                         {
-                            btnALL= btnCambiar+btnInfo+btnCambiarOdt+'<br>'+btnHistoria;  
+                            btnALL= btnCambiar+btnInfo+btnCambiarOdt+'<br>'+btnHistoria+btnDates;  
                         } else if(row.sync = '0') {
-                            btnALL= btnInfo+btnCerrar+btnCambiarOdt+btnHistoria;
+                            btnALL= btnInfo+btnCerrar+btnCambiarOdt+btnHistoria+btnDates;
                         }
 
                         return btnALL;
@@ -343,6 +371,28 @@ $(document).ready(function() {
             $("#old_odt").val(odt);
             $("#chgODT").modal({show: true, backdrop: false, keyboard: false})
         })
+
+        $(document).on("click",".editFecha", function(){
+            var id = $(this).attr('data');
+
+            var index = $(this).parent().parent().index() ;
+            var data = tableEventos.row( index ).data()
+
+           var fa = getFechaAtencion(data.odt);
+
+            $("#idOdt").val(id);
+
+            $("#odtF").val(data.odt);
+
+            $("#fechaAtencion").val(fa);
+
+            $("#fechaAlta").val(data.fecha_alta);
+
+            $("#fechaVen").val(data.fecha_vencimiento);
+
+            $("#fechaModal").modal({show: true, backdrop: false, keyboard : false})
+        })
+
 		
 		$("#addDocuments").on("click", function() {
 			var totalArchivos = $("#documentos")[0].files;
@@ -400,6 +450,7 @@ $(document).ready(function() {
                                     
                                     //EXTRAS
                                     getInfoExtra(element.odt);
+                                    $("#cambiarInfoTpv").hide();
 
                                     $("#odt").val(element.odt)
                                     $("#afiliacion").val(element.afiliacion)
@@ -448,6 +499,7 @@ $(document).ready(function() {
                                     $("#tpv_retirado").val(element.tpv_retirado); 
                                     $("#version").val(element.version);
                                     $("#aplicativo").val(element.aplicativo);
+                                    $("#aplicativo_ret").val(element.aplicativo_ret);
                                     $("#producto").val(element.producto);
                                     $("#rollos_instalar").val(element.rollos_instalar);
                                     $("#rollos_entregados").val(element.rollos_entregados);
@@ -693,6 +745,37 @@ $(document).ready(function() {
                     var demo = error;
                 }
             });
+        })
+
+        $("#btnChgFechas").on("click", function(){
+            var id = $("#idOdt").val();
+            var fechaAtencion = $("#fechaAtencion").val();
+            var fechaAlta = $("#fechaAlta").val();
+            var fechaVen = $("#fechaVen").val();
+            var odt = $("#odtF").val();
+
+            var data= {module:'cambiarFechasOdt', id:id, fechaAtencion:fechaAtencion, fechaAlta:fechaAlta, fechaVen:fechaVen, odt:odt};
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php',
+                data: data,
+                cache: false,
+                success: function(data)
+                {
+                    $.toaster({
+                        message: 'Se actualizaron las fechas',
+                        title: 'Aviso',
+                        priority:'success'
+                    });
+                    tableEventos.ajax.reload();
+                    $("#fechaModal").modal('hide');
+                    $("#fechaAtencion").val('');
+                    $("#fechaAlta").val('');
+                    $("#fechaVen").val('');
+
+                }
+            })
         })
         
 
@@ -977,11 +1060,71 @@ $(document).ready(function() {
             }
         })
 
-        
-        
+        $("#tpvInDataConnect").on("change", function(){
+            $("#cambiarInfoTpv").show();
+        })
+        $("#tpvReDataConnect").on("change", function(){
+            $("#cambiarInfoTpv").show();
+        })
+
+
+        $("#btnUpdateAlmacen").on("click", function(){
+            
+            var tpv = $("#tpv").val();
+            var tpvInConnect = $("#tpvInDataConnect").val();
+            var aplicativoIn = $("#aplicativo").val();
+
+
+            var tpvRe = $("#tpv_retirado").val();
+            var tpvReConnect = $("#tpvReDataConnect").val();
+            var aplicativoOut = $("#aplicativo_ret").val();
+            
+                $.ajax({
+                    type: 'GET',
+                    url: 'modelos/eventos_db.php', // call your php file
+                    data: 'module=cambiarInConnect&tpv='+tpv+'&tpvInConnect='+tpvInConnect+'&aplicativoIn='+aplicativoIn,
+                    cache: false,
+                    success: function(data){
+                        var info = JSON.parse(data);
+                        console.log(info.upd);
+                        
+                            $.toaster({
+                            message: info.message,
+                            title: 'Aviso',
+                            priority : 'success'
+                        });    
+                    },
+                    error: function(error)
+                    {
+                        var demo = error;
+                    }
+                })
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'modelos/eventos_db.php', // call your php file
+                    data: 'module=cambiarReConnect&tpvRe='+tpvRe+'&tpvReConnect='+tpvReConnect+'&aplicativoOut='+aplicativoOut,
+                    cache: false,
+                    success: function(data){
+                        var info = JSON.parse(data);
+                        console.log(info.upd);
+                        
+                            $.toaster({
+                            message: info.message,
+                            title: 'Aviso',
+                            priority : 'success'
+                        });    
+                    },
+                    error: function(error)
+                    {
+                        var demo = error;
+                    }
+                })
+        })
+    
     } );
 
-    function getModeloConectividad(tpv,tipo,donde) {
+function getModeloConectividad(tpv,tipo,donde) {
 
         $.ajax({
             type: 'GET',
@@ -1020,9 +1163,9 @@ $(document).ready(function() {
                 var demo = error;
             }
         });
-    }
+}
 
-    function camposObligatorios(servicio) {
+function camposObligatorios(servicio) {
 
         return new Promise((resolve, reject) => {
             $.ajax({
@@ -1042,9 +1185,9 @@ $(document).ready(function() {
         }) 
 
         
-    }
+}
 
-    function validarTPV(tpv,tipo,donde) {
+function validarTPV(tpv,tipo,donde) {
             result = 0;
 
             $.ajax({
@@ -1094,14 +1237,15 @@ $(document).ready(function() {
 
             return result;
 
-    }
+}
+
 
     
-      function initMap() {
+function initMap() {
          
-      }
+}
 	  
-      function getInfoExtra(odt) {
+function getInfoExtra(odt) {
 
     
 
@@ -1139,9 +1283,9 @@ $(document).ready(function() {
                 reject(error)
             }
         })  
-    }
+}
 
-	  function tipodeUsuario(tipo) {
+function tipodeUsuario(tipo) {
 
           $("#rowCancelado").hide();
           $("#rowRechazos").hide();
@@ -1213,7 +1357,7 @@ $(document).ready(function() {
 			$("#sim_retirado").attr('readonly',true)
             
 		  }
-	  }
+}
 
 function getScriptEvento(servicio,noserie,conectividad,modelo) {
     var result = '';
@@ -1659,6 +1803,7 @@ function getAplicativo() {
             console.log(data);
         
          $("#aplicativo").html(data);
+         $("#aplicativo_ret").html(data);
 		 
 		 	
         },
@@ -1785,3 +1930,21 @@ function cleartext() {
 
 }
 
+function getFechaAtencion(odt)
+{
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getFechaAtencion&odt='+odt,
+        cache: false,
+        success: function(data){
+            
+            $("#fechaAtencion").html(data);
+            $("#fechaAtencion").val(data);
+
+        },
+        error: function(error){
+            var demo = error;
+        }
+    })
+}

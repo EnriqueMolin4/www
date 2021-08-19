@@ -1,9 +1,11 @@
 var infoAjax = 0;
 var tablePeticiones;
+var fecha_hoy;
 $(document).ready(function() {
     getSupervisores();
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "peticioneslink")
     
+    fecha_hoy = moment().format('YYYY-MM-DD');
 
     tablePeticiones = $('#tplPeticiones').DataTable({
         language: {
@@ -16,10 +18,22 @@ $(document).ready(function() {
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
         order: [[ 0, "ASC" ]],	
         dom: 'lfrtiBp',	  
-        buttons: [
-            'excelHtml5',
-            'csv'
-        ],
+        buttons: [{
+            extend: 'excel',
+            filename: 'Peticiones_'+fecha_hoy,
+            exportOptions: {
+                orthogonal: 'sort',
+                columns: [1,2,3,4]
+            },
+            customizeData: function ( data ) {
+                for (var i=0; i<data.body.length; i++){
+                    for (var j=0; j<data.body[i].length; j++ )
+                    {
+                        data.body[i][j] = '\u200C' + data.body[i][j];
+                    }
+                }
+            }               
+            }],
         ajax: {
             url: 'modelos/almacen_db.php',
             type: 'POST',
