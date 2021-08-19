@@ -9,49 +9,33 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>USUARIOS</h3>
-            </div>
-            <div class="container-fluid p-4">
-            <?php if( searchMenuEdit($_SESSION['Modules'],'url','registrousuarios') == '1') { ?>
-                <div class="row">
-                    <div class="col"> 
-                        <label for="excelMasivo" class="col-form-label-sm">CARGA MASIVA USUARIOS</label> 
-                        <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
-                        <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
-                    </div>
-                    <div class="col">
-                        <a href="layouts/Template_Masivo_Usuarios.csv" download>Template Para Carga Masiva</a>
-                    </div>
+            <div class="container-fluid p-5">
+            <div class="row">
+			<?php if( searchMenuEdit($_SESSION['Modules'],'url','registrousuarios') == '1') { ?>
+                <div class="col"> 
+                <label for="excelMasivo" class="col-form-label-sm">Carga Masiva Usuarios</label> 
+                <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
+                <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
                 </div>
-            <?php  } ?>
-                
-            </div>
-            <div class="row p-3">
                 <div class="col">
-                    <button class="btn btn-success" id="btnNewUser">Nuevo Usuario</button>
+                    <a href="layouts/Template_Masivo_Usuarios.csv" download>Template pra Carga Masiva</a>
                 </div>
-                
-            </div><br>
-
-            <div class="row p-5 panel-white">
-            
-            <div class="table-responsive">
-                
-            <table id="usuarios"  class="table table-md table-bordered table-responsive">
+			<?php  } ?>
+            </div>
+            <table id="usuarios"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
-                        <th width="10%" >ID</th>
-                        <th width="200px">NOMBRE</th>
-                        <th width="200px">CORREO</th>
-                        <th>TIPO</th>
-                        <th>PLAZA</th>
-                        <th width="200px">TERRITORIAL</th>
-                        <th width="200px">FECHA ALTA</th>
-                        <th>ESTATUS</th>
-                        <th>ACCION</th>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Tipo</th>
+                        <th>Plaza</th>
+                        <th>Teritorial</th>
+                        <th>Fecha Alta</th>
+                        <th>Estatus</th>
+                        <th>Accion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,21 +43,20 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th width="10%" >ID</th>
-                        <th width="200px">NOMBRE</th>
-                        <th width="200px">CORREO</th>
-                        <th>TIPO</th>
-                        <th>CLAVE</th>
-                        <th width="200px">SUPERVISOR</th>
-                        <th width="200px">FECHA ALTA</th>
-                        <th>ESTATUS</th>
-                        <th>ACCION</th>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Tipo</th>
+                        <th>Clave</th>
+                        <th>Supervisor</th>
+                        <th>Fecha Alta</th>
+                        <th>Estatus</th>
+                        <th>Accion</th>
                     </tr>
                 </tfoot>
             </table>
-            </div>
             <input type="hidden" id="userId" value="0">
-            
+            <button class="btn btn-success" id="btnNewUser">Nuevo Usuario</button>
             </div>
 
             <!-- MODAL -->
@@ -81,7 +64,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">NUEVO USUARIO</h5>
+                        <h5 class="modal-title">Nuevo Usuario</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -90,64 +73,63 @@
                         <form id="frm" name="frm">
                             <div class="row">
                                 <div class="col-sm-4">           
-                                    <label for="nombre" class="col-form-label-sm">NOMBRES</label>
-                                    <input type="text" class="custom-select form-control form-control-sm" id="nombre" name="nombre" aria-describedby="nombre">
+                                    <label for="nombre" class="col-form-label-sm">Nombres</label>
+                                    <input type="text" class="form-control form-control-sm" id="nombre" name="nombre" aria-describedby="nombre">
                                 </div>
                                 <div class="col-sm-4">           
-                                    <label for="apellidos" class="col-form-label-sm">APELLIDOS</label>
-                                    <input type="text" class="custom-select form-control form-control-sm" id="apellidos" name="apellidos" aria-describedby="apellidos">
-                                </div>
-                                <div class="col-sm-4">           
-                                    <label for="correo" class="col-form-label-sm">CORREO</label>
-                                    <input type="text" class="custom-select form-control form-control-sm" id="correo" name="correo" aria-describedby="correo">
+                                    <label for="apellidos" class="col-form-label-sm">Apellidos</label>
+                                    <input type="text" class="form-control form-control-sm" id="apellidos" name="apellidos" aria-describedby="apellidos">
                                 </div>
                             </div>
-
                             <div class="row">
-                                
                                 <div class="col-sm-4">           
-                                    <label for="contrasena" class="col-form-label-sm">CONTRASEÑA</label>
-                                    <input type="password" class="custom-select form-control form-control-sm" id="contrasena" name="contrasena" aria-describedby="contrasena">
+                                    <label for="correo" class="col-form-label-sm">Correo</label>
+                                    <input type="text" class="form-control form-control-sm" id="correo" name="correo" aria-describedby="correo">
                                 </div>
-								<div class="col-sm-4">           
-                                    <label for="tipo" class="col-form-label-sm">TIPO USUARIO</label>
-                                    <select id="tipo" name="tipo" class="custom-select form-control form-control-sm">
+                                <div class="col-sm-4">           
+                                    <label for="contrasena" class="col-form-label-sm">Contraseña</label>
+                                    <input type="password" class="form-control form-control-sm" id="contrasena" name="contrasena" aria-describedby="contrasena">
+                                </div>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">           
+                                    <label for="tipo" class="col-form-label-sm">Tipo Usuario</label>
+                                    <select id="tipo" name="tipo" class="form-control form-control-sm">
                                         <option value="0" selected>Seleccionar</option>
                                        
                                     </select>
                                 </div>
                                 <div class="col-sm-4">           
-                                    <label for="negocio" class="col-form-label-sm">CUENTA</label><br>
-                                    <select hidden id="negocio" name="negocio" class="custom-select form-control form-control-sm" multiple>
+                                    <label for="negocio" class="col-form-label-sm">Cuenta</label><br>
+                                    <select id="negocio" name="negocio" class="custom-select form-control form-control-sm" multiple>
                                         <option value="0" selected>Seleccionar</option>
                             
                                     </select>
                                 </div>
-                                
                             </div>
-
                             <div class="row">
-                            <div class="col-sm-4">           
-                                    <label for="territorial" class="col-form-label-sm">TERRITORIAL</label><br>
-                                    <select hidden id="territorial" name="territorial" class="custom-select form-control form-control-sm" multiple>
+                            <div class="col-sm-4" id="divTerritorial">           
+                                    <label for="territorial" class="col-form-label-sm">Territorial</label><br>
+                                    <select id="territorial" name="territorial" class="custom-select form-control form-control-sm" multiple>
                                         
                                     </select>
                             </div>
-                                <div class="col-sm-4">           
-                                    <label for="plaza" class="col-form-label-sm">PLAZA</label><br>
-                                    <select hidden id="plaza" name="plaza" class="custom-select form-control form-control-sm" multiple>
-                                        <option value="0" selected>Seleccionar</option>
-                            
+                                <div class="col-sm-4" id="divPlaza">           
+                                    <label for="plaza" class="col-form-label-sm">Plaza</label><br>
+                                    <select id="plaza" name="plaza" class="custom-select form-control form-control-sm" multiple>
+                                        
                                     </select>
                                 </div>
-                                <div class="col-sm-4">           
-                                    <label for="almacen" class="col-form-label-sm">ALMACEN</label>
+                                <div class="col-sm-4" id="divAlmacen">           
+                                    <label for="almacen" class="col-form-label-sm">Almacen</label>
                                     <select id="almacen" name="almacen" class="form-control form-control-sm">
                                         <option value="0" selected>Seleccionar</option>
                             
                                     </select>
                                 </div>
                                 
+                               
                             </div>
                         </form>
                     </div>
@@ -170,7 +152,7 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
-    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
     <script src="js/Chart.bundle.min.js"></script>
@@ -181,14 +163,15 @@
     <script src="js/main.js"></script>
     <script src="js/jquery.rotate.1-1.js"></script>
     <script>
-    var usuarios, almacen;
+    var usuarios,almacen;
         $(document).ready(function() {
             ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "registrousuarioslink")
            // getSupervisores();
             getTerritorial();
             getTipoUser();
-            getBancos();
-            getPlazas();
+            getBancos($("#userId").val());
+         
+           
                 $("#txtfecha_llamada").datetimepicker({
                     timepicker:false,
                     format:'Y-m-d'
@@ -259,9 +242,9 @@
                                 var boton = "";
                                 
                             if(row.estatus == '1'){
-                                    boton =  '<a href="#" class="EditUser" data="'+row.Id+'"><i class="fas fa-edit fa-2x "></i></a><a title="Desactivar Usuario" href="#" class="DelUser" data="'+row.Id+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a>';
+                                    boton =  '<a href="#" class="EditUser" data="'+row.Id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelUser" data="'+row.Id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
                                 } else {
-                                    boton = '<a href="#" class="EditUser" data="'+row.Id+'"><i class="fas fa-edit fa-2x "></i></a><a title="Activar Usuario" href="#" class="AddUser" data="'+row.Id+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
+                                    boton = '<a href="#" class="EditUser" data="'+row.Id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="AddUser" data="'+row.Id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
                             }
 
                                 return boton;
@@ -289,17 +272,17 @@
 
                 var messages = {
                     contrasena: {
-                        required: "Favor de capturar una Contraseña",
-                        minlength: "La contraseña debe contener 8 caracteres mínimo"
+                        required: "Favor de Capturar una Contraseña",
+                        minlength: "La contraseña debe contener 8 caracteres minimo"
                     },
                     nombre: {
-                        required: "Favor de capturar el Nombre",
+                        required: "Favor de Capturar el Nombre",
                     },
                     apellidos: {
-                        required: "Favor de capturar los Apellidos",
+                        required: "Favor de Capturar los Apellidos",
                     },
                     correo: {
-                        required: "Favor de capturar el Correo Electronico",
+                        required: "Favor de Capturar el Correo Electronico",
                     }
                 }
 
@@ -335,8 +318,8 @@
                         success: function(data, textStatus, jqXHR){
                             var info = JSON.parse(data);
 
-                            var territorios = info[0].territorios.split(',');
-                            var plazas =info[0].plazas.split(',');
+                            var territorios = info[0].territorios == null ? [] : info[0].territorios.split(',');
+                            var plazas = info[0].plazas == null ? [] : info[0].plazas.split(',');
                             almacen = info[0].almacen;
                             $("#showUser").modal({show: true, backdrop: false, keyboard: false}) 
                             
@@ -618,8 +601,7 @@
                             url: 'modelos/usuarios_db.php', // call your php file
                             data: { module: 'getBancos', 'tecnico': 0  }
                         }).done(function(data) {
-                            console.log(data);
-                            //var plazas = data;
+                            var plazas = data;
                             $("#negocio").html(data);
                             $("#negocio").multiselect('refresh');
 
@@ -838,12 +820,12 @@
             });
         }
 
-        function getBancos() {
+        function getBancos(tecnico) {
 
             $.ajax({
                 type: 'POST',
                 url: 'modelos/usuarios_db.php', // call your php file
-                data: { module: 'getBancosUser'},
+                data: { module: 'getBancos', 'tecnico': tecnico },
                 cache: false,
                 success: function(data, textStatus, jqXHR){
                     
@@ -851,7 +833,6 @@
                     $("#negocio").multiselect({ 
                         includeSelectAllOption: true,
                         selectAllText: 'Todos',
-                        nonSelectedText: 'Ninguno Seleccionado',
                         maxHeight: 100 
                     });
 
@@ -878,6 +859,7 @@
             $("#plaza").val("0");
 
         }
+
 
     </script> 
   

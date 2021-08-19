@@ -11,27 +11,23 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>TECNICOS</h3>
-            </div>
-            <div class="container-fluid p-3 panel-white">
+            <div class="container-fluid p-5">
             <div class="row">
                 <div class="col-sm-12 p-4">           
-                    <label for="supervisor" class="col-form-label-sm">SUPERVISOR</label>
+                    <label for="supervisor" class="col-form-label-sm">Supervisor</label>
                     <select id="supervisor" name="supervisor" class="form-control form-control-sm">
                         <option value="0">Seleccionar</option>
                     </select>
                 </div>
             </div>
-            <div class="table-responsive">
-                <table id="usuarios"  class="table table-md table-bordered table-responsive">
+            <table id="usuarios"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
-                        <th width="350px">NOMBRE</th>
-                        <th width="350px">APELLIDOS</th>
-                        <th width="250px">EMAIL</th>
-                        <th width="250px">TELEFONO</th>
-                        <th>ACCION</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Accion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,30 +35,27 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th width="350px">NOMBRE</th>
-                        <th width="350px">APELLIDOS</th>
-                        <th width="250px">EMAIL</th>
-                        <th width="250px">TELEFONO</th>
-                        <th width="200px">ACCION</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Accion</th>
                     </tr>
                 </tfoot>
             </table>
-            </div>
-                            
-            </div>
-            <div class="panel-footer p-4">
                 <fieldset class="border p-2">
-                    <legend>AGREGAR TECNICO</legend>
+                    <legend>Agregar Tecnico</legend>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12 p-4">
                             <input type="hidden" value="0" id="tecnicoId" name="tecnicoId">
                             <label for="newTecnico" class="col-form-label-sm">Buscar Tecnico</label>
-                                <input type="text" id="newTecnico" name="newTecnico" class="form-control form-control-sm"><br>
+                            <input type="text" id="newTecnico" name="newTecnico">
                             <button class="btn btn-success btn-sm" id="btnAddTecnico">Agregar</button>
                         </div>
                     </div>
                 </fieldset>
             </div>
+   
         </main>
         <!-- page-content" -->
     </div>
@@ -119,7 +112,7 @@
                         {
                             "targets": [4],
                             "mRender": function ( data,type, row ) {
-                                return '<a href="#" title="Des-Asignar Técnico" class="delTecnico" data="'+row.id+'"><i class="fas fa-user-minus fa-2x" style="color:#F5425D"></i></a>';
+                                return '<a href="#" class="delTecnico" data="'+row.id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
                             }
                         }
                     ]
@@ -173,18 +166,9 @@
                 } );
 
                 $("#btnAddTecnico").on('click', function() {
-                    if( $("#supervisor").val() == "0" ) 
-                    {
-                        alert("SELECCIONA EL SUPERVISOR");
-
-                    } else if ( $("#newTecnico").val().lenght != 0 ) {
-                        $.toaster({
-                          message: 'Favor de ingresar un técnico',
-                          title: 'Aviso',
-                          priority : 'danger'
-                      });
-
-                    }else {
+                    if( $("#supervisor").val() == "0" ) {
+                        alert("Necesitas Escojer un Supervisor");
+                    } else {
                         $.ajax({
                             type: 'POST',
                             url: 'modelos/tecnicosxsupervisor_db.php', // call your php file
@@ -207,7 +191,7 @@
                 $(document).on('click','.delTecnico', function() {
                     var tecnicoid = $(this).attr('data');
 
-                    var r = confirm("Se Des-asignará el Técnico. ¿Desea Continuar?");
+                    var r = confirm("Esta seguro de des asignar el tecnico");
 
                     if(r == true) {
                         $.ajax({
@@ -218,7 +202,7 @@
                             success: function(data){
                                 if(data == "1") {
                                     $.toaster({
-                                        message: 'Se des-asignó con éxito. ',
+                                        message: 'Se borro con exito  ',
                                         title: 'Aviso',
                                         priority : 'success'
                                     });  

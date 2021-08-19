@@ -7,71 +7,55 @@
                   </a>
         <nav id="sidebar" class="sidebar-wrapper">
             <?php include("menu.php"); ?>
-		</nav>
+        </nav>
         <!-- page-content  -->
-        <main class="page-content ">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>PLAZAS</h3> 
-            </div>
-            <br>
-            <div class="row p-4">
-                <div class="col"> 
-                    <label for="excelMasivo" class="col-form-label-sm">Carga Masiva</label> 
-                        <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
-                            <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
-                </div>
-                <div class="col">
-                    <a href="layouts/LayoutCargaMasivaCPPlazas.csv" download>Template Carga Masiva</a>
-                </div>
-            </div>
-
-            <div class="row p-4">
-                <div class="col">
-                    <a href="#" class="btn btn-success" id="btnNewPlaza">Agregar Nueva Plaza</a>
-                </div>
-                
-            </div>
-
-            <div class="container-fluid p-4 panel-white">
-           
-                    
-            <div class="row p-3">
-                <div class="col">           
-                    <label for="territorios" class="col-form-label-sm">TERRITORIOS</label>
+            <div class="container-fluid p-5">
+            <h3>Plazas</h3>
+                    <div class="row">
+                            <div class="col-sm-5"> 
+                                <label for="excelMasivo" class="col-form-label-sm">Carga Masiva</label> 
+                                <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
+                                <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="layouts/LayoutCargaMasivaCPPlazas.csv" download>Template Carga Masiva</a>
+                            </div>
+                    </div>
+            <div class="row">
+                <div class="col-sm-12 p-4">           
+                    <label for="territorios" class="col-form-label-sm">Territorios</label>
                     <select id="territorios" name="territorios" class="form-control form-control-sm">
                         <option value="0">Seleccionar</option>
                     </select>
                 </div>
             </div>
-            <div class="table-responsive">
-                <table id="plazas"  class="table table-md table-bordered tabale-responsive">
-                    <thead>
-                        <tr>
-                            <th width="300px">PLAZA</th>
-                            <th width="300px">TERRITORIO</th>
-                            <th width="300px">ESTATUS</th>
-                            <th width="300px">ACCION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th width="300px">PLAZA</th>
-                            <th width="300px">TERRITORIO</th>
-                            <th width="300px">ESTATUS</th>
-                            <th width="300px">ACCION</th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            
+            <table id="plazas"  class="table table-md table-bordered ">
+                <thead>
+                    <tr>
+                        <th>PLAZA</th>
+                        <th>TERRITORIO</th>
+                        <th>ESTATUS</th>
+                        <th>ACCION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>PLAZA</th>
+                        <th>TERRITORIO</th>
+                        <th>ESTATUS</th>
+                        <th>ACCION</th>
+                    </tr>
+                </tfoot>
+            </table>
             <div class="row">
                 <div class="col-sm-5">
                     <input type="hidden" id="plazaId" name="plazaId" value="0">
-                    
+                    <a href="#" class="btn btn-success" id="btnNewPlaza">Agregar Nueva Plaza</a>
                 </div>
             </div>
             </div>
@@ -95,7 +79,7 @@
                             </div>
                         </div>                       
                         <div class= "col-sm-10">
-                            <select class="custom-select" name="listTerritorio" id="listTerritorio" multiple hidden>
+                            <select class="custom-select" name="listTerritorio" id="listTerritorio" multiple>
                             </select>
                         </div>
                  
@@ -124,7 +108,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="plazas">CP:</label>
                             <div class="col-sm-10">
-                            <input type="newCP" class="form-control form-control form-control-sm" name="newCP" id="newCP" placeholder="Agregar CP">
+                            <input type="newCP" class="form-control" name="newCP" id="newCP" placeholder="Agregar CP">
                             </div>
                         </div>
                         <div class="table-responsive">  
@@ -167,7 +151,7 @@
                             </div>
                         </div>                       
                         <div class= "col-sm-10">
-                            <select  class="custom-select form-control form-control-sm" name="listTerritorio" id="listTerritorio" multiple hidden>
+                            <select class="custom-select" name="listTerritorio" id="listTerritorio" multiple>
                             </select>
                         </div>
                  
@@ -453,7 +437,6 @@
 
     </script> 
   
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"r":1,"rayId":"62a44cabcc440465","version":"2021.2.0","si":10}'></script>
 </body>
 
 </html>

@@ -11,23 +11,17 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>REGISTRO PARA ALMACEN</h3>
-            </div>
-            <div class="row p-3">
-                <button class="btn btn-success" id="btnNewModelo">Nuevo Modelo</button>
-            </div>
-            <div class="container-fluid p-3 panel-white">
-            
+            <div class="container-fluid p-5">
+            <h3>Registro para Almacen</h3>
                 <table id="modelos"  class="table table-md table-bordered ">
                     <thead>
                         <tr>
-                            <th>MODELO</th>
-                            <th>PROVEEDOR</th>
-                            <th>CONECTIVIDAD</th>
-                            <th>NO LARGO</th>
-                            <th>ESTATUS</th>
-                            <th>ACCION</th>
+                            <th>Modelo</th>
+                            <th>Proveedor</th>
+                            <th>Conectividad</th>
+                            <th>No largo</th>
+                            <th>Estatus</th>
+                            <th>Accion</th>
                             <th>proveedorid</th>
                             <th>estatusid</th>
                         </tr>
@@ -37,26 +31,26 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>MODELO</th>
-                            <th>PROVEEDOR</th>
-                            <th>CONECTIVIDAD</th>
-                            <th>NO LARGO</th>
-                            <th>ESTATUS</th>
-                            <th>ACCION</th>
+                            <th>Modelo</th>
+                            <th>Proveedor</th>
+                            <th>Conectividad</th>
+                            <th>No largo</th>
+                            <th>Estatus</th>
+                            <th>Accion</th>
                             <th>proveedorid</th>
                             <th>estatusid</th>
                         </tr>
                     </tfoot>
                 </table>
                 <input type="hidden" id="userId" value="0">
-                
+                <button class="btn btn-success" id="btnNewModelo">Nuevo Modelo</button>
     
             <!-- MODAL -->
             <div class="modal fade" tabindex="-1" role="dialog" id="showModelo">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">MODELO</h5>
+                    <h5 class="modal-title">Modelo</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -65,11 +59,11 @@
 
                     <div class="row">
                         <div class="col-sm-4">           
-                            <label for="modelo" class="col-form-label-sm">MODELO</label>
+                            <label for="modelo" class="col-form-label-sm">Modelo</label>
                             <input type="text" class="form-control form-control-sm" id="modelo" aria-describedby="modelo">
                         </div>
                         <div class="col-sm-4">           
-                            <label for="proveedor" class="col-form-label-sm">PROVEEDOR</label>
+                            <label for="proveedor" class="col-form-label-sm">Proveedor</label>
                             <select id="proveedor" name="proveedor" class="form-control form-control-sm">
                                 <option value="0" selected>Seleccionar</option>
                             </select>
@@ -77,17 +71,17 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-4">           
-                            <label for="conectividad" class="col-form-label-sm">CONECTIVIDAD</label>
+                            <label for="conectividad" class="col-form-label-sm">Conectividad</label>
                             <select id="conectividad" name="conectividad" class="form-control form-control-sm">
                                 <option value="0" selected>Seleccionar</option>
                             </select>
                         </div>
                         <div class="col-sm-4">           
-                            <label for="nolargo" class="col-form-label-sm">No. LARGO</label>
+                            <label for="nolargo" class="col-form-label-sm">No. Largo</label>
                             <input type="text" class="form-control form-control-sm" id="nolargo" aria-describedby="nolargo">
                         </div>
                         <div class="col-sm-4">           
-                            <label for="estatus" class="col-form-label-sm">ESTATUS</label>
+                            <label for="estatus" class="col-form-label-sm">Estatus</label>
                                 <select id="estatus" name="estatus" class="form-control form-control-sm">
                                 <option value="0" selected>Seleccionar</option>
                             </select>

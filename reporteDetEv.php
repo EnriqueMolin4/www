@@ -9,18 +9,13 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-
-            <div class="page-title">
-                 <h3>REPORTE DETALLE EVENTO</h3>
-            </div>
-
-            <div class="container-fluid p-4 panel-white">
-           
+            <div class="container-fluid p-5">
+            <h3>REPORTE DETALLE EVENTO</h3>
             
-            <div id="container" class="panel-body">
-                <form method="post" action="modelos/reportes_db.php" name="formDetalle"> <!-- onsubmit="return valiDate()" -->
+            <div id="container" class="container">
+                <form method = "post" id="formReporte" action="modelos/reportes_db.php">
                    
                    <div class="row">
                         <div class="col-sm-5">
@@ -29,52 +24,51 @@
                         </div>
                     </div>
                      <div class="row">
-
-                        <div class="col-sm-3 mt-4 border">
+                        <div class="col-sm-3 mt-4">
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input"  value="Alta" checked>
-                                <label class="custom-control-label" for="customRadioInline1" >FECHA ALTA SISTEMA</label>
-                            </div><br>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="customRadioInline2" name="customRadioInline1"  class="custom-control-input"  value="Cierre" >
-                                <label class="custom-control-label" for="customRadioInline2" >FECHA CIERRE</label>
+                                <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" value="Alta" checked>
+                                <label class="custom-control-label" for="customRadioInline1">Fecha Alta Sistema</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" value="Cierre">
+                                <label class="custom-control-label" for="customRadioInline2">Fecha Cierre</label>
                             </div>
                         </div>
-
                         <div class="col-sm-3">
                             <label for="fecha_alta" class="col-form-label-sm">INICIO</label>
-                            <input type="text" class="form-control form-control-sm" id="fecha_alta" name="fecha_alta" placeholder="Seleccionar Fecha" value="">
+                            <input type="text" class="form-control form-control-sm" id="fecha_alta" name="fecha_alta" value="<?php echo date("Y-m-d", strtotime("-5 days", strtotime(date("Y-m-d")) )); ?>" autocomplete="off">
                         </div>
 
                         <div class="col-sm-3">
                             <label for="fecha_hasta" class="col-form-label-sm">HASTA</label>
-                            <input type="text" class="form-control form-control-sm" id="fecha_hasta" name="fecha_hasta" placeholder="Seleccionar Fecha" value="">
+                            <input type="text" class="form-control form-control-sm" id="fecha_hasta" name="fecha_hasta" value="<?php echo date("Y-m-d", strtotime("+1 days", strtotime(date("Y-m-d")) )); ?>" autocomplete="off">
                         </div>
 
-                        <div class="col-sm-4">
-                            <label for="estado" class="col-form-label-sm">ESTADO</label><br>
-                            <select hidden name="estado[]" id="estado" class="custom-select form-control form-control-sm" multiple>
-                                
-                            </select>
-                        </div>
+                        
                     </div>
                     <br/>
 
                     <div class="row">
                         <div class="col-sm-3">
-                            <label for="tipo_servicio" class="col-form-label-sm">SERVICIO</label><br>
-                                <select hidden name="tipo_servicio[]" id="tipo_servicio" class="custom-select form-control form-control-sm" multiple>
+                            <label for="estado" class="col-form-label-sm">ESTADO</label><br>
+                            <select hidden name="estado[]" id="estado" class="custom-select form-control-sm" multiple>
+                                
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="tipo_servicio" class="col-form-label-sm">SERVICIO</label>
+                                <select hidden name="tipo_servicio[]" id="tipo_servicio" class="custom-select form-control-sm" multiple>
                                 </select>
                         </div>
 
                         <div class="col-sm-3">
-                            <label for="tipo_subservicio" class="col-form-label-sm">SUBSERVICIO</label><br>
-                                <select hidden name="tipo_subservicio[]" id="tipo_subservicio" class="custom-select form-control form-control-sm" multiple>
+                            <label for="tipo_subservicio" class="col-form-label-sm">SUBSERVICIO</label>
+                                <select hidden name="tipo_subservicio[]" id="tipo_subservicio" class="custom-select form-control-sm" multiple>
                                     <option value="0">Seleccionar</option>
                                 </select>
                         </div>
 
-                        <div class="col-sm-3">           
+                        <div class="col-sm-4">           
                             <label for="estatus_servicio" class="col-form-label-sm">ESTATUS SERVICIO</label><br>
                                 <select hidden name="estatus_servicio[]" class="custom-select form-control form-control-sm" id="estatus_servicio" multiple>
                                     <option value="0">Seleccionar</option>
@@ -84,18 +78,7 @@
 
                     </br>
 
-                   <!--  <div class="row">
-                        <div class="col-sm-3">
-                            <label for="fecha_cierre">FECHA CIERRE</label>
-                            <input type="text" class="form-control form-control-sm" id="fecha_cierre" placeholder="Seleccionar Fecha" name="fecha_cierre" value="">
-                        </div>
-                    
                    
-                        <div class="col-sm-3">
-                            <label for="hasta_fc">HASTA</label>
-                            <input type="text" class="form-control form-control-sm" id="hasta_fc" placeholder="Seleccionar Fecha" name="hasta_fc" value="" >
-                        </div>
-                   </div> -->
 
                     <br />
                     <div class="row">

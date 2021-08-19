@@ -1,47 +1,37 @@
 <?php require("header.php"); ?>
 
-
 <body>
     <div class="page-wrapper ice-theme sidebar-bg bg1 toggled">
-        <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+            <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
                     <i class="fas fa-bars"></i>
-        </a>
+                  </a>
         <nav id="sidebar" class="sidebar-wrapper">
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                 <h3>TARJETAS TECNICO</h3>
+            <div class="container-fluid p-5">
+            <div class="row"><h3>Tarjetas Tecnicos</h3>
+			
             </div>
-            <div class="row p-3">
-                <button class="btn btn-success" id="bntNewTarjeta">Asignar Tarjeta</button>
-            </div>
-            <div class="container-fluid">
-                <div class="panel-white p-3">
-                    <div class="table-responsive">
-                        <table id="tarjetas"  class="table table-md table-bordered ">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>TECNICO</th>
-                                    <th>NUMERO DE TARJETA</th>
-                                    <th>BANCO</th>
-                                    <th>ESTATUS</th>
-                                    <th>ACCION</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            
-                            </tbody>
-                        </table>
-                    </div>
-            </div>
-            
-            
+            <table id="tarjetas"  class="table table-md table-bordered ">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Tecnico</th>
+                        <th>Num Tarjeta</th>
+                        <th>Banco</th>
+                        <th>STATUS</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+            </table>
             <input type="hidden" id="bancoId" value="0">
-            
+            <button class="btn btn-success" id="bntNewTarjeta">Asignar Tarjeta</button>
             </div>
 
             <!-- MODAL -->
@@ -165,9 +155,9 @@
                                 var boton = "";
                                 
                             if(row.estatus == '1'){
-                                    boton =  '<a href="#" class="EditBanco" title="Editar" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
+                                    boton =  '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelBanco" data="'+row.id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
                                 } else {
-                                    boton = '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></i></a><a href="#" class="DelBanco" data="'+row.Id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
+                                    boton = '<a href="#" class="EditBanco" data-id="'+row.id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelBanco" data="'+row.id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
                             }
 
                                 return boton;
@@ -188,13 +178,52 @@
 
                 $(document).on("click",".EditBanco", function() {
                     var index = $(this).parent().parent().index() ;
-                    var data = bancos.row( index ).data()
-                    $("#banco").val(data.banco);
-                    $("#cve").val(data.cve);
-                    $("#bancoId").val( $(this).data('id') );
+                    var data = tarjetas.row( index ).data()
+                    $("#bancos").val(data.banco_id);
+                    $("#tecnicos").val(data.tecnico_id);
+                    $("#numtarjeta").val(data.num_tarjeta);
                     $("#showBanco").modal("show");
 
                 })
+
+                $(document).on("click",".DelBanco", function() {
+                   var id = $(this).attr('data');
+                 
+                   Swal.fire({
+                    title: 'Deseas borrar la Tarjeta?',
+                    showDenyButton: true,
+                    confirmButtonText: `Si`,
+                    denyButtonText: `No`,
+                   }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+
+                            $.ajax({
+                                type: 'POST',
+                                url: 'modelos/tarjetastecnico_db.php', // call your php file
+                                data: { module: 'delTarjeta',tarjetaid: id },
+                                cache: false,
+                                success: function(data, textStatus, jqXHR){
+
+                                    tarjetas.ajax.reload();
+                                    Swal.fire('Se borro la Tarjeta!', '', 'success');
+                                    
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) {
+                                   // alert(textStatus)
+                                    Swal.fire('Error de Conexion', '', 'warning');
+                                }
+                            });
+
+                            
+                        } else if (result.isDenied) {
+                            //Swal.fire('Changes are not saved', '', 'info')
+                        }
+                   })
+
+                })
+
+                
 
                 $("#btnGrabarTarjeta").on('click', function() {
 
@@ -203,7 +232,7 @@
                     var numtarjeta = $("#numtarjeta").val();
                     var tarjetaId = $("#tarjetaId").val();
                     
-                    if(  numtarjeta.length > 0 && banco != '0' && tecnico != '0' ) 
+					if(  numtarjeta.length > 0 && banco != '0' && tecnico != '0' ) 
                     {
                         
                         $.ajax({
@@ -243,10 +272,10 @@
 
                     } else {
                         $.toaster({
-                            message: 'FAVOR CAPTURAR TODOS LOS DATOS',
-                            title: 'Aviso',
-                            priority : 'warning'
-                        });  
+							message: 'Favor Capturar todos los datos',
+							title: 'Aviso',
+							priority : 'warning'
+						});  
                     }
                     
                     

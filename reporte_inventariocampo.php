@@ -9,23 +9,20 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>REPORTE VISITAS</h3>
-            </div>
-            <div class="container-fluid p-4 panel-white">
-                
+            <div class="container-fluid p-5">
+                <h3>Reporte Visitas</h3>
             
-                    <div id="container" class="col-md-6">
+                    <div id="container" class="container">
                         <form action="modelos/reportes_db.php">
                             <div class="row">
                                 <div class="col">
-                                    <label for="fechaVen_inicio" class="col-form-label-sm">DESDE</label>
+                                    <label for="fechaVen_inicio" class="col-form-label-sm">Desde</label>
                                     <input type="text" class="form-control form-control-sm " id="fechaVen_inicio" name="fechaVen_inicio" value="<?php echo date("Y-m-d", strtotime("-5 days", strtotime(date("Y-m-d")) )); ?>">
                                 </div>
                                 <div class="col">
-                                    <label for="fechaVen_fin" class="col-form-label-sm">HASTA</label>
+                                    <label for="fechaVen_fin" class="col-form-label-sm">Hasta</label>
                                     <input type="text" class="form-control form-control-sm" id="fechaVen_fin" name="fechaVen_fin" value="<?php echo date("Y-m-d", strtotime("+1 days", strtotime(date("Y-m-d")) )); ?>">
                                 </div>
                                 

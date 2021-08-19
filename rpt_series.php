@@ -9,12 +9,11 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content">
+        <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-            	<h3>BUSCAR TPV O SIM </h3>
-            </div>
-            <div class="container-fluid p-4 panel-white">					 
+            <div class="container-fluid p-5">
+                <h3>Buscar TPV o SIM</h3>
+					 
                     <div class="row">
                         <div id="avisos" class="display:none;" style="background-color:red;"></div>
                     </div>
@@ -22,7 +21,7 @@
                     <div id="progress"></div>
                     <div class="row">
                         <div class="col-sm-4">           
-                            <label for="InSerie" class="col-form-label-sm">INGRESA LA SERIE:</label>
+                            <label for="InSerie" class="col-form-label-sm">Ingresa la serie:</label>
                             <input type="text" class="form-control form-control-sm" id="InSerie" style="text-transform:uppercase" >
                         </div>
                         <div class="col" style="padding-left:30px;padding-top:30px;">  
@@ -30,26 +29,23 @@
                         </div>
                     </div>
                     <br/>
-                
 
            
             <!-- Tabla Eventos -->
 			
 			<div class="row">
-				<div class="table-responsive">
-					
 				
-				<table id="table_eventos" class="table table-md table-bordered table-responsive" style="width:100%;display:none">
+				<table id="table_eventos" class="table table-md table-bordered" style="width:100%;display:none">
 					<thead>
 						<tr>
 							<th>ODT</th>
-							<th>ÚLTIMA MODIFICACION</th>
-							<th>AFILIACION</th>
-							<th>TPV INSTALADO</th>
-							<th>TPV RETIRADO</th>
-							<th>SERVICIO</th>
-							<th>TECNICO</th>
-							<th>MODIFICADO POR</th>
+							<th>Última Modificación</th>
+							<th>Afiliación</th>
+							<th>Tpv Instalado</th>
+							<th>Tpv Retirado</th>
+							<th>Servicio</th>
+							<th>Técnico</th>
+							<th>Modificado Por</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -57,39 +53,37 @@
                     </tbody>
 					
 				</table>
-				</div>
+				
 			</div>
 					 
 		 <br>
 		 <!-- Tabla Inventario -->
 		 
 		 <div class="row">
-				<div class="table-responsive">
-					
 				
-				<table id="table_inventario" class="table table-md table-bordered table-responsive" style="width:100%;display:none">
+				<table id="table_inventario" class="table table-md table-bordered" style="width:100%;display:none">
 					<thead>
 						<tr>
-							<th>SERIE</th>
-							<th>MODELO</th>
-							<th>CONECTIVIDAD</th>
-							<th>ESTATUS</th>
-							<th>ESTATUS INVENTARIO</th>
-							<th>ANAQUEL</th>
-							<th>CAJA</th>
-							<th>TARIMA</th>
-							<th>CANTIDAD</th>
-							<th>UBICACION</th>
-							<th>UBICACION NOMBRE</th>
-							<th>QUIEN MODIFICA</th>
-							<th>FECHA EDICION</th>
+							<th>Serie</th>
+							<th>Modelo</th>
+							<th>Conectividad</th>
+							<th>Estatus</th>
+							<th>Estatus Inventario</th>
+							<th>Anaquel</th>
+							<th>Caja</th>
+							<th>Tarima</th>
+							<th>Cantidad</th>
+							<th>Ubicación</th>
+							<th>Ubicación Nombre</th>
+							<th>Quien Modifica</th>
+							<th>Fecha Edición</th>
 						</tr>
 					</thead>
 					<tbody>
                         
                     </tbody>
 				</table>
-				</div>
+				
 			</div>
 			            </div>
 			

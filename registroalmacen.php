@@ -94,17 +94,18 @@
                 <table id="inventario"  class="table table-md table-bordered " style="width:100%">
                     <thead>
                         <tr>
-                            <th>Banco</th>
-                            <th>Tipo</th>
-                            <th>No Serie</th>
-                            <th>Modelo</th>
-                            <th>Conectividad</th>
-                            <th>Estatus</th>
-							<th>Estatus Ubicacion</th>
-                            <th>Ubicacion</th>
-                            <th>Fecha Actualizacion</th>
-                            <th>Cantidad</th>
-                            <th>Accion</th>
+                            <th width="10%">Banco</th>
+                            <th width="8%">Tipo</th>
+                            <th width="20%">No Serie</th>
+                            <th width="10%">Modelo</th>
+                            <th width="10%">Aplicativo</th>
+                            <th width="10%">Conectividad</th>
+                            <th width="10%">Estatus</th>
+							<th width="10%">Estatus Ubicacion</th>
+                            <th width="10%">Ubicacion</th>
+                            <th width="10%">Fecha Actualizacion</th>
+                            <th width="8%">Cantidad</th>
+                            <th width="10%">Accion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -234,20 +235,40 @@
 							<label for="noserie" class="col-form-label-sm">No Serie</label>
 							<input type="text" class="form-control form-control-sm" id="det-noserie" aria-describedby="odt" readonly>
 						</div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-4" id="divTipoProd">           
+                            <label for="tipo_prod" class="col-form-label-sm">Tipo</label>
+                            <select id="tipo_prod" name="tipo_prod" class="form-control form-control-sm">
+                                <option value="0" selected>Seleccionar</option>
+                                <option value="1">TPV</option>
+                                <option value="2">SIM</option>
+                                <option value="3">Insumos</option>
+                                <option value="4">Accesorios</option>
+                            </select>
+						</div>
                         <div class="col-md-4" id="divModelo">           
 							<label for="det-modelo" class="col-form-label-sm">Modelo</label>
 							 <select id="det-modelo" name="det-modelo" class="form-control form-control-sm"></select>
 						</div>
+                        
 						<div class="col-md-4" id="divCarrier">           
 							<label for="det-modelo" class="col-form-label-sm">Carrier</label>
 							 <select id="det-carrier" name="det-carrier" class="form-control form-control-sm"></select>
+						</div>
+                        <div class="col-md-4" id="divAplicativo">           
+							<label for="det-aplicativo" class="col-form-label-sm">Aplicativo</label>
+							 <select id="det-aplicativo" name="det-aplicativo" class="form-control form-control-sm">
+                             </select>
 						</div>
                         <div class="col-md-4">           
 							<label for="det-conectividad" class="col-form-label-sm">Conectividad</label>
 							 <select id="det-conectividad" name="det-conectividad" class="form-control form-control-sm">
                              </select>
 						</div>
-                    </div><br>
+                        
+                    </div>
+                    <br>
                     <div class="row">
 						<div class="col-md-3">           
 							<label for="estatus" class="col-form-label-sm">Estatus</label>
@@ -283,7 +304,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
         crossorigin="anonymous"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
+    
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>

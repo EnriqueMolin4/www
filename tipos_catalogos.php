@@ -11,28 +11,25 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>CATALOGO VERSION, APLICATIVO & CONECTIVIDAD</h3>
-            </div>
-            <div class="container-fluid p-5 panel-white">
-            <div class="row">
-                <div class="col p-4">           
-                    <label for="catalogo" class="col-form-label-sm">SELECCIONAR CATALOGO</label>
+            <div class="container-fluid p-5">
+            <div class="row"><h3>Catálogo Versión, Aplicativo & Conectividad</h3>
+                <div class="col-sm-12 p-4">           
+                    <label for="catalogo" class="col-form-label-sm"></label>
                     <select id="catalogo" name="catalogo" class="form-control form-control-sm">
                         <option value="0">Seleccionar</option>
                         <option value="tipo_version">Tipo Versión</option>
                         <option value="tipo_aplicativo">Tipo Aplicativo</option>
                         <option value="tipo_conectividad">Tipo Conectividad</option>
-					</select>
+                       
+                    </select>
                 </div>
             </div>
-            <div class="table-responsive">
-                <table id="parametros"  class="table table-md table-bordered table-responsive">
+            <table id="parametros"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
-                        <th width="450px">NOMBRE</th>
-                        <th width="340px">ESTATUS</th>
-                        <th width="300px">ACCION</th>
+                        <th>Nombre</th>
+                        <th>Estatus</th>
+                        <th>Accion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,28 +37,24 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th width="550px">NOMBRE</th>
-                        <th width="440px">ESTATUS</th>
-                        <th width="400px">ACCION</th>
+                        <th>Nombre</th>
+                        <th>Estatus</th>
+                        <th>Accion</th>
                     </tr>
                 </tfoot>
             </table>
-            </div>
-                
-            </div>
-            <div class="panel-footer p-4">
                 <fieldset class="border p-2">
-                    <legend><h3>AGREGAR PARAMETRO</h3></legend>
+                    <legend>Agregar Parámetro</legend>
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="newParametro" class="col-form-label-sm">PARAMETRO</label>
+                            <label for="newParametro" class="col-form-label-sm">Parametro</label>
                                 <input type="text" id="newParametro" name="newParametro" class="form-control form-control-sm"><br>
                             <button class="btn btn-success btn-sm" id="btnAddParametro">Agregar</button>
                         </div>
                     </div>
                 </fieldset>
             </div>
-    
+   
         </main>
         <!-- page-content" -->
     </div>
@@ -86,7 +79,7 @@
     <script>
     var parametros;
         $(document).ready(function() {
-            ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "vac_catalogolink")
+            ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "parametroslink", "tiposxcatalogoslink")
             
 
 
@@ -146,7 +139,7 @@
                 $("#catalogo").on('change',function() {
                     parametros.ajax.reload();
                 })
-				
+
                 function validarnewParam() 
                     {
                         if ($('#newParametro').val().length == "0") 
@@ -203,7 +196,7 @@
                         success: function(data){
                             if(data == "1") {
                                 $.toaster({
-                                    message: 'Se actualizó el estatus con éxito  ',
+                                    message: 'Se desactivo/activo con éxito  ',
                                     title: 'Aviso',
                                     priority : 'success'
                                 });  
