@@ -179,6 +179,7 @@ class Eventos implements IConnections {
 				e.afiliacion,
 				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
 				c.comercio  comercio ,
+				c.direccion,
 				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
 				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
 				e.fecha_alta,

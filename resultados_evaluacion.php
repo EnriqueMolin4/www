@@ -12,7 +12,7 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div class="page-title">
-                <h3>DETALLE DE LAS EVALUACIONES</h3>
+                <h3>Detalle de las Evaluaciones</h3>
             </div>
             <div id="overlay" class="overlay"></div>
                 
@@ -20,7 +20,7 @@
                 <div class="container-fluid p-3 panel-white">
 				  
 
-                    <div class="container-fluid p-5"><h3>TOTAL DE EVALUADOS:</h3>
+                    <div class="container-fluid p-5"><h3>Total Evaluados:</h3>
                         <input type="text" class="form-control" id="totalEvaluados" name="totalEvaluados" value="" readonly style="width: 200px">                        
                     </div>
             
@@ -30,11 +30,11 @@
                         <table id="detEv" class="table table-md table-bordered table-responsive" >
                         <thead>
                             <tr>
-                                <th width="400px">TECNICO</th>
-                                <th width="250px">EVALUACION</th>
-                                <th width="250px">FECHA DE INICIO</th>
-                                <th width="250px">FECHA DE FIN</th>
-                                <th width="200px">ACCION</th>
+                                <th width="400px">Técnico</th>
+                                <th width="250px">Evaluación</th>
+                                <th width="250px">Fecha de Inicio</th>
+                                <th width="250px">Fecha de Fin</th>
+                                <th width="200px">Accion</th>
                             </tr>
                         </thead>
                         
@@ -43,11 +43,11 @@
                         
                         <tfoot>
                             <tr>
-                                <th width="400px">TECNICO</th>
-                                <th width="250px">EVALUACION</th>
-                                <th width="250px">FECHA DE INICIO</th>
-                                <th width="250px">FECHA DE FIN</th>
-                                <th width="200px">ACCION</th>
+                                <th width="400px">Técnico</th>
+                                <th width="250px">Evaluación</th>
+                                <th width="250px">Fecha De Inicio</th>
+                                <th width="250px">Fecha De Fin</th>
+                                <th width="200px">Accion</th>
                             </tr>
                         </tfoot>
                         
@@ -67,7 +67,7 @@
     		<div class="modal-dialog modal-lg" role="document">
     			<div class="modal-content">
     				<div class="modal-header">
-    					<h5 class="modal-title">DETALLE DE EVALUACIÓN</h5>
+    					<h5 class="modal-title">Detalle</h5>
     					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     				</div>
 
@@ -90,9 +90,9 @@
                             
                             <thead>
                                 <tr>
-                                    <th width="55%">PREGUNTA</th>
-                                    <th width="30%">RESPUESTA</th>
-                                    <th width="15%">RESULTADO</th>
+                                    <th width="55%">Pregunta</th>
+                                    <th width="30%">Respuesta</th>
+                                    <th width="15%">Resultado</th>
                                 </tr>
                             </thead>
 
@@ -101,9 +101,9 @@
 
                             <tfoot>
                                 <tr>
-                                    <th width="55%">PREGUNTA</th>
-                                    <th width="30%">RESPUESTA</th>
-                                    <th width="15%">RESULTADO</th>
+                                    <th width="55%">Pregunta</th>
+                                    <th width="30%">Respuesta</th>
+                                    <th width="15%">Resultado</th>
                                 </tr>
                             </tfoot>
 
@@ -124,7 +124,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">INFORMACIÓN DE RESULTADOS</h5>
+                        <h5 class="modal-title">Información de Resultados</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
 
@@ -136,7 +136,7 @@
                         <center>
                         <div class="container">
                             <div class="row">
-                                <div><h6>CALIFICACIÓN:</h6>
+                                <div><h6>Calificación:</h6>
                                     <input type="text" class="form-control totalInput" value="" id="totalC" name="totalC" readonly>
                                 </div>
                                

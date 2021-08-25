@@ -1535,9 +1535,9 @@
                 $("#sim_retirado").attr('readonly',false)  
                 
                  //HORAS
-                $("#fecha_atencion").attr('readonly',false);
-                $("#hora_llegada").attr('readonly',false);
-                $("#hora_salida").attr('readonly',false);
+                $("#fecha_atencion").attr('readonly',true);
+                $("#hora_llegada").attr('readonly',true);
+                $("#hora_salida").attr('readonly',true);
             
             
             } else {

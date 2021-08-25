@@ -37,6 +37,7 @@ function ResetLeftMenuClass(header, subheader, link) {
     $("#cataltacplink").removeClass("active");
     $("#catinsumoslink").removeClass("active");
     $("#catcarrierlink").removeClass("active");
+    $("#nuevaevaluacionlink").removeClass("active");
 
     $("#"+header+"").addClass("active");
 	$("#"+link+"").addClass("active");

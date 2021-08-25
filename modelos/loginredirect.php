@@ -41,7 +41,7 @@ if(isset($_SESSION['user']))
 		
 		$tipouser = $_SESSION['tipo_user'];
 		if($tipouser == 'tecnico') {
-			header("Location: login.php");
+			//header("Location: login.php");
 		}
 		//$cve = $_SESSION['cve'];
 	}

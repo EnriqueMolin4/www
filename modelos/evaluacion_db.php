@@ -37,7 +37,7 @@ class Evaluacion implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: dashboard_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: evaluacion_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 	}
 	function insert($prepareStatement, $arrayString) {
@@ -51,7 +51,7 @@ class Evaluacion implements IConnections {
 		//$salida = array();
 
 		$sql = "SELECT preguntas.id, preguntas.pregunta, preguntas.evaluacion_id FROM preguntas LEFT JOIN evaluaciones_tecnico ON evaluaciones_tecnico.evaluacion_id = preguntas.evaluacion_id WHERE evaluaciones_tecnico.tecnico_id = '$id_tecnico'";
-		self::$logger->error($sql);
+		//self::$logger->error($sql);
 		try 
 		{
 			$stmt = self:: $connection->prepare($sql);
@@ -124,6 +124,58 @@ class Evaluacion implements IConnections {
 		}
 	}
 
+	function getTableEvAs($params, $total)
+	{
+		$start = $params['start'];
+		$length = $params['length'];
+
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
+
+		$filter = "";
+		$param = "";
+		$where = "";
+
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+		if (!empty($params['search']['value']) && $total ) 
+		{
+			$where .=" AND ";
+			$where .="  tecnico LIKE '".$params['search']['value']."%' ";
+			
+		}
+
+		$sql = "SELECT et.tecnico_id, CONCAT(du.nombre, ' ', du.apellidos) tecnico, et.evaluacion_id,
+				ev.nombre, et.inicio, et.fin
+				FROM
+					evaluaciones_tecnico et
+				LEFT JOIN evaluaciones ev ON
+					ev.id = et.evaluacion_id
+				LEFT JOIN detalle_usuarios du ON
+					du.cuenta_id = et.tecnico_id
+			$where
+			$order
+			$filter
+		";
+
+		//self::$logger->error($sql);
+
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: evaluacion_db.php;	Method Name: getTableEvAs();	Functionality: Get Table;	Log:" . $e->getMessage () );
+		}
+		
+	}
+
 	function getTableTotal() {
 		$sql = "select count(*)  from evaluaciones ";
 		
@@ -133,6 +185,17 @@ class Evaluacion implements IConnections {
 			return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: evaluacion_db.php;	Method Name: getTableTotal();	Functionality: Get Table Total;	Log:" . $e->getMessage () );
+		}
+	}
+
+	function getTableTotalEA(){
+		$sql = "select count(*) from evaluaciones_tecnico";
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: evaluacion_db.php;	Method Name: getTableTotalEA();	Functionality: Get Table Total;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -372,7 +435,7 @@ class Evaluacion implements IConnections {
 				LEFT JOIN respuestas_tecnico ON respuestas.id = respuestas_tecnico.respuesta_id
 				WHERE respuestas.correcta = '0' AND respuestas_tecnico.tecnico_id = '$id_tecnico' ";
 
-			self::$logger->error($sql);
+			//self::$logger->error($sql);
 			try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute (array());
@@ -396,6 +459,15 @@ if ($module == 'getTable')
 {
 	$rows = $Evaluacion->getTable($params, true);
 	$rowsTotal = $Evaluacion->getTableTotal();
+	$data = array("draw"=>$_POST["draw"],"data" =>$rows,'recordsTotal' => $rowsTotal, "recordsFiltered" => $rowsTotal);
+
+	echo json_encode($data);
+}
+
+if ($module == 'getTableEvAs')
+{
+	$rows = $Evaluacion->getTableEvAs($params, true);
+	$rowsTotal = $Evaluacion->getTableTotalEA();
 	$data = array("draw"=>$_POST["draw"],"data" =>$rows,'recordsTotal' => $rowsTotal, "recordsFiltered" => $rowsTotal);
 
 	echo json_encode($data);
@@ -511,6 +583,7 @@ if ($module == 'subirEvaluacion')
 	$user = $_SESSION['userid'];
 	$fecha_c = date("Y-m-d H:i:s");
 	$id = 0;
+	$user = $_SESSION['userid'];
 
 	$existeEvaluacion = $Evaluacion->evaluacionExiste($params['nombre']);
 
@@ -688,6 +761,7 @@ if ($module == 'getEvaluaciones')
 if ($module == 'guardar_asignaciones') 
 {
 	$user = $_SESSION['userid'];
+	$message = '';
 		
 	if ( isset($params['tecnicos']) ) 
 	{
@@ -720,23 +794,16 @@ if ($module == 'guardar_asignaciones')
 		{
 			//Si no existe
 			$id = $Evaluacion->insert($sql, $arrayString);
+			$message = "Se asignó correctamente";
 		}
 		else
 		{
 			$id = 0;
-			echo "YA EXISTE LA ASIGNACION";
+			$message = "Ya existe esta asignación";
 		}	
-
-		if ($id) 
-		{
-			echo "TRUE";
-		}
-				else
-				{
-					echo "FALSE";
-				}
-
 	}
+
+	echo json_encode(['id' => $id,'message' => $message]);
 	
 }
 
@@ -749,18 +816,15 @@ if ($module == 'validar_evaluacion')
 
 	if ($id) 
 	{
-		//Si existe
+		
 		echo json_encode(['id'=> $id]);
-		//echo "TRUE";
+		
 	}
 	else
 	{
-		//Si no existe
 		echo json_encode(['id'=> 0]);
-		//echo "FALSE";
 
 	}
-	
 
 }
 

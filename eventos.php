@@ -70,15 +70,17 @@
                     <thead>
                         <tr>
                             <th>ODT</th>
-                            <th>Afiliacion | Folio</th>
+                            <th>Afiliación | Folio</th>
                             <th>CVE</th>
                             <th>Comercio | Cliente</th>
+                            <th>Dirección</th>
                             <th>Servicio</th>
                             <th>Fecha de Alta</th>
                             <th>Fecha Vencimiento</th>
+                            <th></th>
 							<th>Fecha Cierre</th>
                             <th>Imagenes Cargadas</th>
-                            <th>Tecnico</th>
+                            <th>Técnico</th>
                             <th>Estatus</th>
 							<th>Estatus Servicio</th>
                             <th>Accion</th>

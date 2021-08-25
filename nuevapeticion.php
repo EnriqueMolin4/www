@@ -24,7 +24,24 @@
                 </div>
 			<?php } ?>
             </div> -->
-                <div class="row p-3"> 
+                <div class="row p-3">
+                    <div class="col-4">
+                        <label for="tipo_envio" class="col-form-label-sm">Tipo de Envío</label>
+                        <select name="tipo_envio" id="tipo_envio" class="form-control form-control-sm searchInventario">
+                            <option value="0" selected>Seleccionar</option>
+                            <option value="DIA SIGUIENTE">DIA SIGUIENTE</option>
+                            <option value="TERRESTRE">TERRESTRE</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="direccion_envio" class="col-form-label-sm">Dirección de Envío</label>
+                        <select name="direccion_envio" id="direccion_envio" class="form-control form-control-sm searchInventario">
+                            <option value="0" selected>Seleccionar</option>
+                            <option value="DOMICILIO">DOMICILIO</option>
+                            <option value="OCURRE">OCURRE</option>
+                        </select>
+                    </div>
+                
                     <div class="col-4">
                         <label for="plaza" class="col-form-label-sm">Plaza</label>
                         <select id="plaza" name="plaza" class="form-control form-control-sm searchInventario">
@@ -32,7 +49,7 @@
                         </select>
                     </div>   
                     <div class="col-4">
-                        <label for="tecnico" class="col-form-label-sm">Tecnico</label>
+                        <label for="tecnico" class="col-form-label-sm">Técnico</label>
                         <select id="tecnico" name="tecnico" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
@@ -47,10 +64,7 @@
 								
                         </select>
                     </div>   
-                </div>
-				
-				
-				<div class="row p-3">
+                
 					
                     <div class="col-4"> 
                         <label for="estatus" class="col-form-label-sm">Estatus</label>
@@ -59,6 +73,12 @@
                             <option value="3">DISPONIBLE-USADO</option>
                             <option value="5">DISPONIBLE-NUEVO</option>
                             
+                        </select>
+                    </div>
+					<div class="col-4" style="display:none" id="divCarrier"> 
+                        <label for="carrier" class="col-form-label-sm">Carrier</label>
+                        <select id="carrier" name="carrier" class="form-control form-control-sm searchInventario">
+
                         </select>
                     </div>
 				
@@ -97,6 +117,12 @@
 						</div>
 					
 				</div>
+                <div class="col">
+                    
+                        <label for="comentario_supervisor" class="col-form-label-sm">Comentarios</label>
+                        <textarea class="form-control form-control-sm" name="comentario_supervisor" id="comentario_supervisor" cols="10" rows="5"></textarea>
+                    
+                </div>
                 <div class="row p-3">
 					<div class="col mb-3 row">
 						<button type="button" class="btn btn-success mb-3" id="btnAdd">Agregar</button>
@@ -111,13 +137,17 @@
                             <th>INSUMO</th>
                             <th>CONECTIVIDAD</th>
                             <th>VERSION</th>
-                            <th>CANTIDAD</th> 
+                            <th>CANTIDAD</th>
+                            <th>comentario_supervisor</th> 
+                            <th>tipo_envio</th>
+                            <th>direccion_envio</th>
                             <th>tipoId</th>  
                             <th>tecnicoId</th> 
                             <th>estatusId</th>  
                             <th>insumoId</th>   
                             <th>conectividadId</th>   
-                            <th>versionId</th>    
+                            <th>versionId</th>
+                            <th>carrierId</th>
                             <th>ACCION</th>                         
                         </tr>
                     </thead>

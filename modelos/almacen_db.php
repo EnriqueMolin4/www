@@ -3200,12 +3200,20 @@ if( $module == 'guardarPeticion' )
 	$fecha = date("Y-m-d H:i:s");
 	$fecha_alta = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
+
+	foreach($info as $datos)
+	{
+		print_r($datos);
+	}
 	
-	$prepareStatement = "INSERT INTO `peticiones` SET `supervisor_id`=?,`creado_por`=?,`fecha_creacion`=?,`modificado_por`=?,`fecha_modificacion`=? ;
+	$prepareStatement = "INSERT INTO `peticiones` SET `supervisor_id`=?,`comentarios`=?,`tipo_envio`=?,`direccion_envio`=?,`creado_por`=?,`fecha_creacion`=?,`modificado_por`=?,`fecha_modificacion`=? ;
 					";
 	
 	$arrayString = array (
 			$user,
+			$datos['comentario_supervisior'],
+			$datos['tipo_envio'],
+			$datos['direccion_envio'],
 			$user,
 			$fecha_alta,
 			$user,

@@ -106,7 +106,7 @@ class Assignacion implements IConnections {
 			$where .= " AND eventos.servicio=".$params['tipoevento'];
 		}
 
-		/* if (!isset($params['ciudade']) ) 
+		 if (!isset($params['ciudade']) ) 
 		{
 			$where .= " ";
 			
@@ -115,7 +115,7 @@ class Assignacion implements IConnections {
 		{
 			$where .= " OR territorial.ciudad LIKE '".$params['ciudade']."%'";
 		}
- */
+ 
 		
 		
 		if(isset($start) && $length != -1 && $total) {

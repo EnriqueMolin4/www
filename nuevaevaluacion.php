@@ -10,27 +10,29 @@
         <!-- page-content  -->
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
-            <div class="page-title">
-                <h3>EVALUACIONES</h3>
-            </div>
-            <div class="container-fluid p-3 panel-white">
-                
-                    <h5>NUEVA EVALUACION</h5>
+        
+            <div class="container-fluid p-5">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h3>Nueva Evaluación</h3>
+                    </div>
+                </div>
+                    
                     <div class="row">
                         <div class="col-4">
-                            <label for="nombre" class="col-form-label-sm">NOMBRE DE LA EVALUACION</label>
+                            <label for="nombre" class="col-form-label-sm">Nombre de la Evaluación</label>
                             <input type="text" name="nombre" class="form-control form-control-sm" id="nombre" onkeyup="enableBtn();">
                         </div>
 
                         <div class="col-4">
-                            <label for="descripcion" class="col-form-label-sm">DESCRIPCION</label>
+                            <label for="descripcion" class="col-form-label-sm">Descripción</label>
                             <textarea id="descripcion" name="descripcion" class="form-control" onkeyup="enableBtn();"></textarea>
                         </div>  
                     </div>
                     <hr>
                     <br>
                     <div id="evFile" style="display: none;">
-                     <h5>CARGAR PREGUNTAS Y RESPUESTAS</h5>
+                     <h5>Cargar Preguntas </h5>
                     <div class="row p-3">
 
                         <div class="col-sm-5"> 
@@ -49,18 +51,18 @@
                         </div>
                     </div>
                      </br>
-                     <button type="button" class="btn btn-primary asignar" value="0" name="btnAsignar" id="btnAsignar">Asignar Evaluaciones</button>
-                    <hr>
+                     <!-- <button type="button" class="btn btn-primary asignar" value="0" name="btnAsignar" id="btnAsignar">Asignar Evaluaciones</button>
+                    <hr> -->
                     <div class="table-responsive">
                         <table id="evaluaciones" class="table table-bordered table-responsive" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th width="300px">NOMBRE</th>
-                                    <th width="300px">DESCRIPCIÓN</th>
-                                    <th width="300px">FECHA CREACION</th>
-                                    <th width="200px">ARCHIVO</th>
-                                    <th width="200px">FECHA MODIFICACION</th>
-                                    <th width="200px">ACCION</th>
+                                    <th width="300px">Nombre</th>
+                                    <th width="300px">Descripcion</th>
+                                    <th width="300px">Fecha Creación</th>
+                                    <th width="200px">Archivo</th>
+                                    <th width="200px">Fecha Modificación</th>
+                                    <th width="200px">Acción</th>
 
                                 </tr>
                             </thead>
@@ -80,7 +82,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5>ASIGNAR EVALUACIONES</h5>
+                        <h5>Asignar Evaluaciones</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -89,14 +91,14 @@
                         <form id="frm" name="frm">
                             <div class="row">
                                 <div class="col">
-                                    <label class="col-form-label-sm" for="tecnicos">TECNICOS</label><br>
+                                    <label class="col-form-label-sm" for="tecnicos">Tecnico (s)</label><br>
                                     <select hidden name="tecnicos[]" id="tecnicos" class="custom-select form-control-sm" multiple></select>
                                     
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <label class="col-form-label-sm" for="evaluacionList">EVALUACIONES</label>
+                                    <label class="col-form-label-sm" for="evaluacionList">Evaluación</label>
                                     <select style="text-align: center;text-align-last: center;-moz-text-align-last: center;" name="evaluacionList" id="evaluacionList" class="form-control form-control-sm">
                                         <option value="0" selected>Seleccionar</option>
                                     </select>

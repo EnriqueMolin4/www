@@ -4,7 +4,8 @@ $(document).ready(function() {
         ResetLeftMenuClass("submenueventos", "ulsubmenueventos", "asignacioneventoslink")
 		 $.datetimepicker.setLocale('es');
         getTipoEvento();
-        getSupervisores()
+        getSupervisores();
+        getEstados();
         //getTecnicos();
         $("#fechaVen_inicio").datetimepicker({
             timepicker:false,
@@ -38,6 +39,7 @@ $(document).ready(function() {
                     d.tipoevento = $("#tipo_evento").val(),
                     d.fechaVen_inicio = $("#fechaVen_inicio").val(),
                     d.fechaVen_fin = $("#fechaVen_fin").val(),
+                    d.ciudade = $("#ciudad_e").val(),
                     d.supervisores = $("#supervisores").val()
                 }
             },
@@ -360,7 +362,10 @@ $(document).ready(function() {
         })
 
 
-       
+        $("#estado_e").on("change", function() {
+            getMunicipios();
+        }) 
+
        
 
 
@@ -389,7 +394,41 @@ function cleartext() {
 
 }
 
+function getEstados()
+{
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/assignacioneventos_db.php',
+        data: 'module=getEstados',
+        cache: false,
+        success: function(data){
+            console.log(data);
+            $("#estado_e").html(data);
 
+        },
+        error: function(error)
+        {
+            var demo = error;
+        }
+    });
+}
+
+function getMunicipios()
+{
+    var estado = $("#estado_e").val();
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/assignacioneventos_db.php',
+        data: 'module=getMunicipios&estado='+estado,
+        cache: false,
+        success: function(data){
+            $("#ciudad_e").html(data);
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+} 
 
 function getTipoEvento() {
     $.ajax({
@@ -405,6 +444,8 @@ function getTipoEvento() {
         }
     });
 }
+
+
 
 function getTecnicos() {
 

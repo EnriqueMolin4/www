@@ -166,7 +166,9 @@ class Reportes implements IConnections {
                 AND eventos.estatus not in  (1)
                 AND eventos.tecnico not in (128)
                 AND eventos.estatus = tipo_estatus.id
-                AND evidencias.fecha BETWEEN ?  AND ? ";
+                AND evidencias.fecha BETWEEN '$inicio'  AND '$final' ";
+            
+                self::$logger->error($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -573,6 +575,7 @@ if($module == 'reporte_inventarioCampo') {
             $totalCol = sizeof($fields);
             $counter = 1;
             foreach($fields as $index => $value) {
+                $value = $counter == 2 ? "'$value" : $value;
                 $hojaDeProductos->setCellValueByColumnAndRow($counter, $numeroDeFila, $value);
                 $counter++;
             }

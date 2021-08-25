@@ -44,20 +44,7 @@
                     </div>
                     
                 </div><br>
-                <!-- <div class="row">
-                    <div class="col-md-3">
-                        <label for="estado_e" class="col-form-label-sm">Estado</label>
-                        <select name="estado_e" id="estado_e" class="form-control form-control-sm">
-                            <option value="0" Seleccionar></option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="ciudad_E" class="col-form-label-sm">Ciudad</label>
-                        <select name="ciudad_e" id="ciudad_e" class="form-control form-control-sm refreshDataTable">
-                            <option value="0" selected></option>
-                        </select>
-                    </div>
-                </div> -->
+                 
                 
                     <div class="row mt-3 mb-3">
 						 <div class="col-md-3">
@@ -77,6 +64,22 @@
                         <a href="#" class="btn btn-success" id="btnAsignarTecnico" name="btnAsignarTecnico">Asignar Evento (s)</a>
                         </div>
                     </div>
+
+                    <div class="row">
+                    <div class="col-md-3">
+                        <label for="estado_e" class="col-form-label-sm">Estado</label>
+                        <select name="estado_e" id="estado_e" class="form-control form-control-sm">
+                            <option value="0" Seleccionar></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="ciudad_E" class="col-form-label-sm">Ciudad</label>
+                        <select name="ciudad_e" id="ciudad_e" class="form-control form-control-sm refreshDataTable">
+                            <option value="0" selected></option>
+                        </select>
+                    </div>
+                </div><br>
+                
 
                 <table id="assignaciones"  class="table table-md table-bordered ">
                     <thead>

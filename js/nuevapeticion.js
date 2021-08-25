@@ -2,14 +2,15 @@ var infoAjax = 0;
 var tableTraspasos,tableTraspasosItems;
 $(document).ready(function() {
     
-    ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "peticioneslink")
+    ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "traspasoslink")
     
     getAlmacenes();
     getConectividad();
     getProducto();
     getPlazas();
-    getInsumos();
-    campos_tipo();
+	getInsumos();
+	campos_tipo();
+	getCarrier();
 
     
 
@@ -52,14 +53,34 @@ $(document).ready(function() {
                 "visible": false,
                 "searchable": false
             },
+			{
+                "targets": [ 13 ],
+                "visible": false,
+                "searchable": false
+            },
             {
-                "targets": [13],
+                "targets": [ 14 ],
+                "visible": false,
+                "searchable": false
+            },
+			{
+                "targets": [ 15 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 16 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [17],
                 "mRender": function ( data,type, row ) {
               
-                    return '<a href="#" title="Eliminar de la lista" class="delRow"><i class="fas fa-trash-alt fa-2x" style="color:#F5425D"></i></a>';
+                    return '<a href="#" class="btn btn-danger delRow">Borrar</a>';
                 }
             }
-        ]     
+        ]	  
     });
 
     $('#tplDetalle tbody').on( 'click', '.delRow', function () {
@@ -75,20 +96,27 @@ $(document).ready(function() {
 
     $("#btnAdd").on('click',function() {
         var error = 0;
-        var insumo = '';
+		var insumo = '';
         var insumoId = 0;
         var conectividad = '';
         var conectividadId = 0;
         var producto = '';
         var productoId = 0;
+		var carrierId = 0
 
-        switch( $("#tipo").val() ) {
+        var comentario_supervisor = document.getElementById("comentario_supervisor").value;
+
+        switch( $("#tipo").val() ) 
+		{
             case "1":
                 conectividad = $("#conectividad option:selected" ).text();
                 conectividadId = $("#conectividad").val();
                 producto = $("#producto option:selected" ).text();
                 productoId = $("#producto").val();
             break;
+			case "2":
+				carrierId = $("#carrier").val();
+			break
             case "3":
                 insumo =  $("#insumo option:selected" ).text();
                 insumoId =  $("#insumo").val();
@@ -96,94 +124,100 @@ $(document).ready(function() {
         }
 
         if ( $("#plaza").val() == "0" || $("#tecnico").val() == "0" )
-        {
-            $.toaster({
+		{
+			$.toaster({
             message: 'Favor de seleccionar la plaza y el técnico',
             title: 'Aviso',
             priority : 'danger'
                       });
-            
-            error++;
-            
-        }else if ( $("#tipo").val() == "0" )
-        {
-            $.toaster({
+			
+			error++;
+			
+		}else if ( $("#tipo").val() == "0" )
+		{
+			$.toaster({
             message: 'Seleccionar tipo',
             title: 'Aviso',
             priority : 'danger'
                       });
-                      
-            error++;
-            
-        }
-        
-        if ( $("#tipo").val() == "1" )
-        {
-            if ( $("#conectividad").val() == "0" || $("#producto").val() == "0" || $("#estatus").val() == "0" )
-            {
-                $.toaster({
-                message: 'Revisar Estatus, Conectividad y Producto',
-                title: 'Aviso',
-                priority : 'danger'
+					  
+			error++;
+			
+		}
+		
+		if ( $("#tipo").val() == "1" )
+		{
+			if ( $("#conectividad").val() == "0" || $("#producto").val() == "0" || $("#estatus").val() == "0" )
+			{
+				$.toaster({
+				message: 'Revisar Estatus, Conectividad y Producto',
+				title: 'Aviso',
+				priority : 'danger'
                       });
-              error++;
-            }else if ( $("#cantidad").val() == "" )
-            {
-                $.toaster({
-                message: 'Favor de ingresar la cantidad',
-                title: 'Aviso',
-                priority : 'danger'
+			  error++;
+			}else if ( $("#cantidad").val() == "" )
+			{
+				$.toaster({
+				message: 'Favor de ingresar la cantidad',
+				title: 'Aviso',
+				priority : 'danger'
                       });
-                error++;
-            }
-        }
-        else if ( $("#tipo").val() == "2" )
-        {
-            if ( $("#cantidad").val() == "" )
-            {
-                toaster({
-                message: 'Favor de ingresar la cantidad',
-                title: 'Aviso',
-                priority : 'danger'
+				error++;
+			}
+		}
+		else if ( $("#tipo").val() == "2" )
+		{
+			if ( $("#cantidad").val() == "" )
+			{
+				$.toaster({
+				message: 'Favor de ingresar la cantidad',
+				title: 'Aviso',
+				priority : 'danger'
                       });
-                error++;
-                
-            }
-            
-        }
-        
-        if ( $("#tipo").val() == "3" )
-        {
-            if ( $("#insumo").val() == "0" || $("#cantidad").val() == "" )
-            {
-                $.toaster({
-                message: 'Favor de elegir insumo e ingresar la cantidad',
-                title: 'Aviso',
-                priority : 'danger'
+				error++;
+				
+			} 
+			
+		}
+		
+		if ( $("#tipo").val() == "3" )
+		{
+			if ( $("#insumo").val() == "0" || $("#cantidad").val() == "" )
+			{
+				$.toaster({
+				message: 'Favor de elegir insumo e ingresar la cantidad',
+				title: 'Aviso',
+				priority : 'danger'
                       });
-                error++;
-            }
-                
-        }
-        
-    if(error == 0){
-        tableTraspasosItems.row.add( [
-            
-           $("#tipo option:selected" ).text(),
-           $("#tecnico option:selected" ).text(),
-           $("#estatus option:selected" ).text(),
-           insumo,
-           conectividad,
-           producto,
-           $("#cantidad").val(),
-           $("#tipo").val(),
-           $("#tecnico").val(),
-           $("#estatus").val(),
-           insumoId,
-           $("#conectividad").val(),
-           $("#producto").val(),
-            ] ).draw( false );
+				error++;
+			}
+				
+		}
+		
+	if(error == 0){
+        tableTraspasosItems.row.add( 
+            [ 
+                $("#tipo option:selected" ).text(),
+                $("#tecnico option:selected" ).text(),
+                $("#estatus option:selected" ).text(),
+                insumo,
+                conectividad,
+                producto,
+				$("#cantidad").val(),
+                comentario_supervisor,
+				$("#tipo_envio option:selected").text(),
+                $("#direccion_envio option:selected").text(),
+				
+                $("#tipo").val(),
+                $("#tecnico").val(),
+                $("#estatus").val(),
+                insumoId,
+                $("#conectividad").val(),
+                $("#producto").val(),
+		        $("#carrier").val()
+			] ).draw( false );
 
+            
         $("#tipo").val('0');
         $("#conectividad").val("0");
         $("#producto").val("0");
@@ -192,102 +226,111 @@ $(document).ready(function() {
         $("#cantidad").val("0");
         campos_tipo();
         tableTraspasosItems.columns.adjust().draw();
-    }
+	}
  
     });
 
-    $("#btnPeticion").on('click', function()
-    {
-            var data = tableTraspasosItems.rows().data();
-            var datosEnviar=[];
-            console.log(data);
-            
-            $.each(data, function(index,value) {               
+	$("#btnPeticion").on('click', function()
+	{
+			var data = tableTraspasosItems.rows().data();
+			var datosEnviar=[];
+			console.log(data);
+			
+			$.each(data, function(index,value) {               
 
-                var valueToPush = new Object();
-                valueToPush["tipo"] = value[7];
-                valueToPush["tecnico"] = value[8];
-                valueToPush["estatus"] = value[9];
-                valueToPush["insumo"] = value[10];
-                valueToPush["conectividad"] = value[11];
-                valueToPush["producto"] = value[12];
+				var valueToPush = new Object();
+                valueToPush['comentario_supervisior'] = value[7];
+                valueToPush['tipo_envio'] = value[8];
+                valueToPush['direccion_envio'] = value[9];
+				valueToPush["tipo"] = value[10];
+				valueToPush["tecnico"] = value[11];
+				valueToPush["estatus"] = value[12];
+				valueToPush["insumo"] = value[13];
+				valueToPush["conectividad"] = value[14];
+                valueToPush["producto"] = value[15];
                 valueToPush["cantidad"] = value[6];
-                datosEnviar.push(valueToPush);
-                
-                })
+				datosEnviar.push(valueToPush);
 
-            console.log(datosEnviar);
                 
-            $.ajax({ 
-                    type: 'POST',
-                    url : 'modelos/almacen_db.php',
-                    data: 'module=guardarPeticion&array='+JSON.stringify(datosEnviar),
-                    cache: false,
-                    success: function(data){
-                        
-                    
-                      $.toaster({
+                
+				})
+                
+                console.log(datosEnviar)
+				
+			$.ajax({ 
+					type: 'POST',
+					url : 'modelos/almacen_db.php',
+					data: 'module=guardarPeticion&array='+JSON.stringify(datosEnviar),
+					cache: false,
+					success: function(data){
+						
+					
+					  $.toaster({
                             message: 'Se guardaron los datos',
                             title: 'Aviso',
                             priority : 'success'
                         }); 
-                        cleartext();
+						cleartext();
                         window.location.href = "peticiones.php";
-                    },
-                    error: function(error){
-                        var demo = error;
-                    }
-            })                 
-    });
-    
-    $("#btnRegresar").on("click", function() {
+					},
+					error: function(error){
+						var demo = error;
+					}
+			})					
+	});
+	
+	$("#btnRegresar").on("click", function() {
         window.location.href = "peticiones.php";
     })
-    
-    
-    
-    
+	
+	
+	
+	
 });
 
 /*Peticiones opciones*/
-    function campos_tipo() {
-    
-    var val = document.getElementById("tipo").value;
-    
-        if (val === "0") 
-        {
-            $("#divIns").hide();
-            $("#divCan").hide();
-            $("#divTpv").hide();
-            $("#divStat").hide();
-        }
-    
-        if (val === "1") 
-        {
+	function campos_tipo() {
+	
+	var val = document.getElementById("tipo").value;
+	
+		if (val === "0") 
+		{
+			$("#divIns").hide();
+			$("#divCan").hide();
+			$("#divTpv").hide();
+			$("#divStat").hide();
+			$("#divCarrier").hide();
+		}
+	
+		if (val === "1") 
+		{
             $("#divTpv").show();
             $("#divCan").show();
             $("#divStat").show();
             $("#divIns").hide();
-        }
-        
-        if (val === "2")
-        {
-            $("#divCan").show();
-            $("#divStat").show();
+			$("#divCarrier").hide();
+		}
+		
+		if (val === "2")
+		{
+			$("#divCan").show();
+			$("#divStat").show();
             $("#divTpv").hide();
             $("#divIns").hide();
-        }
-        
-        if (val === "3")
-        {
-            $("#divIns").show();
-            $("#divCan").show();
-            $("#divTpv").hide();
-            $("#divStat").show();
-            
-        }
+			$("#divCarrier").show();
+		}
+		
+		if (val === "3")
+		{
+			$("#divIns").show();
+			$("#divCan").show();
+			$("#divTpv").hide();
+			$("#divStat").show();
+			$("#divCarrier").hide();
+			
+		}
 }
-    
+	
 
 function getPlazas() {
     $.ajax({
@@ -298,8 +341,8 @@ function getPlazas() {
         success: function(data){
              
             $("#plaza").html(data);
-            
-            
+			
+			
         },
         error: function(error){
             var demo = error;
@@ -316,13 +359,8 @@ function getInsumos() {
         success: function(data){
              
             $("#insumo").html(data);
-
-            //$('#insumo').multiselect({
-            //
-            //    nonSelectedText: 'Seleccionar'
-            //});
-            
-            
+			
+			
         },
         error: function(error){
             var demo = error;
@@ -339,13 +377,26 @@ function getProducto() {
         success: function(data){
              
             $("#producto").html(data);
+			
+			
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
 
-            /*$('#producto').multiselect({
-
-                nonSelectedText: 'Seleccionar'
-            });*/
-            
-            
+function getCarrier() {
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/almacen_db.php', // call your php file
+        data: 'module=getCarriers',
+        cache: false,
+        success: function(data){
+             
+            $("#carrier").html(data);
+			
+			
         },
         error: function(error){
             var demo = error;
@@ -362,13 +413,8 @@ function getConectividad() {
         success: function(data){
              
             $("#conectividad").html(data);
-
-            /*$('#conectividad').multiselect({
-                
-                nonSelectedText: 'Seleccionar'
-            });*/
-            
-            
+			
+			
         },
         error: function(error){
             var demo = error;
@@ -377,8 +423,8 @@ function getConectividad() {
 }
 
 function getTecnicos(plaza) {
-    
-    
+	
+	
     $.ajax({
         type: 'GET',
         url: 'modelos/almacen_db.php', // call your php file
@@ -404,7 +450,7 @@ function getAlmacenes() {
         success: function(data){
            
             $("#almacen").html(data);   
-        
+		
         },
         error: function(error){
             var demo = error;
@@ -429,12 +475,12 @@ function cleartext() /* Función que limpia los campos del formulario */
 { 
     $("#tecnico").val("0");
     $("#plaza").val("0");
-    $("#tipo").val('0');
+	$("#tipo").val('0');
     $("#conectividad").val("0");
     $("#producto").val("0");
     $("#estatus").val("0");
     $("#insumo").val("0");
-    $("#cantidad").val("0");
+	$("#cantidad").val("0");
 
 
 }
