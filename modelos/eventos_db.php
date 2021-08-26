@@ -1759,7 +1759,12 @@ if($module == 'getModelos') {
 if($module == 'getHistorialodt'){
 	$rows = $Eventos->getHistorialODT($params,true);
 	$rowsTotal = $Eventos->getHistorialODT($params,false);
-	$data = array("draw"=>$_POST['draw'],"data" =>$rows, 'recordsTotal' => count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+	$data = array(
+			"draw"=>$_POST['draw'],
+			"data" =>$rows, 
+			'recordsTotal' => count($rowsTotal), 
+			"recordsFiltered" => count($rowsTotal) 
+		);
 	
 	echo json_encode($data);
 	

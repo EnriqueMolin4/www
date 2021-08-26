@@ -276,14 +276,24 @@
                 tiempo.segundo = 0;
                 tiempo.minuto++;
             }
-
+            
             //Minutos
+            if (tiempo.minuto == 30)
+            {
+                Swal.fire(
+                    '¡Tienes 30 minutos para terminar la evaluación!',
+                    '',
+                    'info'
+                )
+            }
+
             if (tiempo.minuto >= 60) 
             {
                 tiempo.minuto = 0;
                 tiempo.hora = 1;
                 clearInterval(tiempo_corriendo);
             }
+
             if (tiempo.hora >= 1) 
             {
                 clearInterval(tiempo_corriendo);

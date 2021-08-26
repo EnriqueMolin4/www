@@ -1,4 +1,4 @@
-var tblEvaluaciones;
+var tblEvaluaciones, tblInfo;
 $(document).ready(function() {
     getTecnicos();
     getEvaluaciones();
@@ -43,6 +43,9 @@ $(document).ready(function() {
                 data: 'fecha_modificacion'
             },
             {
+                data: 'usuario'
+            },
+            {
                 data: 'id'
             }
         ],
@@ -51,7 +54,7 @@ $(document).ready(function() {
                 "width": "10%",
             },
             {
-                "targets": [5],
+                "targets": [6],
                 "mRender": function(data, type, row) {
                     var boton = "";
                     boton += '<a title="Eliminar Información" href="#" class="delEval" data="' + data + '"><i class="fas fa-trash-alt fa-2x" style="color:#F5425D"></i></a>';
@@ -62,49 +65,90 @@ $(document).ready(function() {
     })
 
 
-    $("#btnGuardar").on("click", function() {
-        var data = {
+    tblInfo = $("#infoEvaluacion").DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        searching: false,
+        order: [
+            [0, "ASC"]
+        ],
+        dom: 'lfrtiBp',
+        buttons: [
+            'pdf',
+            'excelHtml5'
+
+        ],
+        ajax: {
+            url: 'modelos/evaluacion_db.php',
+            type: 'POST',
+            data: function(d){
+                d.module = 'getPreguntasEvInfo',
+                    d.evId = $("#evId").val()
+            }
+        },
+        columns: [{
+                data: 'pregunta'
+                },
+                {
+                data: 'opciones'
+                }
+            ]
+
+    });
+
+
+    $("#btnGuardar").on("click", function() 
+    {
+        var data = 
+        {
             'module': 'subirEvaluacion',
             'nombre': $("#nombre").val(),
             'descripcion': $("#descripcion").val()
         }
-        if ($("#nombre").val().length == 0 || $("#descripcion").val().length == 0) {
+
+
+        if ($("#nombre").val().length == 0 || $("#descripcion").val().length == 0) 
+        {
             $.toaster({
                 message: 'No debes dejar campos vacíos',
                 title: 'Aviso',
                 priority: 'warning'
             });
-        } else if (document.getElementById("excelMasivoE").files.length == 0) {
+
+        } 
+        else if (document.getElementById("excelMasivoE").files.length == 0) 
+        {
             $.toaster({
                 message: 'Debes seleccionar un archivo',
                 title: 'Aviso',
                 priority: 'warning'
             });
-        } else
-
+        } 
+        else
         {
             $.ajax({
                 type: 'GET',
                 url: 'modelos/evaluacion_db.php',
                 data: data,
                 cache: false,
-                success: function(data) {
+                success: function(data) 
+                {
                     var info = JSON.parse(data)
-                    mensaje = "Se guardó la información, subiendo preguntas y respuestas."
-                    //if (info.id) {}
+                     
                     var eid = info.id
-                    tblEvaluaciones.ajax.reload();
-                    if (eid >= 0) {
+                    
+                    if (eid >= 0) 
+                    {
                         $.toaster({
-                            message: mensaje,
+                            message: "Cargando Información...",
                             title: 'Aviso',
                             priority: 'success'
-                        });
-                        //$("#evaluaciones").DataTable().ajax.reload();
+                            });
+                        
                         //SE EJECUTA FUNCION MASIVA
-
-                        $("#evaluaciones").DataTable().ajax.reload();
-
                         var form_data = new FormData();
                         var excelMasivo = $("#excelMasivoE");
                         var file_data = excelMasivo[0].files[0];
@@ -119,17 +163,31 @@ $(document).ready(function() {
                             processData: false,
                             contentType: false,
                             success: function(data, textStatus, jqXHR) {
+
+
                                 var info = JSON.parse(data);
-                                $.toaster({
-                                    message: 'Se cargaron ' + info.contador + 'preguntas',
-                                    title: 'Aviso',
-                                    priority: 'success'
-                                })
+
+                                console.log(info);
+
+
+                               Swal.fire(
+                                   'Se cargaron ' + info.contador + ' preguntas',
+                                   '',
+                                   'info' 
+                               );
+                               cleartext();
+                               tblEvaluaciones.ajax.reload();
+                            
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
-                                alert(textStatus)
+                                alert(textStatus);
+                                
+                                $.toaster({
+                                    message: 'Hubo un error',
+                                    title: 'Aviso',
+                                    priority: 'danger'
+                                })
                             }
-
                         });
                     } else {
                         $.toaster({
@@ -138,7 +196,6 @@ $(document).ready(function() {
                             priority: 'danger'
                         });
                     }
-
                 },
                 error: function(error) {
                     var demo = error;
@@ -146,33 +203,8 @@ $(document).ready(function() {
 
             })
         }
-
-        /*  
-                
-                $.ajax({
-                    type: 'POST',
-                    url: 'modelos/evaluacion_db.php', //call your php file
-                    data: form_data,
-                    processData: false,
-                    contentType: false,
-                    success: function(data, textStatus, jqXHR){
-                        var info = JSON.parse(data);
-                        $.toaster({
-                         message: 'Se cargaron '+info.contador+ 'preguntas',
-                            title: 'Aviso',
-                            priority: 'success'
-                        })
-                    },
-                    error: function(jqXHR, textStatus, errorThrown)
-                    {
-                        alert(textStatus)
-                    }
-
-                });
-                */
-
-
     })
+
 
 
     $(document).on("click", ".delEval", function(e) {
@@ -208,6 +240,21 @@ $(document).ready(function() {
         }
     })
 
+
+    $(document).on("click", ".infoEv", function(){
+        var index = $(this).parent().parent().index();
+        var data = tblEvaluaciones.row(index).data()
+
+        console.log(index);
+        console.log(data);
+
+        $("#evId").val(data.id);
+
+        console.log(data.id);
+
+        $("#showPreguntas").modal("show");
+
+    })
 
 
     function getTecnicos() {
@@ -253,6 +300,13 @@ $(document).ready(function() {
         })
     }
 
+
+    function cleartext()
+    {
+        $("#btnFileTest").val('');
+        $("#descripcion").val('');
+        $("#nombre").val('');
+    }
 
 
 

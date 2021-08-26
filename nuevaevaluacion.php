@@ -21,18 +21,18 @@
                     <div class="row">
                         <div class="col-4">
                             <label for="nombre" class="col-form-label-sm">Nombre de la Evaluación</label>
-                            <input type="text" name="nombre" class="form-control form-control-sm" id="nombre" onkeyup="enableBtn();">
+                            <input type="text" name="nombre" class="form-control form-control-sm" id="nombre">
                         </div>
 
                         <div class="col-4">
                             <label for="descripcion" class="col-form-label-sm">Descripción</label>
-                            <textarea id="descripcion" name="descripcion" class="form-control" onkeyup="enableBtn();"></textarea>
+                            <textarea id="descripcion" name="descripcion" class="form-control"></textarea>
                         </div>  
                     </div>
                     <hr>
                     <br>
-                    <div id="evFile" style="display: none;">
-                     <h5>Cargar Preguntas </h5>
+                    <div id="evFile">
+                     <h5>Cargar archivo </h5>
                     <div class="row p-3">
 
                         <div class="col-sm-5"> 
@@ -51,18 +51,18 @@
                         </div>
                     </div>
                      </br>
-                     <!-- <button type="button" class="btn btn-primary asignar" value="0" name="btnAsignar" id="btnAsignar">Asignar Evaluaciones</button>
-                    <hr> -->
+                    
                     <div class="table-responsive">
-                        <table id="evaluaciones" class="table table-bordered table-responsive" style="width:100%;">
+                        <table id="evaluaciones" class="table table-bordered table-responsive">
                             <thead>
                                 <tr>
                                     <th width="300px">Nombre</th>
                                     <th width="300px">Descripcion</th>
                                     <th width="300px">Fecha Creación</th>
                                     <th width="200px">Archivo</th>
-                                    <th width="200px">Fecha Modificación</th>
-                                    <th width="200px">Acción</th>
+                                    <th width="100px">Fecha Modificación</th>
+                                    <th width="100px">Creado por</th>
+                                    <th width="100px">Acción</th>
 
                                 </tr>
                             </thead>
@@ -77,45 +77,44 @@
             </div> 
         </main>
         <!-- page-content" -->
-        <!-- MODAL ASIGNAR -->
-        <div class="modal fade" tabindex="-1" role="dialog" id="modalAsignar" data-backdrop="static" data-keyboard="false">
+        
+        <!-- MODAL DETALLE -->
+        <!-- <div class="modal fade" tabindex="-1" role="dialog" id="showPreguntas" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5>Asignar Evaluaciones</h5>
+                        <h5>Detalle Evaluación</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    
                     <div class="modal-body">
-                        <form id="frm" name="frm">
-                            <div class="row">
-                                <div class="col">
-                                    <label class="col-form-label-sm" for="tecnicos">Tecnico (s)</label><br>
-                                    <select hidden name="tecnicos[]" id="tecnicos" class="custom-select form-control-sm" multiple></select>
-                                    
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label class="col-form-label-sm" for="evaluacionList">Evaluación</label>
-                                    <select style="text-align: center;text-align-last: center;-moz-text-align-last: center;" name="evaluacionList" id="evaluacionList" class="form-control form-control-sm">
-                                        <option value="0" selected>Seleccionar</option>
-                                    </select>
-                                    
-                                </div>
-                            </div>
-                            
-                        </form>
+                        <h4>Preguntas y Respuestas de la Evaluación</h4>
+
+                        <table id="infoEvaluacion">
+                            <thead>
+                                <tr>
+                                    <th>Preguntas</th>
+                                    <th>Respuestas</th>
+                                                  
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
                         
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="btnAsignarEv">Asignar</button>
+                    
+                        <input type="hidden" value="0" id="evId" names="evId">
+                    
                     </div>
                 </div>
                 
             </div>
-        </div>
+        </div> -->
         
 </div>
     <!-- using online scripts -->
@@ -135,33 +134,7 @@
     <script src="js/main.js"></script>
     <script src="js/evaluaciones.js"></script> 
     <script src="js/bootstrap-multiselect.min.js"></script>
-    <script type="text/javascript">
-
-         function enableBtn()
-         {
-            var n = document.getElementById("nombre");
-            var d = document.getElementById("descripcion");
-
-            if (n.value.length > 0 && d.value.length > 0) 
-            {
-                document.getElementById("evFile").style.display = '';
-            }
-
-        }
-
-        function cleartext()
-        {
-            //$('#tecnicos').multiselect('refresh');
-            $('#tecnicos').val('').multiselect('refresh');
-            //$("#evaluaciones").val("");
-        }
-
-
-        $('#modalAsignar').on('hide.bs.modal',function (e){
-            cleartext()
-        })
-
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
         .multiselect {
           background-color: initial;

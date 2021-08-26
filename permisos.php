@@ -334,7 +334,7 @@
                                     $.toaster({
                                         message: data,
                                         title: 'Aviso',
-                                        priority: 'succes'
+                                        priority: 'success'
                                    });
                                    cleartext();
                                    $("#showModel").modal('hide');

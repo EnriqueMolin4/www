@@ -50,7 +50,9 @@ class Evaluacion implements IConnections {
 	{
 		//$salida = array();
 
-		$sql = "SELECT preguntas.id, preguntas.pregunta, preguntas.evaluacion_id FROM preguntas LEFT JOIN evaluaciones_tecnico ON evaluaciones_tecnico.evaluacion_id = preguntas.evaluacion_id WHERE evaluaciones_tecnico.tecnico_id = '$id_tecnico'";
+		$sql = "SELECT preguntas.id, preguntas.pregunta, preguntas.evaluacion_id 
+				FROM preguntas LEFT JOIN evaluaciones_tecnico ON evaluaciones_tecnico.evaluacion_id = preguntas.evaluacion_id
+				WHERE evaluaciones_tecnico.tecnico_id = '$id_tecnico'";
 		//self::$logger->error($sql);
 		try 
 		{
@@ -63,6 +65,7 @@ class Evaluacion implements IConnections {
 			self::$logger->error ("File: evaluacion_db.php;  	Method Name: getPreguntas();	Functionality: Get questions From Preguntas;	Log:" . $e->getMessage () );
 		}
 	}
+
 
 	function getOpciones($pregunta_id)
 	{
@@ -108,12 +111,15 @@ class Evaluacion implements IConnections {
 			$where .=" OR descripcion LIKE '".$params['search']['value']."%' ) ";
 		}
 
-		$sql = " SELECT ev.id, ev.nombre, ev.descripcion, ev.fecha_creacion, ev.archivo, ev.fecha_modificacion 
-				FROM `evaluaciones` ev 
-				$where
-				$order
-				$filter
-			";
+		$sql = " SELECT ev.id, ev.nombre, ev.descripcion, ev.fecha_creacion, ev.archivo, ev.fecha_modificacion, ev.modified_by,
+					CONCAT(du.nombre,' ',du.apellidos) usuario
+				FROM
+					`evaluaciones` ev
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = ev.modified_by
+					$where
+					$order
+					$filter
+					";
 
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -594,12 +600,13 @@ if ($module == 'subirEvaluacion')
 	else
 	{
 		//echo "LA EVALUACION NO EXISTE";
-		$prepareStatement = "INSERT INTO evaluaciones (nombre,descripcion,fecha_creacion) VALUES (?,?,?);";
+		$prepareStatement = "INSERT INTO evaluaciones (nombre,descripcion,fecha_creacion, modified_by) VALUES (?,?,?,?);";
 
 			$arrayString = array (
 			$params['nombre'],
 			$params['descripcion'],
-			$fecha_c
+			$fecha_c,
+			$user
 			);
 
 		$id = $Evaluacion->insert($prepareStatement, $arrayString);
@@ -628,6 +635,7 @@ if ($module == 'evaluacionMasivo')
 		$fecha = date ( 'Y-m-d H:m:s' );
 		$id = $params['eid'];
 		$nombreFile = $_FILES['file']['name'] ;
+		$message = '';
 
 		$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
 		$letraMayorDeColumna = $hojaDeProductos->getHighestColumn();
@@ -639,13 +647,14 @@ if ($module == 'evaluacionMasivo')
 		for ($indiceFila = 2; $indiceFila <= $numeroMayorDeFila; $indiceFila++)  
 		{ 
 			# Las columnas están en este orden:
-			# Código de barras, Descripción, Precio de Compra, Precio de Venta, Existencia
+			
 			$counter++;
 			$Pregunta = $hojaDeProductos->getCellByColumnAndRow(1, $indiceFila);
 			$R1 = $hojaDeProductos->getCellByColumnAndRow(2, $indiceFila);
 			$R2 = $hojaDeProductos->getCellByColumnAndRow(3, $indiceFila);
 			$R3 = $hojaDeProductos->getCellByColumnAndRow(4, $indiceFila);
 			$correcta = $hojaDeProductos->getCellByColumnAndRow(5, $indiceFila);
+
 
 			$dataFieldsQ = array('evaluacion_id', 'pregunta', 'estatus');
 			$question_marksPreguntas = implode(', ', array_fill(0, sizeof($dataFieldsQ), '?'));
@@ -658,17 +667,150 @@ if ($module == 'evaluacionMasivo')
 				1
 			);
 
-
-			//echo json_encode($arrayStringQ);
-
 			array_push($datosCargarP, $arrayStringQ);
 
-			$idp = $Evaluacion->insert($sqlPreguntas, $arrayStringQ);
 
+			$idp = $Evaluacion->insert($sqlPreguntas, $arrayStringQ);
+			$message .= "Guardando preguntas..";
 			if ($idp) 
 			{
-				echo("SE GUARDARON LAS PREGUNTAS!!");
+			
+				$dataFieldsR = array( 'id_pregunta', 'evaluacion_id', 'respuesta', 'correcta', 'estatus');
+				$question_marksRespuestas = implode(', ', array_fill(0, sizeof($dataFieldsR), '?'));
 
+				$sqlRes = "INSERT INTO respuestas (" . implode(",", $dataFieldsR) . ") VALUES (".$question_marksRespuestas.")";
+
+				if($correcta->getValue() == 1)
+				{
+					$correcta = 1;
+
+					//RESPUESTA 1
+					$arrayStringR1 = array (
+						$idp,
+						$id,
+						$R1->getValue(),
+						$correcta,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR1);
+					$Evaluacion->insert($sqlRes, $arrayStringR1);
+
+					//RESPUESTA 2
+					$arrayStringR2 = array (
+						$idp,
+						$id,
+						$R2->getValue(),
+						0,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR2);
+					$Evaluacion->insert($sqlRes, $arrayStringR2);
+
+					//RESPUESTA 3
+					$arrayStringR3 = array (
+						$idp,
+						$id,
+						$R3->getValue(),
+						0,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR3);
+					$Evaluacion->insert($sqlRes, $arrayStringR3);
+
+
+				} else if ($correcta->getValue() == 2 )
+				{
+					$correcta = 2;
+					//RESPUESTA 1
+					$arrayStringR1 = array (
+						$idp,
+						$id,
+						$R1->getValue(),
+						0,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR1);
+					$Evaluacion->insert($sqlRes, $arrayStringR1);
+
+					//RESPUESTA 2
+					$arrayStringR2 = array (
+						$idp,
+						$id,
+						$R2->getValue(),
+						1,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR2);
+					$Evaluacion->insert($sqlRes, $arrayStringR2);
+
+					//RESPUESTA 3
+					$arrayStringR3 = array (
+						$idp,
+						$id,
+						$R3->getValue(),
+						0,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR3);
+					$Evaluacion->insert($sqlRes, $arrayStringR3);
+
+
+
+				}else
+				{
+					//RESPUESTA 1
+					$arrayStringR1 = array (
+						$idp,
+						$id,
+						$R1->getValue(),
+						0,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR1);
+					$Evaluacion->insert($sqlRes, $arrayStringR1);
+
+					//RESPUESTA 2
+					$arrayStringR2 = array (
+						$idp,
+						$id,
+						$R2->getValue(),
+						0,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR2);
+					$Evaluacion->insert($sqlRes, $arrayStringR2);
+
+					//RESPUESTA 3
+					$arrayStringR3 = array (
+						$idp,
+						$id,
+						$R3->getValue(),
+						1,
+						1
+
+					);
+
+					array_push($datosCargarR,$arrayStringR3);
+					$Evaluacion->insert($sqlRes, $arrayStringR3);
+
+				}
+					
 				$sqlN = "UPDATE evaluaciones SET archivo=? WHERE id=? ";
 
 				$arraySN = array (
@@ -677,37 +819,17 @@ if ($module == 'evaluacionMasivo')
 				);
 
 				$Evaluacion->insert($sqlN, $arraySN);
- 				/*
-					$dataFieldsR = array( 'id_pregunta', 'respuesta', 'correcta', 'estatus');
-					$question_marksRespuestas = implode(', ', array_fill(0, sizeof($dataFieldsR), '?'));
-
-
-					$sqlRespuestas = "INSERT INTO respuestas (" . implode(",", $dataFieldsR). ") VALUES (".$question_marksRespuestas.") WHERE id_pregunta = '$idp'";
-
-					$arrayStringR = array (
-						$idp,
-						$R1->getValue(),
-						$R2->getValue(),
-						$R3->getValue(),
-						$correcta->getValue()
-					);
-
-					array_push($datosCargarR, $arrayStringR);
-
-					echo json_encode($arrayStringR);
-				
-
-				//$Evaluacion->insert($sqlRespuestas, $arrayStringR);
-				*/
+ 				
 			}
 			else
 			{
-				echo("ERROR !!!!!");
+				$message .= "Hubo un error.!";
+				
 			}
 
 		}
 
-		echo json_encode(["contador" => $counter, "datos" => $datosCargarP]);
+		echo json_encode(["contador" => $counter, "datos" => $datosCargarP, "mensaje" => $message]);
 }
 
 //Eliminar Evaluación 
@@ -730,6 +852,10 @@ if ($module == 'evaluacionMasivo')
 			$prepareStatement2 = "DELETE FROM preguntas WHERE evaluacion_id = ?";
 			$arrayString2 = array ($params['id']);
 			$del2 = $Evaluacion->insert( $prepareStatement2, $arrayString2 );
+
+			$prepaeStatement3 = "DELETE FROM respuestas WHERE evaluacion_id = ?";
+			$arrayString3 = array( $params['id']);
+			$del3 = $Evaluacion->insert( $prepareStatement3, $arrayString3 );
 		}
 		
 	}
