@@ -641,12 +641,7 @@ class Almacen implements IConnections {
 		if($id == '') {
 			$id = -1;
 		}
-
-	 
-																						
-   
-		
-		
+																				
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
 		}
@@ -962,10 +957,23 @@ class Almacen implements IConnections {
 		$start = $params['start'];
 		$length = $params['length'];
 
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
+
 		$filter = "";
 		$param = "";
+		$where = "";
+
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
 		$tecnico = $params['tecnico'] ;
-		$where = '';
 		$almacen = $params['almacen'];
 		$estatus = $params['estatus'];
 
@@ -983,11 +991,6 @@ class Almacen implements IConnections {
 		}else
 		{
 			$where .= " AND t1.estatus = 1 ";
-		}
-
-	
-		if(isset($start) && $length != -1 && $total) {
-			$filter .= " LIMIT  $start , $length";
 		}
 
 		if( !empty($params['search']['value'])) {   
@@ -1029,6 +1032,19 @@ class Almacen implements IConnections {
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: almacen_db.php;	Method Name: getTraspasos();	Functionality: Search No_Serie;	Log:". $sql . $e->getMessage () );
+		}
+	}
+
+	function getTotalTraspasos()
+	{
+		$sql = "select count(*) from traspasos";
+
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getTotalTraspasos();	Functionality: Get Table Total;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -2033,8 +2049,8 @@ if($module == 'getHistoriaInsumos') {
 }
 if($module == 'getTraspasos') {
 	$rows = $Almacen->getTraspasos($params,true);
-    $rowsTotal = $Almacen->getTraspasos($params,false);
-    $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+    $rowsTotal = $Almacen->getTotalTraspasos();
+    $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  $rowsTotal, "recordsFiltered" => $rowsTotal );
 
 	echo json_encode($data); //$val;
 }

@@ -191,6 +191,14 @@
                   </li>
 				  
                   <?php }
+
+               if ( searchMenu( $_SESSION['Modules'], 'url', 'evaluaciones' )) {?>
+
+                  <li>
+                     <a href="evaluaciones.php">Evaluaciones</a>
+                  </li>
+                  <?php }
+
 				  if ( searchMenu($_SESSION['Modules'], 'url', 'nueva_evaluacion') ){ ?>
                   <li id="nuevaevaluacionlink">
                      <a href="nuevaevaluacion.php">Nueva Evaluación</a>

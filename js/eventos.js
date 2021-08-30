@@ -73,7 +73,10 @@ $(document).ready(function() {
         ],
         dom: 'lfrtiBp',
         buttons: [{
-            extend: 'excel',
+            charset: 'utf-8',
+            extension: '.csv',
+            bom: true,
+            extend: 'csv',
             title: 'Eventos_' + fecha_hoy,
             exportOptions: {
                 orthogonal: 'sort',
@@ -132,7 +135,7 @@ $(document).ready(function() {
                 render: function ( data, type, row ) {
                     var fecha = moment(data.fecha_vencimiento, 'YYYY-MM-DD');
                     var now = moment();
-                    return now.diff(fecha, 'days');
+                    return fecha.diff(now, 'days');
                   
                   }
             },
@@ -577,7 +580,7 @@ $(document).ready(function() {
                         $("#sim_instalado").val(element.sim_instalado);
                         $("#sim_retirado").val(element.sim_retirado);
                         $("#estatus_servicio").val(element.estatus_servicio);
-                        $("#causaCambio").val(element.causacambio);
+                        $("#causas_cambio").val(element.causacambio);
 
                         $("#rechazo").val(element.rechazo);
                         $("#subrechazo").val(element.subrechazo);
@@ -1696,12 +1699,12 @@ function getCausasCambio() {
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getEstatusCambio',
+        data: 'module=getCausasCambio',
         cache: true,
         success: function(data) {
             console.log(data);
 
-            $("#causaCambio").html(data);
+            $("#causas_cambio").html(data);
 
         },
         error: function(error) {

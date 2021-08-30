@@ -411,6 +411,14 @@
                         </div>
                         
                     </div>
+                    <div class="row showcausacambio">
+                            <div class="col-sm-3">           
+                                <label for="causas_cambio" class="col-form-label-sm">Causas de Cambio</label>
+                                <select  class="form-control form-control-sm" id="causas_cambio" aria-describedby="causas_cambio">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
                     <div class="row">
                         <div class="col">           
                             <label for="comentarios_cierre" class="col-form-label-sm">Comentarios de Cierre</label>

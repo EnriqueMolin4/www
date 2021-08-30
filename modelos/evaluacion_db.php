@@ -66,7 +66,6 @@ class Evaluacion implements IConnections {
 		}
 	}
 
-
 	function getOpciones($pregunta_id)
 	{
 		$sql = "SELECT * FROM respuestas where id_pregunta = '$pregunta_id' ";
@@ -120,6 +119,7 @@ class Evaluacion implements IConnections {
 					$order
 					$filter
 					";
+				//self::$logger->error($sql);
 
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -217,7 +217,6 @@ class Evaluacion implements IConnections {
 		            self::$logger->error ("File: evaluacion_db.php;	Method Name: evaluacionExiste();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
 		        }
 	}
-
 
 	function getTecnicos()
 	{
@@ -451,6 +450,127 @@ class Evaluacion implements IConnections {
         }
 	}
 
+	function getTablePreguntas($params, $total)
+	{
+		$start = $params['start'];
+		$length = $params['length'];
+
+	
+		$order = '';
+
+		$filter = "";
+		$param = "";
+		$where = "";
+
+		$evaluacionId = $params['id'];
+
+		if($evaluacionId == '') {
+			$evaluacionId = -1;
+		}
+
+		if(isset($orderField) ){
+			$order .= "ORDER BY  $orderField  $orderDir";
+		}
+
+		if(isset($start) && $length != -1 && $total){
+			$filter .= " LIMIT $start ,  $length";
+		}
+		
+
+		$sql = "SELECT preguntas.id, preguntas.evaluacion_id, preguntas.pregunta
+				FROM preguntas
+				WHERE preguntas.evaluacion_id = '$evaluacionId' 
+				$where
+				$order
+				$filter
+				";
+		//self::$logger->error($sql);
+
+		try{
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: evaluacion_db.php;	Method Name: getTablePreguntas();	Functionality: Get Table;	Log:" . $e->getMessage () );
+		}
+
+	}
+
+	function getTotalPreguntas($idE){
+
+		$sql = "SELECT COUNT(*) FROM preguntas WHERE preguntas.evaluacion_id = '$idE' ";
+
+		//self::$logger->error($sql);
+
+		try {
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute();
+			return $stmt->fetch ( PDO::FETCH_COLUMN, 0);
+		} catch ( PDOException $e ){
+			self::$logger->error ("File: evaluacion_db.php;	Method Name: getTotalPreguntas();	Functionality: Get Table Total;	Log:" . $e->getMessage () );
+		}
+
+	}
+
+	function getOpcionesByPreg($params, $total)
+	{
+		$start = $params['start'];
+		$length = $params['length'];
+
+	
+		$order = '';
+
+		$filter = "";
+		$param = "";
+		$where = "";
+
+
+		if($params['idp'] != 0) {
+			$preguntaId = $params['idp'];
+
+			$where .= " WHERE res.id_pregunta = $preguntaId";
+		}
+
+		if(isset($orderField) ){
+			$order .= "ORDER BY  $orderField  $orderDir ";
+		}
+
+		if(isset($start) && $length != -1 && $total){
+			$filter .= " LIMIT $start ,  $length";
+		}
+
+		$sql = "SELECT res.id,res.id_pregunta, res.evaluacion_id, res.respuesta, res.correcta, res.estatus FROM respuestas res
+				$where
+				$order
+				$filter
+				";
+
+		self::$logger->error($sql);
+
+		print_r($sql);
+		
+		try{
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: evaluacion_db.php;	Method Name: getOpcionesByPreg();	Functionality: Get Table;	Log:" . $e->getMessage () );
+		}
+
+	}
+
+	function getTotalOpt($idp){
+
+		$sql = "SELECT COUNT(*) FROM respuestas WHERE respuestas.id_pregunta  = '$idp'";
+		self::$logger->error($sql);
+		try {
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute();
+			return $stmt->fetch ( PDO::FETCH_COLUMN, 0);
+		} catch ( PDOException $e ){
+			self::$logger->error ("File: evaluacion_db.php;	Method Name: getTotalOpt();	Functionality: Get Table Total;	Log:" . $e->getMessage () );
+		}
+	}
 
 }
 //
@@ -488,6 +608,33 @@ if ($module == 'getTableDetalle')
 	echo json_encode($data);
 }
 
+if($module == 'getPreguntasInfo')
+{
+	$rows = $Evaluacion->getTablePreguntas($params, true);
+	$rowsTotal = $Evaluacion->getTotalPreguntas($params['id']);
+	$data = array ("draw"=>$_POST["draw"],"data" => $rows, 'recordsTotal' => $rowsTotal, "recordsFiltered" => $rowsTotal);
+
+	echo json_encode($data);
+}
+
+if($module == 'getOpciones')
+{
+	$rows = $Evaluacion->getOpcionesByPreg($params, true);
+	$rowsTotal = $Evaluacion->getTotalOpt($params['idp']);
+	$data = array ("draw"=>$_POST["draw"],"data" => $rows, 'recordsTotal' => $rowsTotal, "recordsFiltered" => $rowsTotal);
+
+	echo json_encode($data);
+
+}
+
+if ($module == 'getEvaluacionesList')
+{
+	$rows = $Evaluacion->getTable($params, true);
+	$rowsTotal = $Evaluacion->getTableTotal();
+	$data = array("draw"=>$_POST["draw"],"data" =>$rows,'recordsTotal' => $rowsTotal, "recordsFiltered" => $rowsTotal);
+
+	echo json_encode($data);
+}
 
 if ($module == 'getPreguntasEv') 
 {

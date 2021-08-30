@@ -288,12 +288,6 @@
                                 bom: true,
                                 filename: 'CsvTest',
                                 title: 'CSV'
-                            //extend: 'excelHtml5',
-                            //title: 'Excel'
-                            //text: 'Exportar',
-                            //charset: 'UTF-8',
-                            //extension: '.csv',
-                            //filename: 'evaluacion_2021',
                             }
                         ],
                 ajax: {
@@ -339,9 +333,11 @@
 				var data = detalle.row( index ).data();
 				console.log(index)
 				console.log(data)
+
 				$("#tecnicoId").val(data.tecnico_id);
 				$("#nombreTecnico").val(data.nombreTecnico);
 				$("#showDetalleEv").modal("show");
+
                 $("#showInfoEv").modal("hide");
 
                 $.ajax({
@@ -384,6 +380,8 @@
                 var dataDet = detalle.row( index ).data();
                 console.log(index)
                 console.log(dataDet)
+
+
                 $("#tecnicoId").val(dataDet.tecnico_id);
                 $("#nombreTecnico2").val(dataDet.nombreTecnico);
                 $("#showInfoEv").modal("show");

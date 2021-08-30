@@ -2154,9 +2154,6 @@ if($module == 'getCausasCambio') {
   
 }
 
-
-
-
 if($module == 'getNumSerieTecnico') {
 	$rows = $Eventos->getNumSerieTecnico($params['tecnico_id']);
 	$val = '<option value="0" selected>Seleccionar</option>';
@@ -2224,11 +2221,13 @@ if($module == 'validarTPV') {
 	$comercioId = $Eventos->getComercioBy($afiliacion,'037');
 	$inventarioElavon = $Eventos->getInvUniversoNoserie($noserie);
 
-	if($inventarioElavon) {
+	if($inventarioElavon) 
+	{
 
 		$inventarioGeneral = $Eventos->getInventarioNoserie($noserie,$tipo);
 
-		if($inventarioGeneral) {
+		if($inventarioGeneral) 
+		{
 			if( $inventarioGeneral['id_ubicacion'] == '2' && $inventarioGeneral['id_ubicacion'] != $comercioId[0]['id']  && $tipo == '1' )
 			{
 				$inventarioGeneral = [ "modelo" => $inventarioGeneral['modelo'], "conectividad" =>  $inventarioGeneral['conectividad'], 'status' => false ,'msg' => 'Serie No Valida ya esta asignada en un comercio' ];

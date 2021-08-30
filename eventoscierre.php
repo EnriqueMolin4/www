@@ -637,9 +637,6 @@
             })
 
             $("#btnComentValid").on('click', function() {
-            
-            
-            
                 if( $('#comentarios_validacion').val().length > 0  )
                 {
                     var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val()};
@@ -699,7 +696,7 @@
                         Swal.fire({
                             title: 'Cierre de Eventos',
                             text: "EL Comercio no tiene Asignada la ODT",
-                            footer: 'Comuicate con tu Supervisor',
+                            footer: 'Comunicate con tu Supervisor',
                             icon: 'warning',
                         })
 
@@ -1339,9 +1336,6 @@
         }
 
         function getInfoExtra(odt) {
-
-           
-
             $.ajax({
                 type: 'POST',
                 url: 'modelos/eventos_db.php', // call your php file
