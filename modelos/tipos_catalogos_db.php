@@ -59,7 +59,24 @@ class Usuarios implements IConnections {
         }
     }
 
-
+	function getTipoRechazo(){
+		$sql = "SELECT tp.tipo,
+				CASE WHEN tp.tipo = 'r' THEN 'RECHAZO' WHEN tp.tipo = 's' THEN 'SUBRECHAZO' END rechazo
+				FROM
+				tipo_rechazos tp
+				GROUP BY tipo";
+		
+		try {
+			 $stmt = self::$connection->prepare ($sql );
+			 $stmt->execute (array());
+			 $result = $stmt->fetchAll ( PDO::FETCH_ASSOC );
+			 return $result;
+		 } catch ( PDOException $e ) {
+			 self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: getTipoRechazo();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+		 }
+		
+	}
+	
     function getTable($params,$total) {
 
 		$start = $params['start'];
@@ -96,7 +113,14 @@ class Usuarios implements IConnections {
 				WHERE id = -1;
 				$order
                 $filter ";
-        } else {
+        } else if($catalogo == 'tipo_servicio') { 
+
+			$sql = "SELECT id,nombre,status estatus from $catalogo
+            $where 
+			$order
+            $filter ";
+
+		} else {
             $sql = "SELECT id,nombre,estatus from $catalogo
             $where 
 			$order
@@ -161,10 +185,76 @@ class Usuarios implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: getTableCR();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
+	
+	function getTableRechazos($params, $total){
+		$start = $params['start'];
+		$length = $params['length'];
+		$catalogo = $params['catalogo'];
+		$rechazoTipo = "";
+		//$rechazoTipo = $params['tipo'];
+		
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
 
+		$filter = "";
+		$param = "";
+		$where = " WHERE nombre IS NOT NULL";
+		/*
+		if($rechazoTipo == '0')
+		{
+			$where .= " ";
+		}
+		else if ($rechazoTipo == 'r')
+		{
+			$where .= " AND tipo = 'r' ";
+		}
+		else 
+		{
+			$where .= " AND tipo = 's' ";
+		}*/
+		
+	
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}
+        
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+		
+		if( !empty($params['search']['value'])  &&  $total) {   
+			$where .=" AND ";
+			$where .=" ( nombre LIKE '".$params['search']['value']."%' ) ";    
+
+		}
+		
+		
+			$sql = "SELECT id, nombre, descripcion, clave_elavon, tipo, estatus FROM $catalogo 
+					$where
+					$order
+					$filter
+					";
+		
+		
+		//self::$logger->error($sql);
+		
+		try {
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute();
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ){
+			self::$logger->error ( "File: tipos_catalogos_db.php;      Method Name: getTableRechazos();      Functionality: Get Table;     Log:" . $e->getMessage () );
+		}
+		
+		
+		
+	}
+	
     function getEvento($id) {
         $sql = "select * from eventos where id = $id";
 		
@@ -173,7 +263,7 @@ class Usuarios implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: getComercio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: getEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -197,7 +287,7 @@ class Usuarios implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: getImagenesODT();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: getHistoriaODT();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -230,7 +320,7 @@ class Usuarios implements IConnections {
             $stmt->execute (array($nombreP));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: searchUser();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: searchParam();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
     
@@ -248,7 +338,7 @@ class Usuarios implements IConnections {
 			$stmt->execute ();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: buscarComercio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: tipos_catalogos_db.php;	Method Name: buscarTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -295,6 +385,105 @@ if($module == 'getTableCR') {
 	echo json_encode($data); //$val;
 }
 
+if($module == 'getRechazosTable'){
+	
+	$rows = $Usuario->getTableRechazos($params,true);
+	$rowsTotal = $Usuario->getTableRechazos($params, false);
+	$data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' => count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+	
+	echo json_encode($data);
+}
+
+if($module == 'getTipoRechazos'){
+	$rows = $Usuario->getTipoRechazo();
+	$val = '<option value="0">Seleccionar</option>';
+	foreach ( $rows as $row ){
+		$val .= '<option value="' . $row ['tipo'] . '">' . $row ['rechazo'] . '</option>';
+	}
+	echo $val;
+}
+
+if($module == 'desEstatusr'){
+	$catalogo = $params['catalogo'];
+
+	$prepareStatement = "UPDATE $catalogo SET estatus = ? WHERE id = ?";
+
+	$arrayString = array (
+		0,
+		$params['id']
+	);
+	$Usuario->insert($prepareStatement, $arrayString);
+	echo $params['id'];
+
+}
+
+
+if($module == 'actEstatusr'){
+	$catalogo = $params['catalogo'];
+
+	$prepareStatement = "UPDATE $catalogo SET estatus = ? WHERE id = ?";
+
+	$arrayString = array (
+		1,
+		$params['id']
+	);
+	$Usuario->insert($prepareStatement, $arrayString);
+	echo $params['id'];
+
+}
+
+if($module == 'grabarRechazo'){
+	$catalogo = $params['catalogo'];
+	$nombre = $params['rechazo'];
+	$descripcion = $params['descripcion'];
+	$clave_elavon = $params['clave_elavon'];
+	$tipo = $params['tipo'];
+	$estatus = 1;
+	$rId = $params['rId'];
+
+	if ($rId == '0') 
+	{
+		$prepareStatement = "INSERT INTO $catalogo (`nombre`, `descripcion`, `clave_elavon`, `tipo`, `estatus`)
+						VALUES (?, ?, ?, ?, ?);";
+
+		$arrayString = array(
+			$nombre,
+			$descripcion,
+			$clave_elavon,
+			$tipo,
+			$estatus
+		);
+
+		$newId = $Usuario->insert($prepareStatement,$arrayString);
+
+		$msg = $newId == 1 ? 'Falló al crear el registro' : 'Se creó el registro';
+
+		echo json_encode(['id' => $newId, 'msg' => $msg]);
+
+	}
+	else
+	{
+		$prepareStatement = "UPDATE $catalogo SET `nombre` = ?, `descripcion` = ?, `clave_elavon` = ?, `tipo` = ?
+							WHERE `id` = ? 
+							";
+
+		$arrayString = array(
+			$nombre,
+			$descripcion,
+			$clave_elavon,
+			$tipo,
+			$rId
+		);
+
+		$newId = $Usuario->insert($prepareStatement, $arrayString);
+		$msg = $newId == 1 ? 'Falló al modificar el registro' : 'Se modificó el registro';
+
+		echo json_encode(['id' => $newId, 'msg' => $msg]);
+
+	}
+
+
+}
 
 if($module == 'getSupervisores') {
 $rows = $Usuario->getSupervisores();

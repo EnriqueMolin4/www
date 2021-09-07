@@ -118,9 +118,6 @@ $(document).ready(function() {
                 data: 'comercio'
             },
             {
-                data: 'direccion'
-            },
-            {
                 data: 'servicio'
             },
             {
@@ -130,14 +127,7 @@ $(document).ready(function() {
                 data: 'fecha_vencimiento'
             },
             {
-                data: null,
-                title: 'Días Vencidos',
-                render: function ( data, type, row ) {
-                    var fecha = moment(data.fecha_vencimiento, 'YYYY-MM-DD');
-                    var now = moment();
-                    return fecha.diff(now, 'days');
-                  
-                  }
+                data: 'dias',
             },
             {
                 data: 'fecha_cierre'
@@ -170,7 +160,7 @@ $(document).ready(function() {
 
             },
             {
-                "targets": [14],
+                "targets": [13],
                 "mRender": function(data, type, row) {
                     var btnALL = '';
                     var btnCambiarEstatus = '<a href="#" title="Cambiar Estatus" class="btnCambiarEst" data="' + row.id + '"><i class="fas fa-undo fa-2x"></i></a>';
@@ -192,11 +182,11 @@ $(document).ready(function() {
         fixedColumns: true,
         rowCallback: function(row, data, index, full) {
             if ($("#tipo_user").val() != 'VO') {
-                fnShowHide(6, true)
+                fnShowHide(5, true)
                 var fechacompromiso = moment(data.fecha_vencimiento)
                 var now = moment();
                 var diff = moment.duration(fechacompromiso.diff(now));
-                var col = this.api().column(6).index('visible');
+                var col = this.api().column(5).index('visible');
                 /*console.log('Evento '+fechacompromiso.format('YYYY-MM-DD'));
                 console.log('HOY '+now.format('YYYY-MM-DD'));
                 console.log('Diferencia Dias '+ fechacompromiso.diff(now,'days'))
@@ -233,7 +223,7 @@ $(document).ready(function() {
                 }
 
             } else {
-                fnShowHide(6, false)
+                fnShowHide(5, false)
             }
         }
     });
@@ -535,6 +525,14 @@ $(document).ready(function() {
                         $("#fecha_cierre").val(element.fecha_cierre);
                         $("#servicioId").val(element.tipo_servicio);
 
+                        if(element.tipo_servicio == '2' || element.tipo_servicio == '8' || element.tipo_servicio == '13' || element.tipo_servicio == '14' ||  element.tipo_servicio == '26' || element.tipo_servicio == '30' || element.tipo_servicio == '33' || element.tipo_servicio == '45')
+                        {
+                            $("#rowCausasCambio").show();
+                        }else if(element.tipo_servicio == '2' && element.estatus_servicio =="13")
+                        {
+                            $("#rowCausasCambio").show();
+                        }
+
                         if (element.tipo_servicio == '15') {
                             $("#comercio").val(element.cliente_vo)
                         } else {
@@ -645,21 +643,25 @@ $(document).ready(function() {
                         //getScriptEvento(element.servicio,element.tpv_instalado)
                         //INTENTAR VALIDACIÓN AQUÍ
 
+                       
+
                         if (element.estatus_servicio == '13') {
                             $("#divBtnCV").show();
                             $("#comentarios_valid").show();
                             $("#rowRechazos").hide();
                             $("#rowSubRechazos").hide();
                             $("#rowCancelado").hide();
+                            //$("#rowCausasCambio").hide();
 
                         } else if (element.estatus_servicio == '14') {
-                            //$("#rowCausasCambio").show();
+                            $("#rowCausasCambio").hide();
                             $("#rowCancelado").show();
                         } else if (element.estatus_servicio == '15') {
                             $("#divBtnCV").show();
                             $("#comentarios_valid").show();
                             $("#rowRechazos").show();
                             $("#rowSubRechazos").show();
+                            $("#rowCausasCambio").hide();
                         }
                     })
                 }

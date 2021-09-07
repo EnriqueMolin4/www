@@ -158,7 +158,7 @@ class Almacen implements IConnections {
 			$where .= " AND tu2.id = $ubicacion ";
 		} else {
 			
-			if( $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'almacen'  )
+			if( $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'almacen' || $_SESSION['tipo_user'] == 'supervisor' )
 			{
 				
 			} else {
@@ -249,7 +249,7 @@ class Almacen implements IConnections {
 				-- group by inv.id
 				$filter ";
 			 		
-		 	self::$logger->error($sql);
+		 	//self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -398,7 +398,7 @@ class Almacen implements IConnections {
 				$where
 				$filter ";
 			
-				self::$logger->error($sql);
+				//self::$logger->error($sql);
 
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -761,7 +761,7 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getHistoria();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getHistoriaIT();	Functionality: Get Historia;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1019,12 +1019,12 @@ class Almacen implements IConnections {
 				LEFT JOIN detalle_usuarios ON t1.cuenta_id = detalle_usuarios.cuenta_id
 				WHERE t1.id != -1 
 				$where  
-				GROUP BY t1.no_guia,t1.codigo_rastreo,t1.origen,t1.destino,nombre,apellidos ORDER BY fecha_creacion DESC ) traspasos; 
+				GROUP BY t1.no_guia,t1.codigo_rastreo,t1.origen,t1.destino,nombre,apellidos ORDER BY fecha_creacion DESC ) traspasos
 				$filter
 				
 				";
 
-		//self::$logger->error($sql);
+		self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1467,7 +1467,7 @@ class Almacen implements IConnections {
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} catch ( PDOException $e ) {
-			self::$logger->error("File: almacen_db.php;		Method Name: getSeriesTpvSimEventos();     Functionality: Get Series;   Log:" . $e->getMessage());
+			self::$logger->error("File: almacen_db.php;		Method Name: getSeriesTpvSimEventosH();     Functionality: Get Series;   Log:" . $e->getMessage());
 		}
 	
 	}
@@ -1492,7 +1492,7 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getSerieInfo();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getSerieInfoH();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1524,18 +1524,28 @@ class Almacen implements IConnections {
 		$start = $params['start'];
 		$length = $params['length'];
 
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
+
 		$filter = "";
 		$param = "";
 		$query = "";
 		$where = '';
 		$isActive = $params['active'];
+		$supervisor = $params['supervisor'];
 		
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}
+        
+
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
 		}
 
 		if( !empty($params['search']['value'])) {   
-			$where .=" where ";
+			$where .=" AND ";
 			$where .=" ( du.nombre LIKE '".$params['search']['value']."%' ";
 			$where .=" OR du.apellidos LIKE '".$params['search']['value']."%'  )";
 
@@ -1543,11 +1553,17 @@ class Almacen implements IConnections {
 
 		if ( $isActive == '0' ) 
 		{
-			$where .=" WHERE p.IsActive = $isActive";
+			$where .=" AND p.IsActive = $isActive";
 		}elseif ($isActive == '1') 
 		{
-			$where .=" WHERE p.IsActive = $isActive";
+			$where .=" AND p.IsActive = $isActive";
 		}
+
+		if($supervisor != 0)
+		{
+			$where .= " AND p.supervisor_id = $supervisor ";
+		}
+
 
 		$sql = "SELECT 
 				p.id,
@@ -1558,10 +1574,12 @@ class Almacen implements IConnections {
 				CONCAT(du.nombre,' ',du.apellidos) creadopor
 				FROM peticiones p
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = p.creado_por
+				WHERE p.creado_por IS NOT NULL
 				$where
+				$order
 				$filter  ";
 
-		
+		//self::$logger->error($sql);
 		 
         try {
             $stmt = self::$connection->prepare ($sql );

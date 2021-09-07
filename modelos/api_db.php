@@ -423,7 +423,8 @@ class Api implements IConnections {
 		 ELSE 0 END tpvretiradorule,
 		IFNULL(eventos.tpv_retirado,'') tpvretirado,
         IFNULL(eventos.tpv_instalado,'') tpvinstalado,
-        DATE(fecha_vencimiento) fechavencimiento ,eventos.fecha_alta,
+        DATE(fecha_vencimiento) fechavencimiento ,
+		eventos.fecha_alta,
         CASE WHEN DATEDIFF(NOW(),fecha_vencimiento) > 2 THEN 'red'
             WHEN  DATEDIFF(NOW(),fecha_vencimiento) = 1  THEN 'orange'
             WHEN HOUR( TIMEDIFF(NOW(),fecha_vencimiento)) <= 24 THEN 'yellow'

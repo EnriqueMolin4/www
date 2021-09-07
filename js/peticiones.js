@@ -16,8 +16,7 @@ $(document).ready(function() {
         searching: true,
         responsive: true,
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
-        order: [[ 0, "ASC" ]],	
-        dom: 'lfrtiBp',	  
+        order: [[ 4, "desc" ]],	  
         buttons: [{
             extend: 'excel',
             filename: 'Peticiones_'+fecha_hoy,

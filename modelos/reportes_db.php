@@ -34,7 +34,7 @@ class Reportes implements IConnections {
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: usuarios_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: reportes_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
 	private function execute_ins($prepareStatement, $arrayString) {
@@ -44,7 +44,7 @@ class Reportes implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: usuarios_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: reportes_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 	}
 	function insert($prepareStatement, $arrayString) {
@@ -144,6 +144,7 @@ class Reportes implements IConnections {
 
         $sql = "Select 
 				eventos.ODT,
+				bancos.banco,
 				eventos.afiliacion,
 				cuentas.nombre Tecnico,
 				eventos.fecha_alta ,
@@ -159,6 +160,7 @@ class Reportes implements IConnections {
 				evidencias.cantImagenes 
                 from eventos
                 LEFT JOIN tipo_subservicios ON eventos.servicio = tipo_subservicios.id
+                LEFT JOIN bancos ON bancos.cve = eventos.cve_banco
                 LEFT JOIN tipo_servicio ON eventos.tipo_servicio = tipo_servicio.id ,cuentas,tipo_estatus,
                 (SELECT odt,MAX(fecha) fecha,count(id) cantImagenes FROM img group by odt) evidencias
                 WHERE eventos.odt = evidencias.odt
@@ -205,7 +207,7 @@ class Reportes implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getStatusx();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;	Method Name: getEstatus();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
     }
 
@@ -332,7 +334,7 @@ class Reportes implements IConnections {
 			$stmt->execute();
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: almacen_db.php;	Method Name: getAlmaceninventario();	Functionality: Get Table;	Log:" . $e->getMessage () );
+			self::$logger->error ("File: reportes_db.php;	Method Name: getAlmaceninventario();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -409,10 +411,12 @@ class Reportes implements IConnections {
 				eventos.odt, 
 				eventos.afiliacion, 
 				ts.nombre servicioNombre, 
-				tss.nombre subservicioNombre, 
+				tss.nombre subservicioNombre,
+				bancos.banco, 
 				eventos.fecha_alta, 
 				eventos.fecha_vencimiento, 
 				eventos.fecha_cierre, 
+				CASE WHEN (eventos.fecha_cierre > eventos.fecha_vencimiento) THEN DATEDIFF(eventos.fecha_cierre, eventos.fecha_vencimiento) ELSE 0 END dias,
 				c.comercio, 
 				eventos.colonia, 
 				eventos.municipio, 
@@ -473,6 +477,7 @@ class Reportes implements IConnections {
                 LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
                 LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
                 LEFT JOIN historial_eventos he ON he.evento_id = eventos.id AND he.estatus_id = '10'
+                LEFT JOIN bancos ON bancos.cve = eventos.cve_banco
                 -- LEFT JOIN inventario tpvIn on eventos.tpv_instalado = tpvIn.no_serie AND tpvIn.tipo =1
                 -- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
                 WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
@@ -504,7 +509,7 @@ class Reportes implements IConnections {
              $stmt->execute (array());
              return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
          } catch ( PDOException $e ) {
-             self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+             self::$logger->error ("File: reporte_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
          }
   }
     
@@ -552,7 +557,7 @@ if($module == 'reporte_inventarioCampo') {
 
 
     $rows = $Reportes->getInventarioCampo($params);
-    $headers = array('ODT','Afiliacion','Nombre','Fecha Alta','Fecha Atencion','Fecha Evidencias','TVP_Retirado','TVP_Instalado','SIM_Retirado','SIM_Instalado','Estatus','Servicio','SubServicio','Cant Imagenes');
+    $headers = array('ODT','Banco','Afiliacion','Nombre','Fecha Alta','Fecha Atencion','Fecha Evidencias','TVP_Retirado','TVP_Instalado','SIM_Retirado','SIM_Instalado','Estatus','Servicio','SubServicio','Cant Imagenes');
 
         $documento = new Spreadsheet();
         $documento
@@ -772,7 +777,7 @@ if ( $module == 'reporte_detevento' ) {
     $rows = $Reportes->getDetEvento($params, true);
 
 	//$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
-	$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR');																																																																																																																																																																																 
+	$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR');																																																																																																																																																																																 
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO', 'DESCRIPCION', 'TECNICO', 'ESTATUS', 'TPV INSTALADA', 'TPV RETIRADA', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION');
 
