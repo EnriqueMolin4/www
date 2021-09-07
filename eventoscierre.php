@@ -924,6 +924,9 @@
             var fecha_atencion = $("#fecha_atencion").val();
             var hora_llegada = $("#hora_llegada").val();
             var hora_salida = $("#hora_salida").val();
+            //Prueba fecha vencimiento dias
+            ver fecha_vencimiento = ("#fecha_vencimiento");
+            //
 
 			//ODT checkbox
 			var odtGetNet = $("#odtGetNet").is(":checked") ? 1 : 0;

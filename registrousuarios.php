@@ -604,7 +604,6 @@
                             var plazas = data;
                             $("#negocio").html(data);
                             $("#negocio").multiselect('refresh');
-
                             
                         });
                     }

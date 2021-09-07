@@ -73,11 +73,10 @@
                             <th>Afiliación | Folio</th>
                             <th>CVE</th>
                             <th>Comercio | Cliente</th>
-                            <th>Dirección</th>
                             <th>Servicio</th>
                             <th>Fecha de Alta</th>
                             <th>Fecha Vencimiento</th>
-                            <th></th>
+                            <th>Días Vencidos</th>
 							<th>Fecha Cierre</th>
                             <th>Imagenes Cargadas</th>
                             <th>Técnico</th>
@@ -411,8 +410,8 @@
                         </div>
                         
                     </div>
-                    <div class="row showcausacambio">
-                            <div class="col-sm-3">           
+                    <div class="row">
+                            <div class="col-sm-3" id="rowCausasCambio" style="display:none;">           
                                 <label for="causas_cambio" class="col-form-label-sm">Causas de Cambio</label>
                                 <select  class="form-control form-control-sm" id="causas_cambio" aria-describedby="causas_cambio">
                                     <option value="0">Seleccionar</option>
@@ -731,7 +730,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
 
-    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
     <script src="js/Chart.bundle.min.js"></script>

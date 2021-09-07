@@ -380,7 +380,15 @@
                      <a href="cancelacion_rechazo.php">Cancelacion Rechazos</a>
                   </li>
                   <?php 
-                     } 
+                     }
+                     
+                     if( searchMenu($_SESSION['Modules'], 'url','rechazos')) { ?>
+                     <li id="rechazoslink">
+                        <a href="rechazos.php">Rechazos y Cancelación</a>
+                     </li>
+
+                     <?php
+                     }
                      ?>
                </ul>
             </div>

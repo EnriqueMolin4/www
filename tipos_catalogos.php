@@ -20,6 +20,9 @@
                         <option value="tipo_version">Tipo Versión</option>
                         <option value="tipo_aplicativo">Tipo Aplicativo</option>
                         <option value="tipo_conectividad">Tipo Conectividad</option>
+						<option value="tipo_servicio">Tipo Servicio</option>
+						<option value="tipo_causas_cambio">Causas Cambio</option>
+						<option value="tipo_cancelacion">Causas Cancelacion</option>
                        
                     </select>
                 </div>

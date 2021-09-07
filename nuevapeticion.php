@@ -15,15 +15,6 @@
             </div>
             <div class="container" class="container">
             <h3>Nueva Peticion</h3>
-           <!-- <div class="row">
-			<?php if( searchMenuEdit($_SESSION['Modules'],'url','traspasos') == '1') { ?>
-                <div class="col-sm-6">
-                    <label for="excelMasivo" class="col-form-label-sm">Creacion Traspasos Masivos</label> 
-                    <input class="input-file" type="file" id="excelMasivoTraspasos" name="excelMasivoAsignacion">
-                    <button class="btn btn-success btn-sm" id="btnCargarExcelTraspasos">Cargar</button>
-                </div>
-			<?php } ?>
-            </div> -->
                 <div class="row p-3">
                     <div class="col-4">
                         <label for="tipo_envio" class="col-form-label-sm">Tipo de Envío</label>
