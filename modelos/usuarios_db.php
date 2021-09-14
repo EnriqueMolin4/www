@@ -160,6 +160,7 @@ class Usuarios implements IConnections {
 
 		$sql = " SELECT 
 				c.id Id,
+				c.user sgs,
 				CONCAT(du.nombre,' ',du.apellidos) nombre,
 				c.correo,
 				tu.nombre TipoUser,
@@ -303,6 +304,7 @@ class Usuarios implements IConnections {
 	function getUser($id) {
 		$sql = "select 
 				cuentas.Id,
+				cuentas.user sgs,
 				cuentas.tipo_user,
 				cuentas.cve,
 				cuentas.supervisor supervisor,
@@ -453,18 +455,20 @@ if($module == 'nuevousuario') {
 	$negocios = json_decode( $params['negocio']);
 	$almacen = $params['almacen'];
 	$user = $_SESSION['userid'];
-	$pass = sha1($params['contrasena']);
+	$sgs = $params['user'];
+	//$pass = sha1($params['contrasena']);
 
 	
 
 	if(count($existe) == 0 ) {
 		$prepareStatement = "INSERT INTO `cuentas`
-		( `pass`,`supervisor`,`cve`,`tipo_user`,`nombre`,`correo`,`plaza`,`territorial`,`fecha_alta`,`almacen`)
+		( `user`,`pass`,`supervisor`,`cve`,`tipo_user`,`nombre`,`correo`,`plaza`,`territorial`,`fecha_alta`,`almacen`)
 		VALUES
-		(?,?,?,?,?,?,?,?,?,?);
+		(?,?,?,?,?,?,?,?,?,?,?);
 						";
 		$arrayString = array (
-			$pass,
+			$sgs,
+			sha1($params['contrasena']),
 			0,
 			$negocios[0],
 			$params['tipo'],
@@ -499,9 +503,9 @@ if($module == 'nuevousuario') {
 			
 			$email = new envioEmail();
 
-			$body = "Se a creado tu cuenta para el Sistema Sinttecom SAS <br /> Tus datos de acceso son  <br/> Usuario :".$params['correo']." <br/>"; 
+			$body = "Se a creado tu cuenta para el Sistema Sinttecom SAES <br /> Tus datos de acceso son  <br/> Usuario :".$params['correo']." <br/>"; 
 			$body .= "Contraseña: ".$params['contrasena']." <br /> Acceso Sistema <a href='http://sinttecom.net'>Click Aqui</a>";
-			$header = "Acceso Sistema Sinttecom SAS";
+			$header = "Acceso Sistema Sinttecom SAES";
 
 			$email->send($header,$body,$params['correo']);
 			$envio = "Se Creo al  Usuario";
@@ -510,14 +514,13 @@ if($module == 'nuevousuario') {
 
 		$id = $params['userid'];
 
-		$oldPass = $Usuario->getPass($id);
+		//$oldPass = $Usuario->getPass($id);
 
-		$newPass = strlen($pass) > 0 ? $pass : $oldPass;
+		//$newPass = strlen($pass) > 0 ? $pass : $oldPass;
 
-		$prepareStatement = "UPDATE  `cuentas` SET `pass`=?,`cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
+		$prepareStatement = "UPDATE  `cuentas` SET `cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
 		$arrayString = array (
-			$newPass,
-			0,
+			$negocios[0],
 			$params['tipo'],
 			$params['nombre'],
 			$fecha_alta,

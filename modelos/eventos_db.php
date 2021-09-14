@@ -182,6 +182,7 @@ class Eventos implements IConnections {
 				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
 				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
 				e.fecha_alta,
+				e.fecha_atencion,
 				e.fecha_cierre,
 				e.fecha_vencimiento,
 				CASE WHEN (e.fecha_cierre > e.fecha_vencimiento) THEN DATEDIFF(e.fecha_cierre, e.fecha_vencimiento) ELSE 0 END dias,
@@ -207,8 +208,7 @@ class Eventos implements IConnections {
 				$order
 				$filter ";
 
-		self::$logger->error ($sql);
-		//self::$logger->error($sql);
+			//self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -944,10 +944,10 @@ class Eventos implements IConnections {
 				GetNameById(comercio,'Comercio') comercioNombre ,
 				GetNameById(servicio,'TipoServicio') servicioNombre,
 				GetNameById(estatus,'Estatus') estatusNombre ,
-        ifnull(visita_tecnicos.id,0) existeFormulario
-				from eventos 
-        left join visita_tecnicos ON eventos.odt = visita_tecnicos.formulario->>'$.odt'
-        where tecnico = $id 
+        		ifnull(visita_tecnicos.id,0) existeFormulario
+					from eventos 
+       	 		left join visita_tecnicos ON eventos.odt = visita_tecnicos.formulario->>'$.odt'
+        		where tecnico = $id 
 			";
 		
         try {
@@ -1655,32 +1655,15 @@ if($module == 'cambiarFechasOdt')
 	$fecha = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
  
-	$sql = "UPDATE eventos SET fecha_atencion=?, fecha_alta=?, fecha_vencimiento=? where odt=? ;";
+	$sql = "UPDATE eventos SET fecha_alta=?, fecha_vencimiento=? where odt=? ;";
 
 	$arrayString = array (
-		$params['fechaAtencion'],
 		$params['fechaAlta'],
 		$params['fechaVen'],
 		$params['odt']
 	);
 
 	$id = $Eventos->insert($sql, $arrayString);
-
-
-	//Historico cambio fecha
-	$prepareStatement = "INSERT INTO historial_eventos ( evento_id, fecha_movimiento, estatus_id, odt, modified_by )
-						VALUES
-						(?,?,?,?,?);
-						";
-	$arrayStringHist = array (
-		$params['id'],
-		$fecha,
-		20,
-		$params['odt'],
-		$user
-	);
-
-	$Eventos->insert($prepareStatement, $arrayStringHist);
 
 	echo $id;
 

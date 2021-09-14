@@ -170,7 +170,7 @@ class Reportes implements IConnections {
                 AND eventos.estatus = tipo_estatus.id
                 AND evidencias.fecha BETWEEN '$inicio'  AND '$final' ";
             
-                self::$logger->error($sql);
+                //self::$logger->error($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -248,6 +248,7 @@ class Reportes implements IConnections {
                     SELECT 
                     'Insumos' tipoNombre,
                     no_serie,
+                    NULL banco,
                     NULL modelo,
                     'DISPONIBLE_NUEVO' estatus,
                     'EN PLAZA'  estatus_inventario,
@@ -305,6 +306,7 @@ class Reportes implements IConnections {
 		$sql = "SELECT 
 						  CASE WHEN inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios' END tipoNombre,
 						  inv.no_serie,	
+						  bancos.banco banco,
 						   CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN  inv.tipo= 4 THEN a.concepto END modelo,
 						   em.nombre estatus,
 						   ei.nombre estatus_inventario,
@@ -319,6 +321,7 @@ class Reportes implements IConnections {
 							LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
 							LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
 							LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
+							LEFT JOIN bancos ON bancos.cve = inv.cve_banco
 							-- LEFT JOIN comercios c ON c.afiliacion = inv.id_ubicacion
 							WHERE inv.no_serie is not null
                             $where
@@ -327,7 +330,7 @@ class Reportes implements IConnections {
 
 
 				
-		self::$logger->error ($sql.' '.$estatusubicacion);
+		//self::$logger->error ($sql.' '.$estatusubicacion);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -484,7 +487,7 @@ class Reportes implements IConnections {
                 $where 
 				 
                 ";
-        self::$logger->error ($sql);
+        //self::$logger->error ($sql);
         try {
             $stmt = self::$connection->prepare ($sql);
             $stmt->execute();
@@ -718,7 +721,7 @@ if($module == 'reporte_almaceninv') {
 
     $rows = $Reportes->getAlmaceninventario($params, true);
     //$headers = array('TipoNombre','No_Serie','Modelo','Estatus','Estatus_Inventario','Ubicacion','Fecha_Edicion','Cantidad','Id');
-    $headers = array('TipoNombre','No_Serie','Modelo','Estatus','Estatus_Inventario','Ubicacion','Fecha_Actualización','Cantidad');
+    $headers = array('TipoNombre','No_Serie','Banco','Modelo','Estatus','Estatus_Inventario','Ubicacion','Fecha_Actualización','Cantidad');
 
         $documento = new Spreadsheet();
         $documento
@@ -809,13 +812,13 @@ if ( $module == 'reporte_detevento' ) {
                 //$value = $counter == 2 ? "'$value" : $value;
                 if( $counter == 2  ) {
                     $value ="'$value";
-                } else if ( $counter == 33 ) {
-                    $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 34 ) {
-                    $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 35 ) {
-                    $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 36 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 37 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 38 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 39 ) {
                     $value = empty($value) ? "" : "'$value";
                 } 
 

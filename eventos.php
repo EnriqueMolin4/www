@@ -610,7 +610,7 @@
                             <div class="col-sm-3">           
                                 <label for="odtF" class="col-form-label-sm">ODT</label>
                                 <input type="text" class="form-control form-control-sm" id="odtF" aria-describedby="odtF" readonly>
-                            </div>
+                            </div> <!--
                             <div class="col-sm-3">           
                                 <label for="fechaAtencion" class="col-form-label-sm">Fecha Atencion</label>
                                 <input type="text" class="form-control form-control-sm" id="fechaAtencion" aria-describedby="fechaAtencion">
@@ -620,7 +620,7 @@
                                 <label for="idOdt" class="col-form-label-sm"></label>
                                 <input type="hidden" class="form-control form-control-sm" id="idOdt" aria-describedby="idOdt" readonly>
                                  
-                            </div>
+                            </div>--> 
                              
                         </div>   
                         <div class="row">

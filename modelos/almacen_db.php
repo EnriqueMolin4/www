@@ -46,8 +46,7 @@ class Almacen implements IConnections {
 
 	}
 	
-    
-	
+   
 	function getModelosTPV() {
 		
 		$sql = "select * from modelos";
@@ -322,8 +321,6 @@ class Almacen implements IConnections {
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: almacen_db.php;	Method Name: getTableInsumos();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
-
-
 	}
 
     function getInventarioTecnico($params,$total) {
@@ -561,7 +558,7 @@ class Almacen implements IConnections {
 	
 	function getInsumosId($id) {
 
-		$sql = "select id,  nombre from tipo_insumos WHERE id = ? ";
+		$sql = "select id,  nombre , codigo from tipo_insumos WHERE id = ? ";
 		
 	
         try {
@@ -752,9 +749,10 @@ class Almacen implements IConnections {
 		LEFT JOIN detalle_usuarios du ON du.cuenta_id = h.id_ubicacion
 		LEFT JOIN detalle_usuarios du2 ON du2.cuenta_id = h.modified_by
 		WHERE no_serie = '$id'
-		$where ";
+		$where 
+		$filter ";
 
-		self::$logger->error($sql);
+		//self::$logger->error($sql);
 		 
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -884,7 +882,7 @@ class Almacen implements IConnections {
 				$where
 				ORDER BY du.nombre,du.apellidos
 				";
-		//self::$logger->error($sql);
+
 		try {
 			$stmt = self::$connection->prepare ($sql );
 			$stmt->execute (array($userid));
@@ -892,8 +890,7 @@ class Almacen implements IConnections {
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: almacen_db.php;	Method Name: getTecnicosxAlmacen();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
-				
-				
+							
 	}
 
 	function buscarNoSerie($nom_serie,$tipo) {
@@ -1023,8 +1020,6 @@ class Almacen implements IConnections {
 				$filter
 				
 				";
-
-		self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1184,7 +1179,6 @@ class Almacen implements IConnections {
 			self::$logger->error ("File: almacen_db.php;     Method Name: getEstatusInvId();    Functionality: Search Carriers; Log:". $sql . $e->getMessage ());
 		}
 	}
-
 
 	function existeInventario($serie) {
 		$sql = " SELECT SUM(cantidad)   FROM inventario WHERE no_serie='$serie'  ";
@@ -1496,9 +1490,6 @@ class Almacen implements IConnections {
         }
 	}
 
-
-
-
 	function getTecnicoxPlaza($plaza) {
 
 		$sql = " SELECT detalle_usuarios.cuenta_id,CONCAT(detalle_usuarios.nombre,' ',detalle_usuarios.apellidos) nombre FROM cuentas,detalle_usuarios ,plaza_tecnico
@@ -1636,6 +1627,7 @@ class Almacen implements IConnections {
 				peticiones_id,
 				CONCAT(du.nombre,' ',du.apellidos) tecnico,
 				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
+				te.id estatus,
 				ti.nombre insumo ,
 				tc.nombre conectividad,
 				tp.nombre producto,
@@ -1647,6 +1639,7 @@ class Almacen implements IConnections {
 				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
 				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
 				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
+				LEFT JOIN tipo_estatus_modelos te ON te.id = dp.estatus
 				WHERE dp.peticiones_id = $peticion
 				$where
 				$filter  ";
@@ -1696,6 +1689,9 @@ class Almacen implements IConnections {
 				  group by no_serie,m.nombre			
 			   ";
 		}
+
+		//self::$logger->error($sql);
+
 		
         try {
             $stmt = self::$connection->prepare ($sql);
@@ -2453,17 +2449,23 @@ if($module == 'updateInvProd')
 	{
 		
 		
-		if($params['estatusinventario'] == '1' || $params['estatusinventario'] == '4' ) {
-			$querySIM = " DELETE FROM inventario_tecnico  WHERE no_serie=?";
+		if($params['tipo'] == '1' || $params['tipo'] == '2') {
 
-			$arrayString = array (
-				$params['noserie']
-			);
+			if($params['estatusinventario'] == '1' || $params['estatusinventario'] == '4' ) {
+				$querySIM = " DELETE FROM inventario_tecnico  WHERE no_serie=?";
 
-			$Almacen->insert($querySIM,$arrayString);
-			
-			
+				$arrayString = array (
+					$params['noserie']
+				);
+
+				$Almacen->insert($querySIM,$arrayString);
+				
+				
+			}
 		}
+			
+			
+	}
 		
 		$getIdInv = $Almacen->getInventarioInfo($params['noserie']);
 	
@@ -2488,10 +2490,6 @@ if($module == 'updateInvProd')
 		
 		echo "Se actualizaron los datos";
 	}
-	
-	
-	
-	 
 	
 
 }
@@ -3261,9 +3259,9 @@ if( $module == 'guardarPeticion' )
 	{
 		echo "SE GUARDARON LOS DATOS";
 		$prepareStatementDet = "INSERT INTO `detalle_peticiones` 
-					(`peticiones_id`,`tecnico_id`,`tipo`,`insumo`,`conectividad`,`producto`,`cantidad`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
+					(`peticiones_id`,`tecnico_id`,`tipo`,`estatus`,`insumo`,`conectividad`,`producto`,`cantidad`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
 					 VALUES
-					 (?,?,?,?,?,?,?,?,?,?,?);
+					 (?,?,?,?,?,?,?,?,?,?,?,?);
 					 ";
 					 
 		foreach ($info as $data) 
@@ -3274,6 +3272,7 @@ if( $module == 'guardarPeticion' )
 				$id,
 				$data['tecnico'],
 				$data['tipo'],
+				$data['estatus'],
 				$data['insumo'],
 				$data['conectividad'],
 				$data['producto'],
@@ -3313,6 +3312,7 @@ if($module == 'generarEnvio') {
 	$peticion = $Almacen->detallePeticion( $params['peticionId'] );
 	$peticiondetalle = $Almacen->getDetallePeticion($params['peticionId']);
 	$user = $_SESSION['userid'];
+	$nameInsumo = '';
 
 	foreach($peticiondetalle as $detalle) {
 		
@@ -3335,6 +3335,7 @@ if($module == 'generarEnvio') {
 
 			$tipoInsumo = $Almacen->getInsumosId($detalle['insumo']);
 
+
 			$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act');
 		
 			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsTraspasos), '?'));
@@ -3343,7 +3344,7 @@ if($module == 'generarEnvio') {
 
 			$arrayString = array (
 				$tipo,
-				$tipoInsumo['nombre'],
+				$tipoInsumo['codigo'],
 				0,
 				$cant,
 				$params['no_guia'],
@@ -3396,7 +3397,7 @@ if($module == 'generarEnvio') {
 				$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
 				$arrayString = array (
 					$detalle['tecnico_id'],
-					$tipoInsumo['nombre'],
+					$tipoInsumo['codigo'],
 					$cant,
 					$params['no_guia'],
 					0,
@@ -4425,8 +4426,6 @@ if ($module == 'UpdateInventario')
 	{
 		echo " Se $msg Inventario el numero de serie $info[1] de tipo $info[0]  ";
 	}
-
-	
 
 
 }

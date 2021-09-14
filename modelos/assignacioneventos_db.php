@@ -106,16 +106,6 @@ class Assignacion implements IConnections {
 			$where .= " AND eventos.servicio=".$params['tipoevento'];
 		}
 
-		 if (!isset($params['ciudade']) ) 
-		{
-			$where .= " ";
-			
-		}
-		else
-		{
-			$where .= " OR territorial.ciudad LIKE '".$params['ciudade']."%'";
-		}
- 
 		
 		
 		if(isset($start) && $length != -1 && $total) {
@@ -124,13 +114,17 @@ class Assignacion implements IConnections {
 
 		if( !empty($params['search']['value'])  &&  $total) {   
 			$where .=" AND ";
-			$where .=" ( odt LIKE '".$params['search']['value']."%' ";    
+			$where .=" eventos.odt LIKE '".$params['search']['value']."%' ";    
 			$where .=" OR eventos.afiliacion LIKE '".$params['search']['value']."%' ";
-			//$where .=" OR eventos.municipio LIKE '".$params['search']['value']."%' ";
-			$where .=" OR  eventos.receptor_servicio LIKE '".$params['search']['value']."%' )";
+			$where .=" OR  eventos.receptor_servicio LIKE '".$params['search']['value']."%'";
 
 		}
 
+		 if ($params['ciudade'] != '0' ) 
+		{
+			$where .= " OR territorial.ciudad LIKE '".$params['ciudade']."%'";
+			
+		}
 
 		$sql = "SELECT eventos.id,eventos.odt,eventos.afiliacion,eventos.fecha_vencimiento,tipo_estatus.nombre estatus,eventos.comercio comercio_id,eventos.estado,
 				 territorial.NombreComercio,
@@ -146,7 +140,7 @@ class Assignacion implements IConnections {
 				$order
 				$filter ";
 		
-		self::$logger->error($sql);
+		//self::$logger->error($sql);
 		try {
 			$stmt = self::$connection->prepare ($sql);
 			$stmt->execute();

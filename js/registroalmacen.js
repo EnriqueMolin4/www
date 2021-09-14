@@ -73,7 +73,33 @@ $(document).ready(function() {
         columns : [
             { data: 'banco'},
             { data: 'tipoNombre'},
-            { data: 'no_serie'},
+            { data: 'no_serie',
+                "render" : function (data, type, row, meta)
+                {
+                    var id;
+                    
+                    if(row.tipo == '1') 
+                    {
+                        id = data;
+                    } 
+                    else if (row.tipo == '2') 
+                    {
+                        id = data;
+                    } 
+                    else 
+                    {
+                        id = row.id;
+                    }
+                    if (type === 'display') 
+                    {
+                        data = '<a href="#" class="mostrarHistoria" title="Ver Historia" style="color:#187CD0;font-weight:bold;" data="'+id+' ">'+data+'</a>'
+                    }
+
+                    return data;
+                }
+                
+
+            },
             { data: 'modelo' },
             { data: 'aplicativ'},
             { data: 'conect'},
@@ -102,6 +128,10 @@ $(document).ready(function() {
                 "width": "10%",
             },
             {
+                "targets": [10],
+                "width" : "8%",
+            },
+            {
                 "targets": [11],
                 "mRender": function ( data,type, row ) 
                 {
@@ -124,8 +154,8 @@ $(document).ready(function() {
                     
                     
                     if(usrPerm == 'admin' || usrPerm == 'CA' || usrPerm == 'AN' || usrPerm == 'LA' ) {
-                         buttons += ' <a href="#" class="btn btn-warning mostrarDetalle" data="'+id+' ">Editar</a>';
-                         buttons += '<a href="#" class="btn btn-success mostrarHistoria" data="'+id+' ">Historia</a>';
+                         buttons += ' <a href="#" title="Editar Serie"class="mostrarDetalle" data="'+id+' "><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a>';
+                         //buttons += '<a href="#" class="btn btn-success mostrarHistoria" data="'+id+' ">Historia</a>';
                     } 
 
                     

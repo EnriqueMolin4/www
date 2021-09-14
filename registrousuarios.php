@@ -13,7 +13,7 @@
             <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-5">
             <div class="row">
-			<?php if( searchMenuEdit($_SESSION['Modules'],'url','registrousuarios') == '1') { ?>
+            <?php if( searchMenuEdit($_SESSION['Modules'],'url','registrousuarios') == '1') { ?>
                 <div class="col"> 
                 <label for="excelMasivo" class="col-form-label-sm">Carga Masiva Usuarios</label> 
                 <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
@@ -22,17 +22,18 @@
                 <div class="col">
                     <a href="layouts/Template_Masivo_Usuarios.csv" download>Template pra Carga Masiva</a>
                 </div>
-			<?php  } ?>
+            <?php  } ?>
             </div>
             <table id="usuarios"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Nombre</th>
+                        <th>Sgs</th>
                         <th>Correo</th>
                         <th>Tipo</th>
                         <th>Plaza</th>
-                        <th>Teritorial</th>
+                        <th>Territorial</th>
                         <th>Fecha Alta</th>
                         <th>Estatus</th>
                         <th>Accion</th>
@@ -45,10 +46,11 @@
                     <tr>
                         <th>Id</th>
                         <th>Nombre</th>
+                        <th>Sgs</th>
                         <th>Correo</th>
                         <th>Tipo</th>
-                        <th>Clave</th>
-                        <th>Supervisor</th>
+                        <th>Plaza</th>
+                        <th>Territorial</th>
                         <th>Fecha Alta</th>
                         <th>Estatus</th>
                         <th>Accion</th>
@@ -60,7 +62,7 @@
             </div>
 
             <!-- MODAL -->
-            <div class="modal fade" tabindex="-1" role="dialog" id="showUser">
+            <div class="modal fade" tabindex="-1" role="dialog" id="showUser" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
@@ -79,6 +81,10 @@
                                 <div class="col-sm-4">           
                                     <label for="apellidos" class="col-form-label-sm">Apellidos</label>
                                     <input type="text" class="form-control form-control-sm" id="apellidos" name="apellidos" aria-describedby="apellidos">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="user" class="col-form-label-sm">Usuario SGS</label>
+                                    <input type="text" class="form-control form-control-sm" id="user" name="user" aria-describedby="user">
                                 </div>
                             </div>
                             <div class="row">
@@ -152,7 +158,7 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
-    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
     <script src="js/Chart.bundle.min.js"></script>
@@ -202,6 +208,7 @@
                     columns : [
                         { data: 'Id'},
                         { data: 'nombre'},
+                        { data: 'sgs'},
                         { data: 'correo' },
                         { data: 'TipoUser' }, 
                         { data: 'plazas' },
@@ -218,12 +225,12 @@
                             
                         },
                         {
-                            "targets": [ 2 ],
+                            "targets": [ 3 ],
                             "width": "25%",
                             
                         },
                         {
-                            "targets": [7],
+                            "targets": [8],
                             "mRender": function ( data,type, row ) {
                                 var boton = "";
                                 
@@ -237,7 +244,7 @@
                             }
                         },
                         {
-                            "targets": [8],
+                            "targets": [9],
                             "mRender": function ( data,type, row ) {
                                 var boton = "";
                                 
@@ -325,12 +332,14 @@
                             
                             $("#nombre").val(info[0].nombre)
                             $("#apellidos").val(info[0].apellidos)
+                            $("#user").val(info[0].sgs)
                            // $("#negocio").val(info[0].cve)
                             $("#supervisor").val(info[0].supervisor)
                             $("#correo").val(info[0].correo)
                             $("#tipo").val(info[0].tipo_user);
                             $("#territorial").val(territorios);
                             $("#territorial").multiselect('rebuild');
+                            $("#almacen").val(almacen)
                             getPlazaxTerritorial(JSON.stringify(territorios) )
                            // $("#plaza").val(plazas);
                            // $("#plaza").multiselect('rebuild');
@@ -347,9 +356,9 @@
                 });
 
                 $('#usuarios tbody').on('click', 'tr a.DelUser', function () {
-                var index = $(this).parent().parent().index() ;
-                var data = usuarios.row( index ).data()
-                var id = $(this).attr('data');
+                    var index = $(this).parent().parent().index() ;
+                    var data = usuarios.row( index ).data()
+                    var id = $(this).attr('data');
                     console.log(id);
                     $.ajax({
                         type: 'POST',
@@ -373,9 +382,9 @@
                 });
 
                 $('#usuarios tbody').on('click', 'tr a.AddUser', function () {
-                var index = $(this).parent().parent().index() ;
-                var data = usuarios.row( index ).data()
-                var id = $(this).attr('data');
+                    var index = $(this).parent().parent().index() ;
+                    var data = usuarios.row( index ).data()
+                    var id = $(this).attr('data');
                     console.log(id);
                     $.ajax({
                         type: 'POST',
@@ -416,13 +425,15 @@
                             isNew = 0;
                         }
                     }
-					if( isNew == 1 && correo.length > 0 && isNew > 0 && $("#tipo").val() != '0' && $("#nombre").val().length > 0  && $("#negocio").val().length > 0 && $("#almacen").val()  != '0' ) {
-                        var existUsuario = $.get('modelos/usuarios_db.php',{module: 'existeuser',correo:correo},function(data) {
+                    if( isNew == 1 && correo.length > 0 && isNew > 0 && $("#tipo").val() != '0' && $("#nombre").val().length > 0  && $("#negocio").val().length > 0 && $("#almacen").val()  != '0' ) 
+                    {
+                        var existUsuario = $.get('modelos/usuarios_db.php',{module: 'existeuser',correo:correo},function(data) 
+                        {
                             var form_data = { module: 'nuevousuario',nombre: $("#nombre").val(),apellidos: $("#apellidos").val(),
                             territorial: JSON.stringify( $("#territorial").val() ),tipo: $("#tipo").val(), negocio: JSON.stringify( $("#negocio").val() ),
-                            contrasena:  $("#contrasena").val(),correo: $("#correo").val() ,userid: $("#userId").val(), plaza: JSON.stringify( $("#plaza").val() ),almacen: $("#almacen").val()  };
+                            contrasena:  $("#contrasena").val(),correo: $("#correo").val() ,userid: $("#userId").val(), plaza: JSON.stringify( $("#plaza").val() ),almacen: $("#almacen").val(), user: $("#user").val()  };
                             var info = JSON.parse(data) ;
-                            console.log(info)	
+                            console.log(info)   
                                 if( $("#userId").val() == '0'  || $("#userId").val() == '' ) {
 
                                     if( $("#contrasena").val().length > 0 && $("#contrasena").val().length < 9 ) {
@@ -453,7 +464,7 @@
                                             console.log(element);
                                                 $("#nombre").val(element.nombre);
                                                 $("#apellidos").val(element.apellidos);
-                                                $("#usuario").val(element.user);
+                                                $("#user").val(element.user);
                                                 $("#supervisor").val(element.supervisor);
                                                 $("#tipo").val(element.tipo_user);
                                                 $("#negocio").val(element.cve);
@@ -495,7 +506,7 @@
                                         console.log(element);
                                             $("#nombre").val(element.nombre);
                                             $("#apellidos").val(element.apellidos);
-                                            $("#usuario").val(element.user);
+                                            $("#user").val(element.user);
                                             $("#supervisor").val(element.supervisor);
                                             $("#tipo").val(element.tipo_user);
                                             $("#negocio").val(element.cve);
@@ -506,15 +517,15 @@
                                 
 
                             
-						}).fail(function(error) {
+                        }).fail(function(error) {
                             alert(error); // or whatever
                         });
                     } else {
                         $.toaster({
-							message: 'Favor de Capturar los campos obligatorios *',
-							title: 'Aviso',
-							priority : 'warning'
-						});  
+                            message: 'Favor de Capturar los campos obligatorios *',
+                            title: 'Aviso',
+                            priority : 'warning'
+                        });  
                     }
                     
                     
@@ -522,58 +533,58 @@
 
                     var correo =  $("#correo").val();
                     var contr = $("#contrasena").val().length;
-					if( correo.length > 0 || ( $("#contrasena").val().length > 0 && $("#contrasena").val().length < 9 ) || $("#tipo").val() != '0' || $("#nombre").val().length > 0 ) {
-						var existUsuario = $.get('modelos/usuarios_db.php',{module: 'existeuser',correo:correo},function(data) {
-							var form_data = { module: 'nuevousuario',nombre: $("#nombre").val(),apellidos: $("#apellidos").val(),
-							supervisor: $("#supervisor").val(),tipo: $("#tipo").val(), negocio: $("#negocio").val(),
-							contrasena:  $("#contrasena").val(),correo: $("#correo").val() ,userid: $("#userId").val() };
-							var info = JSON.parse(data) ;
-							console.log(info)
-						//	
-						  //  if(info.existe == '0' ) {
-								$.ajax({
-									type: 'POST',
-									url: 'modelos/usuarios_db.php', // call your php file
-									data: form_data,
-									cache: false,
-									success: function(data, textStatus, jqXHR){
-										usuarios.ajax.reload();
-										$.toaster({
-											message: data,
-											title: 'Aviso',
-											priority : 'success'
-										});  
+                    if( correo.length > 0 || ( $("#contrasena").val().length > 0 && $("#contrasena").val().length < 9 ) || $("#tipo").val() != '0' || $("#nombre").val().length > 0 ) {
+                        var existUsuario = $.get('modelos/usuarios_db.php',{module: 'existeuser',correo:correo},function(data) {
+                            var form_data = { module: 'nuevousuario',nombre: $("#nombre").val(),apellidos: $("#apellidos").val(),
+                            supervisor: $("#supervisor").val(),tipo: $("#tipo").val(), negocio: $("#negocio").val(),
+                            contrasena:  $("#contrasena").val(),correo: $("#correo").val() ,userid: $("#userId").val() };
+                            var info = JSON.parse(data) ;
+                            console.log(info)
+                        //  
+                          //  if(info.existe == '0' ) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'modelos/usuarios_db.php', // call your php file
+                                    data: form_data,
+                                    cache: false,
+                                    success: function(data, textStatus, jqXHR){
+                                        usuarios.ajax.reload();
+                                        $.toaster({
+                                            message: data,
+                                            title: 'Aviso',
+                                            priority : 'success'
+                                        });  
                                         $("#userId").val('')
-										$("#showUser").modal('hide');
-										
-										
-									},
-									error: function(jqXHR, textStatus, errorThrown) {
-										alert(data)
-									}
-								});
-	 
-								$.each(info.usuario,function(index,element) {
-									console.log(element);
-										$("#nombre").val(element.nombre);
-										$("#apellidos").val(element.apellidos);
-										$("#usuario").val(element.user);
-										$("#supervisor").val(element.supervisor);
-										$("#tipo").val(element.tipo_user);
-										$("#negocio").val(element.cve);
-										$("#correo").val(element.correo)
-								})
-						   // }
+                                        $("#showUser").modal('hide');
+                                        
+                                        
+                                    },
+                                    error: function(jqXHR, textStatus, errorThrown) {
+                                        alert(data)
+                                    }
+                                });
+     
+                                $.each(info.usuario,function(index,element) {
+                                    console.log(element);
+                                        $("#nombre").val(element.nombre);
+                                        $("#apellidos").val(element.apellidos);
+                                        $("#usuario").val(element.user);
+                                        $("#supervisor").val(element.supervisor);
+                                        $("#tipo").val(element.tipo_user);
+                                        $("#negocio").val(element.cve);
+                                        $("#correo").val(element.correo)
+                                })
+                           // }
 
 
-						});
-					} else {
-						$.toaster({
-							message: 'Favor de Capturar los campos obligatorios *',
-							title: 'Aviso',
-							priority : 'warning'
-						});  
-					} */
+                        });
+                    } else {
+                        $.toaster({
+                            message: 'Favor de Capturar los campos obligatorios *',
+                            title: 'Aviso',
+                            priority : 'warning'
+                        });  
+                    } */
 
                     
                 })

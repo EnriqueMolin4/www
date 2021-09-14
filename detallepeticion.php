@@ -39,6 +39,7 @@
                         <tr>
                             <th>TECNICO</th>
                             <th>TIPO</th>
+                            <th>ESTATUS</th>
                             <th>INSUMO</th>
                             <th>CONECTIVIDAD</th>
                             <th>VERSION</th>
@@ -134,6 +135,7 @@
                     <div class="modal-footer">
                         <input type="hidden" id="peticionDetalleId" name="peticionDetalleId" value='0'>
                         <input type="hidden" id="tipoId" name="tipoId">
+                        <input type="hidden" id="estatusId" name="estatusId">
                         <button type="button" class="btn btn-success" id="btnGrabarNuevo">Grabar</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                     </div>
@@ -194,6 +196,7 @@
             columns : [
                 { data: 'tecnico'},
                 { data: 'tipo'},
+                { data: 'estatus'},
                 { data: 'insumo'},
                 { data: 'conectividad'},
                 { data: 'producto'},
@@ -202,14 +205,29 @@
             ],
             aoColumnDefs: [
                 {
-                    "targets": [6],
+                    "targets": [2],
+                    "mRender": function (data, type, row){
+                        var mostrar;
+
+                        if(data == '3'){
+                            mostrar = 'DISPONIBLE-USADO';
+                        }else {
+                            mostrar = 'DISPONIBLE-NUEVO';
+                        }
+
+                        return mostrar;
+                    }
+
+                },
+                {
+                    "targets": [7],
                     "mRender": function ( data,type, row ) {
                         var btn;
 
                         if(row.tipoid == '3') {
                             btn = '';
                         } else {
-                            btn = "<a href='#' class='btn btn-success addSeries' data-producto='"+row.producto+"' data-tipo='"+row.tipoid+"' data-id='"+data+"' data-qty='"+row.cantidad+"'>CARGAR</a> ";
+                            btn = "<a href='#' class='btn btn-success addSeries' data-producto='"+row.producto+"' data-tipo='"+row.tipoid+"' data-id='"+data+"' data-qty='"+row.cantidad+"' >CARGAR</a> ";
                         }
 
                         return btn;
@@ -260,9 +278,11 @@
                 .draw();
             var totalSeries = $(this).data('qty');
             var tipo = $(this).data('tipo');
+            var estatus = $(this).data('estatus');
             var id = $(this).data('id');
             var producto = $(this).data('producto');
             $("#tipoId").val(tipo);
+            $("#estatusId").val(estatus);
             $("#iProducto").val(producto);
             $("#sPend").html(totalSeries);
             $("#peticionDetalleId").val(id);
@@ -480,10 +500,11 @@
             $.ajax({ 
                 type: 'POST',
                 url : 'modelos/almacen_db.php',
-                data: 'module=validarSerie&serie='+serie+'&tipo='+$("#tipoId").val() ,
+                data: 'module=validarSerie&serie='+serie+'&tipo='+$("#tipoId").val()+'&estatus='+$("estatusId").val(),
                 cache: false,
                 success: function(data){
                     var info= JSON.parse(data);
+                    console.log(info);
                     var loaded = parseInt($("#sLoad").html());
                     var pend = parseInt($("#sPend").html());
 

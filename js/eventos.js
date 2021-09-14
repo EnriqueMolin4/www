@@ -23,7 +23,7 @@ $(document).ready(function() {
     getTerritoriosFilter();
     getTecnicosf();
     getBancosf();
-    getFechaAtencion();
+    //getFechaAtencion();
     $("#fechaVen_inicio").datetimepicker({
         timepicker: false,
         format: 'Y-m-d'
@@ -40,10 +40,10 @@ $(document).ready(function() {
     });
     fecha_hoy = moment().format('YYYY-MM-DD');
 
-    $("#fechaAtencion").datetimepicker({
+ /*   $("#fechaAtencion").datetimepicker({
         timepicker: true,
         format: 'Y-m-d 00:00:00'
-    })
+    })*/
 
     $("#fechaAlta").datetimepicker({
         timepicker: true,
@@ -438,13 +438,9 @@ $(document).ready(function() {
         var index = $(this).parent().parent().index();
         var data = tableEventos.row(index).data()
 
-        var fa = getFechaAtencion(data.odt);
-
         $("#idOdt").val(id);
-
+        
         $("#odtF").val(data.odt);
-
-        $("#fechaAtencion").val(fa);
 
         $("#fechaAlta").val(data.fecha_alta);
 
@@ -826,7 +822,6 @@ $(document).ready(function() {
 
     $("#btnChgFechas").on("click", function() {
         var id = $("#idOdt").val();
-        var fechaAtencion = $("#fechaAtencion").val();
         var fechaAlta = $("#fechaAlta").val();
         var fechaVen = $("#fechaVen").val();
         var odt = $("#odtF").val();
@@ -834,7 +829,6 @@ $(document).ready(function() {
         var data = {
             module: 'cambiarFechasOdt',
             id: id,
-            fechaAtencion: fechaAtencion,
             fechaAlta: fechaAlta,
             fechaVen: fechaVen,
             odt: odt
@@ -853,7 +847,6 @@ $(document).ready(function() {
                 });
                 tableEventos.ajax.reload();
                 $("#fechaModal").modal('hide');
-                $("#fechaAtencion").val('');
                 $("#fechaAlta").val('');
                 $("#fechaVen").val('');
 
@@ -2061,7 +2054,7 @@ function cleartext() {
 
 }
 
-function getFechaAtencion(odt) {
+/*function getFechaAtencion(odt) {
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
@@ -2077,4 +2070,4 @@ function getFechaAtencion(odt) {
             var demo = error;
         }
     })
-}
+}*/
