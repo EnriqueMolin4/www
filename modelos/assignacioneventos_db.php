@@ -171,7 +171,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getComercio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -195,7 +195,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getImagenesODT();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getHistoriaODT();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -233,7 +233,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTecnicos();	Functionality: Get Tecnicos x supervisor;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTecnicosbyId();	Functionality: Get Tecnicos x supervisor;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -254,7 +254,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTecnicosbyId();	Functionality: Get Tecnicos x supervisor;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTecnicos();	Functionality: Get Tecnicos x supervisor;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -271,7 +271,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTecnicosbyId();	Functionality: Get Tecnicos x supervisor;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTecnicosS();	Functionality: Get Tecnicos x supervisor;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -300,7 +300,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTecnicos();	Functionality: Get Supervisores;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getSupervisores();	Functionality: Get Supervisores;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -312,7 +312,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getEstatusxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacioneventos_db.php;	Method Name: existeEvento();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 

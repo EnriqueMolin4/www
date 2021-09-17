@@ -138,7 +138,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacion_db.php;	Method Name: getComercio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacion_db.php;	Method Name: getEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 	
@@ -162,7 +162,7 @@ class Assignacion implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: assignacion_db.php;	Method Name: getImagenesODT();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: assignacion_db.php;	Method Name: getHistoriaODT();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 

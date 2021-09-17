@@ -2489,7 +2489,7 @@ if($module == 'updateInvProd')
 		$Almacen->insert($prepareStatement,$arrayString);
 		
 		echo "Se actualizaron los datos";
-	}
+	
 	
 
 }
@@ -3361,7 +3361,7 @@ if($module == 'generarEnvio') {
 			$id = $Almacen->insert($sql,$arrayString);
 
 			//Modificar inventario general
-			$item = $Almacen->getInventarioInfo($tipoInsumo['nombre']);
+			$item = $Almacen->getInventarioInfo($tipoInsumo['codigo']);
 			$nuevaCant = (int) $item['cantidad'] - (int) $cant;
 
 			$sql = " UPDATE `inventario` SET `cantidad`=?,`modificado_por`=?,`fecha_edicion`=? WHERE `id`=? "; 
@@ -3376,7 +3376,7 @@ if($module == 'generarEnvio') {
 			$Almacen->insert($sql,$arrayString);
 
 			//Grabar en Inventario Tecnico
-			$invTecnico = $Almacen->getCantidadInsumosTecnico($tipoInsumo['nombre'],$detalle['tecnico_id']);
+			$invTecnico = $Almacen->getCantidadInsumosTecnico($tipoInsumo['codigo'],$detalle['tecnico_id']);
 
 			if($invTecnico) {
 				$nuevaCant = (int) $invTecnico[0]['cantidad'] - (int) $qty;
@@ -3434,6 +3434,8 @@ if($module == 'generarEnvio') {
 		} else {
 
 			$noSeries = json_decode( $detalle['no_series'] );
+
+			//print_r($noSeries);
 
 			foreach($noSeries as $noserie) {
 				$fecha = date("Y-m-d H:i:s");

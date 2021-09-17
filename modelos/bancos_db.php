@@ -68,9 +68,6 @@ class Bancos implements IConnections {
 		$param = "";
 		$where = "";
 
- 
-
-
 		
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
