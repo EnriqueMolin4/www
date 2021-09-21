@@ -96,9 +96,6 @@
                                     <label for="contrasena" class="col-form-label-sm">Contraseña</label>
                                     <input type="password" class="form-control form-control-sm" id="contrasena" name="contrasena" aria-describedby="contrasena">
                                 </div>
-                                
-                            </div>
-                            <div class="row">
                                 <div class="col-sm-4">           
                                     <label for="tipo" class="col-form-label-sm">Tipo Usuario</label>
                                     <select id="tipo" name="tipo" class="form-control form-control-sm">
@@ -106,21 +103,15 @@
                                        
                                     </select>
                                 </div>
-                                <div class="col-sm-4">           
-                                    <label for="negocio" class="col-form-label-sm">Cuenta</label><br>
-                                    <select id="negocio" name="negocio" class="custom-select form-control form-control-sm" multiple>
-                                        <option value="0" selected>Seleccionar</option>
-                            
-                                    </select>
-                                </div>
+                                
                             </div>
                             <div class="row">
-                            <div class="col-sm-4" id="divTerritorial">           
+                                <div class="col-sm-4" id="divTerritorial">           
                                     <label for="territorial" class="col-form-label-sm">Territorial</label><br>
                                     <select id="territorial" name="territorial" class="custom-select form-control form-control-sm" multiple>
                                         
                                     </select>
-                            </div>
+                                </div>
                                 <div class="col-sm-4" id="divPlaza">           
                                     <label for="plaza" class="col-form-label-sm">Plaza</label><br>
                                     <select id="plaza" name="plaza" class="custom-select form-control form-control-sm" multiple>
@@ -134,8 +125,15 @@
                             
                                     </select>
                                 </div>
-                                
-                               
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">           
+                                    <label for="negocio" class="col-form-label-sm">Cuenta</label><br>
+                                    <select id="negocio" name="negocio" class="custom-select form-control form-control-sm" multiple>
+                                        <option value="0" selected>Seleccionar</option>
+                            
+                                    </select>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -168,6 +166,15 @@
     <script src="js/bootstrap-multiselect.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/jquery.rotate.1-1.js"></script>
+    <style>
+        .multiselect{
+          background-color: initial;
+          border: 1px solid #ced4da;
+          width: 235px;
+          height: auto;
+
+        }
+    </style>
     <script>
     var usuarios,almacen;
         $(document).ready(function() {
@@ -175,7 +182,7 @@
            // getSupervisores();
             getTerritorial();
             getTipoUser();
-            getBancos($("#userId").val());
+            getBancos();
          
            
                 $("#txtfecha_llamada").datetimepicker({
@@ -249,9 +256,9 @@
                                 var boton = "";
                                 
                             if(row.estatus == '1'){
-                                    boton =  '<a href="#" class="EditUser" data="'+row.Id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="DelUser" data="'+row.Id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
+                                    boton =  '<a href="#" class="EditUser" data="'+row.Id+'"><i class="fas fa-edit fa-2x "></i></a><a href="#" class="DelUser" data="'+row.Id+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></i></a>';
                                 } else {
-                                    boton = '<a href="#" class="EditUser" data="'+row.Id+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="AddUser" data="'+row.Id+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
+                                    boton = '<a href="#" class="EditUser" data="'+row.Id+'"><i class="fas fa-edit fa-2x "></i></a><a href="#" class="AddUser" data="'+row.Id+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
                             }
 
                                 return boton;
@@ -327,6 +334,7 @@
 
                             var territorios = info[0].territorios == null ? [] : info[0].territorios.split(',');
                             var plazas = info[0].plazas == null ? [] : info[0].plazas.split(',');
+                            var cve = info[0].cve == null ? [] : info[0].cve.split(',');
                             almacen = info[0].almacen;
                             $("#showUser").modal({show: true, backdrop: false, keyboard: false}) 
                             
@@ -610,7 +618,7 @@
                         $.ajax({
                             type: 'POST',
                             url: 'modelos/usuarios_db.php', // call your php file
-                            data: { module: 'getBancos', 'tecnico': 0  }
+                            data: { module: 'getBancosUser'}
                         }).done(function(data) {
                             var plazas = data;
                             $("#negocio").html(data);
@@ -726,7 +734,7 @@
                 $.ajax({
                     type: 'POST',
                     url: 'modelos/usuarios_db.php', // call your php file
-                    data: { module: 'getBancos', 'tecnico': tecnico  }
+                    data: { module: 'getBancosUser'}
                 }).done(function(data) {
                     var plazas = data;
                     $("#negocio").html(data);
@@ -830,12 +838,12 @@
             });
         }
 
-        function getBancos(tecnico) {
+        function getBancos() {
 
             $.ajax({
                 type: 'POST',
                 url: 'modelos/usuarios_db.php', // call your php file
-                data: { module: 'getBancos', 'tecnico': tecnico },
+                data: { module: 'getBancosUser'},
                 cache: false,
                 success: function(data, textStatus, jqXHR){
                     

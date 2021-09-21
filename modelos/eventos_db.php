@@ -52,7 +52,7 @@ class Eventos implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: execute_bulkins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: execute_Bulkins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 		self::$connection->commit();
 		
@@ -92,7 +92,7 @@ class Eventos implements IConnections {
     		$stmt->execute();
     		return $stmt->fetchAll ( PDO::FETCH_ASSOC);
     	} catch (PDOException $e) {
- 			self::$logger->error ("File: eventos_db.php; 	Method Name: getEstadoNombre(); Functionality: Get Products Price From PriceLists; Log:" . $e->getMessage ());   		
+ 			self::$logger->error ("File: eventos_db.php; 	Method Name: getEstadosNombre(); Functionality: Get Products Price From PriceLists; Log:" . $e->getMessage ());   		
     	}
     }
     function getTable($params,$total) {
@@ -110,6 +110,7 @@ class Eventos implements IConnections {
 		$filter = "";
 		$param = "";
 		$where = "";
+		$cveBanco = $_SESSION['cve_user'];
 
 		if(isset($orderField) ) {
 			$order .= " ORDER BY   $orderField   $orderDir";
@@ -203,11 +204,12 @@ class Eventos implements IConnections {
 				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
 				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
 				WHERE date(e.fecha_alta) BETWEEN '$inicio' AND '$fin'
+				AND e.cve_banco IN ('$cveBanco')
 				$where
 				group by id,img.totalImg,du.nombre,du.apellidos
 				$order
 				$filter ";
-
+				
 			//self::$logger->error($sql);
 		
 		try {
@@ -501,7 +503,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getTipoFallas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getTipoServicios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -669,13 +671,15 @@ class Eventos implements IConnections {
 	}
 
 	function buscarComercio($search) {
-
+		$cvebanco = $_SESSION['cve_user'];
+		
 		$sql = "SELECT c.id,cve_banco,c.afiliacion,c.comercio,c.direccion,c.colonia, 
 				c.telefono,c.email,c.responsable,c.hora_general,c.hora_comida,c.estado estadoId ,e.nombre estado,c.ciudad ciudadId, m.nombre ciudad
 				from comercios c 
 				LEFT JOIN estados e ON  c.estado = e.id
 				LEFT JOIN municipios m ON  c.ciudad = m.id 
 				WHERE (cve_banco = '$search' OR afiliacion = '$search' OR comercio LIKE '%$search%')
+				AND cve_banco = '$cvebanco'
 				Group by c.id ";
 		
 		
@@ -795,7 +799,7 @@ class Eventos implements IConnections {
 			$stmt->execute (array($id));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieSimTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -872,7 +876,7 @@ class Eventos implements IConnections {
 			   $stmt->execute (array());
 			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		   } catch ( PDOException $e ) {
-			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusServicio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		   }
 	}
 
@@ -937,26 +941,26 @@ class Eventos implements IConnections {
 	 
 	 function getEventobyTecnico($id) {
 		$sql = "select eventos.id, eventos.odt,afiliacion folio,fecha_alta,direccion,colonia,ticket,
-					GetNameById(servicio,'TipoServicio') servicio,
-					GetNameById(estado,'Estado') estadoNombre,
-					GetNameById(municipio,'Municipio') municipioNombre,
-					GetNameById(tecnico,'Tecnico') tecnicoNombre ,
-					GetNameById(comercio,'Comercio') comercioNombre ,
-					GetNameById(servicio,'TipoServicio') servicioNombre,
-					GetNameById(estatus,'Estatus') estatusNombre ,
-        			ifnull(visita_tecnicos.id,0) existeFormulario
-						from eventos 
-       	 			left join visita_tecnicos ON eventos.odt = visita_tecnicos.formulario->>'$.odt'
-        			where tecnico = $id 
-				";
+				GetNameById(servicio,'TipoServicio') servicio,
+				GetNameById(estado,'Estado') estadoNombre,
+				GetNameById(municipio,'Municipio') municipioNombre,
+				GetNameById(tecnico,'Tecnico') tecnicoNombre ,
+				GetNameById(comercio,'Comercio') comercioNombre ,
+				GetNameById(servicio,'TipoServicio') servicioNombre,
+				GetNameById(estatus,'Estatus') estatusNombre ,
+				ifnull(visita_tecnicos.id,0) existeFormulario
+				from eventos 
+				left join visita_tecnicos ON eventos.odt = visita_tecnicos.formulario->>'$.odt'
+				where tecnico = $id 
+			";
 		
-        	try {
-            	$stmt = self::$connection->prepare ($sql );
-            	$stmt->execute ();
-            	return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-        	} catch ( PDOException $e ) {
-            	self::$logger->error ("File: eventos_db.php;	Method Name: getEventobyTecnico();	Functionality: Get Evento x Tecnico;	Log:" . $e->getMessage () );
-        	}
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getEventobyTecnico();	Functionality: Get Evento x Tecnico;	Log:" . $e->getMessage () );
+        }
 	}
 
 	function getDetalleEvento($id) {
@@ -998,7 +1002,7 @@ class Eventos implements IConnections {
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
 				
-            self::$logger->error ("File: eventos_db.php;	Method Name: getOdtEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getDetalleEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
  
@@ -1016,7 +1020,7 @@ class Eventos implements IConnections {
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
 				
-            self::$logger->error ("File: eventos_db.php;	Method Name: getFormularioEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getDetalleEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1168,7 +1172,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: existeEvento();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1180,7 +1184,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: GetTecnicoById();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1265,7 +1269,7 @@ class Eventos implements IConnections {
 	}
 
 	function getInventarioNoserie($noserie,$tipo) {
-		$sql = "select *  from inventario  where no_serie = '$noserie' and tipo = $tipo  ";
+		$sql = "select *  from inventario  where no_serie = '$noserie' and tipo = $tipo";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -1439,7 +1443,14 @@ class Eventos implements IConnections {
 
 	function getBancos()
 	{
-		$sql = " SELECT * FROM `bancos` WHERE status=1";
+		$where = "";
+		
+		if($_SESSION['tipo_user'] == 'CL') 
+		{
+			$where .= " AND cve = '".$_SESSION['cve_user']."' ";
+		}
+		
+		$sql = " SELECT * FROM `bancos` WHERE status=1 $where ";
 
 		try{
 			$stmt = self::$connection->prepare($sql);
@@ -1534,14 +1545,14 @@ if($module == 'assignarTecnico') {
 
 }
 
-if($module == 'getTipoServicios') {
+/*if($module == 'getTipoServicios') {
 	$rows = $Eventos->getTipoServicios($params['tipo']);
 	$val = '';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
 	}
 	echo $val;
-}
+}*/
 	
 if($module == 'getTipoSubServicio') {
 
@@ -1655,9 +1666,10 @@ if($module == 'cambiarFechasOdt')
 	$fecha = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
  
-	$sql = "UPDATE eventos SET fecha_alta=?, fecha_vencimiento=? where odt=? ;";
+	$sql = "UPDATE eventos SET fecha_atencion=?, fecha_alta=?, fecha_vencimiento=? where odt=? ;";
 
 	$arrayString = array (
+		$params['fechaAtencion'],
 		$params['fechaAlta'],
 		$params['fechaVen'],
 		$params['odt']
@@ -1665,6 +1677,22 @@ if($module == 'cambiarFechasOdt')
 
 	$id = $Eventos->insert($sql, $arrayString);
 
+
+	//Historico cambio fecha
+	$prepareStatement = "INSERT INTO historial_eventos ( evento_id, fecha_movimiento, estatus_id, odt, modified_by )
+						VALUES
+						(?,?,?,?,?);
+						";
+	$arrayStringHist = array (
+		$params['id'],
+		$fecha,
+		20,
+		$params['odt'],
+		$user
+	);
+
+	$Eventos->insert($prepareStatement, $arrayStringHist);
+	
 	echo $id;
 
 
@@ -1745,7 +1773,7 @@ if($module == 'getHistorialodt'){
 	$data = array(
 			"draw"=>$_POST['draw'],
 			"data" =>$rows, 
-			'recordsTotal' => count($rowsTotal), 
+			'recordsTotal' => count($rowsTotal),
 			"recordsFiltered" => count($rowsTotal) 
 		);
 	
@@ -2201,22 +2229,38 @@ if($module == 'validarTPV') {
 	$fecha = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
 	$afiliacion = $params['comercio'];
+	$donde = $params['donde'];
 	$comercioId = $Eventos->getComercioBy($afiliacion,'037');
 	$inventarioElavon = $Eventos->getInvUniversoNoserie($noserie);
 
-	if($inventarioElavon) 
-	{
+	if($inventarioElavon) {
 
-		$inventarioGeneral = $Eventos->getInventarioNoserie($noserie,$tipo);
+		$inventarioGeneral = $Eventos->getInventarioNoserie($noserie,$tipo,$donde);
 
-		if($inventarioGeneral) 
-		{
-			if( $inventarioGeneral['id_ubicacion'] == '2' && $inventarioGeneral['id_ubicacion'] != $comercioId[0]['id']  && $tipo == '1' )
+		if($inventarioGeneral) {
+
+			if ($inventarioGeneral['tipo'] != $tipo ) { 
+				$msg = $tipo == '1' ? ' la serie es de tipo SIM' : ' La serie es una TPV ';
+
+				$inventarioGeneral = [ "modelo" => null, "conectividad" => null, 'status' => false ,'msg' => $msg ];
+			
+			} else if( $inventarioGeneral['estatus'] != '13' && $donde == 'out')
 			{
-				$inventarioGeneral = [ "modelo" => $inventarioGeneral['modelo'], "conectividad" =>  $inventarioGeneral['conectividad'], 'status' => false ,'msg' => 'Serie No Valida ya esta asignada en un comercio' ];
-			} else 
+				$inventarioGeneral = [ "modelo" => null, "conectividad" => null, 'status' => false ,'msg' => 'La serie no tiene estatus  INSTALADA' ];
+
+			} else if( $inventarioGeneral['estatus'] == '13' && $donde == 'in')
 			{
-				$inventarioGeneral = [ "modelo" => $inventarioGeneral['modelo'], "conectividad" =>  $inventarioGeneral['conectividad'], 'status' => true ,'msg' => 'Serie Valida' ];
+				$inventarioGeneral = [ "modelo" => null, "conectividad" => null, 'status' => false ,'msg' => 'La serie  tiene estatus  INSTALADA' ];
+
+			} else  {
+
+				if( $inventarioGeneral['id_ubicacion'] == '2' && $inventarioGeneral['id_ubicacion'] != $comercioId[0]['id']  && $tipo == '1' )
+				{
+					$inventarioGeneral = [ "modelo" => $inventarioGeneral['modelo'], "conectividad" =>  $inventarioGeneral['conectividad'], 'status' => false ,'msg' => 'Serie No Valida ya esta asignada en un comercio' ];
+				} else 
+				{
+					$inventarioGeneral = [ "modelo" => $inventarioGeneral['modelo'], "conectividad" =>  $inventarioGeneral['conectividad'], 'status' => true ,'msg' => 'Serie Valida' ];
+				}
 			}
 			
 		} else {

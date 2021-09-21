@@ -925,7 +925,7 @@
             var hora_llegada = $("#hora_llegada").val();
             var hora_salida = $("#hora_salida").val();
             //Prueba fecha vencimiento dias
-            ver fecha_vencimiento = ("#fecha_vencimiento");
+            var fecha_vencimiento = ("#fecha_vencimiento");
             //
 
 			//ODT checkbox

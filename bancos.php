@@ -179,6 +179,10 @@
                     var banco =  $("#banco").val();
                     var cve = $("#cve").val();
                     var bancoId = $("#bancoId").val();
+					
+					console.log(banco);
+					console.log(cve);
+					console.log(bancoId);
                     
 					if(  banco.length > 0 && cve.length > 0 ) 
                     {

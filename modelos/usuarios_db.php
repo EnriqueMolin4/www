@@ -100,7 +100,7 @@ class Usuarios implements IConnections {
 	/*Para combobox de Usuario Nuevo (CUENTA)*/
 	function getBancosUser()
 	{
-		$sql = "SELECT * FROM `bancos`";
+		$sql = "SELECT * FROM `bancos` WHERE status = 1";
 
 		try {
             $stmt = self::$connection->prepare ($sql );
@@ -457,8 +457,10 @@ if($module == 'nuevousuario') {
 	$user = $_SESSION['userid'];
 	$sgs = $params['user'];
 	//$pass = sha1($params['contrasena']);
-
+	//
 	
+	$bancos = implode("','",$negocios);
+
 
 	if(count($existe) == 0 ) {
 		$prepareStatement = "INSERT INTO `cuentas`
@@ -470,7 +472,7 @@ if($module == 'nuevousuario') {
 			$sgs,
 			sha1($params['contrasena']),
 			0,
-			$negocios[0],
+			$bancos, //Guardar banco(s) 
 			$params['tipo'],
 			$params['nombre'],
 			$params['correo'],
@@ -481,6 +483,7 @@ if($module == 'nuevousuario') {
 		);
 
 		$id = $Usuario->insert($prepareStatement,$arrayString);
+
 		
 		if($id == 0) {
 			$envio = "problemas con el alta de usuarios";
@@ -520,7 +523,7 @@ if($module == 'nuevousuario') {
 
 		$prepareStatement = "UPDATE  `cuentas` SET `cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
 		$arrayString = array (
-			$negocios[0],
+			$bancos,
 			$params['tipo'],
 			$params['nombre'],
 			$fecha_alta,
@@ -560,7 +563,7 @@ if($module == 'nuevousuario') {
 
 				
 	
-			//ACtualizar RElacion Plaza Tecnico
+			//Actualizar Relacion Plaza Tecnico
 			$prepareStatement = "DELETE FROM plaza_tecnico WHERE tecnico_id = ? ";
 
 			$arrayString = array (
@@ -705,7 +708,7 @@ if($module == 'getBancosUser')
 
 	foreach ( $rows as $row ) {
 		
-		$val .=  "<option value='". $row ['id']."' $selected>" . $row ['banco'] . "</option>";
+		$val .=  "<option value='". $row ['cve']."' $selected>" . $row ['banco'] . "</option>";
 	}
 	echo $val;
 
