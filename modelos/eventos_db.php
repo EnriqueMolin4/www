@@ -52,7 +52,7 @@ class Eventos implements IConnections {
 			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
 			return $stmt->fetchColumn();
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: execute_Bulkins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: execute_bulkins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
 		}
 		self::$connection->commit();
 		

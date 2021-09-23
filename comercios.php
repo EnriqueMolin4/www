@@ -19,18 +19,18 @@
 				if( searchMenuEdit($_SESSION['Modules'],'url','comercios') == '1') { ?>
                 <div class="row">
                     <div class="col-md-12 text-left">
-                        <button class="btn btn-primary editCom" data="0" id="btnNuevoComercio" name="btnNuevoComercio">Nuevo Comercio</button></div>
+                        <button class="btn btn-success editCom" data="0" id="btnNuevoComercio" name="btnNuevoComercio">Nuevo Comercio</button></div>
                 </div>
 				 <?php } ?>
                 <br />
                 <div class="row">
 				
-                    <table id="example"  class="table table-md table-bordered ">
+                    <table id="example"  class="table display responsive nowrap" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Banco</th>
-                                <th>Comercio</th>
-                                <th>Afiliacion</th>
+                                <th data-priority="1">Banco</th>
+                                <th data-priority="1">Comercio</th>
+                                <th data-priority="1">Afiliacion</th>
                                 <th>Responsable</th>
                                 <th>Tipo Comercio</th>
                                 <th>Territorial Banco</th>
@@ -42,19 +42,7 @@
                         <tbody>
                         
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Banco</th>
-                                <th>Comercio</th>
-                                <th>Afiliacion</th>
-                                <th>Responsable</th>
-                                <th>Tipo Comercio</th>
-                                <th>Territorial Banco</th>
-                                <th>Territorial Sinttecom</th>
-                                <th>Telefono</th>
-                                <th>Accion</th>
-                            </tr>
-                        </tfoot>
+                        
                     </table>
                 </div>
 				<input type="hidden" value="<?php echo searchMenuEdit($_SESSION['Modules'],'url','comercios'); ?>"  id="permusr">
@@ -213,10 +201,11 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
-
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
     <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
@@ -248,6 +237,7 @@
                 },
             processing: true,
             serverSide: true,
+            responsive: window.innerWidth < 600 ? true : false,
             order: [[ 1, "asc" ]],
             dom: 'lfrtiBp',
             buttons: [{
@@ -296,20 +286,21 @@
                         console.log(row.estatus)
 					
                       if(row.activo == '1'){
-                        boton += '<a href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x " style="color:blue"></i>';
+                        boton += '<a href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x" style="color:#187CD0;"></i>';
 						if($("#permusr").val() == '1') {
-						boton += '</a><a href="#" class="delCom" data="'+data+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
+						boton += '</a><a href="#" class="delCom" data="'+data+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a>';
 						}
                       } else {
-                        boton = '<a href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x " style="color:blue"></i></a><a href="#" class="actCom" data="'+data+'"><i class="fas fa-check fa-2x" style="color:green"></i></a>';
+                        boton = '<a href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x " style="color:#187CD0;"></i></a><a href="#" class="actCom" data="'+data+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
                       }
-					  
-					 
 
                       return boton;
                     }
                 }
-            ]
+            ],"columnDefs": [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 4 }
+                ]
         });
 
         var rules = {
@@ -455,7 +446,7 @@
                 success: function(data){
                     var info = JSON.parse(data);
                     $.toaster({
-                            message: 'Se deshabilito el Comercio ',
+                            message: 'Se deshabilitó el Comercio ',
                             title: 'Aviso',
                             priority : 'warning'
                         });  
@@ -480,7 +471,7 @@
                 success: function(data){
                     var info = JSON.parse(data);
                     $.toaster({
-                            message: 'Se habilito el Comercio ',
+                            message: 'Se habilitó el Comercio ',
                             title: 'Aviso',
                             priority : 'success'
                         });  

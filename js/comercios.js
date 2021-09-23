@@ -40,9 +40,9 @@
                     
                 },
                 {
-                    "targets": [8],
-                    "mRender": function ( data,type, row ) {
-                        return '<a href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x " style="color:#ffff"></i></a><a href="#" class="delCom"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
+                    "targets": [8], 
+                    "mRender": function ( data,type, row ) {    
+                        return '<a href="#" class="editCom" data="'+data+'"><i class="fas fa-edit fa-2x " style="color:#187CD0;"></i></a><a href="#" class="delCom"><i class="fas fa-times fa-2x" style="color:#F5425D;"></i></a>';
                     }
                 }
             ]

@@ -12,6 +12,7 @@
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-5">
+                <h3>Usuarios</h3>
             <div class="row">
             <?php if( searchMenuEdit($_SESSION['Modules'],'url','registrousuarios') == '1') { ?>
                 <div class="col"> 
@@ -172,8 +173,15 @@
           border: 1px solid #ced4da;
           width: 235px;
           height: auto;
+      }
 
+        .multiselect-container
+        {
+            height: 250px  ;  
+            overflow-x: hidden;
+            overflow-y: scroll; 
         }
+
     </style>
     <script>
     var usuarios,almacen;
@@ -331,10 +339,10 @@
                         cache: false,
                         success: function(data, textStatus, jqXHR){
                             var info = JSON.parse(data);
-
+                            console.log(info);
                             var territorios = info[0].territorios == null ? [] : info[0].territorios.split(',');
                             var plazas = info[0].plazas == null ? [] : info[0].plazas.split(',');
-                            var cve = info[0].cve == null ? [] : info[0].cve.split(',');
+                            //var cve = info[0].cve == null ? [] : info[0].cve.split(',');
                             almacen = info[0].almacen;
                             $("#showUser").modal({show: true, backdrop: false, keyboard: false}) 
                             
@@ -417,17 +425,20 @@
 
 
 
-
-                $("form[name='frm']").validate({
-                    rules: rules,
-                    messages: messages
-                });
-
-                $("#btnGrabarUser").on('click', function() {
+                $("#btnGrabarUser").on('click', function() 
+                {
                     var correo = $("#correo").val();
                     var isNew = 1;
-                    if( $("#userId").val() == '0' ) {
-                        if ( $("#contrasena").val().length > 0 ) {
+
+                    if( $("#userId").val() == '0' ) 
+                    {
+                        $("form[name='frm']").validate({
+                            rules: rules,
+                            messages: messages
+                        });
+
+                        if ( $("#contrasena").val().length > 0 ) 
+                        {
                             isNew = 1;
                         } else {
                             isNew = 0;
@@ -440,11 +451,15 @@
                             var form_data = { module: 'nuevousuario',nombre: $("#nombre").val(),apellidos: $("#apellidos").val(),
                             territorial: JSON.stringify( $("#territorial").val() ),tipo: $("#tipo").val(), negocio: JSON.stringify( $("#negocio").val() ),
                             contrasena:  $("#contrasena").val(),correo: $("#correo").val() ,userid: $("#userId").val(), plaza: JSON.stringify( $("#plaza").val() ),almacen: $("#almacen").val(), user: $("#user").val()  };
-                            var info = JSON.parse(data) ;
-                            console.log(info)   
-                                if( $("#userId").val() == '0'  || $("#userId").val() == '' ) {
 
-                                    if( $("#contrasena").val().length > 0 && $("#contrasena").val().length < 9 ) {
+                            var info = JSON.parse(data) ;
+ 
+
+                                if( $("#userId").val() == '0'  || $("#userId").val() == '' ) 
+                                {
+
+                                    if( $("#contrasena").val().length > 0 && $("#contrasena").val().length < 9 ) 
+                                    {
 
                                         $.ajax({
                                             type: 'POST',
@@ -502,6 +517,7 @@
                                             });  
                                             $("#userId").val('')
                                             $("#showUser").modal('hide');
+                                            cleartext();
                                             
                                             
                                         },
@@ -521,8 +537,6 @@
                                             $("#correo").val(element.correo)
                                     })
                                 }
-
-                                
 
                             
                         }).fail(function(error) {
@@ -866,15 +880,18 @@
         function cleartext() {
             $("#nombre").val("");
             $("#apellidos").val("");
+			$("#user").val("");
             $("#contrasena").val("");
             $("#usuario").val("");
             $("#supervisor").val("0");
             $("#tipo").val("0");
             $("#negocio").val("0");
+			$("#negocio").multiselect('refresh');
             $("#correo").val("")
             $("#territorial").val("0");
             $("#territorial").multiselect('refresh');
             $("#plaza").val("0");
+			$("#plaza").multiselect('refresh');
 
         }
 

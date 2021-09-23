@@ -122,17 +122,22 @@
                             "width": "50%",
                             "targets": [1],
                             "mRender": function ( data,type, row ) {
-                                return '<a href="#" class="deleteCP" data-id="'+row.id+'"></i><i class="fas fa-edit fa-2x" style="color:red"></i></a>';
+                                return '<a href="#" class="deleteCP" data-id="'+row.id+'"></i><i class="fas fa-trash-alt fa-2x" style="color:#F5425D"></i></a>';
                             }
                         }
                     ]
                 });
 
-                $(document).on('click','.deleteCP', function() {
+                $(document).on('click','.deleteCP', function(e) {
+                    e.preventDefault();
+
                     var id = $(this).data("id");
+                    var eliminar = confirm("Se borrará este registro. ¿Deseas continuar?");
                     $("#plazaId").val(id);
-                    
-                    $.ajax({
+
+                    if (eliminar == true) 
+                    {
+                        $.ajax({
                         type: 'POST',
                         url: 'modelos/plazas_db.php', // call your php file
                         data: { module: 'delCPPlaza', cpid : id },
@@ -147,16 +152,20 @@
                         
                             
                         },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            $.toaster({
-                                message: 'no se pudo borrar el cp  ' ,
-                                title: 'Aviso',
-                                priority : 'danger'
-                            });  
-                        }
-                    }); 
-                    tblCP.ajax.reload();
-                    tblCP.columns.adjust().draw();
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                $.toaster({
+                                    message: 'No se pudo borrar el cp' ,
+                                    title: 'Aviso',
+                                    priority : 'danger'
+                                });  
+                            }
+                        }); 
+                        tblCP.ajax.reload();
+                        tblCP.columns.adjust().draw();
+                    }
+                    
+                    
+                    
                    
                 })
 

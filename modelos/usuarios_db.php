@@ -459,7 +459,7 @@ if($module == 'nuevousuario') {
 	//$pass = sha1($params['contrasena']);
 	//
 	
-	$bancos = implode("','",$negocios);
+	$bancos = implode("','",$negocios);//Guardar bancos como cadena ¿?
 
 
 	if(count($existe) == 0 ) {
@@ -472,7 +472,7 @@ if($module == 'nuevousuario') {
 			$sgs,
 			sha1($params['contrasena']),
 			0,
-			$bancos, //Guardar banco(s) 
+			$bancos, //Guardar banco(s) ¿?
 			$params['tipo'],
 			$params['nombre'],
 			$params['correo'],
@@ -708,7 +708,7 @@ if($module == 'getBancosUser')
 
 	foreach ( $rows as $row ) {
 		
-		$val .=  "<option value='". $row ['cve']."' $selected>" . $row ['banco'] . "</option>";
+		$val .=  "<option value='". $row ['cve']."'>" . $row ['banco'] . "</option>";
 	}
 	echo $val;
 
