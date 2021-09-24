@@ -167,7 +167,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
     
-    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
     <script src="js/Chart.bundle.min.js"></script>

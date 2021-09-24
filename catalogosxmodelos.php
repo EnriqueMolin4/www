@@ -125,7 +125,7 @@
         <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
-    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
     <script src="js/Chart.bundle.min.js"></script>
