@@ -24,18 +24,18 @@
 				 <?php } ?>
                 <br />
                 <div class="row">
-				
-                    <table id="example"  class="table display responsive nowrap" style="width:100%">
+				<div class="table-responsive">
+                    <table id="example"  class="table table-responsive table-bordered" style="width:100%">
                         <thead>
                             <tr>
-                                <th data-priority="1">Banco</th>
-                                <th data-priority="1">Comercio</th>
-                                <th data-priority="1">Afiliacion</th>
-                                <th>Responsable</th>
+                                <th>Banco</th>
+                                <th width="25%">Comercio</th>
+                                <th width="10%">Afiliacion</th>
+                                <th width="15%">Responsable</th>
                                 <th>Tipo Comercio</th>
                                 <th>Territorial Banco</th>
                                 <th>Territorial Sinttecom</th>
-                                <th>Telefono</th>
+                                <th width="15%">Telefono</th>
                                 <th>Accion</th>
                             </tr>
                         </thead>
@@ -44,6 +44,8 @@
                         </tbody>
                         
                     </table>
+                </div>
+                    
                 </div>
 				<input type="hidden" value="<?php echo searchMenuEdit($_SESSION['Modules'],'url','comercios'); ?>"  id="permusr">
                 <!-- MODAL -->
@@ -195,21 +197,24 @@
     <!-- page-wrapper -->
 
     <!-- using online scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
         crossorigin="anonymous"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/datatables.min.js"></script>
+    
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
     <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+
     <script src="js/jquery-ui.min.js"></script>
     <script src="js/moment-with-locales.js"></script>
     <script src="js/Chart.bundle.min.js"></script>
+
     <script type="text/javascript" src="js/jquery.datetimepicker.full.min.js"></script>
     <script type="text/javascript" src="js/jquery.toaster.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
@@ -237,7 +242,6 @@
                 },
             processing: true,
             serverSide: true,
-            responsive: window.innerWidth < 600 ? true : false,
             order: [[ 1, "asc" ]],
             dom: 'lfrtiBp',
             buttons: [{
@@ -297,10 +301,7 @@
                       return boton;
                     }
                 }
-            ],"columnDefs": [
-                    { responsivePriority: 1, targets: 0 },
-                    { responsivePriority: 2, targets: 4 }
-                ]
+            ]
         });
 
         var rules = {
@@ -566,26 +567,26 @@
   });
 
   function cleartext() {
-    $("#cvebancaria").val("")
-    $("#comercio").val("")
-    $("#propietario").val("")
-    $("#estado").val("");
-    $("#responsable").val("")
-    $("#tipo_comercio").val("");
-    $("#ciudad").val("")
-    $("#colonia").val("")
-    $("#afiliacion").val("")
-    $("#telefono").val("")
-    $("#direccion").val("");
-    $("#rfc").val("")
-    $("#email").val("")
-    $("#email_ejecutivo").val("")
-    $("#territorial_banco").val("")
-    $("#territorial_sinttecom").val("")
-    $("#hora_general").val("")
-    $("#hora_comida").val("")
-    $("#razon_social").val("")
-    $("#cp").val("")
+        $("#cvebancaria").val("")
+        $("#comercio").val("")
+        $("#propietario").val("")
+        $("#estado").val("");
+        $("#responsable").val("")
+        $("#tipo_comercio").val("");
+        $("#ciudad").val("")
+        $("#colonia").val("")
+        $("#afiliacion").val("")
+        $("#telefono").val("")
+        $("#direccion").val("");
+        $("#rfc").val("")
+        $("#email").val("")
+        $("#email_ejecutivo").val("")
+        $("#territorial_banco").val("")
+        $("#territorial_sinttecom").val("")
+        $("#hora_general").val("")
+        $("#hora_comida").val("")
+        $("#razon_social").val("")
+        $("#cp").val("")
 
 }
 

@@ -92,7 +92,7 @@ class Eventos implements IConnections {
     		$stmt->execute();
     		return $stmt->fetchAll ( PDO::FETCH_ASSOC);
     	} catch (PDOException $e) {
- 			self::$logger->error ("File: eventos_db.php; 	Method Name: getEstadosNombre(); Functionality: Get Products Price From PriceLists; Log:" . $e->getMessage ());   		
+ 			self::$logger->error ("File: eventos_db.php; 	Method Name: getEstadoNombre(); Functionality: Get Products Price From PriceLists; Log:" . $e->getMessage ());   		
     	}
     }
     function getTable($params,$total) {
@@ -503,7 +503,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getTipoServicios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getTipoFallas();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -799,7 +799,7 @@ class Eventos implements IConnections {
 			$stmt->execute (array($id));
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getNumSerieSimTecnico();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 
@@ -876,7 +876,7 @@ class Eventos implements IConnections {
 			   $stmt->execute (array());
 			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		   } catch ( PDOException $e ) {
-			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusServicio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		   }
 	}
 
@@ -1002,7 +1002,7 @@ class Eventos implements IConnections {
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
 				
-            self::$logger->error ("File: eventos_db.php;	Method Name: getDetalleEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getOdtEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
  
@@ -1020,7 +1020,7 @@ class Eventos implements IConnections {
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
 				
-            self::$logger->error ("File: eventos_db.php;	Method Name: getDetalleEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: getFormularioEvento();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1172,7 +1172,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: existeEvento();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 
@@ -1184,7 +1184,7 @@ class Eventos implements IConnections {
             $stmt->execute ();
             return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusxNombre();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: eventos_db.php;	Method Name: GetTecnicoById();	Functionality: Get Cliente By Afiliacion;	Log:" . $e->getMessage () );
         }
 	}
 

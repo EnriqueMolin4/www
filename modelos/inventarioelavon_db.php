@@ -914,15 +914,6 @@ if($module == 'agregarSerie') {
 }
 
 
-
-
-
-
-
-
-
-
-
 if($module == 'getStatus') {
     $val = '<option value="0">Seleccionar</option>';
     $rows = $Almacen->getStatus();
@@ -935,9 +926,6 @@ if($module == 'getStatus') {
 }
 
 
-
-
-
 if($module == 'getFabricantes') {
     $val = '<option value="0">Seleccionar</option>';
     $rows = $Almacen->getFabricantes();
@@ -948,9 +936,6 @@ if($module == 'getFabricantes') {
 	echo $val;
 
 }
-
-
-
 
 
 if($module == 'altaAlmacen') {

@@ -15,7 +15,8 @@
             <div class="row"><h3>Bancos</h3>
 			
             </div>
-            <table id="bancos"  class="table table-md table-bordered ">
+            
+                <table id="bancos"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -29,6 +30,8 @@
                 
                 </tbody>
             </table>
+            
+            
             <input type="hidden" id="bancoId" value="0">
             <button class="btn btn-success" id="btnNewBanco">Nuevo Banco</button>
             </div>

@@ -109,8 +109,8 @@ class Procesos implements IConnections {
 		}
 
 		if( !empty($params['search']['value'])  &&  $total) {   
-			$where .=" WHERE ";
-			$where .=" ( nombre LIKE '".$params['search']['value']."%' ) ";    
+			$where .=" AND ";
+			$where .=" ( ca.archivo LIKE '".$params['search']['value']."%' ) ";    
 
 		}
 
@@ -124,7 +124,10 @@ class Procesos implements IConnections {
 				 CONCAT(du.nombre,' ',du.apellidos) nombre
 				 FROM carga_archivos ca, detalle_usuarios  du
 				 WHERE ca.creado_por = du.cuenta_id 
-				 AND ca.tipo in ($tipo) ";
+				 AND ca.tipo in ($tipo)
+				 $where
+				 $order
+				 $filter ";
 	
 		try {
 			$stmt = self::$connection->prepare ($sql);

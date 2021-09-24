@@ -133,7 +133,6 @@ class Almacen implements IConnections {
         }
     }
 	
-	/*Función que realiza la consulta que se muestra en el grid principal de Almacén */
     function getTable($params,$total) {
 
 		$start = $params['start'];
