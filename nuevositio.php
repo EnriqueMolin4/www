@@ -3,39 +3,42 @@
 <?php require("header.php"); ?>
 
 <body>
-    <div class="page-wrapper ice-theme sidebar-bg bg1 toggled">
-            <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
-                    <i class="fas fa-bars"></i>
-                  </a>
-        <nav id="sidebar" class="sidebar-wrapper">
-            <?php include("menu.php"); ?> 
-        </nav>
-        <!-- page-content  -->
-        <main class="page-content pt-2">
-		 
-            <div id="overlay" class="overlay"></div>
-            <div class="container-fluid p-5">
-                <div id="container" class="container">
-                        <div class="row">
-                            <div class="col-sm-2"></div>
-                            <div class="col-sm-4">
-                            <canvas id="chartEventos" width="200" height="200"></canvas>
-                            </div>
-                            <div class="col-sm-4">
-                                <canvas id="chartServicios" width="500" height="500"></canvas>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4 p-3">
-                                <canvas id="chartEventosMes" width="300" height="200"></canvas>
-                            </div>
-                        </div>
-                            
-                </div>
+<div class="page-wrapper ice-theme sidebar-bg bg1 toggled">
+   <a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+   <i class="fas fa-bars"></i>
+   </a>
+   <nav id="sidebar" class="sidebar-wrapper">
+      <?php include("menu.php"); ?> 
+   </nav>
+   <!-- page-content  -->
+   <main class="page-content pt-2">
+      <div id="overlay" class="overlay"></div>
+      <!-- <div class="container-fluid p-5"> -->
+         <div id="container" class="container">
+            <div class="row">
+               <!--<div class="col-sm-2"></div>-->
+               <div class="col-sm-4">
+                  <canvas id="chartEventos" width="200" height="200"></canvas>
+               </div>
+
+               <div class="col-sm-4">
+                  <canvas id="chartServicios" width="500" height="500"></canvas>
+               </div>
+
             </div>
-        </main>
-        <!-- page-content" -->
-    </div>
+
+            <div class="row">
+
+               <div class="col-sm-4 p-3">
+                  <canvas id="chartEventosMes" width="300" height="200"></canvas>
+               </div>
+
+            </div>
+
+         </div>
+      <!--</div>-->
+   </main>
+</div>
     <!-- page-wrapper -->
 
     <!-- using online scripts -->
@@ -95,7 +98,7 @@
                         labels : ["Abierto", "En Ruta", "Cerrado"],
                         datasets : [
                             {
-                                label : "Eventos",
+                                label : "EVENTOS",
                                 data : result,
                                 backgroundColor: ["#3e95cd", "#8e5ea2","#c45850"],
                                 borderColor : [
@@ -112,7 +115,7 @@
                         labels : ["Vencidos", "En Tiempo"],
                         datasets : [
                             {
-                                label : "Servicios del Mes",
+                                label : "SERVICIOS DEL MES",
                                 data : resultMonth,
                                 backgroundColor: ["#ff0000","#01ff00"],
                             }
@@ -123,7 +126,7 @@
                         labels : ["Mes Pasado", "Mes Actual"],
                         datasets : [
                             {
-                                label : "Servicios del Mes",
+                                label : "SERVICIOS DEL MES",
                                 data : serviceMonth,
                                 backgroundColor: ["#ff0000","#01ff00"],
                             }
@@ -148,7 +151,7 @@
                     legend: { display: false },
                     title: {
                         display: true,
-                        text: 'Servicios del Mes'
+                        text: 'SERVICIOS DEL MES'
                         }
                     }
 
@@ -162,7 +165,7 @@
                             legend: { display: false },
                             title: {
                                 display: true,
-                                text: 'Total de servicios  Mes Anterior y Actual'
+                                text: 'TOTAL DE SERVICIOS | MES ANTERIOR Y ACTUAL'
                                 }
                         }                   
                     });

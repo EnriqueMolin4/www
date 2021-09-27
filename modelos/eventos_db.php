@@ -952,7 +952,7 @@ class Eventos implements IConnections {
 				from eventos 
 				left join visita_tecnicos ON eventos.odt = visita_tecnicos.formulario->>'$.odt'
 				where tecnico = $id 
-			";
+				";
 		
         try {
             $stmt = self::$connection->prepare ($sql );

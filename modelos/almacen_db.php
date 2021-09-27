@@ -4297,6 +4297,19 @@ if ($module == 'InventarioEditar')
 			}
 			
 		}*/
+
+		if ($Estatus_ubicacionId == '1' || $Estatus_ubicacionId == '4' || $Estatus_ubicacionId == '5') 
+		{
+			$queryDel = " DELETE FROM inventario_tecnico  WHERE no_serie=?";
+
+			$arrayStringDel = array (
+				$No_serie
+			);
+
+			$Almacen->insert($queryDel,$arrayStringDel);
+
+
+		}
 		
 		if ($valido == 0)
 		{
