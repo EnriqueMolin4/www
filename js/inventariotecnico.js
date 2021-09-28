@@ -96,13 +96,19 @@ $(document).ready(function() {
                  var fechamodificacion = moment(data.fecha_modificacion)
                  var now = moment();
                  var diff = moment.duration(fechamodificacion.diff(now));
-                 var col = this.api().column(7).index('visible');
+                 var col = this.api().column(8).index('visible');
 
-                 if(now.diff(fechamodificacion, 'days') >= 15  ) {
+                 if(now.diff(fechamodificacion, 'days') >= 30  ) 
+                 {
                  
                     $('td', row).eq(col).css('color', '#000');
                     $('td', row).eq(col).css('background-color', '#ae2b2b');
-                 }  
+                 } else if(now.diff(fechamodificacion, 'days') >= 15)
+                 {
+                    $('td', row).eq(col).css('background-color', '#FFFF00');
+                 }else{
+                    $('td', row).eq(col).css('background-color', '#00CC66');
+                 }
          }
     });
 
