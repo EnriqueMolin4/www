@@ -1556,16 +1556,21 @@ class Almacen implements IConnections {
 
 
 		$sql = "SELECT 
-				p.id,
-				p.IsActive activa,
-				p.creado_por,
-				p.fecha_creacion,
-				p.modificado_por,
-				CONCAT(du.nombre,' ',du.apellidos) creadopor
-				FROM peticiones p
-				LEFT JOIN detalle_usuarios du ON du.cuenta_id = p.creado_por
-				WHERE p.creado_por IS NOT NULL
-				$where
+						p.id,
+						p.IsActive activa,
+						p.creado_por,
+						p.fecha_creacion,
+						p.modificado_por,
+						GROUP_CONCAT(DISTINCT du.nombre, ' ', du.apellidos) creadopor,
+						GROUP_CONCAT(DISTINCT dut.nombre, ' ',dut.apellidos) tecnico
+						FROM peticiones p
+						LEFT JOIN detalle_usuarios du ON du.cuenta_id = p.creado_por
+						LEFT JOIN detalle_peticiones dp ON dp.peticiones_id = p.id
+						LEFT JOIN detalle_usuarios dut ON dut.cuenta_id = dp.tecnico_id
+						WHERE p.creado_por IS NOT NULL
+						$where
+						GROUP BY p.id
+				
 				$order
 				$filter  ";
 
@@ -3379,7 +3384,7 @@ if($module == 'generarEnvio') {
 
 			if($invTecnico) {
 				$nuevaCant = (int) $invTecnico[0]['cantidad'] - (int) $qty;
-				$sql = " UPDATE `inventario_tecnico` SET `cantidad`=?,`fecha_edicion`=? WHERE `id`=? "; 
+				$sql = " UPDATE `inventario_tecnico` SET `cantidad`=?,`fecha_modificacion`=? WHERE `id`=? "; 
 		
 				$arrayString = array (
 					$nuevaCant,

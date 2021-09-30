@@ -16,7 +16,7 @@ $(document).ready(function() {
         searching: true,
         responsive: true,
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
-        order: [[ 4, "desc" ]],	  
+        order: [[ 5, "desc" ]],	  
         buttons: [{
             extend: 'excel',
             filename: 'Peticiones_'+fecha_hoy,
@@ -47,6 +47,7 @@ $(document).ready(function() {
             { data: 'activa'},
             { data: 'creadopor'},
             { data: 'creadopor'},
+            { data: 'tecnico'},
             { data: 'fecha_creacion'},
             { data: 'modificado_por'}
         ],
@@ -69,7 +70,7 @@ $(document).ready(function() {
                 }
             },
             {
-                "targets": [5],
+                "targets": [6],
                 "mRender": function ( data,type, row ) {
               
                     return '<a href="#" title="Detalle Petición" class="mostrarDetalle" data-id="'+row.id+' "><i class="fas fa-info-circle fa-2x" style="color:#3489eb"></i></a> <a href="#" title="Eliminar Petición" class="eliminarPeticion" data="'+row.id+'"><i class="fas fa-trash-alt fa-2x" style="color:#F5425D"></i><a/>';

@@ -49,8 +49,9 @@
                         <tr>
                             <th>ID</th>
 							<th>ESTATUS</th>
-                            <th>SUPERVISORES</th>
+                            <th>SUPERVISOR</th>
                             <th>CREADO POR</th>
+                            <th>TECNICO</th>
                             <th>FECHA</th>
                             <th>ACCION</th>                         
                         </tr>
