@@ -1574,7 +1574,7 @@ class Almacen implements IConnections {
 				$order
 				$filter  ";
 
-		//self::$logger->error($sql);
+		self::$logger->error($sql);
 		 
         try {
             $stmt = self::$connection->prepare ($sql );
