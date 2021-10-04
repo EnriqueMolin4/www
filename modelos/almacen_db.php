@@ -1307,7 +1307,7 @@ class Almacen implements IConnections {
 		
 		$sql = "SELECT ifnull(count(*),0) from elavon_universo  WHERE serie = '$noserie'  ";
 		
-		self::$logger->error ($sql);
+		//self::$logger->error ($sql);
 		try {
 			$stmt = self::$connection->prepare ($sql );
 			$stmt->execute (array($noserie));

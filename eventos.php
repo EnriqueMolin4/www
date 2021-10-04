@@ -662,11 +662,11 @@
 						
 						<div class="modal-body">
                             <h5>Bitácora ODT:</h5>
-							<table id="historia" class="display responsive nowrap" width="100%">
+							<table id="historia" class="display nowrap" width="100%">
 								<thead> 
 									<tr>
-										<th> Id </th>
-										<th> ODT </th>
+										
+										<th> Fecha Movimiento </th>
 										<th> Estatus </th>
 										<th> Modificado Por </th>
                                         <th> Correo </th>

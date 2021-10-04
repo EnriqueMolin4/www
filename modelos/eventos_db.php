@@ -359,13 +359,16 @@ class Eventos implements IConnections {
 			$where .=" OR cuentas.correo LIKE '".$params['search']['value']."%' )";
 		}
 		
-		$sql = "SELECT historial_eventos.evento_id, historial_eventos.fecha_movimiento, tipo_estatus.nombre, cuentas.correo 
+		$sql = "SELECT historial_eventos.fecha_movimiento, tipo_estatus.nombre,CONCAT(du.nombre,' ',du.apellidos)usuario, cuentas.correo 
 				FROM `historial_eventos` 
 				LEFT JOIN tipo_estatus ON tipo_estatus.id = historial_eventos.estatus_id 
 				LEFT JOIN cuentas ON cuentas.id = historial_eventos.modified_by
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = historial_eventos.modified_by
 				WHERE historial_eventos.odt = '$odt'
 				$where 
 				ORDER BY historial_eventos.id ASC ";
+
+				self::$logger->error($sql);
 				
 		try {
             $stmt = self::$connection->prepare ($sql );
@@ -468,7 +471,7 @@ class Eventos implements IConnections {
 	function getTipoSubServicios($servicio) {
 		
 		   $sql = "SELECT * from tipo_subservicios  WHERE status=1 AND servicio_id = ?";
-		   self::$logger->error ($sql);
+		   //self::$logger->error ($sql);
 		   try {
 			   $stmt = self::$connection->prepare ($sql );
 			   $stmt->execute (array($servicio));
@@ -1403,7 +1406,7 @@ class Eventos implements IConnections {
 	{
 	
 		$sql = "SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1 AND  tipo_subservicios.servicio_id in ($serviciosList);";
-		   self::$logger->error ($sql);
+		   //self::$logger->error ($sql);
 		   try {
 			   $stmt = self::$connection->prepare ($sql );
 			   $stmt->execute (array($serviciosList));

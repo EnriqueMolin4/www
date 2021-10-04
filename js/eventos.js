@@ -253,14 +253,15 @@ $(document).ready(function() {
                     d.historiaOdt = $("#historiaOdt").val()
             }
         },
-        columns: [{
-                data: 'evento_id'
-            },
+        columns: [
             {
                 data: 'fecha_movimiento'
             },
             {
                 data: 'nombre'
+            },
+            {
+                data: 'usuario'
             },
             {
                 data: 'correo'

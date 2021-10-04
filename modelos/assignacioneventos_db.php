@@ -293,7 +293,7 @@ class Assignacion implements IConnections {
 				$where
 				ORDER BY  du.nombre
 				 ";
-		self::$logger->error ($sql);
+		//self::$logger->error ($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );

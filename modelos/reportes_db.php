@@ -127,7 +127,7 @@ class Reportes implements IConnections {
 				WHERE ultima_act BETWEEN ?  AND ? 
                 $filter ";
 				
-		self::$logger->error ($sql);
+		//self::$logger->error ($sql);
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute (array($inicio,$final));
@@ -441,13 +441,24 @@ class Reportes implements IConnections {
 				eventos.id_caja,
 				eventos.afiliacionamex,
 				eventos.amex,
-				tv.nombre version,
-				ta.nombre aplicativo,
-				eventos.producto,
+                CASE WHEN eventos.bateria = 1 THEN 'SI' ELSE 'NO' END bateria,
+                CASE WHEN eventos.cable = 1 THEN 'SI' ELSE 'NO' END cable,
+                CASE WHEN eventos.cargador = 1 THEN 'SI' ELSE 'NO' END cargador,
+                CASE WHEN eventos.base = 1 THEN 'SI' ELSE 'NO' END base,
+                CASE WHEN eventos.kit = 1 THEN 'SI' ELSE 'NO' END kit,
 				eventos.rollos_instalar,
 				eventos.rollos_entregados,
+
 				eventos.tpv_instalado, 
-				eventos.tpv_retirado, 
+                tv.nombre versionIn,
+				ta.nombre aplicativoIn,
+				tp.nombre productoIn,
+
+				eventos.tpv_retirado,
+                tvr.nombre versionRet,
+                tar.nombre aplicativoRet,
+                tpr.nombre productoRet,
+
 				eventos.sim_instalado,
 				eventos.sim_retirado,
 				eventos.comentarios, 
@@ -473,6 +484,10 @@ class Reportes implements IConnections {
                 Left JOIN tipo_subservicios tss ON tss.id= eventos.servicio
 				LEFT JOIN tipo_version tv ON tv.id = eventos.version
                 LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
+                LEFT JOIN tipo_producto tp ON tp.id = eventos.producto
+                LEFT JOIN tipo_version tvr ON tvr.id = eventos.version_ret
+                LEFT JOIN tipo_aplicativo tar ON tar.id = eventos.aplicativo_ret
+                LEFT JOIN tipo_producto tpr ON tpr.id = eventos.producto_ret
                 LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
                 LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
 				LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
@@ -780,7 +795,7 @@ if ( $module == 'reporte_detevento' ) {
     $rows = $Reportes->getDetEvento($params, true);
 
 	//$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
-	$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR');																																																																																																																																																																																 
+	$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN', 'TPV RETIRADA','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR');																																																																																																																																																																																 
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO', 'DESCRIPCION', 'TECNICO', 'ESTATUS', 'TPV INSTALADA', 'TPV RETIRADA', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION');
 
@@ -812,13 +827,13 @@ if ( $module == 'reporte_detevento' ) {
                 //$value = $counter == 2 ? "'$value" : $value;
                 if( $counter == 2  ) {
                     $value ="'$value";
-                } else if ( $counter == 36 ) {
-                    $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 37 ) {
-                    $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 38 ) {
                     $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 39 ) {
+                } else if ( $counter == 42 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 46 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 47 ) {
                     $value = empty($value) ? "" : "'$value";
                 } 
 

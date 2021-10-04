@@ -69,7 +69,7 @@ class Usuarios implements IConnections {
 		
 		$sql = "select id,nombre from tipo_user where status=1 $where ";
 		
-		self::$logger->error ($sql);
+		//self::$logger->error ($sql);
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute ();
