@@ -50,22 +50,24 @@
                         </select>
                     </div>   
                 </div>
-                <table id="traspasos"  class="table table-md table-bordered ">
-                    <thead>
-                        <tr>
-                            <th>No Guia</th>
-                            <th>C Rastreo</th>
-                            <th>Origen</th>
-                            <th>Destino</th>
-                            <th>Estatus</th>
-                            <th>Fecha</th>
-                            <th>Accion</th>
-                        </tr>
-                    </thead>
-                    <tbody> 
+               <div class="table-responsive">
+                    <table id="traspasos"  class="table table-responsive table-md table-bordered ">
+                        <thead>
+                            <tr>
+                                <th width="10%">No Guia</th>
+                                <th width="15%">C Rastreo</th>
+                                <th width="20%">Origen</th>
+                                <th width="15%">Destino</th>
+                                <th width="10%">Estatus</th>
+                                <th width="15%">Fecha</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
                     
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+               </div>
                 <br />
                 <input type="hidden" id="no_guia" name="no_guia" value="0">
 				<input type="hidden" id="userPerm" value="<?php echo isset($_SESSION['tipo_user']) ? $_SESSION['tipo_user'] : 0 ; ?>">

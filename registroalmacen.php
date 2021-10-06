@@ -91,28 +91,30 @@
 					</div>
 				<?php  } ?>
 				</div>
-                <table id="inventario"  class="table table-md table-bordered " style="width:100%">
-                    <thead>
-                        <tr>
-                            <th width="10%">Banco</th>
-                            <th width="8%">Tipo</th>
-                            <th width="20%">No Serie</th>
-                            <th width="10%">Modelo</th>
-                            <th width="10%">Aplicativo</th>
-                            <th width="10%">Conectividad</th>
-                            <th width="10%">Estatus</th>
-							<th width="10%">Estatus Ubicacion</th>
-                            <th width="10%">Ubicacion</th>
-                            <th width="10%">Fecha Actualizacion</th>
-                            <th width="8%">Cantidad</th>
-                            <th width="10%">Accion</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="table-responsive">
+                    <table id="inventario"  class="table table-md table-responsive table-bordered " style="width:100%">
+                        <thead>
+                            <tr>
+                                <th width="10%">Banco</th>
+                                <th width="8%">Tipo</th>
+                                <th width="20%">No Serie</th>
+                                <th width="10%">Modelo</th>
+                                <th width="10%">Aplicativo</th>
+                                <th width="10%">Conectividad</th>
+                                <th width="10%">Estatus</th>
+							    <th width="10%">Estatus Ubicacion</th>
+                                <th width="10%">Ubicacion</th>
+                                <th width="10%">Fecha Actualizacion</th>
+                                <th width="8%">Cantidad</th>
+                                <th width="10%">Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                     
-                    </tbody>
+                        </tbody>
             
-                </table>
+                    </table>
+                </div>
                 <br />
 				<input type="hidden" id="userPerm" value="<?php echo isset($_SESSION['tipo_user']) ? $_SESSION['tipo_user'] : 0 ; ?>">
             </div>

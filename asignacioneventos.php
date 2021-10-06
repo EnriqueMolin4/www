@@ -80,38 +80,40 @@
                     </div>
                 </div><br>
                 
-
-                <table id="assignaciones"  class="table table-md table-bordered ">
-                    <thead>
-                        <tr>
-                            <th>ODT</th>
-                            <th>Afiliacion</th>
-                            <th>Comercio</th>
-                            <th>Estatus</th>
-                            <th>Tipo Comercio</th>
-                            <th>Fecha Vencimiento</th>
-                            <th>Codigo Postal</th>
-                            <th>Detalle</th>
-                            <th>Asignar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="table-responsive">
+                    <table id="assignaciones"  class="table table-responsive table-md table-bordered " width="100%">
+                        <thead>
+                            <tr>
+                                <th>ODT</th>
+                                <th width="10%">Afiliacion</th>
+                                <th width="20%">Comercio</th>
+                                <th width="10%">Estatus</th>
+                                <th>Tipo Comercio</th>
+                                <th width ="15%">Fecha Vencimiento</th>
+                                <th>Codigo Postal</th>
+                                <th>Detalle</th>
+                                <th>Asignar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                     
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>ODT</th>
-                            <th>Afiliacion</th>
-                            <th>Comercio</th>
-                            <th>Estatus</th>
-                            <th>Tipo Comercio</th>
-                            <th>Fecha Vencimiento</th>
-                            <th>Codigo Postal</th>
-                            <th>Detalle</th>
-                            <th>Asignar</th>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>ODT</th>
+                                <th>Afiliacion</th>
+                                <th>Comercio</th>
+                                <th>Estatus</th>
+                                <th>Tipo Comercio</th>
+                                <th>Fecha Vencimiento</th>
+                                <th>Codigo Postal</th>
+                                <th>Detalle</th>
+                                <th>Asignar</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
                 <br />
 
             </div>

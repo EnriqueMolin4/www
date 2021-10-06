@@ -48,7 +48,8 @@
                     </div>
 				<?php } ?>
                 </div>
-                <table id="inventario"  class="table table-md table-bordered ">
+                <div class="table-responsive">
+                <table id="inventario"  class="table table-responsive table-md table-bordered ">
                     <thead>
                         <tr>
                             <th>Tecnico</th>
@@ -67,6 +68,8 @@
                     
                     </tbody>
                 </table>
+                </div>
+                
                 <br />
 				<input type="hidden" id="almacenId" name="almacenId" value="<?php echo $_SESSION['almacen']; ?>">
                 <input type="hidden" id="tecnicoId" name="tecnicoId" value="0">
@@ -116,7 +119,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    
+                    <div class="table-responsive">
                         <table id="historia"  class="display table table-md table-bordered " width="100%">
                             <thead>
                                 <tr>
@@ -142,6 +145,8 @@
                                 </tr>
                             </tfoot>
                         </table>
+                    </div>
+                        
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" value="0" id="noSerie" name="noSerie">
