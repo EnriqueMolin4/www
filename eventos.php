@@ -66,33 +66,36 @@
                     </div>
                 </div>
                 <br />
-                <table id="eventos"  class="display table table-md table-bordered"  cellspacing="0" width="100%">
-                    <thead>
-                        <tr>
-                            <th>ODT</th>
-                            <th>Afiliación | Folio</th>
-                            <th>CVE</th>
-                            <th>Comercio | Cliente</th>
-                            <th>Servicio</th>
-                            <th>Fecha de Alta</th>
-                            <th>Fecha Vencimiento</th>
-                            <th>Días Vencidos</th>
-							<th>Fecha Cierre</th>
-                            <th>Imagenes Cargadas</th>
-                            <th>Técnico</th>
-                            <th>Estatus</th>
-							<th>Estatus Servicio</th>
-                            <th>Accion</th>
+                <div class="table-responsive">
+                    <table id="eventos"  class="display table-responsive table table-md table-bordered"  cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                             <th>ODT</th>
+                                <th>Afiliación | Folio</th>
+                                <th>CVE</th>
+                                <th>Comercio | Cliente</th>
+                                <th>Servicio</th>
+                                <th>Fecha de Alta</th>
+                                <th>Fecha Vencimiento</th>
+                                <th>Días Vencidos</th>
+							    <th>Fecha Cierre</th>
+                                <th>Imagenes Cargadas</th>
+                                <th>Técnico</th>
+                                <th>Estatus</th>
+							    <th>Estatus Servicio</th>
+                                <th>Accion</th>
                             
-                        </tr>
-                    </thead>
-                    <tbody>
+                            </tr>
+                        </thead>
+                        <tbody>
                     
-                    </tbody>
-                    <tfoot>
+                        </tbody>
+                        <tfoot>
                        
-                    </tfoot>
-                </table>
+                        </tfoot>
+                    </table>
+                </div>
+                
                 <div class="row">
                     <div class="col" style="padding-left:30px;padding-top:30px;">  
                         <a href="nuevoevento.php" class="btn btn-dark" id="btnNuevoEvento">Nuevo Evento</a>
@@ -662,42 +665,48 @@
 						
 						<div class="modal-body">
                             <h5>Bitácora ODT:</h5>
-							<table id="historia" class="display nowrap" width="100%">
-								<thead> 
-									<tr>
+                            <div class="table-responsive">
+                                <table id="historia" class="display table-responsive nowrap" width="100%">
+								    <thead> 
+									    <tr>
 										
-										<th> Fecha Movimiento </th>
-										<th> Estatus </th>
-										<th> Modificado Por </th>
-                                        <th> Correo </th>
-									</tr>
-								</thead>
-								 <tbody>
+										    <th> Fecha Movimiento </th>
+										    <th> Estatus </th>
+										    <th> Modificado Por </th>
+                                            <th> Correo </th>
+									    </tr>
+								    </thead>
+								    <tbody>
                         
-								</tbody>
+								    </tbody>
 								
 							
-							</table>
+							    </table>
+                            </div>
+							
 							<br><hr>
                             <h5>Movimientos de Inv Odt</h5>
-							<table id="historiaevento" class="display responsive nowrap" width="100%">
+                            <div class="table-responsive">
+                                <table id="historiaevento" class="display table-responsive nowrap" width="100%">
   
-								<thead>
-									<tr>
-										<th> Serie de Entrada</th>
-										<th> Aplicativo </th>
-										<th> Conectividad </th>
-										<th> Serie de Salida </th>
-										<th> SIM de Entrada</th>
-										<th> SIM de Salida</th>
-									</tr>
-								</thead>
-								 <tbody>
+								    <thead>
+									    <tr>
+										    <th> Serie de Entrada</th>
+										    <th> Aplicativo </th>
+										    <th> Conectividad </th>
+										    <th> Serie de Salida </th>
+										    <th> SIM de Entrada</th>
+										    <th> SIM de Salida</th>
+									    </tr>
+								    </thead>
+								    <tbody>
                         
-								</tbody>
+								    </tbody>
 	
 							
-							</table>
+							    </table>
+                            </div>
+							
 							
 							<div class="modal-footer">
 								<input type="hidden" value="0" id="historiaOdt" name="historiaOdt">

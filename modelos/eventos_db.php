@@ -368,7 +368,7 @@ class Eventos implements IConnections {
 				$where 
 				ORDER BY historial_eventos.id ASC ";
 
-				self::$logger->error($sql);
+				//self::$logger->error($sql);
 				
 		try {
             $stmt = self::$connection->prepare ($sql );
@@ -439,6 +439,8 @@ class Eventos implements IConnections {
 				WHERE eventos.odt = '$odt'
 				$where 
 				$filter";
+
+			//self::$logger->error($sql);
 				
 		try {
             $stmt = self::$connection->prepare ($sql );

@@ -55,6 +55,7 @@ $(document).ready(function() {
     })
 
     tableEventos = $('#eventos').DataTable({
+        "responsive": true,
         order: [
             [8, "desc"]
         ],
@@ -72,7 +73,8 @@ $(document).ready(function() {
             [6, "ASC"]
         ],
         dom: 'lfrtiBp',
-        buttons: [{
+        buttons: [
+            {
             charset: 'utf-8',
             extension: '.csv',
             bom: true,
@@ -230,6 +232,7 @@ $(document).ready(function() {
 
 
     $('#historia').DataTable({
+        "responsive": true,
         language: {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
         },
@@ -271,6 +274,7 @@ $(document).ready(function() {
     });
 
     $('#historiaevento').DataTable({
+        "responsive": true,
         language: {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
         },
