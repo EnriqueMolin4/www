@@ -285,7 +285,8 @@ $(document).ready(function() {
                 var info = ui.item.data;
                 $("#tecnico_id").val(info.id);
             }
-          } ); */
+          } ); 
+    */
 
         $("#btnRegistrar").on('click', function() {
             alert("Grabar")

@@ -562,7 +562,7 @@ class Evaluacion implements IConnections {
 	function getTotalOpt($idp){
 
 		$sql = "SELECT COUNT(*) FROM respuestas WHERE respuestas.id_pregunta  = '$idp'";
-		self::$logger->error($sql);
+		//self::$logger->error($sql);
 		try {
 			$stmt = self::$connection->prepare($sql);
 			$stmt->execute();
