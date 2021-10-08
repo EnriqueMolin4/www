@@ -670,10 +670,10 @@
 								    <thead> 
 									    <tr>
 										
-										    <th> Fecha Movimiento </th>
-										    <th> Estatus </th>
-										    <th> Modificado Por </th>
-                                            <th> Correo </th>
+										    <th width="20%"> Fecha Movimiento </th>
+										    <th width="20%"> Estatus </th>
+										    <th width="20%"> Modificado Por </th>
+                                            <th width="20%"> Correo </th>
 									    </tr>
 								    </thead>
 								    <tbody>
@@ -691,12 +691,12 @@
   
 								    <thead>
 									    <tr>
-										    <th> Serie de Entrada</th>
+										    <th width="20%"> Serie de Entrada</th>
 										    <th> Aplicativo </th>
-										    <th> Conectividad </th>
-										    <th> Serie de Salida </th>
-										    <th> SIM de Entrada</th>
-										    <th> SIM de Salida</th>
+										    <th width="20%"> Conectividad </th>
+										    <th width="20%"> Serie de Salida </th>
+										    <th width="20%"> SIM de Entrada</th>
+										    <th width="20%"> SIM de Salida</th>
 									    </tr>
 								    </thead>
 								    <tbody>

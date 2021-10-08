@@ -114,15 +114,15 @@ class Assignacion implements IConnections {
 
 		if( !empty($params['search']['value'])  &&  $total) {   
 			$where .=" AND ";
-			$where .=" eventos.odt LIKE '".$params['search']['value']."%' ";    
+			$where .=" (eventos.odt LIKE '".$params['search']['value']."%' ";    
 			$where .=" OR eventos.afiliacion LIKE '".$params['search']['value']."%' ";
-			$where .=" OR  eventos.receptor_servicio LIKE '".$params['search']['value']."%'";
+			$where .=" OR  eventos.receptor_servicio LIKE '".$params['search']['value']."%')";
 
 		}
 
 		 if ($params['ciudade'] != '0' ) 
 		{
-			$where .= " OR territorial.ciudad LIKE '".$params['ciudade']."%'";
+			$where .= " AND territorial.ciudad LIKE '".$params['ciudade']."%'";
 			
 		}
 
@@ -134,9 +134,8 @@ class Assignacion implements IConnections {
 				INNER JOIN (  select cp_territorios.territorio_id,cp_territorios.cp,comercios.ciudad, comercios.comercio NombreComercio,comercios.tipo_comercio,comercios.afiliacion FROM cuentas,cp_territorios,comercios
 				WHERE cuentas.territorial = cp_territorios.territorio_id 
 				AND tipo_user =12 AND comercios.cp = cp_territorios.cp ) territorial ON territorial.afiliacion = eventos.afiliacion
-				WHERE date(eventos.fecha_alta) BETWEEN '$inicio' AND '$fin'
+				WHERE date(eventos.fecha_alta) BETWEEN '$inicio' AND '$fin' AND eventos.estatus IN (1,16)
 				$where
-				AND eventos.estatus IN (1,16)
 				$order
 				$filter ";
 		
