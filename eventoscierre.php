@@ -637,6 +637,9 @@
             })
 
             $("#btnComentValid").on('click', function() {
+				
+				
+				
                 if( $('#comentarios_validacion').val().length > 0  )
                 {
                     var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val()};
@@ -870,7 +873,7 @@
                                                 $("#rowSubRechazos").show();
                                             }
 
-                                            if( element.tipo_servicio == '2' || element.tipo_servicio == '8' || element.tipo_servicio == '13' || element.tipo_servicio == '14' ||  element.tipo_servicio == '26' || element.tipo_servicio == '30' || element.tipo_servicio == '33' || element.tipo_servicio == '45') {
+                                            if( element.tipo_servicio == '2' || element.tipo_servicio == '8' || element.tipo_servicio == '13' || element.tipo_servicio == '14' ||  element.tipo_servicio == '26' || element.tipo_servicio == '30' || element.tipo_servicio == '33' || element.tipo_servicio == '45' || element.tipo_servicio == '48') {
                                                 $(".showcausacambio").show();
                                             } else {
                                                 $(".showcausacambio").hide();
@@ -1083,6 +1086,39 @@
                 }
             }
 
+           if(tpv.length > 0 && tpv_retirado.length > 0 )
+           {
+                //Validar que no se repita la serie tpv o sim inst y ret
+            if(tpv == tpv_retirado)
+            {
+                validar++;
+                msg *= " No se puede repetir la misma serie de tpv";
+            }
+
+            
+            if(tpv == sim_retirado)
+            {
+                validar++;
+                msg += "No se puede repetir la misma serie";
+            }
+            if(tpv == sim_instalado)
+            {
+                validar++;
+                msg += "No se puede repetir la misma serie";
+            }
+           }
+
+           if(sim_instalado.length > 0 && sim_retirado.length > 0)
+           {
+            if(sim_instalado == sim_retirado)
+            {
+                validar++;
+                msg += "No se puede repetir el mismo sim";
+            }
+           }
+
+            
+
 
 			if(validar == 0 ) {
 				var dnd = { module: 'cerrarEvento',eventoId : eventoId, odt : odt,comentario: comentario,estatus:estatus,foliotelecarga:foliotelecarga, odtGetNet : odtGetNet, odtNotificado : odtNotificado,
@@ -1128,8 +1164,8 @@
 				});   
 			}
         });
-        
-        $("#tpv").on("change",function() {
+       
+	     $("#tpv").on("change",function() {
             var tpv = $(this).val();
             if(tpv.length > 0) {
                 result = validarTPV(tpv,1,'in',$("#afiliacion").val())
@@ -1162,6 +1198,8 @@
                 
             }
         })
+      
+
 
             //Update SERIE RETIRADA INSTALADA INFO
             $("#tpvInDataModelo").on('change', function() {
@@ -1397,11 +1435,15 @@
 
         function validarTPV(tpv,tipo,donde,comercio) {
             result = 0;
+			var afiliacion = $("#afiliacion").val();
+			var odt = $("#odt").val();
+			
+			var permiso = donde == 'in' ? PermisosEvento.tvp_instalada : PermisosEvento.tpv_salida;
 
             $.ajax({
                 type: 'GET',
                 url: 'modelos/eventos_db.php', // call your php file
-                data: 'module=validarTPV&noserie='+tpv+"&tipo="+tipo+"&comercio="+comercio,
+                data: 'module=validarTPV&noserie='+tpv+"&tipo="+tipo+"&comercio="+comercio+"&donde="+donde+"&permiso="+permiso+"&odt="+odt,
                 cache: false,
                 success: function(data){
                     var info = JSON.parse(data);

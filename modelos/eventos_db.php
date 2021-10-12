@@ -204,12 +204,11 @@ class Eventos implements IConnections {
 				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
 				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
 				WHERE date(e.fecha_alta) BETWEEN '$inicio' AND '$fin'
-				AND e.cve_banco IN ('$cveBanco')
 				$where
 				group by id,img.totalImg,du.nombre,du.apellidos
 				$order
-				$filter ";
-				
+				$filter ";	
+			//AND e.cve_banco IN ('$cveBanco')
 			//self::$logger->error($sql);
 		
 		try {
@@ -676,7 +675,7 @@ class Eventos implements IConnections {
 	}
 
 	function buscarComercio($search) {
-		$cvebanco = $_SESSION['cve_user'];
+		//$cvebanco = $_SESSION['cve_user'];
 		
 		$sql = "SELECT c.id,cve_banco,c.afiliacion,c.comercio,c.direccion,c.colonia, 
 				c.telefono,c.email,c.responsable,c.hora_general,c.hora_comida,c.estado estadoId ,e.nombre estado,c.ciudad ciudadId, m.nombre ciudad
@@ -684,9 +683,9 @@ class Eventos implements IConnections {
 				LEFT JOIN estados e ON  c.estado = e.id
 				LEFT JOIN municipios m ON  c.ciudad = m.id 
 				WHERE (cve_banco = '$search' OR afiliacion = '$search' OR comercio LIKE '%$search%')
-				AND cve_banco = '$cvebanco'
+				
 				Group by c.id ";
-		
+				//AND cve_banco in ('$cvebanco')
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1448,14 +1447,14 @@ class Eventos implements IConnections {
 
 	function getBancos()
 	{
-		$where = "";
+		// $where = "";
 		
-		if($_SESSION['tipo_user'] == 'CL') 
-		{
-			$where .= " AND cve = '".$_SESSION['cve_user']."' ";
-		}
+		// if($_SESSION['tipo_user'] == 'CL') 
+		// {
+			// $where .= " AND cve = '".$_SESSION['cve_user']."' ";
+		// }
 		
-		$sql = " SELECT * FROM `bancos` WHERE status=1 $where ";
+		$sql = " SELECT * FROM `bancos` WHERE status=1 ";//$where 
 
 		try{
 			$stmt = self::$connection->prepare($sql);
@@ -1671,32 +1670,15 @@ if($module == 'cambiarFechasOdt')
 	$fecha = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
  
-	$sql = "UPDATE eventos SET fecha_atencion=?, fecha_alta=?, fecha_vencimiento=? where odt=? ;";
+	$sql = "UPDATE eventos SET fecha_alta=?, fecha_vencimiento=? where odt=? ;";
 
 	$arrayString = array (
-		$params['fechaAtencion'],
 		$params['fechaAlta'],
 		$params['fechaVen'],
 		$params['odt']
 	);
 
 	$id = $Eventos->insert($sql, $arrayString);
-
-
-	//Historico cambio fecha
-	$prepareStatement = "INSERT INTO historial_eventos ( evento_id, fecha_movimiento, estatus_id, odt, modified_by )
-						VALUES
-						(?,?,?,?,?);
-						";
-	$arrayStringHist = array (
-		$params['id'],
-		$fecha,
-		20,
-		$params['odt'],
-		$user
-	);
-
-	$Eventos->insert($prepareStatement, $arrayStringHist);
 	
 	echo $id;
 
@@ -2235,6 +2217,7 @@ if($module == 'validarTPV') {
 	$user = $_SESSION['userid'];
 	$afiliacion = $params['comercio'];
 	$donde = $params['donde'];
+	$permiso = $params['permiso'];
 	$comercioId = $Eventos->getComercioBy($afiliacion,'037');
 	$inventarioElavon = $Eventos->getInvUniversoNoserie($noserie);
 
@@ -2245,19 +2228,19 @@ if($module == 'validarTPV') {
 		if($inventarioGeneral) {
 
 			if ($inventarioGeneral['tipo'] != $tipo ) { 
-				$msg = $tipo == '1' ? ' la serie es de tipo SIM' : ' La serie es una TPV ';
+				$msg = $tipo == '1' ? ' La serie es de tipo SIM' : ' La serie es una TPV ';
 
 				$inventarioGeneral = [ "modelo" => null, "conectividad" => null, 'status' => false ,'msg' => $msg ];
 			
-			} else if( $inventarioGeneral['estatus'] != '13' && $donde == 'out')
+			 /*} else if( $inventarioGeneral['estatus'] != '13' && $donde == 'out')
 			{
 				$inventarioGeneral = [ "modelo" => null, "conectividad" => null, 'status' => false ,'msg' => 'La serie no tiene estatus  INSTALADA' ];
 
 			} else if( $inventarioGeneral['estatus'] == '13' && $donde == 'in')
 			{
-				$inventarioGeneral = [ "modelo" => null, "conectividad" => null, 'status' => false ,'msg' => 'La serie  tiene estatus  INSTALADA' ];
+				$inventarioGeneral = [ "modelo" => null, "conectividad" => null, 'status' => false ,'msg' => 'La serie  tiene estatus  INSTALADA' ]; */
 
-			} else  {
+			}  else  {
 
 				if( $inventarioGeneral['id_ubicacion'] == '2' && $inventarioGeneral['id_ubicacion'] != $comercioId[0]['id']  && $tipo == '1' )
 				{
@@ -2874,10 +2857,12 @@ if($module == 'saveImage') {
 		echo $folder;
 		if (!file_exists($folder)) {
 			mkdir($folder, 0777, true);
+		}else {
+			chmod($folder, 0777);
 		}
 
 		if( move_uploaded_file($_FILES['file']['tmp_name'], $folder.'/'.$fileName) ) {
-			echo 'EL Archivo '.$fileName.' se cargo correctamente.';
+			echo 'EL Archivo '.$fileName.' se cargó correctamente.';
 			$prepareStatement = "INSERT INTO `img`  ( `odt`,`fecha`,`dir_img`,`revisado`,`tecnico`,`tipo`)
 			VALUES
 			(?,?,?,?,?,?);";

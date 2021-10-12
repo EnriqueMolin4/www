@@ -23,7 +23,7 @@ $(document).ready(function() {
     getTerritoriosFilter();
     getTecnicosf();
     getBancosf();
-    //getFechaAtencion();
+ 
     $("#fechaVen_inicio").datetimepicker({
         timepicker: false,
         format: 'Y-m-d'
@@ -39,11 +39,6 @@ $(document).ready(function() {
         format: 'Y-m-d'
     });
     fecha_hoy = moment().format('YYYY-MM-DD');
-
- /*   $("#fechaAtencion").datetimepicker({
-        timepicker: true,
-        format: 'Y-m-d 00:00:00'
-    })*/
 
     $("#fechaAlta").datetimepicker({
         timepicker: true,
@@ -903,6 +898,8 @@ $(document).ready(function() {
             position: cliente,
             map: map
         });
+		
+		var fecha = $("#fecha_atencion").val().split(" ")
         $("#ubicacionData").html("Ubicacion: " + latitud + " " + longitud + " Fecha Atencion: " + $("#fecha_atencion").val());
 
 
