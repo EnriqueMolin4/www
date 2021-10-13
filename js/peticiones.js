@@ -3,6 +3,7 @@ var tablePeticiones;
 var fecha_hoy;
 $(document).ready(function() {
     getSupervisores();
+	getPlazas();
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "peticioneslink")
     
     fecha_hoy = moment().format('YYYY-MM-DD');
@@ -16,13 +17,13 @@ $(document).ready(function() {
         searching: true,
         responsive: true,
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
-        order: [[ 5, "desc" ]],	  
+        order: [[ 4, "desc" ]],	  
         buttons: [{
             extend: 'excel',
             filename: 'Peticiones_'+fecha_hoy,
             exportOptions: {
                 orthogonal: 'sort',
-                columns: [1,2,3,4]
+                columns: [2,3,5,6]
             },
             customizeData: function ( data ) {
                 for (var i=0; i<data.body.length; i++){
@@ -39,6 +40,7 @@ $(document).ready(function() {
             data: function( d ) {
                 d.module = 'getPeticiones',
                 d.supervisor = $("#supervisores").val(),
+				d.plaza = $("#plazas").val(),
                 d.active = $("#activa").val();
             }
         },
@@ -146,4 +148,22 @@ function getSupervisores() {
             var demo = error;
         }
     });
+}
+
+
+function getPlazas() {
+	
+	$.ajax({
+		type: 'GET',
+		url: 'modelos/almacen_db.php', // call your php file here
+		data: 'module=getPlazas',
+		cache: false,
+		success: function(data){
+				
+			$("#plazas").html(data);
+		},
+		error: function(error){
+			var demo = error;
+		}
+	});
 }

@@ -154,7 +154,7 @@ class Eventos implements IConnections {
 		}
 
 		if($evidencias == '1') {
-			$where .= " AND e.totalImg > 0 ";
+			$where .= " AND img.totalImg > 0 ";
 		}
 	
 
