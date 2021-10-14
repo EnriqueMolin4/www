@@ -65,6 +65,12 @@
                         </select>
                     </div>
                 </div>
+               
+                <div class="row">
+                    <div class="col" style="padding-left:30px;padding-top:30px;">  
+                        <a href="nuevoevento.php" class="btn btn-dark" id="btnNuevoEvento">Nuevo Evento</a>
+                    </div>
+                </div>  
                 <br />
                 <div class="table-responsive">
                     <table id="eventos"  class="display table-responsive table table-md table-bordered"  cellspacing="0" width="100%">
@@ -96,11 +102,7 @@
                     </table>
                 </div>
                 
-                <div class="row">
-                    <div class="col" style="padding-left:30px;padding-top:30px;">  
-                        <a href="nuevoevento.php" class="btn btn-dark" id="btnNuevoEvento">Nuevo Evento</a>
-                    </div>
-                </div>   
+                 
            <input type="hidden" id="tipo_user" name="tipo_user" value="<?php echo $_SESSION['tipo_user']; ?>">
 
             <!-- MODAL -->

@@ -265,14 +265,15 @@ class Usuarios implements IConnections {
 	function getAlmacen($plaza) {
 
 		 
-		$plazas = implode(",",json_decode(stripslashes($plaza)));
+		$plazas = implode( ",",json_decode(stripslashes($plaza) ) );
 		 
 		$sql = " Select tipo_ubicacion.id,tipo_ubicacion.nombre 
 				 FROM tipo_ubicacion,plazas_almacen
 				 WHERE tipo_ubicacion.id = plazas_almacen.almacen_id
 				 AND almacen = 1
-				 AND plazas_almacen.plaza_id in ($plazas)
+				 AND plazas_almacen.plaza_id in ('$plazas')
 				 GROUP BY  tipo_ubicacion.id,tipo_ubicacion.nombre ";
+		//self::$logger->error($sql);
 				 
 
         try {
@@ -458,8 +459,9 @@ if($module == 'nuevousuario') {
 	$sgs = $params['user'];
 	//$pass = sha1($params['contrasena']);
 	//
-	
-	$bancos = implode("','",$negocios);//Guardar bancos como cadena ¿?
+	//Guardar bancos como cadena ¿?
+	//$bancos = implode("','",$negocios);
+	//$bancos, //Guardar banco(s) ¿?
 
 
 	if(count($existe) == 0 ) {
@@ -472,7 +474,7 @@ if($module == 'nuevousuario') {
 			$sgs,
 			sha1($params['contrasena']),
 			0,
-			$bancos, //Guardar banco(s) ¿?
+			$negocios[0],
 			$params['tipo'],
 			$params['nombre'],
 			$params['correo'],
@@ -486,7 +488,7 @@ if($module == 'nuevousuario') {
 
 		
 		if($id == 0) {
-			$envio = "problemas con el alta de usuarios";
+			$envio = "Problemas con el alta de usuarios";
 		} else {
 		$prepareStatement = "INSERT INTO `detalle_usuarios`
 			( `nombre`,`apellidos`,`email`,`territorial`,`cuenta_id`)
@@ -523,7 +525,7 @@ if($module == 'nuevousuario') {
 
 		$prepareStatement = "UPDATE  `cuentas` SET `cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
 		$arrayString = array (
-			$bancos,
+			$negocios[0],
 			$params['tipo'],
 			$params['nombre'],
 			$fecha_alta,

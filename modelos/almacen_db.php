@@ -3335,7 +3335,8 @@ if($module == 'generarEnvio') {
 		}
 
 
-		if ($detalle['tipo'] == '3' ) {
+		if ($detalle['tipo'] == '3' ) 
+		{
 
 			$tipoInsumo = $Almacen->getInsumosId($detalle['insumo']);
 
@@ -3392,7 +3393,8 @@ if($module == 'generarEnvio') {
 					$invTecnico[0]['id']
 				);
 
-			} else {
+			} else 
+			{
 
 				$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
 				
