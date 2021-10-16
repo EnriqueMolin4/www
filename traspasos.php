@@ -56,10 +56,11 @@
                             <tr>
                                 <th width="10%">No Guia</th>
                                 <th width="15%">C Rastreo</th>
-                                <th width="20%">Origen</th>
-                                <th width="15%">Destino</th>
+                                <th width="10%">Origen</th>
+                                <th width="10%">Destino</th>
                                 <th width="10%">Estatus</th>
-                                <th width="15%">Fecha</th>
+                                <th>Fecha</th>
+                                <th>Creado Por</th>
                                 <th>Accion</th>
                             </tr>
                         </thead>

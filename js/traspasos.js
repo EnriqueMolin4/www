@@ -21,7 +21,7 @@ $(document).ready(function() {
         serverSide: true,
         searching: true,
         lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
-        order: [[ 0, "ASC" ]],	
+        order: [[ 5, "DESC" ]],	
         dom: 'lfrtiBp',	    
         buttons: [{
             extend: 'excel',
@@ -56,11 +56,12 @@ $(document).ready(function() {
             { data: 'destino'},
             { data: 'estatus'},
             { data: 'fecha_creacion' },
+            { data: 'creadoPor' },
             { data: 'id'}
         ],
         aoColumnDefs: [
             {
-                "targets": [6],
+                "targets": [7],
                 "mRender": function ( data,type, row ) {
 
                 

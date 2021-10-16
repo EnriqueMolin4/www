@@ -291,6 +291,20 @@
 
         })
 
+        $("#no_guia").on("change",function(){
+	    var guia = $(this).val();
+	     if(guia.length > 0){
+	         result = existeGuia(guia)
+	      }
+	    })
+
+        $("#codigo_rastreo").on("change",function(){
+	    var codigor = $(this).val();
+	     if(codigor.length > 0){
+	         result = existeRastreo(codigor)
+	      }
+	})
+
         $(document).on('keypress',function(e) {
             if(e.which == 13) {
                 validarSerie( $("#iSerie").val(),tplSeries )
@@ -302,8 +316,6 @@
         })
 
         $("#btnEnvio").on("click", function() {
-
-            
             
             if( $("#no_guia").val().length > 0 && $("#codigo_rastreo").val().length > 0 ) {
 
@@ -407,6 +419,69 @@
 
 
     })
+
+    function existeRastreo(codigo)
+    {
+        $.ajax({
+            type: 'POST',
+            url: 'modelos/almacen_db.php',
+            data: 'module=existeRastreo&codigo='+codigo,
+            cache: false,
+            success: function(data)
+            {
+                var exist = JSON.parse(data).length;
+
+                if(exist == 0)
+                {
+                    
+                }
+                else{
+                    $.toaster({
+                    message: 'YA EXISTE EL CODIGO DE RASTREO',
+                    title: 'Aviso',
+                    priority: 'danger'
+                })
+                }
+               
+            },
+            error: function(error){
+                var demo = error;
+            }
+        })
+    }
+
+    function existeGuia(guia)
+    {
+        result = 
+        $.ajax({
+            type: 'GET',
+            url: 'modelos/almacen_db.php',
+            data: 'module=existeGuia&guia='+guia,
+            cache: false,
+            success: function(data)
+            {
+                var exist = JSON.parse(data).length;
+               
+                if(exist == 0)
+                {
+                    
+                } else
+                {
+                    $.toaster({
+                        message: 'YA EXISTE LA GUIA INGRESADA',
+                        title: 'Aviso',
+                        priority : 'danger'
+                    });
+                }
+    
+                
+                
+            },
+            error: function(error){
+                var demo = error;
+            }
+        })
+    }
 
     function updateTotal(tbl) {
         var cargadas = tbl.page.info();

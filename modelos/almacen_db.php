@@ -1006,19 +1006,22 @@ class Almacen implements IConnections {
 		$sql = "SELECT *, CASE WHEN trasp != total THEN 'ACEPTADO' ELSE 'EN TRANSITO' END estatus FROM ( SELECT 
 				t1.no_guia,
 				t1.codigo_rastreo,
-				CASE WHEN GetNameById(t1.origen,'AlmacenTraspaso') IS NULL THEN  CONCAT(nombre,' ',ifnull(apellidos,''))  ELSE GetNameById(t1.origen,'AlmacenTraspaso')  END origen,
-				CASE WHEN t1.destino = 0 THEN CONCAT(nombre,' ',ifnull(apellidos,''))  ELSE GetNameById(t1.destino,'AlmacenTraspaso') END destino,
+				CASE WHEN GetNameById(t1.origen,'AlmacenTraspaso') IS NULL THEN  CONCAT(detalle_usuarios.nombre,' ',ifnull(detalle_usuarios.apellidos,''))  ELSE GetNameById(t1.origen,'AlmacenTraspaso')  END origen,
+				CASE WHEN t1.destino = 0 THEN CONCAT(detalle_usuarios.nombre,' ',ifnull(detalle_usuarios.apellidos,''))  ELSE GetNameById(t1.destino,'AlmacenTraspaso') END destino,
 				MAX(t1.fecha_creacion) fecha_creacion ,
+				GROUP_CONCAT(DISTINCT du.nombre,' ',du.apellidos) creadoPor,
 				count(*) total,
 				(Select count(*) total FROM traspasos t2 WHERE t2.no_guia= t1.no_guia and estatus = 0 ) trasp
 				FROM traspasos t1
 				LEFT JOIN detalle_usuarios ON t1.cuenta_id = detalle_usuarios.cuenta_id
+				LEFT JOIN detalle_usuarios du ON t1.creado_por = du.cuenta_id
 				WHERE t1.id != -1 
 				$where  
-				GROUP BY t1.no_guia,t1.codigo_rastreo,t1.origen,t1.destino,nombre,apellidos ORDER BY fecha_creacion DESC ) traspasos
+				GROUP BY t1.no_guia,t1.codigo_rastreo,t1.origen,t1.destino,detalle_usuarios.nombre,detalle_usuarios.apellidos ORDER BY fecha_creacion DESC ) traspasos
 				$filter
 				
 				";
+				//self::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1657,6 +1660,34 @@ class Almacen implements IConnections {
         } catch ( PDOException $e ) {
             self::$logger->error ("File: almacen_db.php;	Method Name: getdetallePeticiones();	Functionality: Get Historia;	Log:" . $e->getMessage () );
 		}
+	}
+
+	function existeGuiaIT($guia){
+		
+		$sql = "SELECT * FROM traspasos WHERE no_guia = '$guia' ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: existeGuia();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+
+	}
+
+	function existeCodigoRastreo($codigo){
+
+		$sql = "SELECT * FROM traspasos WHERE codigo_rastreo = '$codigo' ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: existeCodigoRastreo();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+
 	}
 
 	function validarSerie($noserie,$tipo) {
@@ -2853,6 +2884,20 @@ if($module == 'buscarNoSerie') {
 	echo json_encode($inventario);
 }
 
+if($module == 'existeGuia'){
+
+	$existe = $Almacen->existeGuiaIT($params['guia']);
+
+	echo json_encode($existe);
+}
+
+if($module == 'existeRastreo'){
+
+	$existe = $Almacen->existeCodigoRastreo($params['codigo']);
+
+	echo json_encode($existe);
+}
+
 if($module == 'getinvInsumo') {
 	$inventario = $Almacen->getinvInsumo($params['insumo']);
 
@@ -3316,6 +3361,7 @@ if($module == 'generarEnvio') {
 	$peticion = $Almacen->detallePeticion( $params['peticionId'] );
 	$peticiondetalle = $Almacen->getDetallePeticion($params['peticionId']);
 	$user = $_SESSION['userid'];
+	$AlmOrigen = $_SESSION['almacen'];
 	$nameInsumo = '';
 
 	foreach($peticiondetalle as $detalle) {
@@ -3341,7 +3387,7 @@ if($module == 'generarEnvio') {
 			$tipoInsumo = $Almacen->getInsumosId($detalle['insumo']);
 
 
-			$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act');
+			$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act','creado_por');
 		
 			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsTraspasos), '?'));
 
@@ -3354,12 +3400,13 @@ if($module == 'generarEnvio') {
 				$cant,
 				$params['no_guia'],
 				$params['codigo_rastreo'],
-				1,
+				$AlmOrigen,
 				0,
 				$detalle['tecnico_id'],
 				0,
 				$fecha,
-				$fecha
+				$fecha,
+				$user
 			);
 
 			
@@ -3449,7 +3496,7 @@ if($module == 'generarEnvio') {
 
 				
 
-				$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act');
+				$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act','creado_por');
 			
 				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsTraspasos), '?'));
 
@@ -3462,12 +3509,13 @@ if($module == 'generarEnvio') {
 					$cant,
 					$params['no_guia'],
 					$params['codigo_rastreo'],
-					1,
+					$AlmOrigen,
 					0,
 					$detalle['tecnico_id'],
 					0,
 					$fecha,
-					$fecha
+					$fecha,
+					$user
 				);
 
 				
