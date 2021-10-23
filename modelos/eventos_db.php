@@ -1611,7 +1611,33 @@ if($module == 'cambiarODT') {
 				$params['newODT'],
 				$params['oldODT'] 
 		);
+
+		//Renombrar Folder
+
+		$oldFolder = $_SERVER["DOCUMENT_ROOT"].'/img/'.$params['oldODT'];
+
+		$newFolder = $_SERVER["DOCUMENT_ROOT"].'/img/'.$params['newODT'];
+
+		if (!file_exists($newFolder)) 
+		{
+			mkdir($newFolder, 0777, true);
+		} else
+		{
+			chmod($newFolder, 0777);
+		}
+
+		if (rename($oldFolder, $newFolder)) 
+		{
+			echo 'Se subió el archivo';
+		}
+		else
+		{
+			echo 'No se subió el archivo';
+		}
+
+
 		$Eventos->insert($prepareStatement,$arrayString);
+
 
 		$prepareStatement = "INSERT INTO `cambio_odt`
 						( `old_odt`,`new_odt`,`ultima_act`,`modificado_por`)
@@ -1628,6 +1654,8 @@ if($module == 'cambiarODT') {
 		$id = 	$Eventos->insert($prepareStatement,$arrayString);
 		
 		
+
+
 		//Historico ODT Antigua
 		$prepareStatementHist = " INSERT INTO `historial_eventos` (`evento_id`,`fecha_movimiento`,`estatus_id`,`odt`,`modified_by`) 
 								  VALUES 

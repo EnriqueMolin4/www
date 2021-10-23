@@ -240,7 +240,7 @@ class Assignacion implements IConnections {
 		//$userId = $_SESSION['userid'];
 		if($userId == '0') {
 			$userId = -1;
-		}
+			}
 
 		$sql = "SELECT cuentas.id,du.nombre,du.apellidos from cuentas,detalle_usuarios du
 				WHERE cuentas.id = du.cuenta_id
