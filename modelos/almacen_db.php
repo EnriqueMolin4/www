@@ -570,7 +570,7 @@ class Almacen implements IConnections {
 	}
 
 	function getCantidadInsumos($insumo) {
-		$sql = "select id,cantidad from inventario where insumo = ? ";
+		$sql = "select id,cantidad from inventario where no_serie = ? ";
 		
 	
         try {
