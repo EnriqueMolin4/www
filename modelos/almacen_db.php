@@ -381,8 +381,7 @@ class Almacen implements IConnections {
 				ta.nombre aplicativo,
 				tm.nombre estatus,
 				fecha_modificacion,
-				i.estatus estatusId,
-				ifnull(tp.estatus,1) estatustraspaso
+				i.estatus estatusId
 				FROM inventario_tecnico it
 				LEFT JOIN traspasos tp ON tp.no_serie = it.no_serie
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = it.tecnico, inventario i
@@ -394,7 +393,7 @@ class Almacen implements IConnections {
 				$where
 				$filter ";
 			
-				//self::$logger->error($sql);
+				self::$logger->error($sql);
 
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -1640,18 +1639,20 @@ class Almacen implements IConnections {
 				tp.nombre producto,
 				dp.cantidad,
 				dp.id,
-				dp.tipo tipoid
+				dp.tipo tipoid,
+				inv.cantidad qty
 				FROM detalle_peticiones dp
 				LEFT JOIN detalle_usuarios du ON  dp.tecnico_id = du.cuenta_id
 				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
 				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
 				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
 				LEFT JOIN tipo_estatus_modelos te ON te.id = dp.estatus
+				LEFT JOIN inventario inv ON inv.no_serie = ti.codigo
 				WHERE dp.peticiones_id = $peticion
 				$where
 				$filter  ";
 
-		
+		//self::$logger->error($sql);
 		 
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -1792,6 +1793,33 @@ class Almacen implements IConnections {
 
 	}
 
+	 function getCantPeticion($peticionID)
+	{
+		$sql = "SELECT 
+				peticiones_id,
+				CONCAT(du.nombre,' ',du.apellidos) tecnico,
+				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
+				te.id estatus, ti.nombre insumo , tc.nombre conectividad, tp.nombre producto, dp.cantidad,
+				dp.id, dp.tipo tipoid, inv.cantidad qty
+				FROM detalle_peticiones dp
+				LEFT JOIN detalle_usuarios du ON  dp.tecnico_id = du.cuenta_id
+				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
+				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
+				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
+				LEFT JOIN tipo_estatus_modelos te ON te.id = dp.estatus
+				LEFT JOIN inventario inv ON inv.no_serie = ti.codigo
+				WHERE dp.peticiones_id = $peticionID ";
+		//self::$logger->error($sql);
+
+		try {
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute ();
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		}	catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getCantPeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+		}
+	} 
+
 	function getProducto() {
 		$sql = " SELECT * FROM tipo_producto WHERE status= 1";
 		
@@ -1836,6 +1864,22 @@ class Almacen implements IConnections {
             self::$logger->error ("File: almacen_db.php;	Method Name: searchUbicacion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
+
+	function getCantidadRollos(){
+		$sql = "SELECT cantidad FROM inventario WHERE no_serie = 'ROLS'";
+
+		self::$logger->error($sql);
+
+		try{
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute(array($sql));
+			return $stmt->fetchAll ( PDO::FETCH_ASSOC);
+		}
+		catch ( PDOException $e){
+			self::$logger->error("File: almacen_db.php;	Method Name: getCantidadRollos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+		}
+	}
+	
 }
 //
 include 'DBConnection.php';
@@ -2207,7 +2251,13 @@ if($module == 'getInsumos') {
 		$val .=  '<option value="' . $row ['id'] . '"  >' . $row ['nombre'] . '</option>';
 	}
 	echo $val;
+}
 
+if($module == 'getCantPeticion')
+{
+	$peticionDetail = $Almacen->getCantPeticion($params['peticionID']);
+
+	echo json_encode($peticionDetail);
 }
 
 if($module == 'getFabricantes') {
@@ -2219,6 +2269,13 @@ if($module == 'getFabricantes') {
 	}
 	echo $val;
 
+}
+
+if($module == 'getCantidadRollos')
+{
+	$rols = $Almacen->getCantidadRollos();
+
+	echo json_encode($rols);
 }
 
 if($module == 'getAlmacen') {
@@ -4001,7 +4058,6 @@ if($module == 'grabarInventario')
 }
 
 
-
 if($module == 'InventarioElavon') 
 {
 	$counter = 0;
@@ -4234,6 +4290,12 @@ if($module == 'getSeriesIE')
 	echo json_encode(['eventos' => $array_eventos, 'inventario' => $array_inventario]);
 }
 
+if($module == 'getCantInsumos')
+{
+	$cant = $Almacen->getCantidadInsumos($params['insumo']);
+
+	echo json_encode($cant);
+}
 
 if($module == 'getSerieH')
 {

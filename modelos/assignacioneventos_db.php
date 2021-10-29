@@ -133,7 +133,8 @@ class Assignacion implements IConnections {
 				LEFT JOIN tipo_estatus ON eventos.estatus = tipo_estatus.id
 				INNER JOIN (  select cp_territorios.territorio_id,cp_territorios.cp,comercios.ciudad, comercios.comercio NombreComercio,comercios.tipo_comercio,comercios.afiliacion FROM cuentas,cp_territorios,comercios
 				WHERE cuentas.territorial = cp_territorios.territorio_id 
-				AND tipo_user =12 AND comercios.cp = cp_territorios.cp ) territorial ON territorial.afiliacion = eventos.afiliacion
+				AND tipo_user =12 AND comercios.cp = cp_territorios.cp 
+				GROUP BY cp_territorios.territorio_id, cp_territorios.cp,comercios.ciudad,comercios.comercio, comercios.tipo_comercio, comercios.afiliacion) territorial ON territorial.afiliacion = eventos.afiliacion
 				WHERE date(eventos.fecha_alta) BETWEEN '$inicio' AND '$fin' AND eventos.estatus IN (1,16)
 				$where
 				$order
