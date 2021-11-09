@@ -366,6 +366,32 @@
                             </div>
                             
                         </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="cod_rech" class="col-form-label-sm">Código Rechazo</label>
+                                <input type="text" class="form-control form-control-sm" id="cod_rech" aria-describedby="cod_rech">
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="aplicaExito" value="option1">
+                                    <label class="form-check-label" for="aplicaExito">Aplica Éxito</label>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="cod_rech2" class="col-form-label-sm">Código Rechazo 2</label>
+                                <input type="text" class="form-control form-control-sm" id="cod_rech2" aria-describedby="cod_rech2">
+                                
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="aplicaRechazo" value="option1">
+                                <label class="form-check-label" for="aplicaRechazo">Aplica Rechazo 2</label>
+                                
+                                </div>
+
+                            </div>
+                        </div>
+                        <br><br>
                         <input type="hidden" value="0" id="eventoId">
                         <input type="hidden" value="0" id="servicioId">
                         <input type="hidden" value="0" id="tecnicoid"> 
@@ -976,6 +1002,12 @@
             var faltaUbicacion = $("#faltaUbicacion").prop('checked') ? 1 : 0 ;
 
             var causacambio = $("#causas_cambio").val();
+
+            //codigos rechazo
+            var codigo_rechazo = $("#cod_rech").val();
+            var codigo_rechazo_2 = $("#cod_rech2").val();
+            var aplica_exito = $("#aplicaExito").prop('checked') ? 1 : 0 ;
+            var aplica_rechazo = $("#aplicaRechazo").prop('checked') ? 1 : 0 ;
             
             //Validar si es obligatorio la TVP INStalada
             if( PermisosEvento.tvp_instalada == '1' &&  estatus == '13' ) {
@@ -1127,7 +1159,7 @@
                             simInstalado:sim_instalado, simRetirado: sim_retirado,producto: producto,version: version,aplicativo: aplicativo,producto_ret: producto_ret,version_ret: version_ret,aplicativo_ret:aplicativo_ret,receptorservicio:receptorservicio, 
                             tvpInModelo:tvpInModelo,tpvInConnect:tpvInConnect ,tvpReModelo, tvpReModelo, tpvReConnect: tpvReConnect, simInData:simInData, simReData:simReData,tecnico:tecnico, 
                             rollosInstalar:rollosInstalar, rollosInstalados:rollosInstalados,servicioId:servicioId,fechaatencion:fecha_atencion,horallegada:hora_llegada,horasalida: hora_salida, 
-                            faltaSerie:faltaSerie,faltaEvidencia:faltaEvidencia,faltaInformacion:faltaInformacion,faltaUbicacion:faltaUbicacion,causacambio: causacambio };
+                            faltaSerie:faltaSerie,faltaEvidencia:faltaEvidencia,faltaInformacion:faltaInformacion,faltaUbicacion:faltaUbicacion,causacambio: causacambio, codigo_rechazo: codigo_rechazo, codigo_rechazo_2: codigo_rechazo_2, aplica_exito: aplica_exito, aplica_rechazo: aplica_rechazo  };
 				
 				 $.ajax({
 					type: 'POST',

@@ -174,7 +174,7 @@
     <script>
     var tplDetalle,tplSeries;
     $(document).ready(function() {
-
+        
         //GET info from URL
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -182,7 +182,8 @@
 
         var idp = urlParams.get('peticionId');
         //console.log(idp);
-        
+        //rollosAlm();
+        //cantPeticion(idp);
 
         loadInfo(peticion);
         loadProducto();
@@ -238,21 +239,18 @@
                     {
                         var btn;
 
-                        
-
                         if(row.tipoid == '3') 
                         {
                             
-                            if(row.cantidad > row.qty)
-                            {
+                                if(row.cantidad > row.qty)
+                                {
                                 
-                                btn = 'CANT NO ACEPTADA <i class="fas fa-times-circle fa-2x" style="color:#b52424">';
-                            }
-                            else
-                            {
-                                btn = 'CANT ACEPTADA <i class="fas fa-check-circle fa-2x" style="color:#24b53c"></i>';
-                            }
-                                
+                                    btn = "<h6>Cantidad Actual: <a title ='Cantidad' href='#' style='color:#b52424'>"+row.qty+"</a></h6>";
+                                }
+                                else
+                                {
+                                    btn = "<h6>Cantidad Actual: <a title ='Cantidad' href='#' style='color:#24b53c'>"+row.qty+"</i></h6>";
+                                }  
 
                         } else {
                             btn = "<a href='#' class='btn btn-success addSeries' data-producto='"+row.producto+"' data-tipo='"+row.tipoid+"' data-id='"+data+"' data-qty='"+row.cantidad+"' >CARGAR</a> ";
@@ -373,55 +371,65 @@
 
         $("#btnEnvio").on("click", function() 
         {
-            var rollos = '';
-            var cantidad = '';
-            rollosAlm();
-            cantPeticion(idp);
-
+            
             if( $("#no_guia").val().length > 0 && $("#codigo_rastreo").val().length > 0 ) 
-            {
-
-                if(rollos > 0 && cantidad > rollos)
-                {
-                    $.ajax({ 
-                        type: 'POST',
-                        url : 'modelos/almacen_db.php',
-                        data: 'module=generarEnvio&peticionId='+ peticion +"&no_guia="+ $("#no_guia").val() + "&codigo_rastreo="+ $("#codigo_rastreo").val(),
-                        cache: false,
-                        success: function(data){
-                    
+            {            
+                                        $.ajax({ 
+                            type: 'POST',
+                            url : 'modelos/almacen_db.php',
+                            data: 'module=generarEnvio&peticionId='+ peticion +"&no_guia="+ $("#no_guia").val() + "&codigo_rastreo="+ $("#codigo_rastreo").val(),
+                            cache: false,
+                            success: function(data)
+                            {
                                 $("#btnEnvio").attr("disabled",true);
-                                Swal.fire({
-                                icon: 'success',
-                                title: 'Exito',
-                                text: 'Se genero el Envio' 
-                                }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = "peticiones.php";
+                                var info = JSON.parse(data);
+                                console.log(info);
+                                if(info.enviado == '0' || info.enviado == '9')
+                                {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: info.mensaje
+                                        
+                                    })
+                                    
                                 }
-                                })
+                                else if(info.enviado == '2')
+                                {
+                                    Swal.fire({
+                                        icon: 'info',
+                                        title: 'Cargando...',
+                                        text: 'Generando envío'
+                                        
+                                    })
+                                    
+                                }
+                                else
+                                {
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Exito',
+                                    text: 'Se generó el Envío' 
+                                    }) .then((result) => {
+
+                                    if (result.isConfirmed) {
+                                    window.location.href = "peticiones.php";
+                                    }
+                                    })  
+                                }
+
+
                             },
-                            error: function(error){
-                            var demo = error;
-                            }
-                        })
-                }
-                else{
-                    Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Revisar cantidad de insumos en almacén',
-                    footer: 'Volver a intentar'
-                })
-                }
-                
-                        
+                                error: function(error){
+                                var demo = error;
+                                }
+                            })     
                 
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Es necesario ingresar la Guía y Cod. Rastreo',
+                    text: 'Es necesario ingresar la Guía y Código de Rastreo',
                     footer: 'Volver a intentar'
                 })
             }
@@ -700,6 +708,7 @@
 
     function rollosAlm()
         {
+            var rollos;
             $.ajax({
                 type: 'GET',
                 url : 'modelos/almacen_db.php',
@@ -712,18 +721,20 @@
                     var rollos = info[0].cantidad;
                     
 
-                    console.log(rollos);
+                    //console.log(rollos);
                     
                 },
                 error: function()
                 {
 
                 }
-            })
+            });
+            return rollos;
         }  
     
         function cantPeticion(idp)
     {
+        var cantidad;
         $.ajax({
             type: 'GET',
             url : 'modelos/almacen_db.php',
@@ -744,7 +755,8 @@
             {
                 var demo = error();
             }
-            }) 
+            });
+            return cantidad; 
     }
 
     </script> 

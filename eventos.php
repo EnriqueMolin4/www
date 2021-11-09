@@ -458,6 +458,31 @@
                         </div>
                         
                     </div>
+                    <div class="row">
+                            <div class="col-sm-4">
+                                <label for="cod_rech" class="col-form-label-sm">Código Rechazo</label>
+                                <input type="text" class="form-control form-control-sm" id="cod_rech" aria-describedby="cod_rech">
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="aplicaExito" value="option1">
+                                    <label class="form-check-label" for="aplicaExito">Aplica Éxito</label>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="cod_rech2" class="col-form-label-sm">Código Rechazo 2</label>
+                                <input type="text" class="form-control form-control-sm" id="cod_rech2" aria-describedby="cod_rech2">
+                                
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="aplicaRechazo" value="option1">
+                                <label class="form-check-label" for="aplicaRechazo">Aplica Rechazo 2</label>
+                                
+                                </div>
+
+                            </div>
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" value="0" id="eventoId">

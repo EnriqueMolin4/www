@@ -611,6 +611,13 @@ $(document).ready(function() {
                         $("#faltaEvidencia").prop('checked', faltaevidencia == 0 ? false : true);
                         $("#faltaInformacion").prop('checked', faltainformacion == 0 ? false : true);
                         $("#faltaUbicacion").prop('checked', faltaubicacion == 0 ? false : true);
+                        
+                        $("#cod_rech").val(element.codigo_servicio);
+                        $("#cod_rech2").val(element.codigo_servicio_2);
+                        var aplica_exito = element.aplica_exito === null ? 0 : element.aplica_exito;
+                        var aplica_rechazo_2 = element.aplica_rechazo_2 === null ? 0 : element.aplica_rechazo_2;
+                        $("#aplicaExito").prop('checked', aplica_exito == 0 ? false : true);
+                        $("#aplicaRechazo").prop('checked', aplica_rechazo_2 == 0 ? false : true);
 
                         if (element.servicio == '15') {
                             $("#labelAfiliacion").html('Folio');
@@ -636,9 +643,7 @@ $(document).ready(function() {
 
                         $("#divBtnCV").show();
                         $("#comentarios_valid").show();
-                        //getScriptEvento(element.servicio,element.tpv_instalado)
-                        //INTENTAR VALIDACIÓN AQUÍ
-
+                        //getScriptEvento(element.servicio,element.tpv_instalado)                       
                        
 
                         if (element.estatus_servicio == '13') {
@@ -725,12 +730,32 @@ $(document).ready(function() {
 
     $("#btnComentValid").on('click', function() {
 
-
+        //codigos rechazo
+        
 
         if ($('#comentarios_validacion').val().length > 0) {
+            var codigo_rechazo = $("#cod_rech").val();
+            var codigo_rechazo_2 = $("#cod_rech2").val();
+            var aplica_exito = $("#aplicaExito").prop('checked') ? 1 : 0 ;
+            var aplica_rechazo = $("#aplicaRechazo").prop('checked') ? 1 : 0 ;
+            var faltaserie = $("#faltaSerie").prop('cheked') ? 1 : 0;
+            var faltaevidencia = $("#faltaEvidencia").prop('cheked') ? 1 : 0;
+            var faltainformacion = $("#faltaInformacion").prop('cheked') ? 1 : 0;
+            var faltaubicacion = $("#faltaUbicacion").prop('cheked') ? 1 : 0;
+            var tecnico = $("#tecnicoid").val();
+
             var dn = {
                 module: 'guardarComVal',
                 comentario: $('#comentarios_validacion').val(),
+                codigo_rechazo: codigo_rechazo,
+                codigo_rechazo_2: codigo_rechazo_2, 
+                aplica_exito: aplica_exito,
+                aplica_rechazo: aplica_rechazo,
+                faltaserie: faltaserie,
+                faltaevidencia: faltaevidencia,
+                faltainformacion: faltainformacion,
+                faltaubicacion: faltaubicacion,
+                tecnico: tecnico,
                 odt: $('#odt').val()
             };
             console.log(dn);
@@ -756,7 +781,7 @@ $(document).ready(function() {
 
         } else {
             $.toaster({
-                message: 'Ingresa el comentario de validacion',
+                message: 'Ingresa el comentario de validación',
                 title: 'Aviso',
                 priority: 'danger'
             });

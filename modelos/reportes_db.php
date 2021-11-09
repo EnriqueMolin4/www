@@ -502,7 +502,7 @@ class Reportes implements IConnections {
                 $where 
 				 
                 ";
-        //self::$logger->error ($sql);
+        self::$logger->error ($sql);
         try {
             $stmt = self::$connection->prepare ($sql);
             $stmt->execute();

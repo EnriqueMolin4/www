@@ -177,8 +177,11 @@ $(document).ready(function() {
                     cache: false,
                     success: function(data){
                         var info = JSON.parse(data);
+
                         mensaje = "Se agrego con Exito al Inventario"
+
                         if(info.id == '0') {
+                            
                             mensaje = "Fallo la carga l Inventario"
                         } else {
                             cleartext();

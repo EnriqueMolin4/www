@@ -253,7 +253,9 @@ class Eventos implements IConnections {
 				cevento.serie faltaserie,
 				cevento.evidencia faltaevidencia,
 				cevento.informacion faltainformacion,
-				cevento.ubicacion faltaubicacion
+				cevento.ubicacion faltaubicacion,
+				cevento.aplica_exito,
+				cevento.aplica_rechazo_2
 				from eventos 
 				LEFT JOIN detalle_usuarios u ON u.cuenta_id = tecnico
 				LEFT JOIN comercios c ON c.id = eventos.comercio
@@ -266,6 +268,8 @@ class Eventos implements IConnections {
 				LEFT JOIN inventario simRe ON eventos.sim_retirado = simRe.no_serie
 				LEFT JOIN checklist_evento cevento ON cevento.odt = eventos.odt AND cevento.tecnico = eventos.tecnico
 				where eventos.id = $id ";
+
+				//self::$logger->error($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -2778,13 +2782,42 @@ if($module == 'guardarComVal')
 {
 	$comentario = $params['comentario'];
 	$odt = $params['odt'];
+	$codigoServicio = $params['codigo_rechazo'];
+	$codigoServicio2 = $params['codigo_rechazo_2']; 
+	$aplicaExito = $params['aplica_exito'];
+	$aplicaRechazo = $params['aplica_rechazo'];
+	$faltaSerie = $params['faltaserie'];
+	$faltaUbicacion = $params['faltaubicacion'];
+	$faltaInformacion = $params['faltainformacion'];
+	$faltaEvidencia = $params['faltaevidencia'];
+	$tecnico = $params['tecnico'];
+
+	$user = $_SESSION['userid'];
+	$fecha = date ( 'Y-m-d H:m:s' );
 	$aviso = '';
 	
-	$prepareStatement = "UPDATE `eventos` SET `comentarios_validacion`=? WHERE `odt`=?;";
+	$prepareStatement = "UPDATE `eventos` SET `comentarios_validacion`=?, `codigo_servicio`=?, `codigo_servicio_2`=? WHERE `odt`=?;";
 	
-	$arrayString = array ( $comentario, $odt );
+	$arrayString = array ( $comentario, $codigoServicio ,$codigoServicio2 , $odt );
 	
 	$Eventos->insert($prepareStatement,$arrayString);
+
+	$sqlChecklist = " INSERT INTO checklist_evento ( odt , tecnico, serie, evidencia, informacion, ubicacion, aplica_exito, aplica_rechazo_2, creado_por, fecha_creacion )
+					  VALUES ('$odt','$tecnico','$faltaSerie','$faltaEvidencia','$faltaInformacion','$faltaUbicacion','$aplicaExito','$aplicaRechazo','$user','$fecha') 
+					  ON DUPLICATE KEY UPDATE
+						odt = '$odt',
+						tecnico = $tecnico,
+						serie = $faltaSerie,
+						evidencia = $faltaEvidencia,
+						informacion = $faltaInformacion,
+						ubicacion = $faltaUbicacion,
+						aplica_exito=$aplicaExito,
+						aplica_rechazo_2=$aplicaRechazo,
+						creado_por =$user,
+						fecha_creacion ='$fecha'  ";
+
+	$Eventos->insert($sqlChecklist, array());
+	
 	
 	$aviso = "Se actualizó el comentario de validación";
 	
@@ -3096,6 +3129,12 @@ if($module == 'cerrarEvento') {
 	$faltaUbicacion = $params['faltaUbicacion'];
 
 	$causacambio = $params['causacambio'];
+
+	$codigo_rechazo = $params['codigo_rechazo'];
+	$codigo_rechazo_2 = $params['codigo_rechazo_2'];
+	$aplica_exito = $params['aplica_exito'];
+	$aplica_rechazo = $params['aplica_rechazo'];
+
 	
 	$prepareStatement = "UPDATE `eventos` SET 
 						`estatus`=?,
@@ -3128,7 +3167,9 @@ if($module == 'cerrarEvento') {
 						`causacambio`=?, 
 						`rechazo`=?, 
 						`subrechazo`=?, 
-						`cancelado`=?   
+						`cancelado`=?,
+						`codigo_servicio`=?,
+						`codigo_servicio_2`=?     
 						 WHERE `odt`=? ; 
 						 ";
 
@@ -3164,6 +3205,8 @@ if($module == 'cerrarEvento') {
 		$rechazo,
 		$subrechazo,
 		$cancelado,
+		$codigo_rechazo,
+		$codigo_rechazo_2, 
 		$odt 
 	);
 
@@ -3195,8 +3238,8 @@ if($module == 'cerrarEvento') {
 	$Eventos->insert($sql,$arrayString);
 
 	// INSERT Checklist de Eventos
-	$sqlChecklist = "  INSERT INTO checklist_evento (odt, tecnico, serie, evidencia, informacion, ubicacion, creado_por,fecha_creacion) 
-					   VALUES('$odt',$tecnico,$faltaSerie,$faltaEvidencia,$faltaInformacion,$faltaUbicacion,$user,'$fecha' ) 
+	$sqlChecklist = "  INSERT INTO checklist_evento (odt, tecnico, serie, evidencia, informacion, ubicacion,aplica_exito,aplica_rechazo_2, creado_por,fecha_creacion) 
+					   VALUES('$odt',$tecnico,$faltaSerie,$faltaEvidencia,$faltaInformacion,$faltaUbicacion,$aplica_exito,$aplica_rechazo,$user,'$fecha' ) 
 					   ON DUPLICATE KEY UPDATE    
 					   odt= '$odt',
 					   tecnico= $tecnico,
@@ -3204,6 +3247,8 @@ if($module == 'cerrarEvento') {
 					   evidencia=$faltaEvidencia,
 					   informacion=$faltaInformacion,
 					   ubicacion=$faltaUbicacion,
+					   aplica_exito=$aplica_exito,
+					   aplica_rechazo_2=$aplica_rechazo,
 					   creado_por=$user ,
 					   fecha_creacion='$fecha' 
 					";

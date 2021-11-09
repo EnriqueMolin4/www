@@ -393,7 +393,7 @@ class Almacen implements IConnections {
 				$where
 				$filter ";
 			
-				self::$logger->error($sql);
+				//self::$logger->error($sql);
 
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -1256,6 +1256,8 @@ class Almacen implements IConnections {
 	function getInventarioInfo($noserie) {
 		$sql = "SELECT * FROM inventario WHERE no_serie= '$noserie' ";
 		
+		//self::$logger->error($sql);
+		
 		try {
 			$stmt = self::$connection->prepare ($sql );
 			$stmt->execute ();
@@ -1868,7 +1870,7 @@ class Almacen implements IConnections {
 	function getCantidadRollos(){
 		$sql = "SELECT cantidad FROM inventario WHERE no_serie = 'ROLS'";
 
-		self::$logger->error($sql);
+		//self::$logger->error($sql);
 
 		try{
 			$stmt = self::$connection->prepare ($sql);
@@ -3420,15 +3422,19 @@ if($module == 'generarEnvio') {
 	$user = $_SESSION['userid'];
 	$AlmOrigen = $_SESSION['almacen'];
 	$nameInsumo = '';
+	$mensaje = '';
+	$enviado = '';
 
 	foreach($peticiondetalle as $detalle) {
 		
 		$fecha = date("Y-m-d H:i:s");
 
 		//cantidad x tipo
-		if($detalle['tipo'] == '3') {
+		if($detalle['tipo'] == '3') 
+		{
 			$cant = $detalle['cantidad'];
-			$tipo = 'INSUMOS';
+			$tipo = 'INSUMOS';		
+		
 		} else if ($detalle['tipo'] == '1' ) {
 			$cant = 1;
 			$tipo = 'TPV';
@@ -3440,114 +3446,133 @@ if($module == 'generarEnvio') {
 
 		if ($detalle['tipo'] == '3' ) 
 		{
+			$insumo = $Almacen->getInsumosId($detalle['insumo']);
+			$insumoCod = $Almacen->getInventarioInfo($insumo['codigo']);
+				
+			if ($cant > $insumoCod[0]['cantidad'])
+			{
+				
+				$mensaje .= "Revisar cantidades de insumos en almacén";
+				$enviado = 0;
+			}
+			else 
+			{
+				$tipoInsumo = $Almacen->getInsumosId($detalle['insumo']);
 
-			$tipoInsumo = $Almacen->getInsumosId($detalle['insumo']);
-
-
-			$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act','creado_por');
+				$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act','creado_por');
 		
-			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsTraspasos), '?'));
+				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsTraspasos), '?'));
 
-			$sql = "INSERT INTO traspasos (" . implode(",", $datafieldsTraspasos ) . ") VALUES (".$question_marks.")"; 
+				$sql = "INSERT INTO traspasos (" . implode(",", $datafieldsTraspasos ) . ") VALUES (".$question_marks.")"; 
 
-			$arrayString = array (
-				$tipo,
-				$tipoInsumo['codigo'],
-				0,
-				$cant,
-				$params['no_guia'],
-				$params['codigo_rastreo'],
-				$AlmOrigen,
-				0,
-				$detalle['tecnico_id'],
-				0,
-				$fecha,
-				$fecha,
-				$user
-			);
+				$arrayString = array (
+					$tipo,
+					$tipoInsumo['codigo'],
+					0,
+					$cant,
+					$params['no_guia'],
+					$params['codigo_rastreo'],
+					$AlmOrigen,
+					0,
+					$detalle['tecnico_id'],
+					0,
+					$fecha,
+					$fecha,
+					$user
+				);
 
 			
-			$id = $Almacen->insert($sql,$arrayString);
+				$id = $Almacen->insert($sql,$arrayString);
+			
 
-			//Modificar inventario general
-			$item = $Almacen->getInventarioInfo($tipoInsumo['codigo']);
-			$nuevaCant = (int) $item['cantidad'] - (int) $cant;
+				//Modificar inventario general
+				$item = $Almacen->getInventarioInfo($tipoInsumo['codigo']);
+			
+				$nuevaCant = (int) $item[0]['cantidad'] - (int) $cant;
 
-			$sql = " UPDATE `inventario` SET `cantidad`=?,`modificado_por`=?,`fecha_edicion`=? WHERE `id`=? "; 
-		
-			$arrayString = array (
-				$nuevaCant,
-				$user,
-				$fecha,
-				$item[0]['id']
-			);
-
-			$Almacen->insert($sql,$arrayString);
-
-			//Grabar en Inventario Tecnico
-			$invTecnico = $Almacen->getCantidadInsumosTecnico($tipoInsumo['codigo'],$detalle['tecnico_id']);
-
-			if($invTecnico) {
-				$nuevaCant = (int) $invTecnico[0]['cantidad'] - (int) $qty;
-				$sql = " UPDATE `inventario_tecnico` SET `cantidad`=?,`fecha_modificacion`=? WHERE `id`=? "; 
+				$sql = " UPDATE `inventario` SET `cantidad`=?,`modificado_por`=?,`fecha_edicion`=? WHERE `id`=? "; 
 		
 				$arrayString = array (
 					$nuevaCant,
-					$fecha,
-					$invTecnico[0]['id']
-				);
-
-			} else 
-			{
-
-				$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
-				
-				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
-
-				$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
-				$arrayString = array (
-					$detalle['tecnico_id'],
-					$tipoInsumo['codigo'],
-					$cant,
-					$params['no_guia'],
-					0,
 					$user,
 					$fecha,
-					$fecha
+					$item[0]['id']
 				);
+
+				$Almacen->insert($sql,$arrayString);
+			
+
+				//Grabar en Inventario Tecnico
+				$invTecnico = $Almacen->getCantidadInsumosTecnico($tipoInsumo['codigo'],$detalle['tecnico_id']);
+
+				if($invTecnico) {
+					$nuevaCant = (int) $invTecnico[0]['cantidad'] + (int) $detalle['cantidad'];
+					$sql = " UPDATE `inventario_tecnico` SET `cantidad`=?,`fecha_modificacion`=? WHERE `id`=? "; 
+		
+					$arrayString = array (
+						$nuevaCant,
+						$fecha,
+						$invTecnico[0]['id']
+					);
+
+				} else 
+				{
+
+					$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
+				
+					$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
+
+					$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
+						$arrayString = array (
+						$detalle['tecnico_id'],
+						$tipoInsumo['codigo'],
+						$cant,
+						$params['no_guia'],
+						0,
+						$user,
+						$fecha,
+						$fecha
+					);
+				}
+
+
+				$newIdInv = $Almacen->insert($sql,$arrayString);
+			
+				//GRABAR HISTORIA 
+			
+				$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
+			
+				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
+				$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
+		
+				$arrayString = array (
+					$newIdInv,
+					$fecha,
+					'TRASPASO',
+					1,
+					$item[0]['no_serie'],
+					$item[0]['tipo'],
+					$cant,
+					$detalle['tecnico_id'],
+					$user
+				);
+		
+				$Almacen->insert($sql,$arrayString);
+				$enviado = 1;
 			}
 
-
-			$newIdInv = $Almacen->insert($sql,$arrayString);
-
-			//GRABAR HISTORIA 
-			
-			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
-			
-			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
-			$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
-		
-			$arrayString = array (
-				$newIdInv,
-				$fecha,
-				'TRASPASO',
-				1,
-				$noserie->NoSerie,
-				$item[0]['tipo'],
-				$cant,
-				$detalle['tecnico_id'],
-				$user
-			);
-		
-			$Almacen->insert($sql,$arrayString);
-
 		} else {
-
+			
 			$noSeries = json_decode( $detalle['no_series'] );
-
-			//print_r($noSeries);
-
-			foreach($noSeries as $noserie) {
+			if(is_null($noSeries))
+			{
+				$enviado = 9;
+				$mensaje .= " - El envío no está cargado";
+			}
+			else{
+				//print_r($noSeries);
+			foreach($noSeries as $noserie) 
+			{
 				$fecha = date("Y-m-d H:i:s");
 				$inventario = $Almacen->getInventarioInfo( $noserie->NoSerie );
 
@@ -3577,7 +3602,7 @@ if($module == 'generarEnvio') {
 
 				
 				$id = $Almacen->insert($sql,$arrayString);
-
+				
 				//Modificar inventario general
 				$item = $Almacen->getInventarioInfo($noserie->NoSerie);
 
@@ -3593,7 +3618,7 @@ if($module == 'generarEnvio') {
 				);
 
 				$Almacen->insert($sql,$arrayString);
-
+				
 				//Grabar en Inventario Tecnico
 				$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
 				
@@ -3612,7 +3637,7 @@ if($module == 'generarEnvio') {
 				);
 
 				$Almacen->insert($sql,$arrayString);
-
+				
 				//GRABAR HISTORIA 
 				
 				$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
@@ -3633,23 +3658,32 @@ if($module == 'generarEnvio') {
 				);
 			
 				$Almacen->insert($sql,$arrayString);
-
+				//$mensaje .= "Se cargaron series al envío";
+				$enviado = 2;
+				
 			}
-		}
+			}
+			
+		} 
 	
 	}
 	
 		// Cerrar Peticion
-		$sql = " UPDATE `peticiones` SET `IsActive`=?  WHERE `id`=? "; 
+		if($enviado == 1 || $enviado == 2)
+		{
+			$sql = " UPDATE `peticiones` SET `IsActive`=?  WHERE `id`=? "; 
 		
-		$arrayString = array (
-			1,
-			$params['peticionId']
-		);
+			$arrayString = array (
+				1,
+				$params['peticionId']
+			);
 
-		$Almacen->insert($sql,$arrayString);
-
-	echo 1;
+			$Almacen->insert($sql,$arrayString);
+		}
+		 
+		
+	echo json_encode(['mensaje' => $mensaje, 'enviado' => $enviado]);
+	//echo 1;
 }
 
 if( $module == 'getTecnicoxPlaza') {
