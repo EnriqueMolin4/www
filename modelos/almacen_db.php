@@ -3499,14 +3499,17 @@ if($module == 'generarEnvio') {
 					$item[0]['id']
 				);
 
-				$Almacen->insert($sql,$arrayString);
+				$id = $Almacen->insert($sql,$arrayString);
 			
 
 				//Grabar en Inventario Tecnico
-				$invTecnico = $Almacen->getCantidadInsumosTecnico($tipoInsumo['codigo'],$detalle['tecnico_id']);
+				//$invTecnico = $Almacen->getCantidadInsumosTecnico($tipoInsumo['codigo'],$detalle['tecnico_id']);
 
-				if($invTecnico) {
+				/* if($invTecnico) 
+				{
+
 					$nuevaCant = (int) $invTecnico[0]['cantidad'] + (int) $detalle['cantidad'];
+
 					$sql = " UPDATE `inventario_tecnico` SET `cantidad`=?,`fecha_modificacion`=? WHERE `id`=? "; 
 		
 					$arrayString = array (
@@ -3516,27 +3519,27 @@ if($module == 'generarEnvio') {
 					);
 
 				} else 
-				{
+				{ */
 
-					$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
+					// $datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
 				
-					$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
+					// $question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
 
-					$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
-						$arrayString = array (
-						$detalle['tecnico_id'],
-						$tipoInsumo['codigo'],
-						$cant,
-						$params['no_guia'],
-						0,
-						$user,
-						$fecha,
-						$fecha
-					);
-				}
+					// $sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
+					// 	$arrayString = array (
+					// 	$detalle['tecnico_id'],
+					// 	$tipoInsumo['codigo'],
+					// 	$cant,
+					// 	$params['no_guia'],
+					// 	0,
+					// 	$user,
+					// 	$fecha,
+					// 	$fecha
+					// );
+				//}
 
 
-				$newIdInv = $Almacen->insert($sql,$arrayString);
+				//$newIdInv = $Almacen->insert($sql,$arrayString);
 			
 				//GRABAR HISTORIA 
 			
@@ -3546,7 +3549,7 @@ if($module == 'generarEnvio') {
 				$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
 		
 				$arrayString = array (
-					$newIdInv,
+					$id,
 					$fecha,
 					'TRASPASO',
 					1,
