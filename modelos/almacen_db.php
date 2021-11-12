@@ -1,5 +1,5 @@
 <?php
-session_start();;
+session_start();
 
 error_reporting( error_reporting() & ~E_NOTICE ); //undefined Problem
 
