@@ -107,7 +107,7 @@ class Assignacion implements IConnections {
 		}
 
 		
-		
+
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
 		}
@@ -248,6 +248,8 @@ class Assignacion implements IConnections {
 				and cuentas.tipo_user=3 
 				and cuentas.territorial = $userId 
 				ORDER BY du.nombre,du.apellidos ";
+
+		//self::$logger->error($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );

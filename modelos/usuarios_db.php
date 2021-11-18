@@ -181,6 +181,7 @@ class Usuarios implements IConnections {
 				$order
 				$filter 
 		";
+			
 
 		/* $sql = "select cuentas.id Id,cuentas.tipo_user,cuentas.cve,territorios.nombre territorial,
 				CASE WHEN  detalle_usuarios.apellidos is null THEN detalle_usuarios.nombre ELSE CONCAT(detalle_usuarios.nombre,' ',detalle_usuarios.apellidos) END nombre,
