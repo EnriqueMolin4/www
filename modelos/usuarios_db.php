@@ -324,6 +324,8 @@ class Usuarios implements IConnections {
 				WHERE cuentas.Id = detalle_usuarios.cuenta_id
 				AND cuentas.id = ?
 				Group by cuentas.id,detalle_usuarios.nombre,detalle_usuarios.apellidos,detalle_usuarios.email   ";
+
+				//self::$logger->error($sql);
 				
 		
         try {
@@ -464,7 +466,7 @@ if($module == 'nuevousuario') {
 	//$bancos, //Guardar banco(s) ¿?
 
 
-	if(count($existe) == 0 ) {
+	 if(count($existe) == 0 ) {
 		$prepareStatement = "INSERT INTO `cuentas`
 		( `user`,`pass`,`supervisor`,`cve`,`tipo_user`,`nombre`,`correo`,`plaza`,`territorial`,`fecha_alta`,`almacen`)
 		VALUES
@@ -513,7 +515,7 @@ if($module == 'nuevousuario') {
 			$header = "Acceso Sistema Sinttecom SAES";
 
 			$email->send($header,$body,$params['correo']);
-			$envio = "Se Creo al  Usuario";
+			$envio = "Se creó el Usuario";
 		} 
 	} else {
 
@@ -558,7 +560,7 @@ if($module == 'nuevousuario') {
 		);
 
 		$Usuario->insert($prepareStatement,$arrayString);		
-		$envio = "El Usuario se actualizo correctamente ";
+		$envio = "El Usuario se actualizó correctamente ";
 	}
 
 	if($params['tipo'] == '3') {
