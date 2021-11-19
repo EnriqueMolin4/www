@@ -165,16 +165,18 @@ class Usuarios implements IConnections {
 				c.correo,
 				tu.nombre TipoUser,
 				GROUP_CONCAT(p.nombre) plazas,
-				CASE WHEN c.tipo_user = 3 THEN GROUP_CONCAT(t.nombre) ELSE t2.nombre END territorios,
+				CASE WHEN c.tipo_user = 3 THEN GROUP_CONCAT(t.nombre) WHEN c.tipo_user = 12 THEN GROUP_CONCAT(t3.nombre) ELSE t2.nombre END territorios,
 				c.fecha_alta,
 				c.estatus
 				FROM cuentas c
-				LEFT JOIN territorios t2 ON t2.id = c.territorial
-				LEFT JOIN tipo_user tu ON tu.id = c.tipo_user ,detalle_usuarios du
+				LEFT JOIN territorios t2 ON t2.id IN (c.territorial)
+				LEFT JOIN tipo_user tu ON tu.id = c.tipo_user, detalle_usuarios du
 				LEFT JOIN plaza_tecnico pt ON pt.tecnico_id = du.cuenta_id
 				LEFT JOIN plazas p ON p.id = pt.plaza_id
 				LEFT JOIN territorio_plaza tp ON tp.plaza_id = pt.plaza_id
 				LEFT JOIN territorios t ON t.id = tp.territorio_id
+				LEFT JOIN supervisor_territorio st ON st.supervisor_id = du.cuenta_id
+				LEFT JOIN territorios t3 ON t3.id = st.territorio_id
 				WHERE c.id = du.cuenta_id
 				$where 		
 				group by c.id,du.nombre,du.apellidos,c.correo
