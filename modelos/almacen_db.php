@@ -834,7 +834,7 @@ class Almacen implements IConnections {
 				RIGHT JOIN territorio_plaza tp ON pt.plaza_id = tp.plaza_id
 				RIGHT JOIN supervisor_territorio st ON st.territorio_id = tp.territorio_id
 				WHERE du.cuenta_id is not null 
-				AND c.id = c.cuenta_id
+				AND c.id = du.cuenta_id
 				AND c.estatus=1
 				$supervisor 
 				ORDER BY du.nombre,du.apellidos
