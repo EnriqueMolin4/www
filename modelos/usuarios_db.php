@@ -467,9 +467,11 @@ if($module == 'nuevousuario') {
 	//Guardar bancos como cadena ¿?
 	//$bancos = implode("','",$negocios);
 	//$bancos, //Guardar banco(s) ¿?
+	//$terr = implode("','",$territorios);
+	
 
-
-	 if(count($existe) == 0 ) {
+	 if(count($existe) == 0 ) 
+	 {
 		$prepareStatement = "INSERT INTO `cuentas`
 		( `user`,`pass`,`supervisor`,`cve`,`tipo_user`,`nombre`,`correo`,`plaza`,`territorial`,`fecha_alta`,`almacen`)
 		VALUES
@@ -520,6 +522,21 @@ if($module == 'nuevousuario') {
 			$email->send($header,$body,$params['correo']);
 			$envio = "Se creó el Usuario";
 		} 
+
+		if($params['tipo'] == '12')
+		{
+			foreach($territorios as $territorio)
+			{
+				$prepareStatementT = "INSERT INTO `supervisor_territorio` (`supervisor_id`,`territorio_id`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`) 
+									VALUES (?,?,?,?,?,?);";
+				
+				$arrayStringT = array($id, $territorio, $user, $fecha_alta, $user, $fecha_alta);
+
+				$Usuario->insert($prepareStatementT, $arrayStringT);
+			}
+	
+		}
+
 	} else {
 
 		$id = $params['userid'];
@@ -527,6 +544,7 @@ if($module == 'nuevousuario') {
 		//$oldPass = $Usuario->getPass($id);
 
 		//$newPass = strlen($pass) > 0 ? $pass : $oldPass;
+		//$terr = implode("','",$territorios);
 
 		$prepareStatement = "UPDATE  `cuentas` SET `cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
 		$arrayString = array (
@@ -566,10 +584,9 @@ if($module == 'nuevousuario') {
 		$envio = "El Usuario se actualizó correctamente ";
 	}
 
-	if($params['tipo'] == '3') {
+	if($params['tipo'] == '3') 
+	{
 
-				
-	
 			//Actualizar Relacion Plaza Tecnico
 			$prepareStatement = "DELETE FROM plaza_tecnico WHERE tecnico_id = ? ";
 
@@ -629,6 +646,28 @@ if($module == 'nuevousuario') {
 
 				$Usuario->insert($prepareStatement,$arrayString);
 			}
+	}
+
+	if($params['tipo'] == '12')
+	{
+		//Actualizar relación territorio - tecnico
+		$prepareStatement = "DELETE FROM supervisor_territorio WHERE supervisor_id = ? ";
+
+		$arrayString = array ($id);
+
+		$Usuario->insert($prepareStatement,$arrayString);
+
+		foreach($territorios as $territorio)
+			{
+				$prepareStatementT = "INSERT INTO `supervisor_territorio` (`supervisor_id`,`territorio_id`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`) 
+									VALUES (?,?,?,?,?,?);";
+				
+				$arrayStringT = array($id, $territorio, $user, $fecha_alta, $user, $fecha_alta);
+
+				$Usuario->insert($prepareStatementT, $arrayStringT);
+			}
+
+
 	}
 
 	echo $envio;
