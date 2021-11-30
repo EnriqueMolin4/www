@@ -440,17 +440,31 @@
                         if ( $("#contrasena").val().length > 0 ) 
                         {
                             isNew = 1;
-                        } else {
-                            isNew = 0;
+							
+                        } 
+						else 
+						{
+                            
+							isNew = 0;
                         }
                     }
+					
                     if( isNew == 1 && correo.length > 0 && isNew > 0 && $("#tipo").val() != '0' && $("#nombre").val().length > 0  && $("#negocio").val().length > 0 && $("#almacen").val()  != '0' ) 
                     {
                         var existUsuario = $.get('modelos/usuarios_db.php',{module: 'existeuser',correo:correo},function(data) 
                         {
-                            var form_data = { module: 'nuevousuario',nombre: $("#nombre").val(),apellidos: $("#apellidos").val(),
-                            territorial: JSON.stringify( $("#territorial").val() ),tipo: $("#tipo").val(), negocio: JSON.stringify( $("#negocio").val() ),
-                            contrasena:  $("#contrasena").val(),correo: $("#correo").val() ,userid: $("#userId").val(), plaza: JSON.stringify( $("#plaza").val() ),almacen: $("#almacen").val(), user: $("#user").val()  };
+                            var form_data = { module: 'nuevousuario',
+											  nombre: $("#nombre").val(),
+											  apellidos: $("#apellidos").val(),
+											  territorial: JSON.stringify( $("#territorial").val() ),
+											  tipo: $("#tipo").val(), 
+											  negocio: JSON.stringify( $("#negocio").val() ),
+											  contrasena:  $("#contrasena").val(),
+											  correo: $("#correo").val() ,
+											  userid: $("#userId").val(), 
+											  plaza: JSON.stringify( $("#plaza").val() ),
+											  almacen: $("#almacen").val(), 
+											  user: $("#user").val()  };
 
                             var info = JSON.parse(data) ;
  
@@ -551,7 +565,8 @@
                     }
                     
                     
-                   /* e.preventDefault();
+                   /* 
+				   e.preventDefault();
 
                     var correo =  $("#correo").val();
                     var contr = $("#contrasena").val().length;
@@ -606,7 +621,8 @@
                             title: 'Aviso',
                             priority : 'warning'
                         });  
-                    } */
+                    } 
+					*/
 
                     
                 })

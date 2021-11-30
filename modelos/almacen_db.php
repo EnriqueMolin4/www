@@ -2514,6 +2514,7 @@ if($module == 'updateInvProd')
 							`conectividad` = ?, 
 							`estatus` = ?,
 							`ubicacion` = ?,  
+							`id_ubicacion` = ?,
 							`estatus_inventario` = ?,
 							`cantidad` = ?, 
 							`modificado_por` = ?,
@@ -2527,14 +2528,16 @@ if($module == 'updateInvProd')
 			$params['conectividad'],
 			$params['estatus'],
 			$params['ubicacion'],
+			$params['ubicacion'],
 			$params['estatusinventario'],
 			$params['cantidad'],
 			$user,
 			$fecha,
 			$params['noserie']
 	);
-	
+	//print_r($arrayString);
 	$id = $Almacen->insert($prepareStatement,$arrayString);
+
 	if($id != 0)
 	{
 		echo json_encode(["msg" => "No se actualizaron los datos", "data" => json_encode($arrayString),'id' => $id ]);

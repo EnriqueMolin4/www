@@ -546,8 +546,9 @@ if($module == 'nuevousuario') {
 		//$newPass = strlen($pass) > 0 ? $pass : $oldPass;
 		//$terr = implode("','",$territorios);
 
-		$prepareStatement = "UPDATE  `cuentas` SET `cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
+		$prepareStatement = "UPDATE  `cuentas` SET `user`=?, `cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
 		$arrayString = array (
+			$sgs,
 			$negocios[0],
 			$params['tipo'],
 			$params['nombre'],

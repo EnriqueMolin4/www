@@ -131,16 +131,16 @@ class Assignacion implements IConnections {
 				CASE WHEN territorial.tipo_comercio IS NULL THEN 'NA' ELSE getNameById(territorial.tipo_comercio,'TipoComercio') END TipoComercio ,territorial.cp, territorial.ciudad
 				from eventos 
 				LEFT JOIN tipo_estatus ON eventos.estatus = tipo_estatus.id
-				INNER JOIN (  select cp_territorios.territorio_id,cp_territorios.cp,comercios.ciudad, comercios.comercio NombreComercio,comercios.tipo_comercio,comercios.afiliacion FROM cuentas,cp_territorios,comercios
-				WHERE cuentas.territorial = cp_territorios.territorio_id 
-				AND tipo_user =12 AND comercios.cp = cp_territorios.cp 
+				LEFT JOIN (  select cp_territorios.territorio_id,cp_territorios.cp,comercios.ciudad, comercios.comercio NombreComercio,comercios.tipo_comercio,comercios.afiliacion FROM cp_territorios,comercios,supervisor_territorio
+				WHERE supervisor_territorio.territorio_id = cp_territorios.territorio_id
+				AND comercios.cp = cp_territorios.cp 
 				GROUP BY cp_territorios.territorio_id, cp_territorios.cp,comercios.ciudad,comercios.comercio, comercios.tipo_comercio, comercios.afiliacion) territorial ON territorial.afiliacion = eventos.afiliacion
 				WHERE date(eventos.fecha_alta) BETWEEN '$inicio' AND '$fin' AND eventos.estatus IN (1,16)
 				$where
 				$order
 				$filter ";
 		
-		//self::$logger->error($sql);
+			   //self::$logger->error($sql);
 		try {
 			$stmt = self::$connection->prepare ($sql);
 			$stmt->execute();
@@ -246,7 +246,7 @@ class Assignacion implements IConnections {
 		$sql = "SELECT cuentas.id,du.nombre,du.apellidos from cuentas,detalle_usuarios du
 				WHERE cuentas.id = du.cuenta_id
 				and cuentas.tipo_user=3 
-				and cuentas.territorial = $userId 
+				and cuentas.territorial = ($userId) 
 				ORDER BY du.nombre,du.apellidos ";
 
 		//self::$logger->error($sql);
