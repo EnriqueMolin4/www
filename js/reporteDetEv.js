@@ -9,6 +9,7 @@ $(document).ready(function() {
     getEstados();
     getEstatusServicio();
     getTipoSubServicio();
+    getEstatusEvento();
     //valiDate();
 	
 	//Create Ticket
@@ -251,6 +252,29 @@ function getEstatusServicio() {
             nonSelectedText: 'Seleccionar',
             includeSelectAllOption: true,
             allSelectedText: 'Todos'
+        });
+
+            
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+function getEstatusEvento() {
+
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getestatusevento',
+        cache: true,
+        success: function(data){
+            console.log(data);
+        
+         $("#estatus_evento").html(data);
+         $("#estatus_evento").multiselect({
+            nonSelectedText: 'Seleccionar',
+            includeSelectAllOption: true
         });
 
             

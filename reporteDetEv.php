@@ -68,11 +68,21 @@
                                 </select>
                         </div>
 
-                        <div class="col-sm-4">           
+                    </div>
+                    <div class="row">
+                        
+                    <div class="col-sm-3">           
                             <label for="estatus_servicio" class="col-form-label-sm">ESTATUS SERVICIO</label><br>
                                 <select hidden name="estatus_servicio[]" class="custom-select form-control form-control-sm" id="estatus_servicio" multiple>
                                     <option value="0">Seleccionar</option>
                                 </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="estatus_evento" class="col-form-label-sm">ESTATUS EVENTO</label><br>
+                                <select hidden name="estatus_evento[]" class="custom-select form-control form-control-sm" id="estatus_evento" multiple>
+                                    <option value="0">Seleccionar</option>
+                                </select>
+
                         </div>
                     </div>
 

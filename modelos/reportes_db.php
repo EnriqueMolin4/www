@@ -358,6 +358,7 @@ class Reportes implements IConnections {
         $tipo_servicio      = isset($params['tipo_servicio']) ? $params['tipo_servicio'] : array();
         $tipo_subservicios  = isset($params['tipo_subservicio']) ? $params['tipo_subservicio'] : array();
         $estatus_servicio   = isset($params['estatus_servicio']) ? $params['estatus_servicio'] : array();
+        $estatus_evento     = isset($params['estatus_evento']) ? $params['estatus_evento'] : array();
         $fecha_cierre       = $params['fecha_cierre'];
         $fecha_cierre_hasta       = $params['hasta_fc'];
 
@@ -390,6 +391,14 @@ class Reportes implements IConnections {
 			}
         } 
 
+        if( sizeof($estatus_evento) > 0 )
+        {
+            $estatus_eventoList = implode(",",$estatus_evento);
+            if($estatus_eventoList != '0'){
+                $where .= " AND eventos.estatus in ($estatus_eventoList)";
+            }
+        }
+
         if( $campoFecha == 'Alta') {
             $campoFecha = "DATE(eventos.fecha_alta)";
         } else {
@@ -412,6 +421,7 @@ class Reportes implements IConnections {
 
         $sql = "SELECT  
 				eventos.odt, 
+				IFNULL(img.totalImg,0) totalImg,
 				eventos.afiliacion, 
 				ts.nombre servicioNombre, 
 				tss.nombre subservicioNombre,
@@ -481,6 +491,7 @@ class Reportes implements IConnections {
                 CASE WHEN ce.aplica_rechazo_2 = 1 THEN 'SI' ELSE 'NO' END AplicaRechazo															
                 FROM eventos
                 LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
+                LEFT JOIN view_total_odt_img img ON img.odt = eventos.odt
                 JOIN comercios c ON c.id = eventos.comercio 
                 JOIN tipo_estatus te ON te.id = eventos.estatus_servicio
                 JOIN tipo_estatus tes ON tes.id = eventos.estatus
@@ -799,7 +810,7 @@ if ( $module == 'reporte_detevento' ) {
     $rows = $Reportes->getDetEvento($params, true);
 
 	//$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
-	$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN', 'TPV RETIRADA','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO');																																																																																																																																																																																 
+	$headers = array ('ODT','IMG CARGADAS', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN', 'TPV RETIRADA','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO');																																																																																																																																																																																 
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO', 'DESCRIPCION', 'TECNICO', 'ESTATUS', 'TPV INSTALADA', 'TPV RETIRADA', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION');
 
@@ -831,13 +842,13 @@ if ( $module == 'reporte_detevento' ) {
                 //$value = $counter == 2 ? "'$value" : $value;
                 if( $counter == 2  ) {
                     $value ="'$value";
-                } else if ( $counter == 38 ) {
+                } else if ( $counter == 39 ) {
                     $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 42 ) {
-                    $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 46 ) {
+                } else if ( $counter == 43 ) {
                     $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 47 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 48 ) {
                     $value = empty($value) ? "" : "'$value";
                 } 
 
