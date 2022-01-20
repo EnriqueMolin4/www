@@ -871,6 +871,7 @@ class Eventos implements IConnections {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		   }
 		}
+		
 
  	function getEstatusServicio() {
  

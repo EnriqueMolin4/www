@@ -43,6 +43,7 @@
                 </div>   
             </div>
         </main>
+        
         <!-- page-content" -->
     </div>
     <!-- page-wrapper -->
@@ -63,6 +64,12 @@
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
     <script src="js/main.js"></script>
     <script type="text/javascript" src="js/reportes.js"></script> 
+    <script>
+        $(document).ready(function(){
+            ResetLeftMenuClass("submenureportes", "ulsubmenureportes","repimgtecnicolink")
+        })
+    </script>
+
 </body>
 
 </html>

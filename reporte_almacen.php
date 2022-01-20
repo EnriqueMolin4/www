@@ -96,6 +96,11 @@
             overflow-y: scroll; 
         }
     </style>
+    <script>
+        $(document).ready(function(){
+            ResetLeftMenuClass("submenureportes", "ulsubmenureportes","repalmacenlink")
+        })
+    </script> 
 </body>
 
 

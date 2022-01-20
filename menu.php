@@ -248,17 +248,17 @@
             
             if ( searchMenu($_SESSION['Modules'],'group','Reportes') )   { 
             ?>
-         <li class="sidebar-dropdown">
+         <li class="sidebar-dropdown" id="submenureportes">
             <a href="#">
             <i class="fa fa-calendar-alt"></i>
             <span class="menu-text">Reportes</span>
             </a>
-            <div class="sidebar-submenu">
+            <div class="sidebar-submenu" id="ulsubmenureportes">
                <ul>
                   <?php
                      if ( searchMenu($_SESSION['Modules'],'url','reporte_eventos') )   { 
                      ?>
-                  <li id="repeventoslink">
+                  <li id="reportedeteventolink">
                      <a href="reporteDetEv.php">Eventos</a>
                   </li>
                   <?php 

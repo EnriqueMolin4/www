@@ -58,7 +58,12 @@
     <script src="js/moment-with-locales.js"></script>
     <script type="text/javascript" src="js/jquery.datetimepicker.full.min.js"></script>
     <script src="js/main.js"></script>
-    <script type="text/javascript" src="js/reportes.js"></script> 
+    <script type="text/javascript" src="js/reportes.js"></script>
+    <script>
+        $(document).ready(function(){
+            ResetLeftMenuClass("submenureportes", "ulsubmenureportes","repinvcampolink")
+        })
+    </script> 
 </body>
 
 </html>

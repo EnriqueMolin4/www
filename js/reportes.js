@@ -7,7 +7,7 @@ $(document).ready(function() {
     getubicacion();
     getubi();
 
-    //ResetLeftMenuClass("submenueventos", "ulsubmenueventos", "eventoslink")
+    //ResetLeftMenuClass("submenureportes", "ulsubmenureportes", "repimgtecnicolink")
     
         $("#fechaVen_inicio").datetimepicker({
             format:'Y-m-d'

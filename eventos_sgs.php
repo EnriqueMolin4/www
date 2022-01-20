@@ -70,6 +70,9 @@ crossorigin="anonymous"></script>
 <script src="js/bootstrap-multiselect.min.js"></script>
 <script>
 $(document).ready(function() {
+
+    ResetLeftMenuClass("submenureportes", "ulsubmenureportes","repeventosgslink")
+
     $("#fechaIni").datetimepicker({
         timepicker:false,
         format:'d/m/Y'
