@@ -126,6 +126,7 @@
                             <th>TECNICO</th>
                             <th>ESTATUS</th>
                             <th>INSUMO</th>
+                            <th>CARRIER</th>
                             <th>CONECTIVIDAD</th>
                             <th>VERSION</th>
                             <th>CANTIDAD</th>
@@ -135,10 +136,10 @@
                             <th>tipoId</th>  
                             <th>tecnicoId</th> 
                             <th>estatusId</th>  
-                            <th>insumoId</th>   
+                            <th>insumoId</th> 
+                            <th>carrierId</th>  
                             <th>conectividadId</th>   
                             <th>versionId</th>
-                            <th>carrierId</th>
                             <th>ACCION</th>                         
                         </tr>
                     </thead>

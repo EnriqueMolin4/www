@@ -815,8 +815,7 @@ class Almacen implements IConnections {
             self::$logger->error ("File: almacen_db.php;	Method Name: getHistoriaInsumos();	Functionality: Get Historia;	Log:" . $e->getMessage () );
 		}
 	}
-		
-	function getTecnicos() {
+ 	function getTecnicos() {
 		$supervisor = "";
 		
 		if($_SESSION['tipo_user'] == 'admin') 
@@ -1635,6 +1634,7 @@ class Almacen implements IConnections {
 				peticiones_id,
 				CONCAT(du.nombre,' ',du.apellidos) tecnico,
 				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
+				CASE WHEN dp.tipo = 2 THEN  c.nombre END carrier,
 				te.id estatus,
 				ti.nombre insumo ,
 				tc.nombre conectividad,
@@ -1646,6 +1646,7 @@ class Almacen implements IConnections {
 				FROM detalle_peticiones dp
 				LEFT JOIN detalle_usuarios du ON  dp.tecnico_id = du.cuenta_id
 				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
+				LEFT JOIN carriers c ON c.id = dp.carrier
 				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
 				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
 				LEFT JOIN tipo_estatus_modelos te ON te.id = dp.estatus
@@ -2587,8 +2588,6 @@ if($module == 'updateInvProd')
 		
 		echo "Se actualizaron los datos";
 	
-	
-
 }
 
 
@@ -3370,9 +3369,9 @@ if( $module == 'guardarPeticion' )
 	{
 		echo "SE GUARDARON LOS DATOS";
 		$prepareStatementDet = "INSERT INTO `detalle_peticiones` 
-					(`peticiones_id`,`tecnico_id`,`tipo`,`estatus`,`insumo`,`conectividad`,`producto`,`cantidad`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
+					(`peticiones_id`,`tecnico_id`,`tipo`,`estatus`,`insumo`,`carrier`,`conectividad`,`producto`,`cantidad`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
 					 VALUES
-					 (?,?,?,?,?,?,?,?,?,?,?,?);
+					 (?,?,?,?,?,?,?,?,?,?,?,?,?);
 					 ";
 					 
 		foreach ($info as $data) 
@@ -3385,6 +3384,7 @@ if( $module == 'guardarPeticion' )
 				$data['tipo'],
 				$data['estatus'],
 				$data['insumo'],
+				$data['carrier'],
 				$data['conectividad'],
 				$data['producto'],
 				$data['cantidad'],
@@ -3396,6 +3396,7 @@ if( $module == 'guardarPeticion' )
   
 			);
 
+			var_dump($arrayStringDet);
 			$det = $Almacen->insert($prepareStatementDet, $arrayStringDet);
 		}
 	}
@@ -3486,6 +3487,17 @@ if($module == 'generarEnvio') {
 
 			
 				$id = $Almacen->insert($sql,$arrayString);
+
+				//Actulizar guia y rastreo en peticiones
+				$sqlp ="UPDATE `peticiones` SET `no_guia`=?, `codigo_rastreo`=? WHERE `id`=? ";
+
+				$arrayStringP = array (
+					$params['no_guia'],
+					$params['codigo_rastreo'],
+					$params['peticionId']
+				);
+
+				$idp = $Almacen->insert($sqlp,$arrayStringP);
 			
 
 				//Modificar inventario general

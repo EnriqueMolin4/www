@@ -75,6 +75,11 @@ $(document).ready(function() {
             },
             {
                 "targets": [17],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [18],
                 "mRender": function ( data,type, row ) {
               
                     return '<a href="#" class="btn btn-danger delRow">Borrar</a>';
@@ -102,7 +107,8 @@ $(document).ready(function() {
         var conectividadId = 0;
         var producto = '';
         var productoId = 0;
-		var carrierId = 0
+        var carrier = '';
+		var carrierId = 0;
 
         var comentario_supervisor = document.getElementById("comentario_supervisor").value;
 
@@ -115,6 +121,7 @@ $(document).ready(function() {
                 productoId = $("#producto").val();
             break;
 			case "2":
+                carrier = $("#carrier option:selected").text();
 				carrierId = $("#carrier").val();
 			break
             case "3":
@@ -201,6 +208,7 @@ $(document).ready(function() {
                 $("#tecnico option:selected" ).text(),
                 $("#estatus option:selected" ).text(),
                 insumo,
+                carrier,
                 conectividad,
                 producto,
 				$("#cantidad").val(),
@@ -212,6 +220,7 @@ $(document).ready(function() {
                 $("#tecnico").val(),
                 $("#estatus").val(),
                 insumoId,
+                carrierId,
                 $("#conectividad").val(),
                 $("#producto").val(),
 		        $("#carrier").val()
@@ -223,6 +232,7 @@ $(document).ready(function() {
         $("#producto").val("0");
         $("#estatus").val("0");
         $("#insumo").val("0");
+        $("#carrier").val("0");
         $("#cantidad").val("0");
         campos_tipo();
         tableTraspasosItems.columns.adjust().draw();
@@ -239,19 +249,20 @@ $(document).ready(function() {
 			$.each(data, function(index,value) {               
 
 				var valueToPush = new Object();
-                valueToPush['comentario_supervisior'] = value[7];
-                valueToPush['tipo_envio'] = value[8];
-                valueToPush['direccion_envio'] = value[9];
-				valueToPush["tipo"] = value[10];
-				valueToPush["tecnico"] = value[11];
-				valueToPush["estatus"] = value[12];
-				valueToPush["insumo"] = value[13];
-				valueToPush["conectividad"] = value[14];
-                valueToPush["producto"] = value[15];
-                valueToPush["cantidad"] = value[6];
+                valueToPush['comentario_supervisior'] = value[8];
+                valueToPush['tipo_envio'] = value[9];
+                valueToPush['direccion_envio'] = value[10];
+				valueToPush["tipo"] = value[11];
+				valueToPush["tecnico"] = value[12];
+				valueToPush["estatus"] = value[13];
+				valueToPush["insumo"] = value[14];
+                valueToPush["carrier"] = value[15];
+				valueToPush["conectividad"] = value[16];
+                valueToPush["producto"] = value[17];
+                valueToPush["cantidad"] = value[7];
 				datosEnviar.push(valueToPush);
 
-                
+                //console.log(valueToPush);
                 
 				})
                 

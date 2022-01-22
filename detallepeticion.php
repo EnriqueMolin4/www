@@ -41,6 +41,7 @@
                             <th>TIPO</th>
                             <th>ESTATUS</th>
                             <th>INSUMO</th>
+                            <th>CARRIER</th>
                             <th>CONECTIVIDAD</th>
                             <th>VERSION</th>
                             <th>CANTIDAD</th>   
@@ -145,7 +146,7 @@
                         <input type="hidden" id="peticionDetalleId" name="peticionDetalleId" value='0'>
                         <input type="hidden" id="tipoId" name="tipoId">
                         <input type="hidden" id="estatusId" name="estatusId">
-                        <button type="button" class="btn btn-success" id="btnGrabarNuevo">Grabar</button>
+                        <button type="button" class="btn btn-success" id="btnGrabarNuevo">CARGAR CAJA</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
@@ -212,6 +213,7 @@
                 { data: 'tipo'},
                 { data: 'estatus'},
                 { data: 'insumo'},
+                { data: 'carrier'},
                 { data: 'conectividad'},
                 { data: 'producto'},
                 { data: 'cantidad'},
@@ -234,7 +236,7 @@
 
                 },
                 {
-                    "targets": [7],
+                    "targets": [8],
                     "mRender": function ( data,type, row ) 
                     {
                         var btn;
@@ -413,7 +415,7 @@
                                     }) .then((result) => {
 
                                     if (result.isConfirmed) {
-                                    window.location.href = "peticiones.php";
+                                    //window.location.href = "peticiones.php";
                                     }
                                     })  
                                 }
@@ -707,7 +709,7 @@
     }
 
     function rollosAlm()
-        {
+    {
             var rollos;
             $.ajax({
                 type: 'GET',
@@ -730,9 +732,9 @@
                 }
             });
             return rollos;
-        }  
+    }  
     
-        function cantPeticion(idp)
+    function cantPeticion(idp)
     {
         var cantidad;
         $.ajax({
