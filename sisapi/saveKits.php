@@ -22,9 +22,9 @@ include '../modelos/api_db.php';
             if($invenInsumo['id']) {
 
                 $prepareStatement = "INSERT INTO `historial`
-				( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`)
+				( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)
 				VALUES
-				(?,?,?,?,?,?,?,?);
+				(?,?,?,?,?,?,?,?,?);
                 ";
                 $arrayString = array (
                         $invenInsumo['id'],
@@ -34,7 +34,8 @@ include '../modelos/api_db.php';
                         $dat->codigo,
                         3,
                         1,
-                        $comercio
+                        $comercio,
+                        $tecnico
                 );
 
                 $Api->insert($prepareStatement,$arrayString);

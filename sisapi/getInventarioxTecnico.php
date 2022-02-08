@@ -13,7 +13,7 @@ $sql = "Select 'tpv' tipo,count(*) total  from inventario_tecnico,inventario  wh
 		UNION ALL
 		Select 'sims' tipo,count(*) total from inventario_tecnico,inventario where inventario.no_serie = inventario_tecnico.no_serie AND tecnico = $tecnico AND tipo = 2
 		UNION ALL
-		Select 'rollos' tipo,inventario_tecnico.cantidad total from inventario_tecnico,inventario where inventario.no_serie = inventario_tecnico.no_serie AND tecnico = $tecnico AND inventario_tecnico.no_serie = 'ROLS';
+		Select 'rollos' tipo,ifnull(inventario_tecnico.cantidad,0) total from inventario_tecnico  where  tecnico = $tecnico AND inventario_tecnico.no_serie = 'ROLS';
         ";
 
        $resultado =  $Api->select($sql,array ());
@@ -22,29 +22,36 @@ $sql = "Select 'tpv' tipo,count(*) total  from inventario_tecnico,inventario  wh
 			
 			$total =  $rst['total']; 
 			
-			if ( $total == 0 && $rst['tipo'] == 'tpv' ) {
-				$counter++;
-				$msg = $msg."No tienes terminales en tu inventario \n ";
+			switch($rst['tipo']) {
+				
+				case 'tpv' :
+				if($rst['total'] == '0') {
+					$msg = $msg."No tienes terminales en tu inventario \n ";
+					
+				}  
+				
 				$totalTPV = (int) $total;
-			} else {
-				$totalTPV = (int) $total;
-			}
-			
-			if( $total == 0 && $rst['tipo'] == 'sims' ) {
-				//$counter++;
-				$msg = $msg."No tienes sims en tu inventario \n ";
+				break;
+				case 'sims' :
+				if($rst['total'] == '0') {
+					$msg = $msg."No tienes sims en tu inventario \n ";
+					
+				}  
+				
 				$totalSIM = (int) $total;
-			} else {
-				$totalSIM = (int) $total;
-			}
-			
-			if( $total == 0 && $rst['tipo'] == 'rollos') {
-				$counter++;
-				$msg = $msg."No tienes rollos en tu inventario \n ";
-				$totalRollos= (int) $total;
-			} else {
+				break;
+				case 'rollos' :
+				if($rst['total'] == '0') {
+					$msg = $msg."No tienes rollos en tu inventario \n ";
+					
+				}  
+				
 				$totalRollos = (int) $total;
+				break;
+				
 			}
+			
+			
 			 
 		}
 

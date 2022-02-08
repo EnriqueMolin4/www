@@ -38,7 +38,7 @@ $sql = " SELECT  eventos.id idevento ,eventos.odt,ifnull(hora_llegada,'') hora_l
         CASE WHEN eventos.tipo_servicio = 19 THEN 1 WHEN  eventos.tipo_servicio = 2 THEN 1 WHEN  eventos.tipo_servicio = 21 THEN 1
         WHEN  eventos.tipo_servicio = 13 THEN 1 WHEN  eventos.tipo_servicio = 24 THEN 1 WHEN  eventos.tipo_servicio = 25 THEN 1
         WHEN  eventos.tipo_servicio = 26 THEN 1 WHEN  eventos.tipo_servicio = 18 THEN 1 ELSE 0 END  tpvretiradorule,
-		eventos.servicio subservicioid,
+		IF(eventos.servicio IS NULL or eventos.servicio = '', '0', eventos.servicio) subservicioid,
         eventos.tpv_retirado tpvretirado,
         eventos.tpv_instalado tpvinstalado,
         DATE(fecha_vencimiento) fechavencimiento ,eventos.fecha_alta,
@@ -60,17 +60,20 @@ $sql = " SELECT  eventos.id idevento ,eventos.odt,ifnull(hora_llegada,'') hora_l
 		comercios.estado,
 		ifnull(CONCAT( eventos.hora_atencion ,'|',eventos.hora_atencion_fin),'') horaatencion,
 		ifnull(CONCAT( eventos.hora_comida ,'|',eventos.hora_comida_fin),'') horacomida,
-        eventos.folio_telecarga ,
+		IF(eventos.folio_telecarga = 0 , '', eventos.folio_telecarga)  folio_telecarga, 
         eventos.hora_ticket,
         eventos.id_caja,
         eventos.aplicativo,
-        eventos.version					
+		eventos.aplicativo_ret,
+        eventos.version,
+		eventos.version_ret,
+        eventos.domicilioalterno					
         from eventos 
         LEFT JOIN comercios ON eventos.comercio = comercios.id
 	    LEFT JOIN img ON img.odt = eventos.odt  AND  img.tecnico = eventos.tecnico
         ,tipo_servicio
 	    where eventos.tecnico =  ?
-        and eventos.estatus= 2 
+        and eventos.estatus  in (2,20) 
 	    AND eventos.tipo_servicio = tipo_servicio.id
 	    AND eventos.fecha_alta > date(DATE_ADD(NOW(), INTERVAL -10 day))
 	    group by eventos.odt,eventos.id ,eventos.afiliacion,comercios.comercio order by fecha_vencimiento DESC";

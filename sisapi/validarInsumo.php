@@ -1,5 +1,5 @@
 <?php 
-session_start();
+ 
 include '../modelos/api_db.php';
 
 
@@ -22,6 +22,10 @@ if( $resultado == 0) {
 } else {
 	if( $qty == (int) $resultado) {
 		
+		$cantAnt = $Api->existInsumoInventario($tecnico,$tipo);
+
+		$nuevaQty = (int) $cantAnt + $qty; 
+
 		$sql = "UPDATE traspasos SET estatus = 1,ultima_act = '$today'
 		where no_guia = '$noguia'
 		AND cuenta_id = '$tecnico'
@@ -30,16 +34,26 @@ if( $resultado == 0) {
 
 		$Api->insert($sql,array());
 		
-		$sql = "UPDATE inventario_tecnico SET aceptada = 1,fecha_modificacion= '$today'
+		/* $sql = "UPDATE inventario_tecnico SET aceptada = 1,fecha_modificacion= '$today'
 		where tecnico = '$tecnico'
-		AND no_serie = '$tipo' ";
+		AND no_serie = '$tipo' "; */
+
+		$aceptada = 1;
+		$notas = "";
+
+		$sql = " INSERT INTO inventario_tecnico (id,tecnico,no_serie,cantidad,no_guia,aceptada,notas,creado_por,fecha_creacion,fecha_modificacion) 
+				VALUES (NULL,$tecnico,'$tipo',$qty,'$noguia',$aceptada,'$notas',$tecnico,'$today','$today') 
+				ON DUPLICATE KEY     
+				UPDATE cantidad = $nuevaQty
+				,aceptada = $aceptada
+				,fecha_modificacion = '$today'  ";
 		
 		$Api->insert($sql,array());
 		
 		$IdTraspasos = $Api->getIdTraspaso($noguia,$tecnico,$tipo);
 		
 		$fecha = date ( 'Y-m-d H:m:s' );
-		$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion');
+		$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 		
 		$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
 		$sql = "INSERT INTO historial (" . implode(",", $datafieldsHistoria ) . ") VALUES (".$question_marks.")"; 
@@ -52,6 +66,7 @@ if( $resultado == 0) {
 			$tipo,
 			3,
 			$qty,
+			$tecnico,
 			$tecnico
 		);
 		

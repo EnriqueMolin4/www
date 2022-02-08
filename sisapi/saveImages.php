@@ -1,15 +1,14 @@
-<?php 
-session_start();
+<?php
 date_default_timezone_set('America/Monterrey');
 
-include '../modelos/DBConnection.php';
+include '../modelos/api_db.php';
 
     
-    $connection = $db->getConnection ( 'dsd' );
 
     $odt = trim($_POST['odt']);
     $afiliacion = trim($_POST['afiliacion']);
-    $fecha = date ( 'Y-m-d H:m:s' );
+	$hoy = strtotime("now");
+	$fecha = date ('Y-m-d H:i:s',$hoy );
     $tecnico = $_POST['userid'];
     $realImage = $_FILES['photo']['tmp_name'];
     $fileName = $_POST['name'];
@@ -27,22 +26,22 @@ include '../modelos/DBConnection.php';
         mkdir($folder, 0777, true);
     }
 
-    try {
-            $moveImage = move_uploaded_file($realImage, $folder.'/'.$fileName);
+   
+        $moveImage = move_uploaded_file($realImage, $folder.'/'.$fileName);
         if( $moveImage ) {
             
             //Existe el Evento
             $queryexist = "SELECT id from eventos where odt = ? ";
             
-            $stmt = $connection->prepare ($queryexist);
-            $stmt->execute (array($odt));
-			$exist =  $stmt->fetchColumn();
+          
+            $arrayString = array($odt);
+			$exist =  $Api->insert($queryexist,$arrayString);
             
             if($exist) {
 
-                $stmt = $connection->prepare (" UPDATE eventos SET latitud=?,longitud=?,tecnico=? WHERE id=?");
-                $stmt->execute ( array($latitud,$longitud,$tecnico,$exist) );
-                $newId = $exist;
+                $sqlEvento = " UPDATE eventos SET latitud=?,longitud=?,tecnico=? WHERE id=? ";
+                $arrayStringEvento =  array($latitud,$longitud,$tecnico,$exist);
+                $newId = $Api->insert($sqlEvento,$arrayStringEvento );
 
             } else {
                 //Grabar Evento 
@@ -66,10 +65,7 @@ include '../modelos/DBConnection.php';
                  
                 );
             
-                $stmt = $connection->prepare ( $sqlEvento );
-                $stmt->execute ( $arrayStringEvento );
-                $stmt = $connection->query("SELECT LAST_INSERT_ID()");
-                $newId =  $stmt->fetchColumn();
+                $newId = $Api->insert($sqlEvento,$arrayStringEvento );
             }
             
             //Grabar Registro de Imagen
@@ -86,24 +82,18 @@ include '../modelos/DBConnection.php';
                     $tipoevidencia
                 );
 
-            $stmt = $connection->prepare ( $prepareStatement );
-            $stmt->execute ( $arrayString );
-			$stmt = $connection->query("SELECT LAST_INSERT_ID()");
-			$newId =  $stmt->fetchColumn();
-
+       
+			$newId = $Api->insert($prepareStatement,$arrayString );
             $resultado =  ['status' => 1, 'error' => 'Se Cargo Correctamente la Imagen', 'odt' => $odt, 'afiliacion' => $afiliacion ];
 
         } else {
              
-            $resultado =  ['status' => 0, 'error' => 'No Se subio el archivo ' ];
+            $resultado =  ['status' => 0, 'error' => 'No Se subio el archivo '.$_FILES["photo"]["error"],'folder' => $folder,'upload' => $moveImage,'folderExist' => file_exists($folder) ];
         }
     
         
 
-    } catch (Exception $e) {
-        $error = 'File did not upload: ' . $e->getMessage();
-        $resultado =  ['status' => 0, 'error' => $error ,'odt' => $odt, 'afiliacion' => $afiliacion ];
-    }
+   
 
 
     echo json_encode($resultado);

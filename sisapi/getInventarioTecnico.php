@@ -27,7 +27,8 @@ $sql = "select  distinct
     ifnull(tv.nombre,'EN PLAZA') estatus_inventario,
     it.creado_por,
     DATE(it.fecha_creacion) fecha_creacion,
-    DATE(it.fecha_modificacion)  fecha_modificacion
+    DATE(it.fecha_modificacion)  fecha_modificacion,
+	CASE WHEN it.cantidad <= 15 THEN 'green' WHEN it.cantidad BETWEEN 16 AND 30 THEN 'yellow' WHEN it.cantidad > 30 THEN 'red' ELSE 'white'  END color
     from inventario_tecnico it
     LEFT JOIN inventario i ON it.no_serie = i.no_serie  AND i.id_ubicacion =it.tecnico 
     LEFT JOIN tipo_estatus_modelos tm ON  i.estatus  = tm.id 

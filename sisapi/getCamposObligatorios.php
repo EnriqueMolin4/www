@@ -3,9 +3,11 @@
 include '../modelos/api_db.php';
 
 //$eventoId = $_POST['eventoId'];
-$servicio = $_POST['servicioid'];
+$odt = $_POST['odt'];
 
-$campos = $Api->getCamposObligatorios($servicio);
+$servicio = $Api->getServicioIdOdt($odt);
+
+$campos = $Api->getCamposObligatorios($servicio['subservicio']);
 
 
 echo json_encode($campos);

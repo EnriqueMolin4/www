@@ -11,7 +11,9 @@ include '../modelos/api_db.php';
     $cve = $Api->getDefaultBancoCve();
 	$buscarUniversoElavon = $Api->searchItemElavonAPP($noserie,1);
 	$configuracion = $Api->getConfiguration('ValidarInventarioLocal');
-    file_put_contents("json/search_tpv_".$noserie."_".$fecha.".json",$tecnico."--".$noserie);
+	$tecnicoData = $Api->getTecnicoInfo($tecnico);
+	if( strlen($noserie) > 0 ) {
+		file_put_contents("json/search_tpv_".$noserie."_".$fecha.".json",$tecnico."--".$noserie);
 
 		if($configuracion['valor_numerico'] == '1') {
 			
@@ -24,7 +26,7 @@ include '../modelos/api_db.php';
                 if($existItem['id_ubicacion'] == $tecnico ) {
                     $resultado =  ['status' => 1,'id' => $existItem['id']  , 'error' => 'Ya lo tienes asignado en tu inventario', 'tecnico' => $tecnico,'existe' => $existItem['id_ubicacion']  ];
                 } else {
-					if($existItem['id_ubicacion'] == 0) {
+					if($existItem['id_ubicacion'] == $tecnicoData['almacen']) {
 						 $sql = " UPDATE inventario  SET ubicacion=?,id_ubicacion=?,estatus_inventario=?,fecha_edicion=?   WHERE id=?";
 						$Api->insert($sql,  array(9,$tecnico,3,$fecha,$existItem['id']));
 						
@@ -69,7 +71,14 @@ include '../modelos/api_db.php';
 			
 			if($buscarUniversoElavon){
 				
-				$existItem = $Api->existInsumoInventario($tecnico,$noserie);
+				$itemAsignado = $Api->existItemInventarioAsignado($noserie,9);
+
+				if($itemAsignado) 
+				{
+					$resultado =  ['status' => 1,'id' => 0  , 'tecnico' => $tecnico, 'existe' => $tecnico , 'error' => 'La serie la tiene asignada otro Tecnico \n comunicarse con Adminsitracion' ];
+				} else {
+
+					$existItem = $Api->existInsumoInventario($tecnico,$noserie);
 			
 					 if($existItem) {
 						 
@@ -85,6 +94,7 @@ include '../modelos/api_db.php';
 								$existeInventarioId= 1;
 								
 							} else {
+								$cve = $Api->getDefaultBancoCve();
 								$datafieldsInventarios = array('tipo','no_serie','modelo','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','fecha_entrada','fecha_creacion','fecha_edicion','cve_banco');
 							
 								$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInventarios), '?'));
@@ -94,7 +104,7 @@ include '../modelos/api_db.php';
 									$buscarUniversoElavon[0]['tipo'],
 									$noserie,
 									0,
-									$buscarUniversoElavon[0]['estatus_modelo'],
+									3,
 									3,
 									1,
 									9,
@@ -129,9 +139,9 @@ include '../modelos/api_db.php';
 								$Api->insert($sql,$arrayString); 
 
 								$prepareStatement = "INSERT INTO `historial`
-									( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`)
+									( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)
 									VALUES
-									(?,?,?,?,?,?,?,?);
+									(?,?,?,?,?,?,?,?,?);
 								";
 								
 								$arrayString = array (
@@ -142,6 +152,7 @@ include '../modelos/api_db.php';
 										$noserie,
 										1,
 										1,
+										$tecnico,
 										$tecnico
 								);
 
@@ -149,16 +160,20 @@ include '../modelos/api_db.php';
 								
 								 $resultado =  ['status' => 1, 'id' => 0 , 'tecnico' => $tecnico, 'existe' => $tecnico , 'error' => 'Se agrego al Inventario'];
 							} else {
-								$resultado =  ['status' => 0, 'id' => 0 , 'tecnico' => $tecnico, 'existe' => $tecnico , 'error' => 'No Existe en Elavon Universo2'];
+								$resultado =  ['status' => 0, 'id' => 0 , 'tecnico' => $tecnico, 'existe' => $tecnico , 'error' => 'No Existe en Elavon Universo'];
 							}
 					 }
+
+				}  
 			} else {
-				$resultado =  ['status' => 1,'id' => 0  , 'tecnico' => $tecnico, 'existe' => $tecnico , 'error' => 'No existe en Elavon Universo' ];
+				$resultado =  ['status' => 1,'id' => 0  , 'tecnico' => $tecnico, 'existe' => $tecnico , 'error' => 'No existe en Elavon Universo','existeElavon' => $buscarUniversoElavon ];
 			}
 			
 		}
             
-
+	} else {
+		$resultado =  ['status' => 1,'id' => 0  , 'tecnico' => $tecnico, 'existe' => $tecnico , 'error' => 'Favor de Capturar la serie,sim ' ];
+	}
 
     echo json_encode($resultado);
 

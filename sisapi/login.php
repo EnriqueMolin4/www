@@ -6,14 +6,14 @@ $user = $_POST['user'];
 $pass = sha1($_POST['pass']);
 $identifier = $_POST['identifier'];
 $version = is_null($_POST['version']) ? 0 :  $_POST['version'];
-$existDevice = 0;
+$existDevice = 1;
 
 $deviceInfo = $Api->getDeviceInfo($identifier);
-if( $version != '2.0.6') {
+//if( $version != '2.0.19'   ) {
 //if($version == '0') {
-	$resultado = [ 'error' => 2, 'data' => [] ];
-} else {
-
+	$resultado = [ 'error' => 2, 'data' => [],'version' => $version ];
+//} else { 
+	/*
 	if($deviceInfo) {
 
 		if( $deviceInfo[0]['user'] == $user ) {
@@ -24,7 +24,7 @@ if( $version != '2.0.6') {
 		
 			$existDevice = 1;
 		} else {
-			$existDevice = 0;
+			$existDevice = 1;
 		}
 	
 	} else {
@@ -45,22 +45,23 @@ if( $version != '2.0.6') {
 
 		$id = $Api->insert($prepareStatement,$arrayString);
 		$existDevice = 1;
-	}
+	} */
 
 	if($existDevice ) {
 
 		$login = $Api->getLogin($user,$pass);
+		$configuration = $Api->getConfiguraciones();
 
 		if($login ) {
-			$resultado = [ 'data' => $login, 'error' => 0 ];
+			$resultado = [ 'data' => $login, 'error' => 0 ,'info' => $login,'device' => $existDevice, 'configuracion' => $configuration];
 		
 		} else {
-			$resultado = [ 'error' => 1, 'data' => [] ];
+			$resultado = [ 'error' => 1, 'data' => [],'info' => $login,'device' => $existDevice ];
 		}
 	} else {
-		$resultado = [ 'error' => 0, 'data' => [] ];
+		$resultado = [ 'error' => 0, 'data' => [],'info' => $login,'device' => $existDevice ];
 	}
-}
+ // }
 
 echo json_encode($resultado);
 
