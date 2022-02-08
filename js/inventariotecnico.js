@@ -33,7 +33,7 @@ $(document).ready(function() {
             title: 'Inventario_Tecnico'+fecha_hoy,
             exportOptions: {
                 orthogonal: 'sort',
-                columns: [0,1,2,3,4,5,6]
+                columns: [0,1,2,3,4,5,6,7,8]
             },
             customizeData: function ( data ) {
                 for (var i=0; i<data.body.length; i++){
