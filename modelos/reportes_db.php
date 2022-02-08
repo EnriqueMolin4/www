@@ -426,6 +426,8 @@ class Reportes implements IConnections {
 				ts.nombre servicioNombre, 
 				tss.nombre subservicioNombre,
 				bancos.banco, 
+				CASE WHEN eventos.tipo_atencion = 1 THEN 'Presencial' WHEN eventos.tipo_atencion = 2 THEN 'Telefonico' END atencion,
+				CASE WHEN (eventos.latitud is null and eventos.longitud is null ) THEN 'NO' end coord,	
 				eventos.fecha_alta, 
 				eventos.fecha_vencimiento, 
 				eventos.fecha_cierre, 
@@ -488,7 +490,7 @@ class Reportes implements IConnections {
                 eventos.codigo_servicio codigo,
                 CASE WHEN ce.aplica_exito = 1 THEN 'SI' ELSE 'NO' END AplicaExito,
                 eventos.codigo_servicio_2 codigo2,
-                CASE WHEN ce.aplica_rechazo_2 = 1 THEN 'SI' ELSE 'NO' END AplicaRechazo															
+                CASE WHEN ce.aplica_rechazo_2 = 1 THEN 'SI' ELSE 'NO' END AplicaRechazo													
                 FROM eventos
                 LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
                 LEFT JOIN view_total_odt_img img ON img.odt = eventos.odt
@@ -810,7 +812,7 @@ if ( $module == 'reporte_detevento' ) {
     $rows = $Reportes->getDetEvento($params, true);
 
 	//$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
-	$headers = array ('ODT','IMG CARGADAS', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO', 'FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN', 'TPV RETIRADA','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO');																																																																																																																																																																																 
+	$headers = array ('ODT','IMG CARGADAS', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO','ATENCION','COORDENADAS','FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN', 'TPV RETIRADA','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CAMBIO DE ESTATUS POR','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO');																																																																																																																																																																																 
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO', 'DESCRIPCION', 'TECNICO', 'ESTATUS', 'TPV INSTALADA', 'TPV RETIRADA', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION');
 
@@ -840,15 +842,15 @@ if ( $module == 'reporte_detevento' ) {
             $counter = 1;
             foreach ($fields as $index => $value) {
                 //$value = $counter == 2 ? "'$value" : $value;
-                if( $counter == 2  ) {
+                if( $counter == 1  ) {
                     $value ="'$value";
-                } else if ( $counter == 39 ) {
+                } else if ( $counter == 41 ) {
                     $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 43 ) {
                     $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 47 ) {
+                } else if ( $counter == 49 ) {
                     $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 48 ) {
+                } else if ( $counter == 50 ) {
                     $value = empty($value) ? "" : "'$value";
                 } 
 
