@@ -279,7 +279,29 @@
                                     
                                 </div>
                         </div>
-						<div class="col">           
+                        <div class="col">           
+                                <label for="version" class="col-form-label-sm">Version Instalada</label>
+                                <select  class="form-control form-control-sm" id="version" aria-describedby="version" readonly>
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                        </div>
+                        <div class="col">           
+                                <label for="aplicativo" class="col-form-label-sm">Aplicativo Instalado</label>
+								<select  class="form-control form-control-sm" id="aplicativo" aria-describedby="aplicativo">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                        </div>
+                        <div class="col">           
+                            <label for="producto" class="col-form-label-sm">Producto Instalado</label>
+                            <select  class="form-control form-control-sm" id="producto" aria-describedby="producto" disabled>
+								<option value="0">Seleccionar</option>
+							</select>
+                        </div>
+						
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col">           
                                 <label for="tpv_retirado" class="col-form-label-sm">Terminal Retirada</label>
                                 <input type="text" class="form-control form-control-sm" id="tpv_retirado" aria-describedby="tpv" readonly>
                                 <select  class="form-control form-control-sm" id="tpvReDataModelo" aria-describedby="tpvReDataModelo">
@@ -299,70 +321,25 @@
                                 </div>
                         </div>
                         <div class="col">           
-                                <label for="idcaja" class="col-form-label-sm">Id Caja</label>
-                                <input type="text" class="form-control form-control-sm" id="idcaja" aria-describedby="idcaja" readonly>
-                        </div>
-                        <div class="col">           
-                            <label for="afiliacion_amex" class="col-form-label-sm">Afiliacion Amex</label>
-                            <input type="hidden" id="tieneamex" name="tieneamex">
-                            <input type="text" class="form-control form-control-sm" id="afiliacion_amex" aria-describedby="afiliacion_amex" readonly>
-                        </div>
-                        <div class="col">           
-                            <label for="idamex" class="col-form-label-sm">Id Amex</label>
-                            <input type="text" class="form-control form-control-sm" id="idamex" aria-describedby="idamex" readonly>
-                        </div>
-                    </div>
-					<div class="row">
-                        <div class="col">           
-                                <label for="version" class="col-form-label-sm">Version</label>
-                                <select  class="form-control form-control-sm" id="version" aria-describedby="version" readonly>
-                                    <option value="0">Seleccionar</option>
-                                </select>
-                        </div>
-                        <div class="col">           
-                                <label for="aplicativo" class="col-form-label-sm">Aplicativo</label>
-								<select  class="form-control form-control-sm" id="aplicativo" aria-describedby="aplicativo">
-                                    <option value="0">Seleccionar</option>
-                                </select>
-                        </div>
-                        <div class="col">           
-                            <label for="producto" class="col-form-label-sm">Producto</label>
-                            <select  class="form-control form-control-sm" id="producto" aria-describedby="producto" disabled>
-								<option value="0">Seleccionar</option>
-							</select>
-                        </div>
-                        <div class="col">           
-                            <label for="rollos_instalar" class="col-form-label-sm">Rollos a Entregar</label>
-                            <input type="text" class="form-control form-control-sm" id="rollos_instalar" aria-describedby="rollos_instalar" readonly>
-                        </div>
-			
-						
-                    </div>
-                    <div class="row">
-                            <div class="col">           
                                     <label for="version_ret" class="col-form-label-sm">Version Retirada</label>
                                     <select  class="form-control form-control-sm" id="version_ret" aria-describedby="version_ret" readonly>
                                         <option value="0">Seleccionar</option>
                                     </select>
-                            </div>
-                            <div class="col">           
+                        </div>
+                        <div class="col">           
                                     <label for="aplicativo_ret" class="col-form-label-sm">Aplicativo Retirado</label>
                                     <select  class="form-control form-control-sm" id="aplicativo_ret" aria-describedby="aplicativo_ret">
                                         <option value="0">Seleccionar</option>
                                     </select>
-                            </div>
-                            <div class="col">           
+                        </div>
+                        <div class="col">           
                                 <label for="producto_ret" class="col-form-label-sm">Producto Retirado</label>
                                 <select  class="form-control form-control-sm" id="producto_ret" aria-describedby="producto_ret" disabled>
                                     <option value="0">Seleccionar</option>
                                 </select>
-                            </div>
-                            <div class="col">           
-                                <label for="rollos_entregados" class="col-form-label-sm">Rollos Entregados</label>
-                                <input type="text" class="form-control form-control-sm" id="rollos_entregados" aria-describedby="rollos_entregados" readonly>
-                            </div>
                         </div>
-                    <div class="row">
+                    </div>
+					<div class="row">
                         <div class="col">           
                             <label for="simInData" class="col-form-label-sm">SIM Instalada</label>
                             <input type="text" class="form-control form-control-sm" id="sim_instalado" aria-describedby="sim_instalado">
@@ -376,6 +353,31 @@
                             <select  class="form-control form-control-sm" id="simReData" aria-describedby="simReData">
                                 <option value="0" selected>Seleccionar Carrier</option>
                             </select>
+                        </div>
+                        <div class="col">           
+                            <label for="rollos_instalar" class="col-form-label-sm">Rollos a Entregar</label>
+                            <input type="text" class="form-control form-control-sm" id="rollos_instalar" aria-describedby="rollos_instalar" readonly>
+                        </div>
+                        <div class="col">           
+                                <label for="rollos_entregados" class="col-form-label-sm">Rollos Entregados</label>
+                                <input type="text" class="form-control form-control-sm" id="rollos_entregados" aria-describedby="rollos_entregados" readonly>
+                            </div>
+			
+						
+                    </div>
+                    <div class="row">
+                        <div class="col">           
+                                <label for="idcaja" class="col-form-label-sm">Id Caja</label>
+                                <input type="text" class="form-control form-control-sm" id="idcaja" aria-describedby="idcaja" readonly>
+                        </div>
+                        <div class="col">           
+                            <label for="afiliacion_amex" class="col-form-label-sm">Afiliacion Amex</label>
+                            <input type="hidden" id="tieneamex" name="tieneamex">
+                            <input type="text" class="form-control form-control-sm" id="afiliacion_amex" aria-describedby="afiliacion_amex" readonly>
+                        </div>
+                        <div class="col">           
+                            <label for="idamex" class="col-form-label-sm">Id Amex</label>
+                            <input type="text" class="form-control form-control-sm" id="idamex" aria-describedby="idamex" readonly>
                         </div>
                         <div class="col-sm-3">           
                             <label for="folio_telecarga" class="col-form-label-sm">Folio Telecarga</label>

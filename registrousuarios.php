@@ -285,18 +285,10 @@
                     },
                     correo: {
                         required: true,
-                    },
-                    contrasena:{
-                        required:true,
-                        minlength: 7,
-                    },
+                    }
                 }
 
                 var messages = {
-                    contrasena: {
-                        required: "Favor de Capturar una Contraseña",
-                        minlength: "La contraseña debe contener 8 caracteres minimo"
-                    },
                     nombre: {
                         required: "Favor de Capturar el Nombre",
                     },
@@ -472,7 +464,7 @@
                                 if( $("#userId").val() == '0'  || $("#userId").val() == '' ) 
                                 {
 
-                                    if( $("#contrasena").val().length > 0 && $("#contrasena").val().length < 9 ) 
+                                    if( $("#contrasena").val().length > 0 ) 
                                     {
 
                                         $.ajax({
@@ -565,8 +557,7 @@
                     }
                     
                     
-                   /* 
-				   e.preventDefault();
+                   /* e.preventDefault();
 
                     var correo =  $("#correo").val();
                     var contr = $("#contrasena").val().length;
