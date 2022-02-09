@@ -261,8 +261,6 @@ $(document).ready(function() {
                 valueToPush["producto"] = value[17];
                 valueToPush["cantidad"] = value[7];
 				datosEnviar.push(valueToPush);
-
-                //console.log(valueToPush);
                 
 				})
                 
