@@ -40,7 +40,7 @@ $(document).ready(function() {
             data: function( d ) {
                 d.module = 'getPeticiones',
                 d.supervisor = $("#supervisores").val(),
-				d.plaza = $("#plazas").val(),
+				//d.plaza = $("#plazas").val(),
                 d.active = $("#activa").val();
             }
         },
