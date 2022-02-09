@@ -665,8 +665,6 @@
 
           $("#btnComentValid").on('click', function() {
     
-    
-    
               if( $('#comentarios_validacion').val().length > 0  )
               {
                   var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val()};
@@ -697,13 +695,6 @@
                   title: 'Aviso',
                   priority : 'danger'
                       });}
-            
-        
-            
-            
-            
-        
-        
         
           })
 
