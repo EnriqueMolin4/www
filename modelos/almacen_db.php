@@ -1632,6 +1632,7 @@ class Almacen implements IConnections {
 
 		$sql = "Select 
 				peticiones_id,
+				 dp.id id_dp,
 				CONCAT(du.nombre,' ',du.apellidos) tecnico,
 				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
 				CASE WHEN dp.tipo = 2 THEN  c.nombre END carrier,
@@ -1642,7 +1643,8 @@ class Almacen implements IConnections {
 				dp.cantidad,
 				dp.id,
 				dp.tipo tipoid,
-				inv.cantidad qty
+				inv.cantidad qty,
+				ti.id id_insumo
 				FROM detalle_peticiones dp
 				LEFT JOIN detalle_usuarios du ON  dp.tecnico_id = du.cuenta_id
 				LEFT JOIN tipo_insumos ti ON dp.insumo = ti.id
@@ -1781,6 +1783,19 @@ class Almacen implements IConnections {
         }
 	}
 
+	function getSeriesPeticion($id)
+	{
+		$sql = " SELECT no_series FROM detalle_peticiones dp WHERE dp.peticiones_id = ? ";
+
+		try {
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute(array($id));
+			return $stmt->fetch ( PDO::FETCH_ASSOC );
+		} catch (PDOException $e){
+			self::$logger->error("File: almacen_db.php;	     Method Name: getSeriesPeticion();  Functionality: Get Products Price From PriceLists;  Log:" . $e->getMessage());
+		}
+	}
+
 	function getDetallePeticion($peticionId) {
 
 		$sql = " SELECT * FROM detalle_peticiones
@@ -1822,6 +1837,47 @@ class Almacen implements IConnections {
 			self::$logger->error ("File: almacen_db.php;	Method Name: getCantPeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
 		}
 	} 
+
+	function getSeriesCajas($params,$total) {
+		$start = $params['start'];
+		$length = $params['length'];
+
+		$filter = "";
+		$param = "";
+		$query = "";
+		$where = '';
+		$peticion = $params['idp'];
+
+		
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( !empty($params['search']['value'])) {   
+			$where .=" AND ";
+			$where .=" ( cajas_peticion.no_serie LIKE '".$params['search']['value']."%' ";
+			$where .=" OR cajas_peticion.no_caja LIKE '".$params['search']['value']."%'  ";
+			$where .=" OR cajas_peticion.insumo LIKE '".$params['search']['value']."%' ) ";
+
+		}
+
+		$sql = " SELECT cajas_peticion.insumo,cajas_peticion.no_serie, cajas_peticion.no_caja
+				FROM cajas_peticion
+				LEFT JOIN detalle_peticiones ON cajas_peticion.peticion_id = detalle_peticiones.id
+				WHERE detalle_peticiones.peticiones_id = $peticion
+				$where
+				$filter  ";
+
+		//self::$logger->error($sql);
+		 
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: almacen_db.php;	Method Name: getdetallePeticiones();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+		}
+	}
 
 	function getProducto() {
 		$sql = " SELECT * FROM tipo_producto WHERE status= 1";
@@ -1943,8 +1999,16 @@ if($module == 'getdetallePeticiones') {
 
 }
 
+if ($module == 'getSeriesCajas') {
+	$rows = $Almacen->getSeriesCajas($params, true);
+	$rowsTotal = $Almacen->getSeriesCajas($params, false);
+	$data = array("draw" =>$_POST['draw'],"data" =>$rows,'recordsTotal' => count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+
+	echo json_encode($data);
+}
+
 if($module == 'getNoSeriePeticion') {
-	$rows = $Almacen->getNoSeriePeticion($params['id']);
+	$rows = $Almacen->getSeriesPeticion($params['id']);
 
 	echo $rows['no_series'];
 }
@@ -1954,6 +2018,7 @@ if($module == 'grabardetallePeticion') {
 	$user = $_SESSION['userid'];
 	$id = $params['id'];
 	$noseries = $params['noseries'];
+	
 
 	$prepareStatement = "UPDATE `detalle_peticiones` SET `no_series` = ?,`modificado_por`= ?,`fecha_modificacion`= ? WHERE `id` = ? ;";
 
@@ -1963,8 +2028,82 @@ if($module == 'grabardetallePeticion') {
 		$fecha_alta,
 		$id
 	);
-
+	
 	$Almacen->insert($prepareStatement,$arrayString);
+		
+	
+}
+
+if ($module == 'guardarCajaTraspaso') {
+	
+	$fecha_alta = date("Y-m-d H:i:s");
+	$user = $_SESSION['userid'];
+	$id = $params['id'];
+	$seriesPeticion = $Almacen->getNoSeriePeticion($id);
+	//$detallePeticion = $Almacen->getDetallePeticion($id);
+	
+		foreach ($seriesPeticion as $series) 
+		{
+			$noSeries = json_decode($series, true);
+
+			if ( is_null($noSeries) ) 
+			{
+				echo "El envío no está cargado";
+			}else
+			{
+				foreach ($noSeries as $key => $serie) 
+				{
+					$datafieldsCaja = array ('peticion_id','no_serie','no_caja','fecha_creacion','creado_por');
+					$question_marks = implode (', ', array_fill(0, sizeof($datafieldsCaja), '?'));
+					$sql = "INSERT INTO cajas_peticion (" . implode(",", $datafieldsCaja) . ") VALUES (". $question_marks .") ";
+
+						$arrayString = array(
+							$id,
+							$serie['NoSerie'],
+							$params['caja'],
+							$fecha_alta,
+							$user
+						);
+
+					$Almacen->insert($sql,$arrayString);
+				}
+			}
+		}
+}
+
+if ($module == 'guardarCajaInsumos') 
+{
+	$fecha_alta = date("Y-m-d H:i:s");
+	$user = $_SESSION['userid'];
+	$id = $params['detalleId'];
+	$insumo = $params['insumo'];
+
+	$cajas = json_decode( $params['cajaNo']);
+
+	$box = implode(",", $cajas);
+
+	print_r($box);
+
+	//var_dump(json_encode($cajas));
+	
+
+	$datafieldsCaja = array('peticion_id','insumo','no_caja','fecha_creacion','creado_por');
+	$question_marks = implode (', ', array_fill(0, sizeof($datafieldsCaja), '?'));
+
+	$sql = "INSERT INTO `cajas_peticion` (" . implode(",", $datafieldsCaja) . ") VALUES (" . $question_marks . ")";
+
+	$arrayString =  array(
+		$id,
+		$insumo,
+		$box,
+		$fecha_alta,
+		$user
+	);
+
+	$Almacen->insert($sql,$arrayString);
+
+	
+
 
 }
 
@@ -2114,24 +2253,24 @@ if($module == 'getPeticiones') {
 
 if ($module == 'borrarPeticion') 
 {
+	$id_peticion = $params['id'];
 	$prepareStatement = "DELETE FROM peticiones WHERE id = ? ";
 
-	$arrayString = array($params['id']);
+	$arrayString = array($id_peticion);
 
-	$del = $Almacen->insert($prepareStatement, $arrayString);
+	$Almacen->insert($prepareStatement, $arrayString);
 
-	if ($del) 
-	{
-		echo "0";
+	
+	$prepareStatement2 = "DELETE FROM detalle_peticiones WHERE peticiones_id=?";
+	$arrayString2 = array( $id_peticion);
+	$del2 = $Almacen->insert($prepareStatement2, $arrayString2);
 
-	}
-	else
-	{
-		$prepareStatement2 = "DELETE FROM detalle_peticiones WHERE peticiones_id=?";
-		$arrayString2 = array( $params['id'] );
+	
+		$prepareStatement3 = "DELETE FROM cajas_peticion WHERE peticion_id = ?";
+		$arrayString3 = array($del2);
+		$Almacen->insert($prepareStatement3, $arrayString3);
+	
 
-		$del2 = $Almacen->insert($prepareStatement2, $arrayString2);
-	}
 }
 
 if($module == 'getHistoriaInsumos') {
@@ -3065,7 +3204,7 @@ if($module == 'aceptarTraspaso') {
 
 	$traspaso = $Almacen->getTraspasosbyId($params['traspasoId']);
 
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$sql = " UPDATE `inventario` SET `estatus_inventario`=?,`ubicacion`=?,`fecha_edicion`=? ,`id_ubicacion`=? WHERE `no_serie`=? "; 
 
 	$arrayString = array (
@@ -3103,7 +3242,7 @@ if($module == 'TraspasosMasivo') {
 
 	$consecutivo = 1;
 	$insert_values = array();
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$FechaAlta = date('Y-m-d');
 	$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
 	$letraMayorDeColumna = $hojaDeProductos->getHighestColumn(); // Letra
@@ -3251,7 +3390,7 @@ if($module == 'grabarTraspaso') {
 				$newQty = $info[3];
 			}
 
-			$fecha = date ( 'Y-m-d H:m:s' );
+			$fecha = date ( 'Y-m-d H:i:s' );
 			$sql = " UPDATE `inventario` SET `estatus_inventario`=?,`ubicacion`=?,`id_ubicacion`=?,`cantidad`=?,`fecha_edicion`=? WHERE `no_serie`=? "; 
 	
 			$arrayString = array (
@@ -3304,7 +3443,7 @@ if($module == 'grabarTraspaso') {
 					$TipoS = $info[0];
 			}
 			
-			$fecha = date ( 'Y-m-d H:m:s' );
+			$fecha = date ( 'Y-m-d H:i:s' );
 			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion');
 			
 			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
@@ -3364,10 +3503,11 @@ if( $module == 'guardarPeticion' )
 	);
 	
 	$id = $Almacen->insert($prepareStatement,$arrayString);
+	print_r($arrayString);
 
 	if ($id)
 	{
-		echo "SE GUARDARON LOS DATOS";
+		echo "SE GUARDARON LOS DATOS";//,
 		$prepareStatementDet = "INSERT INTO `detalle_peticiones` 
 					(`peticiones_id`,`tecnico_id`,`tipo`,`estatus`,`insumo`,`carrier`,`conectividad`,`producto`,`cantidad`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
 					 VALUES
@@ -3396,8 +3536,9 @@ if( $module == 'guardarPeticion' )
   
 			);
 
-			var_dump($arrayStringDet);
+			//var_dump($arrayStringDet);
 			$det = $Almacen->insert($prepareStatementDet, $arrayStringDet);
+			print_r($arrayStringDet);
 		}
 	}
 		echo $id;
@@ -3486,19 +3627,7 @@ if($module == 'generarEnvio') {
 				);
 
 			
-				$id = $Almacen->insert($sql,$arrayString);
-
-				//Actulizar guia y rastreo en peticiones
-				$sqlp ="UPDATE `peticiones` SET `no_guia`=?, `codigo_rastreo`=? WHERE `id`=? ";
-
-				$arrayStringP = array (
-					$params['no_guia'],
-					$params['codigo_rastreo'],
-					$params['peticionId']
-				);
-
-				$idp = $Almacen->insert($sqlp,$arrayStringP);
-			
+				$id = $Almacen->insert($sql,$arrayString);		
 
 				//Modificar inventario general
 				$item = $Almacen->getInventarioInfo($tipoInsumo['codigo']);
@@ -3689,9 +3818,11 @@ if($module == 'generarEnvio') {
 		// Cerrar Peticion
 		if($enviado == 1 || $enviado == 2)
 		{
-			$sql = " UPDATE `peticiones` SET `IsActive`=?  WHERE `id`=? "; 
+			$sql = " UPDATE `peticiones` SET `no_guia`=?, `codigo_rastreo`=?, `IsActive`=?  WHERE `id`=? "; 
 		
 			$arrayString = array (
+				$params['no_guia'],
+				$params['codigo_rastreo'],
 				1,
 				$params['peticionId']
 			);
@@ -3722,7 +3853,7 @@ if($module == 'cargarInventarioMasivo') {
 	$target_file = $target_dir . basename($_FILES["file"]["name"]);
 	$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 	$uploadOk = 1;
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 
 	if($imageFileType != "csv" && $imageFileType != "xls" && $imageFileType != "xlsx" ) {
   		echo "Error solo archivos CSV o XSL";
@@ -3769,7 +3900,7 @@ if($module == 'InventariosMasivo') {
 
 	$consecutivo = 1;
 	$insert_values = array();
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$FechaAlta = date('Y-m-d');
 	
 	$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
@@ -4036,7 +4167,7 @@ if($module == 'grabarInventario')
 
 
 			//GRABAR HISTORIA 
-			$fecha = date ( 'Y-m-d H:m:s' );
+			$fecha = date ( 'Y-m-d H:i:s' );
 			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 			
 			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
@@ -4059,7 +4190,7 @@ if($module == 'grabarInventario')
 		} 
 		else if($new == 2) 
 		{
-			$fecha = date ( 'Y-m-d H:m:s' );
+			$fecha = date ( 'Y-m-d H:i:s' );
 			$id = $Almacen->getInventarioId($info[1],$info[11]);//(no_serie,almacen)
 
 			$sql = " UPDATE `inventario` SET `cantidad`=?,`fecha_edicion`=? WHERE `id`=? "; 
@@ -4073,7 +4204,7 @@ if($module == 'grabarInventario')
 			$Almacen->insert($sql,$arrayString);
 
 			//GRABAR HISTORIA 
-			$fecha = date ( 'Y-m-d H:m:s' );
+			$fecha = date ( 'Y-m-d H:i:s' );
 			$datafieldsHistoria = array('inventario_id','fecha_movimiento','tipo_movimiento','ubicacion','no_serie','tipo','cantidad','id_ubicacion','modified_by');
 			
 			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsHistoria), '?'));
@@ -4122,7 +4253,7 @@ if($module == 'InventarioElavon')
 
 	$consecutivo = 1;
 	$insert_values = array();
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$FechaAlta = date('Y-m-d');
 	$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
 	$letraMayorDeColumna = $hojaDeProductos->getHighestColumn(); // Letra
@@ -4215,7 +4346,7 @@ if($module == 'InventarioElavon')
 						);*/
 						$fab = $Fabricante->getValue();
 						$est = $Estatus->getValue();
-						$fecha =date ( 'Y-m-d H:m:s' );
+						$fecha =date ( 'Y-m-d H:i:s' );
 						
 						$sql = "INSERT INTO elavon_universo (id,serie,fabricante,estatus,estatus_modelo,tipo,modificado_por) 
 						VALUES(NULL,'$No_serie','$fab','$est',$Estatus_Modelo,$Tipo,1) 
@@ -4364,7 +4495,7 @@ if($module == 'cargarInventarioEditar') {
 	$target_file = $target_dir . basename($_FILES["file"]["name"]);
 	$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 	$uploadOk = 1;
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 
 	if($imageFileType != "csv" && $imageFileType != "xls" && $imageFileType != "xlsx" ) {
   		echo "Error solo archivos CSV o XSL";
@@ -4549,7 +4680,7 @@ if ($module == 'InventarioEditar')
 if ($module == 'UpdateInventario')
 {
 	$info = json_decode($params['info']);
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$campoUpdate = " tipo=?, fecha_edicion=?  ";
 	$new = 0;
 	$arrayString = array(
