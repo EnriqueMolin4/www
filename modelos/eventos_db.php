@@ -21,7 +21,7 @@ class Eventos implements IConnections {
 	}
 	private static function execute_sel() {
 		try {
-			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
+			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos` limit 1" );
 			$stmt->execute ( array () );
 			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
@@ -30,6 +30,7 @@ class Eventos implements IConnections {
 	}
 	private  static function execute_ins($prepareStatement, $arrayString) {
 		//self::$logger->error ($prepareStatement." Datos: ".json_encode($arrayString) );
+		//self::$logger->error ($prepareStatement ." ".json_encode( $arrayString ));
 
 		try {
 			$stmt = self::$connection->prepare ( $prepareStatement );
@@ -56,6 +57,11 @@ class Eventos implements IConnections {
 		}
 		self::$connection->commit();
 		
+	}
+
+	function select($prepareStatement, $arrayString){
+		
+		return self::execute_sel ( $prepareStatement, $arrayString);
 	}
 
 	function insert($prepareStatement, $arrayString) {
@@ -872,7 +878,6 @@ class Eventos implements IConnections {
 		   }
 		}
 		
-
  	function getEstatusServicio() {
  
 		  $sql = "SELECT * FROM `tipo_estatus` WHERE `tipo` = 12 Order by id ";
@@ -1881,6 +1886,7 @@ if($module == "getImagenesODT") {
 				$lstImagenes[$counter]['supervisor'] = $row['supervisor'];
 				$lstImagenes[$counter]['tecnico'] = $row['tecnico'];
 				$lstImagenes[$counter]['userType'] = $userType;
+				$lstImagenes[$counter]['fecha'] = $row['fecha'];
 				$counter++;
 			}
 
@@ -2128,7 +2134,7 @@ if($module == 'getEstatusSubRechazo') {
 	$rows = $Eventos->getEstatusSubRechazo();
 	  $val = '<option value="0">Seleccionar</option>';
 	  foreach ( $rows as $row ) {
-		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+		  $val .=  '<option value="' . $row ['id'] . '" data-prog="'.$row['programado'].'" >' . $row ['nombre'] . '</option>';
 	  }
 	  echo $val;
   
@@ -2794,7 +2800,7 @@ if($module == 'guardarComVal')
 	$tecnico = $params['tecnico'];
 
 	$user = $_SESSION['userid'];
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$aviso = '';
 	
 	$prepareStatement = "UPDATE `eventos` SET `comentarios_validacion`=?, `codigo_servicio`=?, `codigo_servicio_2`=? WHERE `odt`=?;";
@@ -2838,7 +2844,7 @@ if($module == 'saveDoc') {
     }
     else {
 		$name = $_POST['name'];
-		$fecha = date ( 'Y-m-d H:m:s' );
+		$fecha = date ( 'Y-m-d H:i:s' );
 		$tecnico = $_SESSION['user'];
         $ext = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION );
 		$fileName = $_FILES['file']['name'];
@@ -2874,7 +2880,7 @@ if($module == 'saveDoc') {
 if($module == 'saveImageMobile') {
 
 		$name = $_POST['name'];
-		$fecha = date ( 'Y-m-d H:m:s' );
+		$fecha = date ( 'Y-m-d H:i:s' );
 		$tecnico = $_SESSION['user'];
         $ext = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION );
 		$fileName = $_FILES['file']['name'];
@@ -2911,7 +2917,7 @@ if($module == 'saveImage') {
     }
     else {
 		$name = $_POST['name'];
-		$fecha = date ( 'Y-m-d H:m:s' );
+		$fecha = date ( 'Y-m-d H:i:s' );
 		$tecnico = $_SESSION['userid'];
         $ext = pathinfo($_FILES['file']['name'],PATHINFO_EXTENSION );
 		$fileName = $_FILES['file']['name'];
@@ -2977,7 +2983,7 @@ if($module == "getImagesbyEvento") {
 }
 
 if($module =="saveVisitaTecnico") {
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$id = $params['formularioId'];
  
 
@@ -3009,7 +3015,7 @@ if($module =="saveVisitaTecnico") {
 }
 
 if($module == "cambiarInConnect"){
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$tpv = $params['tpv'];
 	$conectividadIn = $params['tpvInConnect'];
 	$aplicativoIn = $params['aplicativoIn'];
@@ -3038,7 +3044,7 @@ if($module == "cambiarInConnect"){
 }
 
 if($module == "cambiarReConnect"){
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$tpv = $params['tpvRe'];
 	$conectividadOut = $params['tpvReConnect'];
 	$aplicativoOut = $params['aplicativoOut'];
@@ -3068,7 +3074,7 @@ if($module == "cambiarReConnect"){
 if($module == 'cerrarEvento') {
 
 	
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$evento_id = $params['eventoId'];
 	$servicio_id = $params['servicioId'];
 	$odt = $params['odt'];
@@ -3136,6 +3142,9 @@ if($module == 'cerrarEvento') {
 	$aplica_exito = $params['aplica_exito'];
 	$aplica_rechazo = $params['aplica_rechazo'];
 
+	//
+	$tipo_atencion = $params['tipo_atencion'];
+	$fecha_reprogramacion = empty($params['fecha_reprogramacion']) ? null : $params['fecha_reprogramacion'];
 	
 	$prepareStatement = "UPDATE `eventos` SET 
 						`estatus`=?,
@@ -3170,7 +3179,9 @@ if($module == 'cerrarEvento') {
 						`subrechazo`=?, 
 						`cancelado`=?,
 						`codigo_servicio`=?,
-						`codigo_servicio_2`=?     
+						`codigo_servicio_2`=?,
+						`tipo_atencion`=?,
+						`fecha_programacion`=?,
 						 WHERE `odt`=? ; 
 						 ";
 
@@ -3207,7 +3218,9 @@ if($module == 'cerrarEvento') {
 		$subrechazo,
 		$cancelado,
 		$codigo_rechazo,
-		$codigo_rechazo_2, 
+		$codigo_rechazo_2,
+		$tipo_atencion,
+		$fecha_reprogramacion,
 		$odt 
 	);
 
@@ -3881,7 +3894,7 @@ if($module == 'eventoMasivo') {
 	$target_file = $target_dir . basename($_FILES["file"]["name"]);
 	$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 	$uploadOk = 1;
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 
 	if($imageFileType != "csv" && $imageFileType != "xls" && $imageFileType != "xlsx" ) {
   		echo "Error solo archivos CSV o XSL";
@@ -3926,7 +3939,7 @@ if($module == 'eventoMasivo') {
 	$consecutivo = 1;
 	$counter = 0;
 	$insert_values = array();
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
 	$letraMayorDeColumna = $hojaDeProductos->getHighestColumn(); // Letra
 	# Convertir la letra al número de columna correspondiente
@@ -3960,9 +3973,9 @@ if($module == 'eventoMasivo') {
 			 
 			
 			$FechaAlta = str_replace('/','-',$FechaAlta->getFormattedValue());
-			$FechaAlta =  date('Y-m-d H:m:s', strtotime($FechaAlta));
+			$FechaAlta =  date('Y-m-d H:i:s', strtotime($FechaAlta));
 			$FechaVencimiento = str_replace('/','-',$FechaVencimiento->getFormattedValue());
-			$FechaVencimiento =  date('Y-m-d H:m:s', strtotime($FechaVencimiento));
+			$FechaVencimiento =  date('Y-m-d H:i:s', strtotime($FechaVencimiento));
 
 			$Descripcion = $hojaDeProductos->getCellByColumnAndRow(11, $indiceFila);
 			$Observaciones = $hojaDeProductos->getCellByColumnAndRow(12, $indiceFila);
@@ -4242,7 +4255,7 @@ if($module == 'eventoMasivo') {
 
 	$consecutivo = 1;
 	$insert_values = array();
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$FechaAlta = date('Y-m-d');
 	$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
 	$letraMayorDeColumna = $hojaDeProductos->getHighestColumn(); // Letra
@@ -4391,7 +4404,7 @@ if($module == 'eventoMasivoAssignacion') {
 
 	$consecutivo = 1;
 	$insert_values = array();
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$FechaAlta = date('Y-m-d');
 	$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
 	$letraMayorDeColumna = $hojaDeProductos->getHighestColumn(); // Letra
@@ -4422,11 +4435,11 @@ if($module == 'eventoMasivoAssignacion') {
 		$TipoServicio = $Eventos->getServicioxNombre($servicio);
 		// $FechaAlta = $hojaDeProductos->getCellByColumnAndRow(9, $indiceFila);
 		// $FechaAlta = str_replace('/','-',$FechaAlta);
-		// $FechaAlta =  date('Y-m-d H:m:s', strtotime($FechaAlta));
+		// $FechaAlta =  date('Y-m-d H:i:s', strtotime($FechaAlta));
 		$Rollos = $hojaDeProductos->getCellByColumnAndRow(15, $indiceFila);
 
 		$FechaVencimiento = date("d-m-Y", strtotime($FechaVencimientoFinal));
-		$FechaVencimiento =  date('Y-m-d H:m:s', strtotime('+23 hour',strtotime($FechaVencimiento)) );
+		$FechaVencimiento =  date('Y-m-d H:i:s', strtotime('+23 hour',strtotime($FechaVencimiento)) );
 		
 		$clienteExiste = $Eventos->getClientesByAfiliacion($Afiliacion->getValue());
 		
@@ -4552,5 +4565,7 @@ if($module == 'eventoMasivoAssignacion') {
 
 		
 }
+
+
 
 ?>
