@@ -41,7 +41,7 @@
                     </div>   
                     <div class="col-4">
                         <label for="tecnico" class="col-form-label-sm">Técnico</label>
-                        <select id="tecnico" name="tecnico" class="form-control form-control-sm searchInventario">
+                        <select id="tecnico" name="tecnico" class="form-control form-control-sm searchInventario" required>
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div> 
