@@ -20,7 +20,7 @@ class Modelos implements IConnections {
 			return array ();
 		}
 	}
-	private static function execute_sel() {
+	private function execute_sel() {
 		try {
 			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
 			$stmt->execute ( array () );
@@ -29,7 +29,7 @@ class Modelos implements IConnections {
 			self::$logger->error ("File: catalogosxmodelos_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
 		}
 	}
-	private static function execute_ins($prepareStatement, $arrayString) {
+	private function execute_ins($prepareStatement, $arrayString) {
 		try {
 			$stmt = self::$connection->prepare ( $prepareStatement );
 			$stmt->execute ( $arrayString );
@@ -234,6 +234,19 @@ class Modelos implements IConnections {
             self::$logger->error ("File: catalogosxmodelos_db.php;	Method Name: getTipoUserId();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
 	}
+	
+	function getBancos() {
+
+		$sql = "select  * from bancos ";
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array());
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: catalogoxmodelos_db.php;	Method Name: getTipoUserId();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+	}
 }
 //
 include 'DBConnection.php';
@@ -261,6 +274,18 @@ if($module == 'getevento') {
 	echo json_encode($rows);
 
 }
+
+if($module == 'getBancos') {
+	
+	$rows = $Modelo->getBancos();
+	$val = '<option value="0">Seleccionar</option>';
+	foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['cve'] . '">' . $row ['banco'] . '</option>';
+	}
+	echo $val;
+	
+}
+
 //////////
 
 if($module == 'existemodel') 
@@ -281,19 +306,22 @@ if($module == 'nuevomodelo')
 				(modelo, 
 				proveedor, 
 				conectividad, 
-				no_largo, 
-				clave_elavon, 
-				estatus)
+				no_largo,
+				cve_banco,
+				estatus, 
+				clave_elavon
+				)
 				VALUES
-				(?,?,?,?,?,?);";
+				(?,?,?,?,?,?,?);";
 
 		$arrayString = array (
 				$params['modelo'],
 				$params['proveedor'],
 				$params['conectividad'],
 				$params['no_largo'],
-				$params['clave_elavon'],
-				1);
+				$params['cve'],
+				1,
+				$params['sgs']);
 
 	  $id = $Modelo->insert($prepareStatement,$arrayString);
 
@@ -313,6 +341,7 @@ if($module == 'nuevomodelo')
 								   proveedor      = ?,
 								   conectividad   = ?,
 								   no_largo	      = ?,
+								   cve_banco	  = ?,
 								   clave_elavon   = ?
 							 WHERE id             = ?;";
 		
@@ -321,7 +350,8 @@ if($module == 'nuevomodelo')
 							$params['proveedor'],
 							$params['conectividad'],
 							$params['no_largo'],
-							$params['clave_elavon'],
+							$params['cve'],
+							$params['sgs'],
 							$params['modelid']
 		);
 
@@ -404,7 +434,7 @@ if($module == 'masivoUsers') {
 
 	$consecutivo = 1;
 	$insert_values = array();
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$numeroMayorDeFila = $hojaDeUsuarios->getHighestRow(); // Numérico
 	$letraMayorDeColumna = $hojaDeUsuarios->getHighestColumn(); // Letra
 	$Existe = array();
@@ -428,9 +458,9 @@ if($module == 'masivoUsers') {
 		$cve = $hojaDeUsuarios->getCellByColumnAndRow(12, $indiceFila);
 
 		//$fechaNacimiento = str_replace('/','-',$fechaNacimiento);
-		//$fechaNacimiento =  date('Y-m-d H:m:s', strtotime($fechaNacimiento));
+		//$fechaNacimiento =  date('Y-m-d H:i:s', strtotime($fechaNacimiento));
 		//$fechaIngreso = str_replace('/','-',$fechaIngreso);
-		//$fechaIngreso =  date('Y-m-d H:m:s', strtotime($fechaIngreso));
+		//$fechaIngreso =  date('Y-m-d H:i:s', strtotime($fechaIngreso));
 		$territorioExist = $Modelo->getTerritorio($territorial->getValue()) ;
 		$territorio = $territorioExist ? $territorioExist : 0;
 		$tipoExist = $Modelo->getTipoUserId($tipo);
