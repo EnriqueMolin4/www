@@ -477,7 +477,7 @@ if($module == 'eventoMasivoAssignacion') {
 	
 	$consecutivo = 1;
 	$insert_values = array();
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$FechaAlta = date('Y-m-d');
 	$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
 	$letraMayorDeColumna = $hojaDeProductos->getHighestColumn(); // Letra
@@ -552,7 +552,7 @@ if($module == 'AsignarTecnicos') {
 
 	$eventos = json_decode($params['odt']);
 	$count= 0;
-	$fecha = date ( 'Y-m-d H:m:s' );
+	$fecha = date ( 'Y-m-d H:i:s' );
 	$user = $_SESSION['userid'];
 	foreach($eventos as $evento) {
 		
