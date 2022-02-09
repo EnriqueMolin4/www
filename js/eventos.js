@@ -166,6 +166,7 @@ $(document).ready(function() {
                     var btnHistoria = '<a href="#" class="mostrarHistoria" data="' + row.odt + '"><i class="fas fa-history fa-2x" style="color:#C17137"></i> </a>';
                     var btnCerrar = '<a href="#" class="endEvent" title="Cerrar evento" data="' + row.id + '"><i class="far fa-calendar fa-2x " style="color:#E04242"></i></a>';
                     var btnDates = '<a href="#" class="editFecha" title="Cambiar Fechas" data="' + row.id + '"><i class="far fa-calendar-alt fa-2x " style="color:#3EA399"></i></a>';
+                    
                     if (row.nombreEstatus === 'Cerrado' && $("#tipo_user").val() == 'callcenterADM') {
                         btnALL = btnCambiar + btnInfo + btnCambiarOdt + '<br>' + btnHistoria + btnDates;
                     } else if (row.sync = '0') {
