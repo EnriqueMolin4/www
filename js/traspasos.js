@@ -130,9 +130,15 @@ $(document).ready(function() {
             data: 'module=aceptarTraspaso&traspasoId='+traspasoId,
             cache: false,
             success: function(data){
+                Swal.fire(
+                  'Éxito!',
+                  'Serie aceptada!',
+                  'success'
+                );
                
             $("#tecnico").html(data);   
-            $("#add-tecnico").html(data);         
+            $("#add-tecnico").html(data);  
+
             },
             error: function(error){
                 var demo = error;
@@ -181,7 +187,7 @@ $(document).ready(function() {
                         priority : 'success'
                     });
 
-                    $('#traspasos').DataTable().ajax.reload();
+                    tableTraspasosItems.ajax.reload();
                 }
                 else
                 {
@@ -324,3 +330,4 @@ function getAlmacenes() {
         }
     });
 }
+
