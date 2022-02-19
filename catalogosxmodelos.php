@@ -24,35 +24,25 @@
                 </div> -->
 			<?php  } ?>
             </div>
-            <table id="modelos"  class="table table-md table-bordered ">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Modelo</th>
-                        <th>Proveedor</th>
-                        <th>Conectividad</th>
-                        <th>No Largo</th>
-                        <th>Clave Banco</th>
-                        <th>Estatus</th>
-                        <th>Accion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Id</th>
-                        <th>Modelo</th>
-                        <th>Proveedor</th>
-                        <th>Conectividad</th>
-                        <th>No Largo</th>
-                        <th>Clave Banco</th>
-                        <th>Estatus</th>
-                        <th>Accion</th>
-                    </tr>
-                </tfoot>
-            </table>
+            <div class="table-responsive">
+                <table id="modelos"  class="table table-responsive table-md table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th width="20%">Modelo</th>
+                            <th width="20%">Proveedor</th>
+                            <th width="20%">Conectividad</th>
+                            <th width="10%">No Largo</th>
+                            <th width="10%">Clave Banco</th>
+                            <th width="10%">Estatus</th>
+                            <th width="10%">Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                </table>
+            </div>
             <input type="hidden" id="modelId" value="0">
             <button class="btn btn-success" id="btnNewModel">Nuevo Modelo</button>
             </div>

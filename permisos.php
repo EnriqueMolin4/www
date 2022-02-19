@@ -12,42 +12,37 @@
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-5">
-            <div class="row"><h3>Permisos de Rol de Usuario</h3>
-                <div class="col-sm-12 p-4">           
-                    <label for="catalogo" class="col-form-label-sm"></label>
-                    <select id="catalogo" name="catalogo" class="form-control form-control-sm">
-                        <option value="0">Seleccionar</option>
-                        
-                       
-                    </select>
-                </div>
-            </div>
-            <table id="permisos"  class="table table-md table-bordered ">
-                <thead>
-                    <tr>
-						<th>Id</th>
-						<th>Usuario</th>
-                        <th>Módulo</th>
-                        <th>Estatus</th>
-						<th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Id</th>
-						<th>Usuario</th>
-                        <th>Módulo</th>
-                        <th>Estatus</th>
-						<th>Acción</th>
-                    </tr>
-                </tfoot>
-            </table>
+                <div class="row">
+                    <h3>Permisos de Rol de Usuario</h3>
+                    <div class="col-sm-12 p-4">
+                        <label for="catalogo" class="col-form-label-sm"></label>
+                        <select id="catalogo" name="catalogo" class="form-control form-control-sm">
+                            <option value="0">Seleccionar</option>
 
-            <button class="btn btn-success" id="btnNewPermiso">Nuevo Permiso</button>
-                
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="table-responsive">
+                      <table id="permisos" class="display table-responsive table table-bordered nowrap" style="width:100%">
+                          <thead>
+                              <tr>
+                                  <th width="10%">Id</th>
+                                  <th width="20%">Usuario</th>
+                                  <th width="30%">Módulo</th>
+                                  <th width="20%">Estatus</th>
+                                  <th width="20%">Acción</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                      </table>
+                    </div>
+                </div>
+
+                <button class="btn btn-success" id="btnNewPermiso">Nuevo Permiso</button>
+
             </div>
 
             <!-- MODAL -->
@@ -112,209 +107,219 @@
     <script src="js/jquery.rotate.1-1.js"></script>
     <script>
     var permisos;
-        $(document).ready(function() {
-            ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "parametroslink", "tiposxcatalogoslink")
-            
-            getTiposUsuarios();
-            getUsuariosTipos();
-            getMenu();
+    $(document).ready(function() {
+        ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "parametroslink", "tiposxcatalogoslink")
+
+        getTiposUsuarios();
+        getUsuariosTipos();
+        getMenu();
 
 
-            permisos = $('#permisos').DataTable({
-                    language: {
-                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                        },
-                    processing: true,
-                    serverSide: true,
-                    searching: true,
-                    order: [[ 0, "asc" ]],
-                    lengthMenu: [[5,10, 25, -1], [5, 10, 25, "Todos"]],
-                    ajax: {
-                        url: 'modelos/permisos_db.php',
-                        type: 'POST',
-                        data: function( d ) {
-                            d.module = 'getTable',
-                            d.catalogo = $("#catalogo").val()
+        permisos = $('#permisos').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            searching: true,
+            order: [
+                [0, "asc"]
+            ],
+            lengthMenu: [
+                [5, 10, 25, -1],
+                [5, 10, 25, "Todos"]
+            ],
+            ajax: {
+                url: 'modelos/permisos_db.php',
+                type: 'POST',
+                data: function(d) {
+                    d.module = 'getTable',
+                        d.catalogo = $("#catalogo").val()
+                }
+            },
+            columns: [{
+                    data: 'id'
+                },
+                {
+                    data: 'Usuario'
+                },
+                {
+                    data: 'Modulo'
+                },
+                {
+                    data: 'estatus'
+                },
+                /*{ data: 'id'}*/
+            ],
+            aoColumnDefs: [{
+                    "targets": [0],
+                    "width": "10%",
+
+                },
+                {
+                    "targets": [1],
+                    "width": "20%",
+
+                },
+                {
+                    "targets": [2],
+                    "width": "30%",
+
+                },
+                {
+                    "targets": [3],
+                    "width": "20%",
+
+                },
+                {
+                    "targets": [4],
+                    "width": "10%",
+
+                },
+                {
+                    "targets": [3],
+                    "mRender": function(data, type, row) {
+                        var data = 'No Activo';
+
+                        if (row.estatus == '1') {
+                            data = 'Activo';
                         }
-                    },
-                    columns : [
-                        { data: 'id'},
-                        { data: 'Usuario' },
-						{ data: 'Modulo'},
-                        { data: 'estatus' },
-                        /*{ data: 'id'}*/
-                    ],
-                    aoColumnDefs: [
+
+                        return data;
+
+                    }
+                },
+                {
+                    "targets": [4],
+                    "mRender": function(data, type, row) {
+                        var button = '<a title="Deshabilitar" href="#" class="delParametro" data="' + row.id + '-' + row.estatus + '"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></i></a>';
+
+                        if (row.estatus == '0') {
+                            button = '<a title="Habilitar" href="#" class="delParametro" data="' + row.id + '-' + row.estatus + '"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
+                        }
+
+                        return button;
+                    }
+                }
+            ]
+        });
+
+        $("#catalogo").on('change', function() {
+            permisos.ajax.reload();
+        })
+
+        /*
+                    function validarnewParam() 
                         {
-                            "targets": [ 0 ],
-                            "width": "10%",
-                            
-                        },
-                        {
-                            "targets": [ 1 ],
-                            "width": "20%",
-                            
-                        },
-                        {
-                            "targets": [ 2 ],
-                            "width": "30%",
-                            
-                        },
-                        {
-                            "targets": [ 3 ],
-                            "width": "20%",
-                            
-                        },
-                        {
-                            "targets": [ 4 ],
-                            "width": "10%",
-                            
-                        },
-                        {
-                            "targets": [3],
-                            "mRender": function ( data,type, row ) 
+                            if ($('#newParametro').val().length == "0") 
                             {
-                                var data = 'No Activo';
-
-                                if(row.estatus == '1') 
-                                {
-                                    data = 'Activo';
-                                }
-
-                                return data;
-                            
-                            }
-                        },
-                        {
-                            "targets": [4],
-                            "mRender": function ( data,type, row ) {
-                                var button = '<a title="Deshabilitar" href="#" class="delParametro" data="'+row.id+'-'+row.estatus+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></i></a>';
-                                
-                                if(row.estatus == '0') {
-                                    button = '<a title="Habilitar" href="#" class="delParametro" data="'+row.id+'-'+row.estatus+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
-                                }
-                                
-                                return button;
+                                alert('Ingrese rut');
+                                return false;
                             }
                         }
-                    ]
+          */
+
+        $("#btnAddParametro").on('click', function() {
+
+            if ($("#catalogo").val() == "0") {
+                $.toaster({
+                    message: 'Recuerda elegir un catálogo de la lista',
+                    title: 'Aviso',
+                    priority: 'danger'
                 });
-
-                $("#catalogo").on('change',function() {
-                    permisos.ajax.reload();
-                })
-
-			/*
-                function validarnewParam() 
-                    {
-                        if ($('#newParametro').val().length == "0") 
-                        {
-                            alert('Ingrese rut');
-                            return false;
-                        }
+            }
+            if ($("#newParametro").val().length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'modelos/permisos_db.php', // call your php file
+                    data: {
+                        module: 'addParametro',
+                        parametro: $("#newParametro").val(),
+                        catalogo: $("#catalogo").val()
+                    },
+                    cache: false,
+                    success: function(data, textStatus, jqXHR) {
+                        $("#newParametro").val("");
+                        permisos.ajax.reload();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert(data)
                     }
-			*/
+                });
+            } else {
+                $.toaster({
+                    message: 'Favor de ingresar un parámetro',
+                    title: 'Aviso',
+                    priority: 'danger'
+                });
+            }
+        })
 
-                $("#btnAddParametro").on('click', function() 
-                {
-                    
-                    if ( $("#catalogo").val() == "0" ) 
-                    {
+
+        $(document).on('click', '.delParametro', function() {
+            var parametroid = $(this).attr('data').split('-');
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/permisos_db.php', // call your php file
+                data: {
+                    module: 'parametroUpdate',
+                    catalogo: $("#catalogo").val(),
+                    parametroid: parametroid[0],
+                    estatusid: parametroid[1]
+                },
+                cache: false,
+                success: function(data) {
+                    if (data == "1") {
                         $.toaster({
-                          message: 'Recuerda elegir un catálogo de la lista',
-                          title: 'Aviso',
-                          priority : 'danger'
-                      });
-                    } 
-                    if( $("#newParametro").val().length > 0 ) 
-					{
-                        $.ajax({
-                            type: 'POST',
-                            url: 'modelos/permisos_db.php', // call your php file
-                            data: { module: 'addParametro', parametro: $("#newParametro").val(),catalogo: $("#catalogo").val() },
-                            cache: false,
-                            success: function(data, textStatus, jqXHR){
-                                $("#newParametro").val("");
-                                permisos.ajax.reload();
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                alert(data)
-                            }
+                            message: 'Se desactivo/activo con éxito  ',
+                            title: 'Aviso',
+                            priority: 'success'
                         });
+
                     }
-                    else{
-                        $.toaster({
-                          message: 'Favor de ingresar un parámetro',
-                          title: 'Aviso',
-                          priority : 'danger'
-                      });
-                    }
-                })
+                    permisos.ajax.reload();
+                }
+            });
+        })
 
-               
-                $(document).on('click','.delParametro', function() {
-                    var parametroid = $(this).attr('data').split('-');
-                    $.ajax({
-                        type: 'GET',
-                        url: 'modelos/permisos_db.php', // call your php file
-                        data: { module: 'parametroUpdate',catalogo: $("#catalogo").val(),parametroid: parametroid[0],estatusid: parametroid[1] },
-                        cache: false,
-                        success: function(data){
-                            if(data == "1") {
-                                $.toaster({
-                                    message: 'Se desactivo/activo con éxito  ',
-                                    title: 'Aviso',
-                                    priority : 'success'
-                                });  
-                                
-                            }permisos.ajax.reload();
-                        }
-                    });
-                })
-              
-            } );
+    });
 
-            $(document).on("click","#btnNewPermiso", function() 
-                {
-                    
-                    $(".modal-title").html("Asignar Permiso");
+    $(document).on("click", "#btnNewPermiso", function() {
 
-                    //$("#btnGrabarModel").html('Registrar');
+        $(".modal-title").html("Asignar Permiso");
+
+        //$("#btnGrabarModel").html('Registrar');
 
 
-                    //$("#no_largo").val("0");
-                    
-                    $("#showModel").modal({show: true, backdrop: false, keyboard: false})
-                })
+        //$("#no_largo").val("0");
+
+        $("#showModel").modal({
+            show: true,
+            backdrop: false,
+            keyboard: false
+        })
+    })
 
 
-        //////////////////////
-        
-        $("#btnGrabarPermiso").on('click', function()
-        {
+    //////////////////////
 
-            var menu = $("#menu").val();
+    $("#btnGrabarPermiso").on('click', function() {
 
-            var usuario = $("#user").val();
+        var menu = $("#menu").val();
+        var usuario = $("#user").val();
 
-            if( $("#menu").val() != '0')
-            {
+        if ($("#menu").val() != '0') {
 
+            if ($("#user").val() != '0') {
 
-                if( $("#user").val() != '0')
-                {
-                    
-                    var existePermiso = $.get('modelos/permisos_db.php',
-                    {
+                var existePermiso = $.get('modelos/permisos_db.php', {
                         module: 'existepermiso',
                         menu: menu,
                         user: usuario
                     },
 
-                    function(data)
-                    {
-                        var form_data = 
-                        {
+                    function(data) {
+                        var form_data = {
                             module: 'nuevopermiso',
                             menu: $("#menu").val(),
                             user: $("#user").val()
@@ -325,138 +330,122 @@
 
                         $.ajax({
                             type: 'POST',
-                               url: 'modelos/permisos_db.php',
-                               data: form_data,
-                               cache: false,
-                               success: function(data, textStatus, jqXHR)
-                               {
-                                    permisos.ajax.reload();
-                                    $.toaster({
-                                        message: data,
-                                        title: 'Aviso',
-                                        priority: 'success'
-                                   });
-                                   cleartext();
-                                   $("#showModel").modal('hide');
-                               }
-                               
+                            url: 'modelos/permisos_db.php',
+                            data: form_data,
+                            cache: false,
+                            success: function(data, textStatus, jqXHR) {
+                                permisos.ajax.reload();
+                                $.toaster({
+                                    message: data,
+                                    title: 'Aviso',
+                                    priority: 'success'
+                                });
+                                cleartext();
+                                $("#showModel").modal('hide');
+                            }
+
                         });
 
-                        $.each(info.menu,function(index,element){
-                                console.log(element);
-                                  $("#menu").val(element.menu);
-                                  $("#user").val(element.user);  
-                            });
+                        $.each(info.menu, function(index, element) {
+                            console.log(element);
+                            $("#menu").val(element.menu);
+                            $("#user").val(element.user);
+                        });
 
-                    }).fail(function(error){
-                        alert(error);
-                    });
-                   
-
+                    }).fail(function(error) {
+                    alert(error);
+                });
 
 
-                }
-                else
-                {
-                    $.toaster({
+
+            } else {
+                $.toaster({
                     message: 'Selecciona el Usuario',
                     title: 'Aviso',
-                    priority : 'warning'
-                    });
-                }
-
-
+                    priority: 'warning'
+                });
             }
-            else
-            {
-                $.toaster({
+
+        } else {
+            $.toaster({
                 message: 'Selecciona el menú que deseas asignar',
                 title: 'Aviso',
-                priority : 'warning'
-                    });
-            }
-
-        });
-
-
-        /////////////////////
-
-
-        function getUsuariosTipos() 
-        {
-
-            $.ajax({
-                type: 'POST',
-                url: 'modelos/permisos_db.php', // call your php file
-                data: { module: 'getUsuariosTipos' },
-                cache: false,
-                success: function(data, textStatus, jqXHR){
-                    
-                    
-                    $("#user").html(data);
-                    
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert(data)
-                }
+                priority: 'warning'
             });
-        } 
-
-
-
-function getTiposUsuarios() 
-        {
-
-            $.ajax({
-                type: 'POST',
-                url: 'modelos/permisos_db.php', // call your php file
-                data: { module: 'getTipoUsuarios' },
-                cache: false,
-                success: function(data, textStatus, jqXHR){
-                    
-                    $("#catalogo").html(data);
-                    $("#user").html(data);
-                    
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert(data)
-                }
-            });
-        } 
-
-
-
-
-            
-        
-
-        function getMenu() 
-        {
-
-            $.ajax({
-                type: 'POST',
-                url: 'modelos/permisos_db.php', // call your php file
-                data: { module: 'getMenu' },
-                cache: false,
-                success: function(data, textStatus, jqXHR){
-                    
-                    $("#menu").html(data);
-                    
-                    
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert(data)
-                }
-            });
-        } 
-
-
-        function cleartext() {
-            $("#menu").val("0");
-            $("#user").val("0");
-            $("#usuario").val("");
-
         }
+
+    });
+
+    /////////////////////
+
+    function getUsuariosTipos() {
+
+        $.ajax({
+            type: 'POST',
+            url: 'modelos/permisos_db.php', // call your php file
+            data: {
+                module: 'getUsuariosTipos'
+            },
+            cache: false,
+            success: function(data, textStatus, jqXHR) {
+
+
+                $("#user").html(data);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(data)
+            }
+        });
+    }
+
+    function getTiposUsuarios() {
+
+        $.ajax({
+            type: 'POST',
+            url: 'modelos/permisos_db.php', // call your php file
+            data: {
+                module: 'getTipoUsuarios'
+            },
+            cache: false,
+            success: function(data, textStatus, jqXHR) {
+
+                $("#catalogo").html(data);
+                $("#user").html(data);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(data)
+            }
+        });
+    }
+
+    function getMenu() {
+
+        $.ajax({
+            type: 'POST',
+            url: 'modelos/permisos_db.php', // call your php file
+            data: {
+                module: 'getMenu'
+            },
+            cache: false,
+            success: function(data, textStatus, jqXHR) {
+
+                $("#menu").html(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(data)
+            }
+        });
+    }
+
+
+    function cleartext() {
+        $("#menu").val("0");
+        $("#user").val("0");
+        $("#usuario").val("");
+
+    }
 
 
     </script> 

@@ -54,13 +54,13 @@
                     <table id="traspasos"  class="table table-responsive table-md table-bordered ">
                         <thead>
                             <tr>
-                                <th width="10%">No Guia</th>
-                                <th width="15%">C Rastreo</th>
-                                <th width="10%">Origen</th>
+                                <th width="20%">No Guia</th>
+                                <th width="20%">C Rastreo</th>
+                                <th width="15%">Origen</th>
                                 <th width="10%">Destino</th>
                                 <th width="10%">Estatus</th>
-                                <th>Fecha</th>
-                                <th>Creado Por</th>
+                                <th width="10%">Fecha</th>
+                                <th width="10%">Creado Por</th>
                                 <th>Accion</th>
                             </tr>
                         </thead>
@@ -159,7 +159,8 @@
     <script src="js/Chart.bundle.min.js"></script>
     <script type="text/javascript" src="js/jquery.datetimepicker.full.min.js"></script>
     <script type="text/javascript" src="js/jquery.toaster.js"></script>
-    <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
     <script src="js/main.js"></script>
     <script type="text/javascript" src="js/traspasos.js"></script> 
 </body>

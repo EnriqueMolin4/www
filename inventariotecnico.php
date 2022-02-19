@@ -48,26 +48,28 @@
                     </div>
 				<?php } ?>
                 </div>
+                <div class="row">
                 <div class="table-responsive">
-                <table id="inventario"  class="table table-responsive table-md table-bordered ">
-                    <thead>
-                        <tr>
-                            <th>Tecnico</th>
-                            <th>Producto</th>
-                            <th>No Serie</th>
-							<th>Modelo</th>
-                            <th>Conectividad</th>
-                            <th>Aplicativo</th>
-                            <th>Cantidad</th>
-                            <th>Estatus</th>
-                            <th>Fecha Actualizacion</th>
-                            <th>Accion</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    <table id="inventario"  class="table table-responsive table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th width="10%">Tecnico</th>
+                                <th width="10%">Producto</th>
+                                <th width="15%">No Serie</th>
+							    <th width="10%">Modelo</th>
+                                <th width="10%">Conectividad</th>
+                                <th width="10%">Aplicativo</th>
+                                <th width="10%">Cantidad</th>
+                                <th width="15%">Estatus</th>
+                                <th>Fecha Actualizacion</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                     
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
                 </div>
                 
                 <br />
@@ -134,16 +136,6 @@
                             <tbody>
                             
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Fecha Movimiento</th>
-                                    <th>Movimiento</th>
-                                    <th>Cantidad</th>
-                                    <th>Estatus Ubicacion</th>
-                                    <th>Ubicacion</th>
-                                    <th>Id</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                         

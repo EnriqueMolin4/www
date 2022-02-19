@@ -25,39 +25,29 @@
                 </div>
             <?php  } ?>
             </div>
-            <table id="usuarios"  class="table table-md table-bordered ">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th>Sgs</th>
-                        <th>Correo</th>
-                        <th>Tipo</th>
-                        <th>Plaza</th>
-                        <th>Territorial</th>
-                        <th>Fecha Alta</th>
-                        <th>Estatus</th>
-                        <th>Accion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th>Sgs</th>
-                        <th>Correo</th>
-                        <th>Tipo</th>
-                        <th>Plaza</th>
-                        <th>Territorial</th>
-                        <th>Fecha Alta</th>
-                        <th>Estatus</th>
-                        <th>Accion</th>
-                    </tr>
-                </tfoot>
-            </table>
+            <div class="table-responsive">
+                <table id="usuarios"  class="table table-responsive table-md table-bordered" width="100%">
+                    <thead>
+                        <tr>
+                            <th width="10%">Id</th>
+                            <th width="10%">Nombre</th>
+                            <th width="10%">Sgs</th>
+                            <th width="10%">Correo</th>
+                            <th width="10%">Tipo</th>
+                            <th width="10%">Plaza</th>
+                            <th width="10%">Territorial</th>
+                            <th width="10%">Fecha Alta</th>
+                            <th width="10%">Estatus</th>
+                            <th width="10%">Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                    
+                </table>
+            </div>
+            
             <input type="hidden" id="userId" value="0">
             <button class="btn btn-success" id="btnNewUser">Nuevo Usuario</button>
             </div>
