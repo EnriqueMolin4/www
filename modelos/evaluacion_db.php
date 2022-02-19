@@ -523,13 +523,7 @@ class Evaluacion implements IConnections {
 		$filter = "";
 		$param = "";
 		$where = "";
-
-
-		if($params['idp'] != 0) {
-			$preguntaId = $params['idp'];
-
-			$where .= " WHERE res.id_pregunta = $preguntaId";
-		}
+		$pid = $params['idp'];
 
 		if(isset($orderField) ){
 			$order .= "ORDER BY  $orderField  $orderDir ";
@@ -539,15 +533,15 @@ class Evaluacion implements IConnections {
 			$filter .= " LIMIT $start ,  $length";
 		}
 
-		$sql = "SELECT res.id,res.id_pregunta, res.evaluacion_id, res.respuesta, res.correcta, res.estatus FROM respuestas res
-				$where
+		$sql = "SELECT id,id_pregunta, evaluacion_id, respuesta, correcta, estatus FROM respuestas 
+				WHERE id_pregunta = '$pid'
 				$order
 				$filter
 				";
 
-		self::$logger->error($sql);
+		//self::$logger->error($sql);
 
-		print_r($sql);
+		//print_r($sql);
 		
 		try{
 			$stmt = self::$connection->prepare ($sql);
