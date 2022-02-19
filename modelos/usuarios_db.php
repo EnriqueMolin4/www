@@ -97,7 +97,7 @@ class Usuarios implements IConnections {
         }
 	}
 
-	/*Para combobox de Usuario Nuevo (CUENTA)*/
+	
 	function getBancosUser()
 	{
 		$sql = "SELECT * FROM `bancos` WHERE status = 1";
@@ -467,8 +467,10 @@ if($module == 'nuevousuario') {
 	//Guardar bancos como cadena ¿?
 	//$bancos = implode("','",$negocios);
 	//$bancos, //Guardar banco(s) ¿?
-	//$terr = implode("','",$territorios);
+	$terr = implode("','",$territorios);
 	
+	//print_r($territorios);
+	//print_r($terr);
 
 	 if(count($existe) == 0 ) 
 	 {
@@ -486,7 +488,7 @@ if($module == 'nuevousuario') {
 			$params['nombre'],
 			$params['correo'],
 			0,
-			0,
+			$terr,
 			$fecha_alta,
 			$almacen
 		);
@@ -506,7 +508,7 @@ if($module == 'nuevousuario') {
 				$params['nombre'],
 				$params['apellidos'],
 				$params['correo'],
-				0,
+				$terr,
 				$id
 			);
 
@@ -544,7 +546,7 @@ if($module == 'nuevousuario') {
 		//$oldPass = $Usuario->getPass($id);
 
 		//$newPass = strlen($pass) > 0 ? $pass : $oldPass;
-		//$terr = implode("','",$territorios);
+		$terr = implode("','",$territorios);
 
 		$prepareStatement = "UPDATE  `cuentas` SET `user`=?, `cve`=?,`tipo_user`=?,`nombre`=?,`fecha_alta`=?,`territorial`=?,`plaza`=?,`almacen`=? WHERE `id`=? ; ";
 		$arrayString = array (
@@ -553,7 +555,7 @@ if($module == 'nuevousuario') {
 			$params['tipo'],
 			$params['nombre'],
 			$fecha_alta,
-			$territorios[0],
+			$terr,
 			$plazas[0],
 			$almacen,
 			$params['userid']
