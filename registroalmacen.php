@@ -237,6 +237,12 @@
 							<label for="noserie" class="col-form-label-sm">No Serie</label>
 							<input type="text" class="form-control form-control-sm" id="det-noserie" aria-describedby="odt" readonly>
 						</div>
+                        <div class="col-md-4">
+                            <label for="det-banco" class="col-form-label-sm">Banco</label>
+                            <select name="det-banco" id="det-banco" class="form-control form-control-sm">
+                                
+                            </select>
+                        </div>
                     </div>
                     <div class="row">
                     <div class="col-md-4" id="divTipoProd">           
