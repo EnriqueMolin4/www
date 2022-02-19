@@ -137,7 +137,7 @@ class Eventos implements IConnections {
 		}
    
 		if($_SESSION['tipo_user'] == 'supOp' ) {
-			 $where .= " AND cp_territorios.territorio_id = $territorial ";
+			 $where .= " AND cp_territorios.territorio_id IN ('$territorial') ";
 		}
 		//filtro territorial
 		if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor'){
@@ -4150,7 +4150,7 @@ if($module == 'eventoMasivo') {
 
 
 			if(sizeof($existeEvento) == '0') {
-				$fecha = date ( 'Y-m-d H:m:s' );
+				$fecha = date ( 'Y-m-d H:i:s' );
 
 				$datafields = array('odt','afiliacion','comercio','direccion','colonia','municipio','estado','consecutivo',
 				'fecha_alta','fecha_vencimiento','descripcion','comentarios','telefono','nivel','tipo_servicio','servicio',
@@ -4286,10 +4286,10 @@ if($module == 'eventoMasivo') {
 		$TipoServicio = $Eventos->getServicioxNombre($servicio);
 		// $FechaAlta = $hojaDeProductos->getCellByColumnAndRow(9, $indiceFila);
 		// $FechaAlta = str_replace('/','-',$FechaAlta);
-		// $FechaAlta =  date('Y-m-d H:m:s', strtotime($FechaAlta));
+		// $FechaAlta =  date('Y-m-d H:i:s', strtotime($FechaAlta));
 
 		$FechaVencimiento = date("d-m-Y", strtotime($FechaVencimientoFinal));
-		$FechaVencimiento =  date('Y-m-d H:m:s', strtotime('+23 hour',strtotime($FechaVencimiento)) );
+		$FechaVencimiento =  date('Y-m-d H:i:s', strtotime('+23 hour',strtotime($FechaVencimiento)) );
 		
 		$clienteExiste = $Eventos->getClientesByAfiliacion($Afiliacion->getValue());
 		
