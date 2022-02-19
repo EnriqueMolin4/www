@@ -24,13 +24,18 @@
 				<div class="col-sm-3">
 					<a href="layouts/LayoutMasivoInventarioElavon.xlsx" class="btn btn-primary" download>Descargar Layout</a>
 				</div>
-                <div class="col-md-2">  
-                    <a href="#" class="btn btn-dark" id="btnNuevoEvento">Agregar Nuevo</a>
-                </div>
+                
             </div> 
 
             <h5>Busqueda</h5>
                 <div class="row  mb-4">
+                    <div class="col">
+                        <label for="bancoF" class="col-form-label-sm">Banco</label>
+                        <select id="bancoF" name="bancoF" class="form-control form-control-sm searchInventario">
+                                <option value="0" selected>Seleccionar</option>
+                                
+                        </select>
+                    </div>
                     <div class="col">
                         <label for="tipo_producto" class="col-form-label-sm">Tipo</label>
                         <select id="tipo_producto" name="tipo_producto" class="form-control form-control-sm searchInventario">
@@ -53,12 +58,18 @@
                     </div>   
                     
                 </div>
+                <div class="row">
+                    <div class="col-md-2">  
+                        <a href="#" class="btn btn-success" id="btnNuevoEvento">Agregar Nuevo</a>
+                    </div>
+                </div><br>
 				<div class="d-flex justify-content-end">
 
 				</div>
                 <table id="inventario"  class="table table-md table-bordered ">
                     <thead>
                         <tr>
+                            <th>Banco</th>
                             <th>Tipo</th>
                             <th>No Serie</th>
                             <th>Fabricante</th>
@@ -86,15 +97,21 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col">           
-                                <label for="tipo" class="col-form-label-sm">Tipo</label>
+                                <label for="tipo" class="col-form-label-sm">TIPO</label>
                                 <select id="tipo" name="tipo" class="form-control form-control-sm">
                                     <option value="0">SELECCIONAR</option>
                                     <option value="1">TPV</option>
                                     <option value="2">SIM</option>
                                 </select>
                             </div>
+                            <div class="col">
+                                <label for="banco" class="col-form-label-sm">BANCO</label>
+                                <select name="banco" id="banco" class="form-control form-control-sm">
+                                    <option value="0" selected>Seleccionar</option>
+                                </select>
+                            </div>
                             <div class="col" id="colFabricante">           
-                                <label for="fabricante" class="col-form-label-sm">Fabricante</label>
+                                <label for="fabricante" class="col-form-label-sm">FABRICANTE</label>
                                 <select id="fabricante" name="fabricante" class="form-control form-control-sm">
                                     <option value="0">SELECCIONAR</option>
                                     <option value="INGENICO">INGENICO</option>
@@ -104,7 +121,7 @@
                                 </select>
                             </div>
                             <div class="col" id="colCarrier">           
-                                <label for="carrier" class="col-form-label-sm">Carrier</label>
+                                <label for="carrier" class="col-form-label-sm">CARRIER</label>
                                 <select id="carrier" name="carrier" class="form-control form-control-sm">
                                     <option value="0">SELECCIONAR</option>
                                     <option value="TELCEL">TELCEL</option>
@@ -117,12 +134,12 @@
                         </div>
                         <div class="row">
                             <div class="col">           
-                                <label for="serie" class="col-form-label-sm">No. Serie</label>
+                                <label for="serie" class="col-form-label-sm">NO. SERIE</label>
                                 <input id="serie" name="serie" class="form-control form-control-sm">
                                  
                             </div>
                             <div class="col">           
-                                <label for="estatus" class="col-form-label-sm">Estatus</label>
+                                <label for="estatus" class="col-form-label-sm">ESTATUS</label>
                                 <select id="estatus" name="estatus" class="form-control form-control-sm">
                                     <option value="0" selected>Seleccionar</option>
                                     <option value="PERTENECE A ELAVON" data-id="3">PERTENECE A ELAVON</option>

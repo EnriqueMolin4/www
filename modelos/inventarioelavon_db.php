@@ -117,14 +117,20 @@ class Almacen implements IConnections {
 		$estatus = $params['tipo_estatus'];
 		$producto = $params['tipo_producto'];
 		$almacen = $_SESSION['almacen'];
+		$banco = $params['banco'];
 
 		
 		if( $estatus != '0' ) {
-			$where .= " AND estatus = '$estatus' ";
+			$where .= " AND elavon_universo.estatus = '$estatus' ";
 		}
 
+		if( $banco != '0' ) {
+			$where .= " AND elavon_universo.cve_banco = '$banco' ";
+		}
+
+
 		if( $producto != '0' ) {
-			$where .= " AND  tipo = $producto ";
+			$where .= " AND  elavon_universo.tipo = $producto ";
 		}
 
 		if(isset($start) && $length != -1 && $total) {
@@ -133,15 +139,16 @@ class Almacen implements IConnections {
 
 		if( !empty($params['search']['value'])) {   
 			$where .=" AND ";
-			$where .=" ( serie LIKE '".$params['search']['value']."%' ";
-			$where .=" OR fabricante LIKE '".$params['search']['value']."%' ";
-			$where .=" OR estatus LIKE '".$params['search']['value']."%'  ) ";
+			$where .=" ( elavon_universo.serie LIKE '".$params['search']['value']."%' ";
+			$where .=" OR elavon_universo.fabricante LIKE '".$params['search']['value']."%' ";
+			$where .=" OR elavon_universo.estatus LIKE '".$params['search']['value']."%'  ) ";
 
 
 		}
 
-		$sql = " SELECT *
+		$sql = " SELECT elavon_universo.id,elavon_universo.serie, elavon_universo.fabricante, elavon_universo.estatus, elavon_universo.estatus_modelo, elavon_universo.tipo ,bancos.banco bnco 
                  FROM elavon_universo
+                 LEFT JOIN bancos ON bancos.cve = elavon_universo.cve_banco
                  WHERE estatus_modelo != -1 
 				 $where
 				-- group by inv.id
@@ -879,13 +886,14 @@ if($module == 'agregarSerie') {
 	if($existe) {
 		$id = 0;
 
-		$prepareStatement = "UPDATE `elavon_universo` set `fabricante` = ?,`estatus` = ? ,`estatus_modelo` = ?,`tipo` = ?,`modificado_por` = ?  where `id` = ? ";
+		$prepareStatement = "UPDATE `elavon_universo` set `fabricante` = ?,`estatus` = ? ,`estatus_modelo` = ?,`tipo` = ?,`cve_banco` = ?,`modificado_por` = ?  where `id` = ? ";
 
 			$arrayString = array (
 				$params['fabricante'],
 				$params['estatus'],
 				$estatus,
 				$params['tipo'],
+				$params['banco'],
 				$user,
 				$existe[0]['id']
 			);
@@ -895,15 +903,16 @@ if($module == 'agregarSerie') {
 	} else {
 
 		$prepareStatement = "INSERT INTO `elavon_universo`
-				( `serie`,`fabricante`,`estatus`,`estatus_modelo`,`tipo`,`modificado_por`)
-				VALUES (?,?,?,?,?,?); ";
+				( `serie`,`fabricante`,`estatus`,`estatus_modelo`,`tipo`,`cve_banco`,`modificado_por`)
+				VALUES (?,?,?,?,?,?,?); ";
 			
 		$arrayString = array (
 				$params['serie'],
 				$params['fabricante'],
 				$params['estatus'],
 				$estatus,
-				$params['tipo'] ,
+				$params['tipo'],
+				$params['banco'],
 				$user
 		);
 	

@@ -4,6 +4,7 @@ var usrPerm;
 var fecha_hoy;
 $(document).ready(function() {
     usrPerm = $("#userPerm").val();
+    getBancosf();
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "almacenlink")
     $("#colFabricante").hide();
     $("#colCarrier").hide();
@@ -70,10 +71,12 @@ $(document).ready(function() {
             data: function( d ) {
                 d.module = 'getTable',
                 d.tipo_estatus = $("#tipo_estatus").val(),
-                d.tipo_producto = $("#tipo_producto").val()
+                d.tipo_producto = $("#tipo_producto").val(),
+                d.banco = $("#bancoF").val()
             }
         },
         columns : [
+            { data: 'bnco'  },
             { data: 'tipo'},
             { data: 'serie'},
             { data: 'fabricante' },
@@ -82,7 +85,7 @@ $(document).ready(function() {
         ],
         aoColumnDefs: [
             {
-                "targets": [0],
+                "targets": [1],
                 "mRender": function ( data,type, row ) {
                     var id;
 					var tipo = '';
@@ -102,7 +105,7 @@ $(document).ready(function() {
                 }
             },
             {
-                "targets": [4],
+                "targets": [5],
                 "mRender": function ( data,type, row ) {
                     var id;
 					var buttons = '';
@@ -218,6 +221,7 @@ $(document).ready(function() {
         var carrier = $("#carrier").val();
         var serie = $("#serie").val();
         var estatus = $("#estatus").val();
+        var banco = $("#banco").val();
         
         if(serie === "" ) {
 
@@ -232,7 +236,7 @@ $(document).ready(function() {
             $.ajax({
                 type: 'GET',
                 url: 'modelos/inventarioelavon_db.php', // call your php file
-                data: 'module=agregarSerie&serie='+serie+'&estatus='+estatus+'&fabricante='+fabricante+"&carrier="+carrier+"&tipo="+tipo,
+                data: 'module=agregarSerie&serie='+serie+'&estatus='+estatus+'&fabricante='+fabricante+"&carrier="+carrier+"&tipo="+tipo+'&banco='+banco,
                 cache: false,
                 success: function(data){
 
@@ -280,6 +284,27 @@ function fnShowHide( colId,status )
     table.column( colId ).visible( status ); 
 }
 
+function getBancosf() {
+
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getBancos',
+        cache: true,
+        success: function(data) {
+            console.log(data);
+
+            $("#banco").html(data);
+            $("#bancoF").html(data);
+
+
+        },
+        error: function(error) {
+            var demo = error;
+        }
+    });
+}
+
 function clear() {
 
     $("#colFabricante").hide();
@@ -290,5 +315,6 @@ function clear() {
     $("#estatus").val('');
     $("#fabricante").val('0');
     $("#carrier").val('0');
+    $("#banco").val('0');
 
 }
