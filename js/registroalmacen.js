@@ -352,9 +352,16 @@ $(document).ready(function() {
          
         var index = $(this).parent().parent().index() ;
         var data = tableInventario.row( index ).data()
+        console.log(data);
         //Numero de serie
         $("#det-noserie").val(data.no_serie);
         $("#tipo_prod").val(data.tipo);
+
+        //Banco
+        $("#det-banco option").filter(function(){
+            return $(this).text() == data.banco;
+        }).prop('selected', true);
+
 
         if(data.tipo == 1) {
             $("#divModelo").show();
@@ -427,6 +434,7 @@ $(document).ready(function() {
     $("#btnCambiarInv").on("click",function() {
         
         var noserie =           $("#det-noserie").val();
+        var banco =             $("#det-banco").val();
         var modelo =            $("#det-modelo").val() == '0' ? $("#det-carrier").val() : $("#det-modelo").val();
         var tipo =              $("#tipo_prod").val();
         var aplicativo =        $("#det-aplicativo").val();
@@ -487,7 +495,7 @@ $(document).ready(function() {
             $.ajax({
                 type: 'GET',
                 url: 'modelos/almacen_db.php', // call your php file'
-                data: 'module=updateInvProd&noserie='+noserie+'&tipo='+tipo+'&modelo='+modelo+'&aplicativo='+aplicativo+'&conectividad='+conectividad+'&estatus='+estatus+'&ubicacion='+ubicacion+'&estatusinventario='+estatusinventario+'&cantidad='+cantidad,
+                data: 'module=updateInvProd&noserie='+noserie+'&banco='+banco+'&tipo='+tipo+'&modelo='+modelo+'&aplicativo='+aplicativo+'&conectividad='+conectividad+'&estatus='+estatus+'&ubicacion='+ubicacion+'&estatusinventario='+estatusinventario+'&cantidad='+cantidad,
                 cache: false,
                 success: function(data)
                 {
@@ -798,7 +806,7 @@ function fnShowHide( colId,status )
     table.column( colId ).visible( status ); 
 }
 
-//Llamada a la función que tiene la información de los modelos
+
 function getModelos() {
     $.ajax({
         type: 'GET',
@@ -835,7 +843,6 @@ function getAplicativo() {
     });
 }
 
-//Llamada a la función que tiene la información de los carriers
 function getCarriers() {
     $.ajax({
         type: 'GET',
@@ -854,7 +861,6 @@ function getCarriers() {
     });
 }
 
-//Llamada a la función que tiene la información de tipos de conectividad
 function getConectividad() {
     $.ajax({
         type: 'GET',
@@ -951,12 +957,13 @@ function getTecnicos() {
 function getBancos() {
     $.ajax({
         type: 'GET',
-        url: 'modelos/almacen_db.php', // call your php file
+        url: 'modelos/eventos_db.php', // call your php file
         data: 'module=getBancos',
         cache: false,
         success: function(data){
-            console.log(data);
-        $("#banco").html(data);            
+            //console.log(data);
+        $("#banco").html(data);
+        $("#det-banco").html(data);            
         },
         error: function(error){
             var demo = error;
@@ -965,7 +972,7 @@ function getBancos() {
 }
 
 
-function cleartext() /* Función que limpia los campos del formulario */
+function cleartext() 
 { 
     $("#det-noserie").val("");
     $("#det-modelo").val("0");
