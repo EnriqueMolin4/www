@@ -1709,17 +1709,17 @@ function getTecnicos(id) {
     });
 }
 
-function getTecnicosf(id) {
+function getTecnicosf(ter) {
     $.ajax({
         type: 'GET',
-        url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getTecnicosFiltro',
+        url: 'modelos/almacen_db.php', // call your php file
+        data: 'module=getTecnicosxAlmacen&ter='+ter,
         cache: true,
         success: function(data) {
             console.log(data);
 
             $("#tecnicoF").html(data);
-            $("#tecnicoF").val(id);
+            
         },
         error: function(error) {
             var demo = error;
