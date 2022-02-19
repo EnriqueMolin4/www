@@ -97,7 +97,6 @@ class Usuarios implements IConnections {
 	}
 
 
-
     function getTable($params,$total) {
 
 		$start = $params['start'];
@@ -156,6 +155,7 @@ class Usuarios implements IConnections {
             $filter ";
         }
 
+        //self::$logger->error($sql);
 	
 		try {
 			$stmt = self::$connection->prepare ($sql);
@@ -270,7 +270,6 @@ if($module == 'getTable') {
 }
 
 
-
 if($module == 'getMenu') {
 
 	$rows = $Usuario->getMenu();
@@ -343,8 +342,6 @@ if($module == 'nuevopermiso')
 /////////////////
 
 
-
-
 if($module == 'getTipoUsuarios') {
 
 	$rows = $Usuario->getTiposUsuarios();
@@ -394,8 +391,6 @@ if($module == 'addParametro')
 		}
 
    
-    
-    
 }
 
 if($module == 'parametroUpdate') {
