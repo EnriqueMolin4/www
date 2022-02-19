@@ -77,6 +77,7 @@ class Assignacion implements IConnections {
 		$typeUser = $_SESSION['tipo_user'];
 
 		$userId = $params['supervisores'];
+		
 
 		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
 		$orderDir = $params['order'][0]['dir'];
@@ -90,10 +91,15 @@ class Assignacion implements IConnections {
 			$order .= " ORDER BY   $orderField   $orderDir";
 		}
 		
-		if($_SESSION['tipo_user'] != 'admin' || $_SESSION['tipo_user'] != 'supervisor' ) {
-			if($params['supervisores'] != '0') {
-				$where .= " AND territorial.territorio_id = $userId " ;
-			} else {
+		if($_SESSION['tipo_user'] != 'admin' || $_SESSION['tipo_user'] != 'supervisor' ) 
+		{
+			if($params['supervisores'] != '0') 
+			{
+				$where .= " AND territorial.territorio_id IN ('$userId') " ;
+
+			} 
+			else 
+			{
 				$where .= " AND territorial.territorio_id = -1 " ;
 			}
 		}
@@ -246,7 +252,7 @@ class Assignacion implements IConnections {
 		$sql = "SELECT cuentas.id,du.nombre,du.apellidos from cuentas,detalle_usuarios du
 				WHERE cuentas.id = du.cuenta_id
 				and cuentas.tipo_user=3 
-				and cuentas.territorial = ($userId) 
+				and cuentas.territorial IN ('$userId') 
 				ORDER BY du.nombre,du.apellidos ";
 
 		//self::$logger->error($sql);
