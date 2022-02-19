@@ -9,7 +9,7 @@
         </nav>
         <!-- page-content  -->
         <main class="page-content pt-2">
-            
+            <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-2">
             <h3>Consulta de Eventos</h3>
             
@@ -73,7 +73,7 @@
                 </div>  
                 <br />
                 <div class="table-responsive">
-                    <table id="eventos"  class="display table-responsive table table-md table-bordered"  cellspacing="0" width="100%">
+                    <table id="eventos"  class="display table-responsive table table-md table-bordered"  cellspacing="0" style="width:100%">
                         <thead>
                             <tr>
                              <th>ODT</th>
