@@ -359,7 +359,7 @@
     function getBancos() {
         $.ajax({
             type: 'GET',
-            url: 'modelos/almacen_db.php', // call your php file
+            url: 'modelos/eventos_db.php', // call your php file
             data: 'module=getBancos',
             cache: false,
             success: function(data){
