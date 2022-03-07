@@ -5,14 +5,14 @@ $(document).ready(function() {
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "traspasoslink")
     
     getAlmacenes();
+    getAlmacenesO()
     getConectividad();
     getProducto();
     getPlazas();
 	getInsumos();
+    getBancos();
 	campos_tipo();
 	getCarrier();
-
-    
 
       
     //TABLA DETALLE PETICIONES
@@ -24,23 +24,13 @@ $(document).ready(function() {
         dom: 't',
         aoColumnDefs: [
             {
-                "targets": [ 7 ],
-                "visible": false,
-                "searchable": false
-            },
-            {
-                "targets": [ 8 ],
-                "visible": false,
-                "searchable": false
-            },
-            {
                 "targets": [ 9 ],
-                "visible": false,
+                "visible": true,
                 "searchable": false
             },
             {
                 "targets": [ 10 ],
-                "visible": false,
+                "visible": true,
                 "searchable": false
             },
             {
@@ -53,7 +43,7 @@ $(document).ready(function() {
                 "visible": false,
                 "searchable": false
             },
-			{
+            {
                 "targets": [ 13 ],
                 "visible": false,
                 "searchable": false
@@ -73,13 +63,43 @@ $(document).ready(function() {
                 "visible": false,
                 "searchable": false
             },
-            {
-                "targets": [17],
+			{
+                "targets": [ 17 ],
                 "visible": false,
                 "searchable": false
             },
             {
-                "targets": [18],
+                "targets": [ 18 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [19],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [20],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [21],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [22],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [23],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [24],
                 "mRender": function ( data,type, row ) {
               
                     return '<a href="#" class="btn btn-danger delRow">Borrar</a>';
@@ -130,27 +150,67 @@ $(document).ready(function() {
             break;
         }
 
-        if ( $("#plaza").val() == "0" || $("#tecnico").val() == "0" )
-		{
-			$.toaster({
-            message: 'Favor de seleccionar la plaza y el técnico',
-            title: 'Aviso',
-            priority : 'danger'
+
+        if ($("#tipo_peticion").val() == "1") 
+        {
+            if ( $("#plaza").val() == "0" || $("#tecnico").val() == "0" )
+                {
+                    $.toaster({
+                    message: 'Favor de seleccionar la plaza y el técnico',
+                    title: 'Aviso',
+                    priority : 'danger'
+                    });
+                        
+                    error++;
+                        
+                }else if ( $("#tipo").val() == "0" )
+                {
+                    $.toaster({
+                    message: 'Seleccionar tipo',
+                    title: 'Aviso',
+                    priority : 'danger'
+                    });
+                                  
+                    error++;
+                        
+                }
+        }
+        else if ($("#tipo_peticion").val() == "2") 
+        {
+            if ( $("#almacen_origen").val() == "0" || $("#almacen_destino").val() == "0" )
+                {
+                    $.toaster({
+                    message: 'Favor de seleccionar almacenes',
+                    title: 'Aviso',
+                    priority : 'danger'
+                    });
+                        
+                    error++;
+                        
+                }
+                else if ( $("#tipo").val() == "0" )
+                {
+                    $.toaster({
+                    message: 'Seleccionar tipo',
+                    title: 'Aviso',
+                    priority : 'danger'
+                    });
+                                  
+                    error++;
+                        
+                }    
+        }
+
+        if ("#banco") 
+        {
+            $.toaster({
+                message: 'Favor de seleccionar el banco',
+                title: 'Aviso',
+                priority : 'danger'
                       });
-			
-			error++;
-			
-		}else if ( $("#tipo").val() == "0" )
-		{
-			$.toaster({
-            message: 'Seleccionar tipo',
-            title: 'Aviso',
-            priority : 'danger'
-                      });
-					  
-			error++;
-			
-		}
+              error++;
+        }
+        
 		
 		if ( $("#tipo").val() == "1" )
 		{
@@ -203,8 +263,11 @@ $(document).ready(function() {
 		
 	if(error == 0){
         tableTraspasosItems.row.add( 
-            [ 
+            [   
+                $("#banco option:selected").text(),
                 $("#tipo option:selected" ).text(),
+                $("#almacen_origen option:selected").text(),
+                $("#almacen_destino option:selected").text(),
                 $("#tecnico option:selected" ).text(),
                 $("#estatus option:selected" ).text(),
                 insumo,
@@ -212,10 +275,14 @@ $(document).ready(function() {
                 conectividad,
                 producto,
 				$("#cantidad").val(),
+                $("#banco").val(),
+                $("#almacen_origen").val(),
+                $("#almacen_destino").val(),
                 comentario_supervisor,
 				$("#tipo_envio option:selected").text(),
                 $("#direccion_envio option:selected").text(),
 				
+                
                 $("#tipo").val(),
                 $("#tecnico").val(),
                 $("#estatus").val(),
@@ -234,6 +301,7 @@ $(document).ready(function() {
         $("#insumo").val("0");
         $("#carrier").val("0");
         $("#cantidad").val("0");
+        $("#banco").val("0");
         campos_tipo();
         tableTraspasosItems.columns.adjust().draw();
 	}
@@ -249,17 +317,20 @@ $(document).ready(function() {
 			$.each(data, function(index,value) {               
 
 				var valueToPush = new Object();
-                valueToPush['comentario_supervisior'] = value[8];
-                valueToPush['tipo_envio'] = value[9];
-                valueToPush['direccion_envio'] = value[10];
-				valueToPush["tipo"] = value[11];
-				valueToPush["tecnico"] = value[12];
-				valueToPush["estatus"] = value[13];
-				valueToPush["insumo"] = value[14];
-                valueToPush["carrier"] = value[15];
-				valueToPush["conectividad"] = value[16];
-                valueToPush["producto"] = value[17];
-                valueToPush["cantidad"] = value[7];
+                valueToPush['banco'] = value[11];
+                valueToPush['almacen_origen'] = value[12];
+                valueToPush['almacen_destino'] = value[13];
+                valueToPush['comentario_supervisior'] = value[14];
+                valueToPush['tipo_envio'] = value[15];
+                valueToPush['direccion_envio'] = value[16];
+				valueToPush["tipo"] = value[17];
+				valueToPush["tecnico"] = value[18];
+				valueToPush["estatus"] = value[19];
+				valueToPush["insumo"] = value[20];
+                valueToPush["carrier"] = value[21];
+				valueToPush["conectividad"] = value[22];
+                valueToPush["producto"] = value[23];
+                valueToPush["cantidad"] = value[10];
 				datosEnviar.push(valueToPush);
                 
 				})
@@ -280,7 +351,7 @@ $(document).ready(function() {
                             priority : 'success'
                         }); 
 						cleartext();
-                        window.location.href = "peticiones.php";
+                        //window.location.href = "peticiones.php";
 					},
 					error: function(error){
 						var demo = error;
@@ -301,7 +372,23 @@ $(document).ready(function() {
 	function campos_tipo() {
 	
 	var val = document.getElementById("tipo").value;
+    var valP = document.getElementById("tipo_peticion").value;
 	
+        if (valP == "1") 
+        {
+            $("#divPlaza").show();
+            $("#divTecnico").show();
+            $("#almO").hide();
+            $("#almD").hide();
+        }
+        if (valP == "2") 
+        {
+            $("#almO").show();
+            $("#almD").show();
+             $("#divPlaza").hide();
+            $("#divTecnico").hide();
+        }
+
 		if (val === "0") 
 		{
 			$("#divIns").hide();
@@ -345,7 +432,7 @@ function getPlazas() {
     $.ajax({
         type: 'GET',
         url: 'modelos/almacen_db.php', // call your php file
-        data: 'module=getPlazas',
+        data: 'module=getPlazasbyAlmacen',
         cache: false,
         success: function(data){
              
@@ -458,8 +545,45 @@ function getAlmacenes() {
         cache: false,
         success: function(data){
            
-            $("#almacen").html(data);   
+            $("#almacen_origen").html(data);   
+            $("#almacen_destino").html(data);
 		
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
+function getAlmacenesO()
+{
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/almacen_db.php', // call your php file
+        data: 'module=getAlmacenO',
+        cache: false,
+        success: function(data){
+           
+            $("#almacen_origen").html(data);   
+                
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
+function getBancos()
+{
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getBancos',
+        cache: false,
+        success: function(data){
+            //console.log(data);
+        $("#banco").html(data);
+      
         },
         error: function(error){
             var demo = error;
@@ -480,7 +604,7 @@ function enableCB() {
 
 
 
-function cleartext() /* Función que limpia los campos del formulario */
+function cleartext()
 { 
     $("#tecnico").val("0");
     $("#plaza").val("0");
@@ -490,6 +614,7 @@ function cleartext() /* Función que limpia los campos del formulario */
     $("#estatus").val("0");
     $("#insumo").val("0");
 	$("#cantidad").val("0");
+    $("#banco").val("0");
 
 
 }
