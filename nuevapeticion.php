@@ -9,156 +9,174 @@
             <?php include("menu.php"); ?>
         </nav>
         <!-- page-content  -->
-        <main class="page-content pt-2">
-            <div id="overlay" class="overlay">
-           
-            </div>
-            <div class="container" class="container">
-            <h3>Nueva Peticion</h3>
-                <div class="row p-3">
-                    <div class="col-4">
-                        <label for="tipo_envio" class="col-form-label-sm">Tipo de Envío</label>
-                        <select name="tipo_envio" id="tipo_envio" class="form-control form-control-sm searchInventario">
-                            <option value="0" selected>Seleccionar</option>
-                            <option value="DIA SIGUIENTE">DIA SIGUIENTE</option>
-                            <option value="TERRESTRE">TERRESTRE</option>
-                        </select>
-                    </div>
-                    <div class="col-4">
-                        <label for="direccion_envio" class="col-form-label-sm">Dirección de Envío</label>
-                        <select name="direccion_envio" id="direccion_envio" class="form-control form-control-sm searchInventario">
-                            <option value="0" selected>Seleccionar</option>
-                            <option value="DOMICILIO">DOMICILIO</option>
-                            <option value="OCURRE">OCURRE</option>
-                        </select>
-                    </div>
-                
-                    <div class="col-4">
-                        <label for="plaza" class="col-form-label-sm">Plaza</label>
-                        <select id="plaza" name="plaza" class="form-control form-control-sm searchInventario">
-                                <option value="0" selected>Seleccionar</option>
-                        </select>
-                    </div>   
-                    <div class="col-4">
-                        <label for="tecnico" class="col-form-label-sm">Técnico</label>
-                        <select id="tecnico" name="tecnico" class="form-control form-control-sm searchInventario" required>
-                                <option value="0" selected>Seleccionar</option>
-                        </select>
-                    </div> 
-                    <div class="col-4">
-                        <label for="tipo" class="col-form-label-sm">Tipo</label>
-                        <select id="tipo" name="tipo" class="form-control form-control-sm searchInventario" onchange="campos_tipo()">
-                                <option value="0" selected>Seleccionar</option>
-								<option value="1" >TPV</option>
-								<option value="2" >SIM</option>
-								<option value="3" >INSUMOS</option>
-								
-                        </select>
-                    </div>   
-                
-					
-                    <div class="col-4"> 
-                        <label for="estatus" class="col-form-label-sm">Estatus</label>
-                        <select id="estatus" name="estatus" class="form-control form-control-sm searchInventario">
-                            <option value="0" selected>Seleccionar</option>
-                            <option value="3">DISPONIBLE-USADO</option>
-                            <option value="5">DISPONIBLE-NUEVO</option>
-                            
-                        </select>
-                    </div>
-					<div class="col-4" style="display:none" id="divCarrier"> 
-                        <label for="carrier" class="col-form-label-sm">Carrier</label>
-                        <select id="carrier" name="carrier" class="form-control form-control-sm searchInventario">
-
-                        </select>
-                    </div>
-				
-				</div>
-				<div class="row p-3" style="display:none" id="divTpv">
-						<div class="col-4"> 
-							<label for="conectividad" class="col-form-label-sm">Conectividad</label>
-							<select id="conectividad" name="conectividad" class="form-control form-control-sm searchInventario">
-                                <option value="0" selected>Seleccionar</option>
-								
-							</select>
-						</div>
-						
-						<div class="col-4"> 
-							<label for="producto" class="col-form-label-sm">Producto</label>
-							<select id="producto" name="producto" class="form-control form-control-sm searchInventario">
-                                <option value="0" selected>Seleccionar</option>
-								
-							</select>
-						</div>			
-				</div>
-				<div class="row p-3" style="display:none" id="divIns">	
-				
-						<div class="col-4" > 
-							<label for="insumo" class="col-form-label-sm">Tipo Insumo</label>
-							<select id="insumo" name="insumo" class="form-control form-control-sm searchInventario">
-                                <option value="0" selected>Seleccionar</option>
-								
-							</select>
-						</div>
-                </div>
-                <div class="row p-3"> 	
-						<div class="col-md-4" style="display:none" id="divCan">           
-							<label for="cantidad" class="col-form-label-sm">Cantidad</label>
-							<input type="text" name="cantidad" class="form-control form-control-sm" id="cantidad">
-						</div>
-					
-				</div>
-                <div class="col">
-                    
+        <main class="page-content pt-4">
+            <div id="overlay" class="overlay"></div>
+            <div class="container" style="max-width: 1402px!important;">
+               <h3>Nueva Petición</h3>
+               <div class="row">
+                  <div class="col-sm">
+                     <label for="tipo_envio" class="col-form-label-sm">Tipo de Envío</label>
+                     <select name="tipo_envio" id="tipo_envio" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                        <option value="DIA SIGUIENTE">DIA SIGUIENTE</option>
+                        <option value="TERRESTRE">TERRESTRE</option>
+                     </select>
+                  </div>
+                  <div class="col-sm">
+                     <label for="direccion_envio" class="col-form-label-sm">Dirección de Envío</label>
+                     <select name="direccion_envio" id="direccion_envio" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                        <option value="DOMICILIO">DOMICILIO</option>
+                        <option value="OCURRE">OCURRE</option>
+                     </select>
+                  </div>
+                  <div class="col-sm">
+                     <label for="tipo_peticion" class="col-form-label-sm">Tipo Petición</label>
+                     <select name="tipo_peticion" id="tipo_peticion" class="form-control form-control-sm searchInventario" onchange="campos_tipo()">
+                        <option value="0">Seleccionar</option>
+                        <option value="1">Petición Técnico</option>
+                        <option value="2">Peticion entre Almacenes</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-sm" style="display:none" id="almD">
+                     <label for="almacen_destino" class="col-form-label-sm">Almacén Destino</label>
+                     <select name="almacen_destino" id="almacen_destino" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                     </select>
+                  </div>
+                  <div class="col-sm" style="display:none" id="almO">
+                     <label for="almacen_origen" class="col-form-label-sm">Almacen Origen</label>
+                     <select name="almacen_origen" id="almacen_origen" class="form-control form-control-sm searchInventario">
+                     </select>
+                  </div>
+                  <div class="col-sm" style="display:none" id="divPlaza">
+                     <label for="plaza" class="col-form-label-sm">Plaza</label>
+                     <select id="plaza" name="plaza" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                     </select>
+                  </div>
+                  <div class="col-sm" style="display:none" id="divTecnico">
+                     <label for="tecnico" class="col-form-label-sm">Técnico</label>
+                     <select id="tecnico" name="tecnico" class="form-control form-control-sm searchInventario" required>
+                        <option value="0" selected>Seleccionar</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-sm">
+                     <label for="tipo" class="col-form-label-sm">Tipo</label>
+                     <select id="tipo" name="tipo" class="form-control form-control-sm searchInventario" onchange="campos_tipo()">
+                        <option value="0" selected>Seleccionar</option>
+                        <option value="1" >TPV</option>
+                        <option value="2" >SIM</option>
+                        <option value="3" >INSUMOS</option>
+                     </select>
+                  </div>
+                  <div class="col-sm">
+                     <label for="estatus" class="col-form-label-sm">Estatus</label>
+                     <select id="estatus" name="estatus" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                        <option value="3">DISPONIBLE-USADO</option>
+                        <option value="5">DISPONIBLE-NUEVO</option>
+                     </select>
+                  </div>
+                  <div class="col-sm">
+                     <label for="banco" class="col-form-label-sm">Banco</label>
+                     <select name="banco" id="banco" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                     </select>
+                  </div>
+                  <div class="col" style="display:none" id="divCarrier"> 
+                     <label for="carrier" class="col-form-label-sm">Carrier</label>
+                     <select id="carrier" name="carrier" class="form-control form-control-sm searchInventario">
+                     </select>
+                  </div>
+               </div>
+               <div class="row" style="display:none" id="divTpv">
+                  <div class="col-sm">
+                     <label for="conectividad" class="col-form-label-sm">Conectividad</label>
+                     <select id="conectividad" name="conectividad" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                     </select>
+                  </div>
+                  <div class="col-sm">
+                     <label for="producto" class="col-form-label-sm">Producto</label>
+                     <select id="producto" name="producto" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="row " style="display:none" id="divIns">
+                  <div class="col-sm" >
+                     <label for="insumo" class="col-form-label-sm">Tipo Insumo</label>
+                     <select id="insumo" name="insumo" class="form-control form-control-sm searchInventario">
+                        <option value="0" selected>Seleccionar</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-sm" style="display:none" id="divCan">           
+                     <label for="cantidad" class="col-form-label-sm">Cantidad</label>
+                     <input type="text" name="cantidad" class="form-control form-control-sm" id="cantidad">
+                  </div>
+                  <div class="col-sm">
                         <label for="comentario_supervisor" class="col-form-label-sm">Comentarios</label>
                         <textarea class="form-control form-control-sm" name="comentario_supervisor" id="comentario_supervisor" cols="10" rows="5"></textarea>
-                    
-                </div>
-                <div class="row p-3">
-					<div class="col mb-3 row">
-						<button type="button" class="btn btn-success mb-3" id="btnAdd">Agregar</button>
-					</div>
-                </div>
-                <table class="table table-md table-bordered " id="tplDetalle" style="width:100%">
-                    <thead>
+                    </div>
+               </div>
+            <br>
+               <div class="row">
+                  <div class="col-sm">
+                     <button type="button" class="btn btn-success" id="btnAdd">Agregar</button>
+                  </div>
+               </div>
+               <div class="table-responsive">
+                  <table class="table table-md table-responsive table-bordered " id="tplDetalle" style="width:100%">
+                     <thead>
                         <tr>
-                            <th>TIPO</th>
-                            <th>TECNICO</th>
-                            <th>ESTATUS</th>
-                            <th>INSUMO</th>
-                            <th>CARRIER</th>
-                            <th>CONECTIVIDAD</th>
-                            <th>VERSION</th>
-                            <th>CANTIDAD</th>
-                            <th>comentario_supervisor</th> 
-                            <th>tipo_envio</th>
-                            <th>direccion_envio</th>
-                            <th>tipoId</th>  
-                            <th>tecnicoId</th> 
-                            <th>estatusId</th>  
-                            <th>insumoId</th> 
-                            <th>carrierId</th>  
-                            <th>conectividadId</th>   
-                            <th>versionId</th>
-                            <th>ACCION</th>                         
+                           <th width="5%">BANCO</th>
+                           <th width="10%">TIPO</th>
+                           <th width="10%">ALMACEN DESTINO</th>
+                           <th width="10%">ALMACEN ORIGEN</th>
+                           <th width="10%">TECNICO</th>
+                           <th width="10%">ESTATUS</th>
+                           <th width="10%">INSUMO</th>
+                           <th width="10%">CARRIER</th>
+                           <th width="10%">CONECTIVIDAD</th>
+                           <th width="10%">VERSION</th>
+                           <th width="5%">CANTIDAD</th>
+                           <th>banco</th>
+                           <th>almacen_origen</th>
+                           <th>almacen_destino</th>
+                           <th>comentario_supervisor</th>
+                           <th>tipo_envio</th>
+                           <th>direccion_envio</th>
+                           <th>tipoId</th>
+                           <th>tecnicoId</th>
+                           <th>estatusId</th>
+                           <th>insumoId</th>
+                           <th>carrierId</th>
+                           <th>conectividadId</th>
+                           <th>versionId</th>
+                           <th>ACCION</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                    
-                    </tbody>                    
-                </table>	
-                <div class="row p-3">
-                    <div class="col-5 mb-2 row">
-                        <button type="button" class="btn btn-warning mb-3 " id="btnRegresar">Regresar</button> 
-						<button type="button" class="btn btn-success mb-3 " id="btnPeticion">Realizar Petición</button>
-					</div>
-                </div>
-				
-
-                <br />
-                <input type="hidden" id="no_guia" name="no_guia" value="0">
-				<input type="hidden" id="userId" name="userId" value="<?php echo ($_SESSION['territorial']); ?>">
-				<input type="hidden" id="userPerm" value="<?php echo isset($_SESSION['tipo_user']) ? $_SESSION['tipo_user'] : 0 ; ?>">
+                     </thead>
+                     <tbody>
+                     </tbody>
+                  </table>
+               </div>
+               <div class="row p-3">
+                  <div class="col-5 mb-2 row">
+                     <button type="button" class="btn btn-warning mb-3 " id="btnRegresar">Regresar</button> 
+                     <button type="button" class="btn btn-success mb-3 " id="btnPeticion">Realizar Petición</button>
+                  </div>
+               </div>
+               <br />
+               <input type="hidden" id="no_guia" name="no_guia" value="0">
+               <input type="hidden" id="userId" name="userId" value="<?php echo ($_SESSION['territorial']); ?>">
+               <input type="hidden" id="userPerm" value="<?php echo isset($_SESSION['tipo_user']) ? $_SESSION['tipo_user'] : 0 ; ?>">
             </div>
         </main>
         <!-- page-content" -->
