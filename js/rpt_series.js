@@ -35,6 +35,7 @@ $(document).ready(function()
 			info: false,
 			"data" : (inventario),
 			"columns": [
+				{ "data": "banco"},
 				{ "data": "no_serie" },
 				{ "data": "modelo" },
 				{ "data": "conectividad" },

@@ -19,6 +19,14 @@
                 <form action="modelos/reportes_db.php">
                     <div class="row">
                         <div class="col-sm-3">
+                            <label for="cve_banco" class="col-form-label-sm">BANCO</label><br>
+                            <select hidden name="cve_banco[]" id="cve_banco" class="custom-select form-control form-control-sm" multiple>
+                                
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
                             <label for="tipo_producto" class="col-form-label-sm">Tipo</label><br>
                             <select hidden id="tipo_producto" name="tipo_producto[]" class="custom-select form-control-sm searchInventario" multiple>
                                     <option value="1">TPV</option>

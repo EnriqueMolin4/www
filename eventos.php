@@ -15,21 +15,21 @@
             
                 <h5>Busqueda</h5>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-sm">
                         <label for="fechaVen_inicio" class="col-form-label-sm">Vencimiento Desde</label>
                         <input type="text" class="form-control form-control-sm searchEvento" id="fechaVen_inicio" aria-describedby="fechaVen_inicio" value="<?php echo date("Y-m-d", strtotime("-5 days", strtotime(date("Y-m-d")) )); ?>">
                     </div>
-                    <div class="col">
+                    <div class="col-sm">
                         <label for="fechaVen_fin" class="col-form-label-sm">Vencimiento Hasta</label>
                         <input type="text" class="form-control form-control-sm searchEvento" id="fechaVen_fin" aria-describedby="fechaVen_fin" value="<?php echo date("Y-m-d", strtotime("+1 days", strtotime(date("Y-m-d")) )); ?>">
                     </div>
-                    <div class="col">
+                    <div class="col-sm">
                         <label for="tipo_evento" class="col-form-label-sm">Tipo Evento</label>
                         <select id="tipo_evento" name="tipo_evento" class="form-control form-control-sm searchEvento">
                                 <option value="0" selected>Seleccionar</option>
                             </select>
                     </div>
-                    <div class="col">
+                    <div class="col-sm">
                         <label for="estatus_busqueda" class="col-form-label-sm">Estatus</label>
                         <select id="estatus_busqueda" name="estatus_busqueda" class="form-control form-control-sm searchEvento">
                                 <option value="0" selected>Seleccionar</option>
@@ -40,25 +40,25 @@
                     </div>          
                 </div>
                 <div class="row pt-3 pl-4">
-                    <div class="col">
+                    <div class="col-sm">
                         <input type="checkbox" class="form-check-input searchEvento" id="evidencias">
                         <label class="form-check-label" for="evidencias">Con evidencias</label>
                     </div>
                     <?php if ($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor') { ?>
-                    <div class="col">
+                    <div class="col-sm">
                         <label for="territorialF" class="col-form-label-sm">TERRITORIAL</label>
                         <select id="territorialF" name="territorialF" class="form-control form-control-sm searchEvento">
                             <option value="0">Seleccionar</option>
                         </select>
                     </div>
                     <?php } ?>
-                    <div class="col">
+                    <div class="col-sm">
                         <label for="tecnicoF" class="col-form-label-sm">TECNICO</label>
                         <select name="tecnicoF" id="tecnicoF" class="form-control form-control-sm searchEvento">
                             <option value="0" selected>Seleccionar</option> 
                         </select>
                     </div>
-                    <div class="col">
+                    <div class="col-sm">
                         <label for="bancoF" class="col-form-label-sm">BANCO</label>
                         <select name="bancoF" id="bancoF" class="form-control form-control-sm searchEvento">
                             <option value="0" selected>Seleccionar</option> 
@@ -67,13 +67,13 @@
                 </div>
                
                 <div class="row">
-                    <div class="col" style="padding-left:30px;padding-top:30px;">  
+                    <div class="col-sm" style="padding-left:30px;padding-top:30px;">  
                         <a href="nuevoevento.php" class="btn btn-dark" id="btnNuevoEvento">Nuevo Evento</a>
                     </div>
                 </div>  
                 <br />
                 <div class="table-responsive">
-                    <table id="eventos"  class="display table-responsive table table-md table-bordered"  cellspacing="0" style="width:100%">
+                    <table id="eventos"  class="display table-responsive table table-md table-bordered"  cellspacing="0" style="width:100%; display: block;">
                         <thead>
                             <tr>
                              <th>ODT</th>
@@ -89,7 +89,7 @@
                                 <th>Técnico</th>
                                 <th>Estatus</th>
 							    <th>Estatus Servicio</th>
-                                <th>Accion</th>
+                                <th>Acciones</th>
                             
                             </tr>
                         </thead>

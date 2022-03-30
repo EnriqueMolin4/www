@@ -1,6 +1,6 @@
 <?php
 error_reporting( error_reporting() & ~E_NOTICE ); //undefined Problem
-include('../modelos/procesos_db.php');
+require __DIR__ . '/../modelos/procesos_db.php';
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -15,12 +15,12 @@ if($processActive) {
     $proceso = $Procesos->getOlderCargas('I');
 
     if($proceso) {
-        echo "Buscar Proceso mas Viejo ".$proceso['fecha_creacion'];
+        echo "Buscar Proceso mas Viejo I ".$proceso['fecha_creacion']. " \n ";
         $fecha = date ( 'Y-m-d H:m:s' );
         
 
         //$eventoMasivo = new CargasMasivas();
-        $archivo =  'files/'.$proceso['archivo'];
+        $archivo =  '/var/www/dev.sinttecom.net/cron/files/'.$proceso['archivo'];
 
         $spreadsheet = IOFactory::load($archivo);
         $hojaDeProductos= $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
@@ -58,129 +58,146 @@ if($processActive) {
                 //$counter++;
                  
                 
-                $Tipo = $Procesos->getTipo( $hojaDeProductos[$indiceFila]['A'] );
+                $Tipo =  $hojaDeProductos[$indiceFila]['A'] ;
                 $Linea = $hojaDeProductos[$indiceFila]['C'];
                 $Modelo = $hojaDeProductos[$indiceFila]['D'];
-                $Conectividad = $hojaDeProductos[$indiceFila]['E'];
-                $Estatus = $hojaDeProductos[$indiceFila]['F'];
-                $Anaquel = $hojaDeProductos[$indiceFila]['G'];
-                $Caja = $hojaDeProductos[$indiceFila]['H'];
-                $Tarima = $hojaDeProductos[$indiceFila]['I'];
-                $Cantidad = $hojaDeProductos[$indiceFila]['J'];
-                $CveBanco = $hojaDeProductos[$indiceFila]['K'];
-                $Almacen = $hojaDeProductos[$indiceFila]['L'];
+				$Aplicativo = $hojaDeProductos[$indiceFila]['E'];
+                $Conectividad = $hojaDeProductos[$indiceFila]['F'];
+                $Estatus = $hojaDeProductos[$indiceFila]['G'];
+                $Anaquel = $hojaDeProductos[$indiceFila]['H'];
+                $Caja = $hojaDeProductos[$indiceFila]['I'];
+                $Tarima = $hojaDeProductos[$indiceFila]['J'];
+                $Cantidad = $hojaDeProductos[$indiceFila]['K'];
+                $CveBanco = $hojaDeProductos[$indiceFila]['L'];
+                $Almacen = $hojaDeProductos[$indiceFila]['M'];
             
-
-                $ModeloId = $Procesos->getModeloxNombre($Modelo);
-                $ConectividadId = $Procesos->getConectividadxNombre($Conectividad);
+				if($Tipo == '1') {
+					$ModeloId =  $Procesos->getModeloxNombre($Modelo,$CveBanco);
+					$AplicativoId = $Procesos->getAplicativoxNombre($Aplicativo,$CveBanco);
+				} else if ( $Tipo == '2' ) {
+					
+					$ModeloId =  $Procesos->getCarriersxNombre($Modelo,$CveBanco);
+				} else {
+					$ModeloId= 0;
+				}
+				
+                
+                $ConectividadId = $Procesos->getConectividadxNombre($Conectividad,$CveBanco);
                 $EstatusId = $Procesos->getEstatusxNombre($Estatus);
                 $AlmacenId = $Procesos->getAlmacenxNombre($Almacen);
-
-                $existeElavon = $Procesos->getInventarioElavonData($NoSerie);
-                
+				
+				
+				$existeElavon = $Procesos->getInventarioElavonData($NoSerie,$CveBanco);
+				
+				if( $Tipo == '3') {
+					$existeElavon = 1;
+				}
+				
                 if($existeElavon) {
 
-                    $existe = $Procesos->getInventarioData($NoSerie);
 
-                    
-                    if(!$existe) {
+					$existe = $Procesos->getInventarioData($NoSerie,$CveBanco);
+					echo "Existe ".$existe;
+					if(!$existe) {
 
-                        $datafieldsInventarios = array('tipo','cve_banco','no_serie','modelo','conectividad','estatus','estatus_inventario','anaquel','caja','tarima','cantidad','linea','ubicacion','id_ubicacion','creado_por','fecha_entrada','fecha_creacion','fecha_edicion');
-                        $question_marks = implode(', ', array_fill(0, sizeof($datafieldsInventarios), '?'));
+						$datafieldsInventarios = array('tipo','cve_banco','no_serie','modelo','aplicativo','conectividad','estatus','estatus_inventario','anaquel','caja','tarima','cantidad','linea','ubicacion','id_ubicacion','creado_por','fecha_entrada','fecha_creacion','fecha_edicion');
+						$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInventarios), '?'));
 
-                        $sql = "INSERT INTO inventario (" . implode(",", $datafieldsInventarios ) . ") VALUES (".$question_marks.")"; 
+						$sql = "INSERT INTO inventario (" . implode(",", $datafieldsInventarios ) . ") VALUES (".$question_marks.")"; 
 
-                        $arrayString = array (
-                            $Tipo,
-                            $CveBanco,
-                            $NoSerie,
-                            $ModeloId,
-                            $ConectividadId,
-                            $EstatusId,
-                            1,
-                            $Anaquel,
-                            $Caja,
-                            $Tarima,
-                            $Cantidad,
-                            $Linea,
-                            1,
-                            $AlmacenId,
-                            $proceso['creado_por'],
-                            $fecha,
-                            $fecha,
-                            $fecha
-                        );
+						$arrayString = array (
+							$Tipo,
+							$CveBanco,
+							$NoSerie,
+							$ModeloId,
+							$AplicativoId,
+							$ConectividadId,
+							$EstatusId,
+							1,
+							$Anaquel,
+							$Caja,
+							$Tarima,
+							$Cantidad,
+							$Linea,
+							1,
+							$AlmacenId,
+							$proceso['creado_por'],
+							$fecha,
+							$fecha,
+							$fecha
+						);
 
 
-                        
+						echo $sql." ".json_encode($arrayString);
 
-                        $id =  $Procesos->insert($sql,$arrayString);
+						$id =  $Procesos->insert($sql,$arrayString);
 
-                    
+					echo " uniqueId ".$id;
 
-                        if( $id > 0 ) {
-                            $counter++;
+						if( $id > 0 ) {
+							$counter++;
 
-                            $invData = $Procesos->getInventarioData($NoSerie);
+							$invData = $Procesos->getInventarioData($NoSerie,$CveBanco);
 
-                            $sqlEvento = "UPDATE carga_archivos SET registros_procesados=? WHERE id = ?";
+							$sqlEvento = "UPDATE carga_archivos SET registros_procesados=? WHERE id = ?";
 
-                            $arrayStringEvento = array (
-                                $counter,
-                                $proceso['id']
-                            );
+							$arrayStringEvento = array (
+								$counter,
+								$proceso['id']
+							);
 
-                            $Procesos->insert($sqlEvento,$arrayStringEvento);
+							$Procesos->insert($sqlEvento,$arrayStringEvento);
 
-                            $prepareStatement = "INSERT INTO `historial`
-                            ( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)
-                            VALUES
-                            (?,?,?,?,?,?,?,?,?);
-                            ";
-                            $arrayString = array (
-                                    $invData['id'],
-                                    $fecha,
-                                    'ENTRADA ALMACEN',
-                                    $invData['ubicacion'],
-                                    $NoSerie,
-                                    $invData['tipo'],
-                                    $invData['cantidad'],
-                                    $invData['id_ubicacion'],
-                                    $proceso['creado_por']
-                            );
+							$prepareStatement = "INSERT INTO `historial`
+							( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`,`cve_banco`)
+							VALUES
+							(?,?,?,?,?,?,?,?,?,?);
+							";
+							$arrayString = array (
+									$invData['id'],
+									$fecha,
+									'ENTRADA ALMACEN',
+									$invData['ubicacion'],
+									$NoSerie,
+									$invData['tipo'],
+									$invData['cantidad'],
+									$invData['id_ubicacion'],
+									$proceso['creado_por'],
+									$CveBanco
+							);
+							
+							$Procesos->insert($prepareStatement,$arrayString);
 
-                        
-                        } else {
-                            $nocounter++;
-                            array_push($serieNoAct,["NoSerie" => $NoSerie ]);
-                            $sqlEvento = "UPDATE carga_archivos SET registros_sinprocesar=? WHERE id = ?";
+						
+						} else {
+							$nocounter++;
+							array_push($serieNoAct,["NoSerie" => $NoSerie ]);
+							$sqlEvento = "UPDATE carga_archivos SET registros_sinprocesar=? WHERE id = ?";
 
-                            $arrayStringEvento = array (
-                                $nocounter,
-                                $proceso['id']
-                            );
+							$arrayStringEvento = array (
+								$nocounter,
+								$proceso['id']
+							);
 
-                            $Procesos->insert($sqlEvento,$arrayStringEvento);
+							$Procesos->insert($sqlEvento,$arrayStringEvento);
 
-                        }
+						}
+					} else {
 
-                    } else {
+						$nocounter++;
+						array_push($serieNoAct,["NoSerie" => $NoSerie ]);
+						$sqlEvento = "UPDATE carga_archivos SET registros_sinprocesar=? WHERE id = ?";
 
-                        $nocounter++;
-                        array_push($serieNoAct,["NoSerie" => $NoSerie ]);
-                        $sqlEvento = "UPDATE carga_archivos SET registros_sinprocesar=? WHERE id = ?";
+						$arrayStringEvento = array (
+							$nocounter,
+							$proceso['id']
+						);
 
-                        $arrayStringEvento = array (
-                            $nocounter,
-                            $proceso['id']
-                        );
-
-                        $Procesos->insert($sqlEvento,$arrayStringEvento);
-
-                    }
-                } else {
-
-                    $nocounter++;
+						$Procesos->insert($sqlEvento,$arrayStringEvento);
+					}
+				} else {
+				
+					$nocounter++;
                     array_push($serieNoAct,["NoSerie" => $NoSerie ]);
                     $sqlEvento = "UPDATE carga_archivos SET registros_sinprocesar=? WHERE id = ?";
 
@@ -190,7 +207,8 @@ if($processActive) {
                     );
 
                     $Procesos->insert($sqlEvento,$arrayStringEvento);
-                }
+					
+				}
                 
                     
                     
@@ -224,7 +242,7 @@ if($processActive) {
        
 
     } else {
-        echo "$fechaProceso Sin procesos de Inventario pendientes \n";
+        echo " \n $fechaProceso Sin procesos de Inventario pendientes \n";
     }
 }
 

@@ -13,26 +13,26 @@
             <div id="overlay" class="overlay">
            
             </div>
-            <div class="container-fluid p-5">
+            <div class="container-fluid p-2">
             <h3>Almacén</h3>
 			<?php  
 			if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col">
                     <label for="excelMasivo" class="col-form-label-sm">Alta en Almacén Masivos</label> 
                     <input class="input-file" type="file" id="excelMasivoInventarios" name="excelMasivoInventarios">
                     <button class="btn btn-success btn-sm" id="btnCargarExcelInventarios">Cargar</button>
                     
                 </div>
-                <div class="col-sm-4">
+                <div class="col">
                     <button type="button" class="btn btn-primary" id="btnProcesosActivos">
                         Proceso Activo <span class="badge badge-light" id="processBadge"></span>
                     </button>
                 </div>
                 
             </div>
-            <div class="row pt-2">
-                <div class="col-sm-6">
+            <div class="row">
+                <div class="col">
                     <button class="btn btn-warning btn-sm" id="btnUpdateExcelInventarios">Actualizar Series</button>
                     <a href="layouts/LayoutCargaMasivaInventario.xlsx" class="btn btn-primary btn-sm" download>Descargar Layout</a>
                     <button type="button" class="btn btn-success btn-sm" id="btnAltaAlmacen">
@@ -42,7 +42,7 @@
             </div> <br> 
 		    <?php } ?>
             <h5>Busqueda</h5>
-                <div class="row  mb-4">
+                <div class="row">
                     <div class="col">
                         <label for="banco" class="col-form-label-sm">Banco</label>
                         <select id="banco" name="banco" class="form-control form-control-sm searchInventario">
@@ -64,7 +64,10 @@
                         <select id="tipo_ubicacion" name="tipo_ubicacion" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
-                    </div>   
+                    </div> 
+                </div>
+                <div class="row">
+                      
 					 <div class="col">
                         <label for="tipo_estatusubicacion" class="col-form-label-sm">Estatus Ubicación</label>
                         <select id="tipo_estatusubicacion" name="tipo_estatusubicacion" class="form-control form-control-sm searchInventario">
@@ -79,6 +82,7 @@
                     </div>   
                     
                 </div>
+                <br>
 				<div class="d-flex justify-content-end">
 				<?php if( searchMenuEdit($_SESSION['Modules'],'url','registroalmacen') == '1') { ?>
 					<div class="col-sm-3 m-1">
@@ -284,17 +288,33 @@
 						</div>
 						<div class="col-md-3">           
 							<label for="det-estatus_inventario" class="col-form-label-sm">Estatus Inventario</label>
-							 <select id="det-estatus-inventario" name="det-estatus-inventario" class="form-control form-control-sm"></select>
+							 <select id="det-estatus-inventario" name="det-estatus-inventario" class="form-control form-control-sm" onchange="campos_tipo()"></select>
 						</div>
 						<div class="col-md-3">           
 							<label for="det-ubicacion" class="col-form-label-sm">Ubicacion</label>
 							 <select id="det-ubicacion" name="det-ubicacion" class="form-control form-control-sm"></select>
 						</div>
-                        <div class="col-md-2">           
+                    </div>  
+                    <div class="row mb-3">
+                        <div class="col" id="divTecnico">
+                            <label for="det-tecnico" class="col-form-label-sm">Técnico</label>
+                            <select id="det-tecnico" name="det-tecnico" class="form-control form-control-s"> </select>
+                        </div>
+                        <div class="col" id="divComercio">
+                            <label for="det-comercio" class="col-form-label-sm">Comercio</label>
+                            <input type="text" id="det-comercio" name="det-comercio" class="form-control form-control-s" readonly>
+                        </div>
+                        <div class="col" id="divAfiliacion">
+                            <label for="det-afiliacion" class="col-form-label-sm">Afiliación Nuevo Comercio</label>
+                            <input type="text" class="form-control form-control-sm" id="det-afiliacion" name="det-afiliacion" placeholder="Afiliacion" aria-describedby="det-afiliacion">
+                        </div>
+                        <div class="col">           
 							<label for="det-qty" class="col-form-label-sm">Cantidad</label>
                              <input type="text" class="form-control form-control-sm" id="det-qty" aria-describedby="qty" readonly>
 						</div>
-					</div>
+                        <input type="hidden" name="ubicacion_id" id="ubicacion_id">
+                    </div>
+					
 					<br>
             
 					<div class="modal-footer">
@@ -329,6 +349,11 @@
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
     <script src="js/main.js"></script>
     <script type="text/javascript" src="js/registroalmacen.js"></script> 
+    <style>
+        .ui-autocomplete {
+          z-index:2147483647;
+        }
+    </style>
 </body>
 
 </html>

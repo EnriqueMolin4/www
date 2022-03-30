@@ -114,6 +114,10 @@ class Comercios implements IConnections {
 			$filter .= " LIMIT  $start , $length";
 		}
 
+		if ($params['banco'] != '0') {
+			$where .= " AND comercios.cve_banco = ".$params['banco'];
+		}
+
 		if( !empty($params['search']['value'])  &&  $total) {   
 			$where .=" AND ";
 			$where .=" ( comercio LIKE '".$params['search']['value']."%' ";    

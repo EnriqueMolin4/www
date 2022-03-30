@@ -112,29 +112,27 @@ class Usuarios implements IConnections {
 		$start = $params['start'];
 		$length = $params['length'];
 
-		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
-		$orderDir = $params['order'][0]['dir'];
-		$order = '';
-
+	
 		$filter = "";
 		$param = "";
 		$where = "";
 
+		$banco = $params['banco'];
 		
-		if(isset($orderField) ) {
-			$order .= " ORDER BY   $orderField   $orderDir";
-		}
-
+		
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
 		}
 
+		if ($banco > '0') {
+			$where .= " AND eventos.cve_banco = $banco";
+		}
+
 		if( !empty($params['search']['value'])  &&  $total) {   
-			$where .=" WHERE ";
+			$where .=" AND ";
 			$where .=" ( odt LIKE '".$params['search']['value']."%' ) ";    
 			//$where .=" OR comercios.comercio LIKE '".$params['search']['value']."%' ) ";
 			
-
 		}
 
 
@@ -144,9 +142,11 @@ class Usuarios implements IConnections {
 				JOIN comercios ON comercios.afiliacion = eventos.afiliacion
 				JOIN tipo_estatus ON tipo_estatus.id = eventos.estatus
 				JOIN cuentas ON cuentas.id = eventos.modificado_por
+				WHERE eventos.odt is not null
 				$where 
-				$order
 				$filter ";
+
+		//self::$logger->error ($sql);
 
 	
 		try {

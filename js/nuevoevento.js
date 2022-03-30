@@ -7,6 +7,7 @@ $(document).ready(function() {
     getTipoServicio();
     getEstados();
     getProcesosActivos();
+    getBancos();
     
     //Create Ticket
     var d = new Date();
@@ -42,98 +43,64 @@ $(document).ready(function() {
         datepicker:false,
         format:'H:i'
     });
-    //CARGA EVENTOS MASIVA
-    $("#btnCargarExcel").on("click",function() 
-    {
-        var form_data = new FormData();
-        var form_data_file = new FormData()
-        var excelMasivo = $("#excelMasivo");
-        var file_data = excelMasivo[0].files[0];
 
-        //Form data para guardar datos
-        form_data.append('file', file_data);
-        form_data.append('module','eventoMasivo');
+    $("#btnCargarExcel").on("click",function() {
 
-        //Form data para mover/cargar el archivo
-        form_data_file.append('file', file_data);
-        form_data_file.append('module','cargarEventosMasivo');
+        if ($("#cveBanco").val() != '0') {
 
-        if( document.getElementById("excelMasivo").files.length == 0)
-        {   
-            $.toaster({
-                message: 'No hay un archivo seleccionado.',
-                title: 'Aviso',
-                priority: 'danger'
-            });
-
+            if ( document.getElementById("excelMasivo").files.length == 0 ) 
+            {
+                $.toaster({
+                    message: 'No hay un archivo seleccionado',
+                    title: 'Aviso',
+                    priority: 'danger'
+                })
+            }
+            else
+            {
+                var form_data = new FormData();
+                var excelMasivo = $("#excelMasivo");
+                var file_data = excelMasivo[0].files[0];
+                form_data.append('file', file_data);
+                form_data.append('module','eventoMasivo');
+                form_data.append('cveBanco',$("#cveBanco").val());
+                $.toaster({
+                    message: 'Inicia la Carga Masiva de Eventos',
+                    title: 'Aviso',
+                    priority : 'success'
+                });  
+                $.ajax({
+                    type: 'POST',
+                    url: 'modelos/eventos_db.php', // call your php file
+                    data: form_data,
+                    processData: false,
+                   contentType: false,
+                    success: function(data, textStatus, jqXHR){
+                         
+                        $.toaster({
+                            message: data,
+                            title: 'Aviso',
+                            priority : 'success'
+                        });  
+                        
+                        
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert(textStatus)
+                   }
+                 });
+                
+            }
         }
-        else
-        {
+        else {
             $.toaster({
-                message: 'Inicia la Carga Masiva de Eventos',
+                message: 'Necesitas seleccionar un banco',
                 title: 'Aviso',
-                priority : 'success'
-            });
-
-
-            $("#showAvisosCargas").modal("show");
-            $("#bodyCargas").html('Cargando Información... <br /> ');
-
-
-            $.ajax({
-                type: 'POST',
-                url: 'modelos/eventos_db.php', // call your php file
-                data: form_data,
-                processData: false,
-                contentType: false,
-                success: function(data, textStatus, jqXHR){
-                    //console.log(data);
-                    var info = JSON.parse(data);
-                    console.log(info);
-                    if(info.contador.length > 0)
-                    {
-                    
-                        $("#bodyCargas").append(info.contador+" Eventos Cargados");
-                        //
-
-                        $.ajax({
-                            type: 'POST',
-                            url: 'modelos/eventos_db.php',
-                            data: form_data_file,
-                            processData: false,
-                            contentType: false,
-                            success: function()
-                            {
-                                $.toaster({
-                                    message: 'Se cargó el archivo con éxito',
-                                    title: 'Aviso',
-                                    priority: 'success'
-                                });
-                            },
-                            error: function(jqXHR, textStatus, errorThrown)
-                            {
-                                alert(textStatus)
-                            }
-                        });
-
-                    }
-                    else
-                    {
-                        $("#bodyCargas").append(info.contador+" Eventos Cargados");
-                    }
-         
-
-
-
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert(textStatus)
-                }
-            });
-
+                priority: 'warning'
+            })
         }
-    
     })
+        
     
     $("#btnCargarExcelAsignaciones").on('click', function() {
         var form_data = new FormData();
@@ -215,7 +182,7 @@ $(document).ready(function() {
     $("#btnAsignar").on('click', function() {
 
          
-        if( $("#tipo_servicio").val() != '0' && $("#telefono").val().length > 0 && $("#hora_atencion-in").val().length > 0 && $("#hora_atencion-fin").val().length > 0 &&  $("#hora_comida").val().length > 0 &&  $("#hora_comida_fin").val().length > 0  )
+        if( $("#tipo_servicio").val() != '0' && $("#telefono").val().length > 0  && $("#hora_atencion-in").val().length > 0 && $("#hora_atencion-fin").val().length > 0 &&  $("#hora_comida").val().length > 0 &&  $("#hora_comida_fin").val().length > 0  )
         {
             $("#btnAsignar").attr('disabled',true);
             var coments = cleanWordPaste($("#comentarios").val());
@@ -290,7 +257,9 @@ $(document).ready(function() {
         select: function( event, ui ) {
             var info = ui.item.data;
             mostrarComercio(info)
-            $(this).val(''); return false;
+            $(this).val('');
+            getTipoServicio();
+             return false;
            
         }
       } );
@@ -322,10 +291,11 @@ function cleanWordPaste( in_word_text ) {
 }
 
 function getTipoServicio() {
+    $("#tipo_servicio").html('');
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getTipoServicios&tipo=rep',
+        data: 'module=getTipoServicios&tipo=rep&cve='+$("#cve_banco").val(),
         cache: false,
         success: function(data){
         $("#tipo_servicio").html(data);            
@@ -368,6 +338,24 @@ function getTipoFallas(tipofallas) {
     
 }
 
+
+function getBancos()
+{
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getBancos',
+        cache: false,
+        success: function(data){
+            //console.log(data);
+            $("#cveBanco").html(data);
+        },
+        error: function(error)
+        {
+            var demo = error;
+        }
+    });
+}
 
 function getEstados() {
     $.ajax({
@@ -465,6 +453,7 @@ function mostrarComercio(data) {
     $("#hora_general").val(data.hora_general)
     $("#hora_comida").val(data.hora_comida)
     getEquipos(data.id);
+    //getTipoServicio();
 }
 
 function getProcesosActivos() {

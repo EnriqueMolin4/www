@@ -17,15 +17,19 @@
                         <h5>Busqueda</h5>
                         <div class="row">
                             <div class="col">
-                                <label for="fechaVen_inicio" class="col-form-label-sm">Desde</label>
+                                <label for="cve_b" class="col-form-label-sm">BANCO</label>
+                                <select name="cve_b" id="cve_b" class="form-control form-control-sm"></select>
+                            </div>
+                            <div class="col">
+                                <label for="fechaVen_inicio" class="col-form-label-sm">DESDE</label>
                                 <input type="text" class="form-control form-control-sm " id="fechaVen_inicio" name="fechaVen_inicio" aria-describedby="fechaVen_inicio" value="<?php echo date("Y-m-d", strtotime("-5 days", strtotime(date("Y-m-d")) )); ?>">
                             </div>
                             <div class="col">
-                                <label for="fechaVen_fin" class="col-form-label-sm">Hasta</label>
+                                <label for="fechaVen_fin" class="col-form-label-sm">HASTA</label>
                                 <input type="text" class="form-control form-control-sm " id="fechaVen_fin" name="fechaVen_fin" aria-describedby="fechaVen_fin" value="<?php echo date("Y-m-d", strtotime("+1 days", strtotime(date("Y-m-d")) )); ?>">
                             </div>
                             <div class="col">
-                                <label for="tecnico" class="col-form-label-sm">Tecnico</label>
+                                <label for="tecnico" class="col-form-label-sm">TECNICO</label>
                                 <select id="tecnico" name="tecnico" class="form-control form-control-sm ">
                                         <option value="0" selected>Seleccionar</option>
                                     </select>
@@ -63,6 +67,7 @@
     <script type="text/javascript" src="js/jquery.toaster.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
     <script src="js/main.js"></script>
+    <script src="js/bootstrap-multiselect.min.js"></script>
     <script type="text/javascript" src="js/reportes.js"></script> 
     <script>
         $(document).ready(function(){

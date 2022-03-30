@@ -1,9 +1,6 @@
 <?php 
 session_start();
 include '../modelos/DBConnection.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 $connection = $db->getConnection ( 'sinttecom' );
 
@@ -28,11 +25,14 @@ $sql = "select  distinct
     it.creado_por,
     DATE(it.fecha_creacion) fecha_creacion,
     DATE(it.fecha_modificacion)  fecha_modificacion,
-	CASE WHEN it.cantidad <= 15 THEN 'green' WHEN it.cantidad BETWEEN 16 AND 30 THEN 'yellow' WHEN it.cantidad > 30 THEN 'red' ELSE 'white'  END color
+	CASE WHEN it.cantidad <= 15 THEN 'green' WHEN it.cantidad BETWEEN 16 AND 30 THEN 'yellow' WHEN it.cantidad > 30 THEN 'red' ELSE 'white'  END color,
+	it.cve_banco,
+	b.banco
     from inventario_tecnico it
-    LEFT JOIN inventario i ON it.no_serie = i.no_serie  AND i.id_ubicacion =it.tecnico 
+    LEFT JOIN inventario i ON it.no_serie = i.no_serie  and i.cve_banco = it.cve_banco
     LEFT JOIN tipo_estatus_modelos tm ON  i.estatus  = tm.id 
     LEFT JOIN tipo_estatus_inventario tv  ON i.estatus_inventario = tv.id    
+	LEFT JOIN bancos b ON b.cve = it.cve_banco
     WHERE it.tecnico = $tecnico
     AND it.aceptada= 1 
     ";
@@ -46,6 +46,7 @@ try {
 } catch ( PDOException $e ) {
     $resultado = [ 'error' => $e ];
 }
+ 
 
 echo json_encode($resultado);
 

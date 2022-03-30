@@ -23,12 +23,12 @@ include '../modelos/api_db.php';
 	$tipoServicio = $Api->getServicioIdOdt($odt);
 	
     $exist = $Api->existEvento($odt,$afiliacion);
-	
+	 
     if($exist) {
 
         //Save odt
         
-        if($datosODT[0]['estatus_servicio'] == '16' ) {
+        if($tipoServicio['estatus_servicio'] == '16' ) {
                     
             $sqlEvento = " UPDATE eventos SET latitud=?,longitud=?,tecnico=?,fecha_atencion=?,hora_salida=?,comentarios=?,`origen`=?,`modificado_por`=? WHERE id=? ";
             

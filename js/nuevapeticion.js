@@ -198,10 +198,19 @@ $(document).ready(function() {
                                   
                     error++;
                         
+                }else if ($("#almacen_origen").val() == $("#almacen_destino").val()) 
+                {
+                    $.toaster({
+                    message: 'Los almacenes no pueden ser los mismos',
+                    title: 'Aviso',
+                    priority : 'danger'
+                    });
+                                  
+                    error++;
                 }    
         }
 
-        if ("#banco") 
+        if ( $("#banco").val() == "0" ) 
         {
             $.toaster({
                 message: 'Favor de seleccionar el banco',
@@ -351,7 +360,7 @@ $(document).ready(function() {
                             priority : 'success'
                         }); 
 						cleartext();
-                        //window.location.href = "peticiones.php";
+                        window.location.href = "peticiones.php";
 					},
 					error: function(error){
 						var demo = error;

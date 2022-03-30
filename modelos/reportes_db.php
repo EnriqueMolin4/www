@@ -116,10 +116,15 @@ class Reportes implements IConnections {
         $inicio = $params['fechaVen_inicio'];
         $final = $params['fechaVen_fin'];
         $tecnico = $params['tecnico'];
+        $cve = $params['cve_banco'];
         $filter = "";
 
+        if ($cve != '0') {
+        	$filter .= " AND cve = $cve ";
+        }
+
         if($tecnico != '0') {
-            $filter .= " AND tecnico = $tecnico ";
+            $filter .= " AND id_tecnico = $tecnico ";
         }
 
         $sql = "Select *
@@ -140,6 +145,11 @@ class Reportes implements IConnections {
     function getInventarioCampo($params) {
         $inicio = $params['fechaVen_inicio'];
         $final = $params['fechaVen_fin'];
+        $cve = $params['cve_banco'];
+
+        if ($cve != '0') {
+        	$where .= " AND eventos.cve_banco = $cve";
+        }
 
 
         $sql = "Select 
@@ -168,7 +178,8 @@ class Reportes implements IConnections {
                 AND eventos.estatus not in  (1)
                 AND eventos.tecnico not in (128)
                 AND eventos.estatus = tipo_estatus.id
-                AND evidencias.fecha BETWEEN '$inicio'  AND '$final' ";
+                AND evidencias.fecha BETWEEN '$inicio'  AND '$final'  
+                $where";
             
                 //self::$logger->error($sql);
 		
@@ -235,6 +246,7 @@ class Reportes implements IConnections {
 		$param = "";
 		$where = "";
         $queryInsumos = "";
+        $banco = is_null($params['cve_banco']) ? '0' : implode(', ',$params['cve_banco']);
 		$ubicacion = is_null($params['tipo_ubicacion']) ? '0' : implode(', ',$params['tipo_ubicacion']) ;
 		$estatus = is_null($params['tipo_estatus']) ? '0' : implode(', ',$params['tipo_estatus']);
 		$producto = is_null($params['tipo_producto']) ? '0' : implode(', ',$params['tipo_producto']);
@@ -259,6 +271,11 @@ class Reportes implements IConnections {
                     WHERE it.tecnico = du.cuenta_id
                     AND it.no_serie in (SELECT codigo FROM tipo_insumos)
             ";
+        }
+
+        if ($bancos != '0') {
+        	
+        	$where .= " AND inv.cve_banco in ($banco)";
         }
 
 		if( $ubicacion != '0' ) {
@@ -354,6 +371,7 @@ class Reportes implements IConnections {
         $campoFecha = $params['customRadioInline1'];
         $fecha_alta         = $params['fecha_alta'];
         $fecha_hasta        = $params['fecha_hasta'];
+        $bancos				= isset($params['cve_banco']) ? $params['cve_banco'] : array();
         $estado             = isset($params['estado']) ? $params['estado'] : array();
         $tipo_servicio      = isset($params['tipo_servicio']) ? $params['tipo_servicio'] : array();
         $tipo_subservicios  = isset($params['tipo_subservicio']) ? $params['tipo_subservicio'] : array();
@@ -362,6 +380,11 @@ class Reportes implements IConnections {
         $fecha_cierre       = $params['fecha_cierre'];
         $fecha_cierre_hasta       = $params['hasta_fc'];
 
+        if ( sizeof($bancos) > 0 ) {
+        	$bancosList = implode(",", $bancos);
+
+        	$where .= " AND eventos.cve_banco in ($bancosList) ";
+        }
 
         if( sizeof($estado) > 0) {
 
@@ -643,6 +666,7 @@ if($module == 'reporte_imagenestecnico') {
     header('Content-Disposition: attachment; filename="imagenestecnico.csv"');
     
     $rows = $Reportes->getImagenesTecnico($params);
+
     echo 'FechaAtencion,FechImagen,ODT,Tecnico,Imagen,TipoEvidencia'. PHP_EOL;
 
     foreach ($rows as $row ) {

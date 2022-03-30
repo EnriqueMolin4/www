@@ -18,6 +18,12 @@
                         <form action="modelos/reportes_db.php">
                             <div class="row">
                                 <div class="col">
+                                    <label for="cve_banco" class="col-form-label-sm">BANCO</label>
+                                    <select name="cve_b" id="cve_b" class="form-control form-control-sm">
+                                        
+                                    </select>
+                                </div>
+                                <div class="col">
                                     <label for="fechaVen_inicio" class="col-form-label-sm">Desde</label>
                                     <input type="text" class="form-control form-control-sm " id="fechaVen_inicio" name="fechaVen_inicio" value="<?php echo date("Y-m-d", strtotime("-5 days", strtotime(date("Y-m-d")) )); ?>">
                                 </div>

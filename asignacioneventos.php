@@ -46,22 +46,22 @@
                 </div><br>
                  
                 
-                    <div class="row mt-3 mb-3">
-						 <div class="col-md-3">
+                    <div class="row">
+						 <div class="col-sm">
 							<label for="supervisores" class="col-form-label-sm">Supervisores</label>
-							<select id="supervisores" name="supervisores" class="form-control form-control-sm refreshDataTable">
+							<select id="supervisores" name="supervisores" class="form-control refreshDataTable">
 									<option value="0" selected>Seleccionar</option>
 							</select>
 						</div>
-                        <div class="col-3">
+                        <div class="col-sm">
 							<label for="tecnico_asig" class="col-form-label-sm">Tecnico</label>
                             <select id="tecnico_asig" name="tecnico_asig" class="form-control mr-1">
                                     <option value="0" selected>Seleccionar Tecnico</option>
                             </select>
                            
                         </div>
-                        <div class="mt-4 mb-3 col">
-                        <a href="#" class="btn btn-success" id="btnAsignarTecnico" name="btnAsignarTecnico">Asignar Evento (s)</a>
+                        <div class="col-sm mt-4 mb-3">
+                            <a href="#" class="btn btn-success" id="btnAsignarTecnico" name="btnAsignarTecnico">Asignar Evento (s)</a>
                         </div>
                     </div>
 
@@ -84,6 +84,7 @@
                     <table id="assignaciones"  class="table table-responsive table-md table-bordered " width="100%">
                         <thead>
                             <tr>
+                                <th>Banco</th>
                                 <th>ODT</th>
                                 <th width="10%">Afiliacion</th>
                                 <th width="20%">Comercio</th>
@@ -93,24 +94,13 @@
                                 <th>Codigo Postal</th>
                                 <th>Detalle</th>
                                 <th>Asignar</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
                     
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>ODT</th>
-                                <th>Afiliacion</th>
-                                <th>Comercio</th>
-                                <th>Estatus</th>
-                                <th>Tipo Comercio</th>
-                                <th>Fecha Vencimiento</th>
-                                <th>Codigo Postal</th>
-                                <th>Detalle</th>
-                                <th>Asignar</th>
-                            </tr>
-                        </tfoot>
+                        
                     </table>
                 </div>
                 

@@ -55,6 +55,7 @@ $(document).ready(function() {
             }
         },
         columns : [
+			{ data: 'banco'},
             { data: 'nombreTecnico'},
             { data: 'producto'},
             { data: 'no_serie'},
@@ -68,7 +69,7 @@ $(document).ready(function() {
         ],
         aoColumnDefs: [
             {
-                "targets": [9],
+                "targets": [10],
                 "mRender": function ( data,type, row ) {
                     var id;
                     var estatus = '';
@@ -97,7 +98,7 @@ $(document).ready(function() {
                  var fechamodificacion = moment(data.fecha_modificacion)
                  var now = moment();
                  var diff = moment.duration(fechamodificacion.diff(now));
-                 var col = this.api().column(8).index('visible');
+                 var col = this.api().column(9).index('visible');
 
                  if(now.diff(fechamodificacion, 'days') >= 30  ) 
                  {

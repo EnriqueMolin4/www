@@ -393,6 +393,7 @@
                <input type="hidden" value="0" id="odt">
                <input type="hidden" value="0" id="latitud">
                <input type="hidden" value="0" id="longitud">
+			   <input type="hidden" value="0" id="cve_banco">
                <input type="hidden" id="tipo_user" name="tipo_user" value="<?php echo $_SESSION['tipo_user']; ?>">
                <button type="button" class="btn btn-success" name="btnUpdateEvento" id="btnUpdateEvento">Cerrar Evento</button>
                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -477,7 +478,7 @@
       $(document).ready(function() {
           getTipoEvento();
           getEstatusEvento();
-          getEstatusServicio();
+          getEstatusServicio($("#cve_banco").val());
           getRechazos();
           getSubRechazos();
           getCancelado();
@@ -665,6 +666,8 @@
 
           $("#btnComentValid").on('click', function() {
     
+    
+    
               if( $('#comentarios_validacion').val().length > 0  )
               {
                   var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val()};
@@ -695,6 +698,13 @@
                   title: 'Aviso',
                   priority : 'danger'
                       });}
+            
+        
+            
+            
+            
+        
+        
         
           })
 
@@ -702,6 +712,7 @@
             
               var searchAfiliacion = $("#afiliacion").val();
               var searchODT = $("#odt").val();
+			   
 
               $.ajax({
                   type: 'POST',
@@ -819,7 +830,8 @@
                                           $("#sim_instalado").val(element.sim_instalado);
                                           $("#sim_retirado").val(element.sim_retirado);
                                           $("#estatus_servicio").val(element.estatus_servicio);
-
+										  $("#cve_banco").val(element.cve_banco);
+											getEstatusServicio(element.cve_banco);
                                            //Informacion Faltante
                                           $("#faltaSerie").prop('checked',parseInt(element.faltaserie));
                                           $("#faltaEvidencia").prop('checked',parseInt(element.faltaevidencia))  ;
@@ -1185,21 +1197,33 @@
 					data: dnd,
 					cache: false,
 					success: function(data){    
-							 
-                            Swal.fire({
-                                title: 'Cierre de Eventos ',
-                                text: "Cerrado Existosamente Deseas<br> Enviar el Evento al Banco?",
-                                showDenyButton: true,
-                                confirmButtonText: `Enviar`,
-                                denyButtonText: `No`,
-                                icon: 'success',
-                            }).then((result) => {
-                                if (result.isConfirmed) { 
-                                    sendInfoBanco(odt)
-                                } else if (result.isDenied) {
-                                    window.location.href = "eventos.php";
-                                }
-                            })   
+							if($("#cve_banco") == '037') {
+								Swal.fire({
+									title: 'Cierre de Eventos ',
+									text: "Cerrado Existosamente Deseas<br> Enviar el Evento al Banco?",
+									showDenyButton: true,
+									confirmButtonText: `Enviar`,
+									denyButtonText: `No`,
+									icon: 'success',
+								}).then((result) => {
+									if (result.isConfirmed) { 
+										sendInfoBanco(odt)
+									} else if (result.isDenied) {
+										window.location.href = "eventos.php";
+									}
+								})   
+							} else {
+									 Swal.fire({
+										  title: 'Cierre de Eventos ',
+										  text: 'Cerrado Existosamente',
+										  confirmButtonText: `OK`,
+									  }).then((result) => {
+										  if (result.isConfirmed) {    
+											  window.location.href = "eventos.php";
+										  }  
+									  
+									  });
+							}
 	 
 					},
 					error: function(error){
@@ -1787,12 +1811,12 @@
           });
       }
 
-      function getEstatusServicio() {
-
+      function getEstatusServicio(cve_banco) {
+		
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=getEstatusServicio',
+              data: 'module=getEstatusServicio&cve_banco='+cve_banco,
               cache: true,
               success: function(data){
                   console.log(data);

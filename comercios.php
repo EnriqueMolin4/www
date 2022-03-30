@@ -13,6 +13,14 @@
          <div class="container-fluid p-5">
             <h2>Comercios</h2>
             <hr>
+            <div class="row">
+               <div class="col-sm-3">
+                  <label for="cve_Banco" class="col-form-label-sm">BANCO</label>
+                  <select id="cve_Banco" name="cve_Banco" class="form-control form-control-sm searchComercio">
+                          <option value="0" selected>Seleccionar</option>
+                      </select>
+               </div>
+            </div><br>
             <?php  
                if( searchMenuEdit($_SESSION['Modules'],'url','comercios') == '1') { ?>
             <div class="row">
@@ -26,7 +34,7 @@
                <div class="table-responsive">
                   <table id="example"  class="table table-responsive table-bordered nowrap" style="width:100%">
                      <thead>
-                        <tr class="table-secondary">
+                        <tr>
                            <th>Banco</th>
                            <th width="25%">Comercio</th>
                            <th width="10%">Afiliacion</th>
@@ -57,43 +65,43 @@
                      <div class="modal-body">
                         <form id="frm" name="frm">
                            <div class="row">
-                              <div class="col">
+                              <div class="col-sm-4">
                                  <label for="cve_banco" class="col-form-label-sm">Clave Bancaria</label>
                                  <select id="cve_banco" name="cve_banco" class="form-control form-control-sm">
                                     <option value="0">Seleccionar</option>
                                  </select>
                               </div>
-                              <div class="col">           
+                              <div class="col-sm-4">           
                                  <label for="afiliacion" class="col-form-label-sm">Afilacion</label>
                                  <input type="text" class="form-control form-control-sm" id="afiliacion" name="afiliacion" aria-describedby="afiliacion" >
                               </div>
-                              <div class="col">           
+                              <div class="col-sm-4">           
                                  <label for="comercio" class="col-form-label-sm ">Nombre Comercio</label>
                                  <input type="text" class="form-control form-control-sm cambioMay" id="comercio" aria-describedby="comercio" >
                               </div>
                            </div>
                            <div class="row">
-                              <div class="col">           
+                              <div class="col-6 col-sm-4">           
                                  <label for="responsable" class="col-form-label-sm">Responsable</label>
                                  <input type="text" class="form-control form-control-sm cambioMay" id="responsable" aria-describedby="responsable" >
                               </div>
-                              <div class="col">           
+                              <div class="col-6 col-sm-4">           
                                  <label for="propietario" class="col-form-label-sm">Propietario</label>
                                  <input type="text" class="form-control form-control-sm cambioMay" id="propietario" aria-describedby="propietario" >
                               </div>
                            </div>
                            <div class="row">
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="cp" class="col-form-label-sm">Codigo Postal</label>
                                  <input type="text" class="form-control form-control-sm" id="cp" name="cp" aria-describedby="cp" >
                               </div>
-                              <div class="col">
+                              <div class="col-sm-3">
                                  <label for="estado" class="col-form-label-sm">Estado</label>
                                  <select id="estado" name="estado" class="form-control form-control-sm">
                                     <option value="0">Seleccionar</option>
                                  </select>
                               </div>
-                              <div class="col">
+                              <div class="col-sm-3">
                                  <label for="ciudad" class="col-form-label-sm">Ciudad</label>
                                  <select id="ciudad" name="ciudad" class="form-control form-control-sm">
                                     <option value="0">Seleccionar</option>
@@ -101,27 +109,27 @@
                               </div>
                            </div>
                            <div class="row">
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="direccion" class="col-form-label-sm">Direccion</label>
                                  <input type="text" class="form-control form-control-sm cambioMay" id="direccion" name="direccion" aria-describedby="direccion" >
                               </div>
                            </div>
                            <div class="row">
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="colonia" class="col-form-label-sm">Colonia</label>
                                  <input type="text" class="form-control form-control-sm cambioMay" id="colonia" name="colonia" aria-describedby="colonia" >
                               </div>
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="territorial_banco" class="col-form-label-sm">Territorio Banco</label>
                                  <input type="text" class="form-control form-control-sm" id="territorial_banco" name="territorial_banco" aria-describedby="territorial_banco" >
                               </div>
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="territorial_sinttecom" class="col-form-label-sm">Territorio Sinttecom</label>
                                  <input type="text" class="form-control form-control-sm" id="territorial_sinttecom" name="territorial_sinttecom" aria-describedby="territorial_sinttecom" >
                               </div>
                            </div>
                            <div class="row">
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="rfc" class="col-form-label-sm">RFC</label>
                                  <input type="text" class="form-control form-control-sm" id="rfc" aria-describedby="rfc" >
                               </div>
@@ -129,7 +137,7 @@
                                  <label for="telefono" class="col-form-label-sm">Telefono</label>
                                  <input type="text" class="form-control form-control-sm" id="telefono" name="telefono" aria-describedby="telefono" >
                               </div>
-                              <div class="col">
+                              <div class="col-sm-3">
                                  <label for="tipo_comercio" class="col-form-label-sm">Tipo Comercio</label>
                                  <select id="tipo_comercio" name="tipo_comercio" class="form-control form-control-sm">
                                     <option>Seleccionar</option>
@@ -137,17 +145,17 @@
                                     <option value="2">VIP</option>
                                  </select>
                               </div>
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="razon_social" class="col-form-label-sm">Razon Social</label>
                                  <input type="text" class="form-control form-control-sm" id="razon_social" aria-describedby="razon_social" >
                               </div>
                            </div>
                            <div class="row">
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="email_comercio" class="col-form-label-sm">Email Comercio</label>
                                  <input type="email"  class="form-control form-control-sm" id="email_comercio" name="email_comercio" aria-describedby="email_comercio" >
                               </div>
-                              <div class="col">           
+                              <div class="col-sm-3">           
                                  <label for="email_ejecutivo" class="col-form-label-sm">Email Ejecutivo</label>
                                  <input type="email" class="form-control form-control-sm" id="email_ejecutivo" name="email_ejecutivo" aria-describedby="email_ejecutivo" >
                               </div>
@@ -211,6 +219,7 @@
       
       $(document).ready(function () {
           getBancos();
+          getBancosf();
       permission();
       
       $(".cambioMay").on('change',function() {
@@ -247,7 +256,8 @@
                   url: 'modelos/comercios_db.php',
                   type: 'POST',
                   data: function( d ) {
-                      d.module = 'getTable'
+                      d.module = 'getTable',
+                      d.banco = $("#cve_Banco").val()
                   }
               },
               columns : [
@@ -547,6 +557,10 @@
           $("#estado").on('change', function() {
               getMunicipio('0');
           })
+
+          $(".searchComercio").on('change', function(){
+               $("#example").DataTable().ajax.reload();
+          })
       });
       
       function cleartext() {
@@ -574,18 +588,18 @@
       }
       
       function getBancos() {
-      $.ajax({
-          type: 'GET',
-          url: 'modelos/comercios_db.php', // call your php file
-          data: 'module=getbancos',
-          cache: false,
-          success: function(data){
-          $("#cve_banco").html(data);            
-          },
-          error: function(error){
+         $.ajax({
+            type: 'GET',
+            url: 'modelos/comercios_db.php', // call your php file
+            data: 'module=getbancos',
+            cache: false,
+            success: function(data){
+               $("#cve_banco").html(data);            
+            },
+            error: function(error){
               var demo = error;
-          }
-      });
+            }
+         });
       }
       
       function getEstado(cp) {
@@ -613,19 +627,19 @@
       } 
       
       function getMunicipio() {
-      var cp = $("#cp").val();
-      $.ajax({
-          type: 'GET',
-          url: 'modelos/comercios_db.php', // call your php file
-          data: 'module=getmunicipio&cp='+cp,
-          cache: false,
-          success: function(data){
-              var info = JSON.parse(data)
-              $.each(info, function(index,value) {
-                  $("#ciudad").html('<option value="'+value.Id+'" selected>'+value.nombre+'</option>'); 
-                  $("#territorial_banco").val(value.territorial_banco); 
-                  $("#territorial_sinttecom").val(value.territorial_sinttecom); 
-              })
+         var cp = $("#cp").val();
+         $.ajax({
+            type: 'GET',
+            url: 'modelos/comercios_db.php', // call your php file
+            data: 'module=getmunicipio&cp='+cp,
+            cache: false,
+            success: function(data){
+               var info = JSON.parse(data)
+                  $.each(info, function(index,value) {
+                     $("#ciudad").html('<option value="'+value.Id+'" selected>'+value.nombre+'</option>'); 
+                     $("#territorial_banco").val(value.territorial_banco); 
+                     $("#territorial_sinttecom").val(value.territorial_sinttecom); 
+                  })
              // 
               
               console.log(estado);
@@ -635,8 +649,27 @@
           }
       });
       }
+
+      function getBancosf() {
+
+         $.ajax({
+            type: 'GET',
+            url: 'modelos/eventos_db.php', // call your php file
+            data: 'module=getBancos',
+            cache: true,
+            success: function(data) {
+               console.log(data);
+
+            $("#cve_Banco").html(data);
+
+        },
+        error: function(error) {
+            var demo = error;
+        }
+    });
+}
       
-      function permission() {
+   function permission() {
       
       var perm = $("#permusr").val();
       

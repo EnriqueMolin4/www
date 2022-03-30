@@ -1,15 +1,16 @@
 <?php 
-
 include '../modelos/api_db.php';
 
 
     $connection = $db->getConnection ( 'dsd' );
 
-    $tecnico = $_POST['tecnico'];
-    $noserie = preg_replace( "/\r|\n/", "",str_replace('-','',$_POST['noserie'])); 
+    $tecnico = $_REQUEST['tecnico'];
+    $noserie = preg_replace( "/\r|\n/", "",str_replace('-','',$_REQUEST['noserie'])); 
     $fecha = date ( 'Y-m-d H:m:s' );
-    $cve = $Api->getDefaultBancoCve();
+    //$cve = $Api->getDefaultBancoCve();
 	$buscarUniversoElavon = $Api->searchItemElavonAPP($noserie,1);
+	// cvebanco
+	$cveBanco = $buscarUniversoElavon[0]['cve_banco'];
 	$configuracion = $Api->getConfiguration('ValidarInventarioLocal');
 	$tecnicoData = $Api->getTecnicoInfo($tecnico);
 	if( strlen($noserie) > 0 ) {
@@ -31,12 +32,14 @@ include '../modelos/api_db.php';
 						$Api->insert($sql,  array(9,$tecnico,3,$fecha,$existItem['id']));
 						
 						$prepareStatement = "INSERT INTO `inventario_tecnico`
-						( `tecnico`,`no_serie`,`cantidad`,`aceptada`,`creado_por`,`fecha_creacion`,`fecha_modificacion`)
+						( `tecnico`,`no_serie`,`cantidad`,`aceptada`,`creado_por`,`fecha_creacion`,`fecha_modificacion`,`cve_banco`)
 						VALUES
-						(?,?,?,?,?,?,?);
+						(?,?,?,?,?,?,?,?);
 						";
 								
-                        $newInvT = $Api->insert($prepareStatement,  array($tecnico,$noserie,1,1,$tecnico,$fecha,$fecha)); 
+                        $newInvT = $Api->insert($prepareStatement,  array($tecnico,$noserie,1,1,$tecnico,$fecha,$fecha,$existItem['cve_banco'] )); 
+						
+						
                         
                         $prepareStatement = "INSERT INTO `historial`
                             ( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`)
@@ -78,8 +81,8 @@ include '../modelos/api_db.php';
 					$resultado =  ['status' => 1,'id' => 0  , 'tecnico' => $tecnico, 'existe' => $tecnico , 'error' => 'La serie la tiene asignada otro Tecnico \n comunicarse con Adminsitracion' ];
 				} else {
 
-					$existItem = $Api->existInsumoInventario($tecnico,$noserie);
-			
+					$existItem = $Api->existInsumoInventario($tecnico,$noserie,$cveBanco);
+					
 					 if($existItem) {
 						 
 						  $resultado =  ['status' => 1,'id' => $existItem['id']  , 'error' => 'Ya lo tienes asignado en tu inventario', 'tecnico' => $tecnico,'existe' => $existItem['id_ubicacion']  ];
@@ -94,7 +97,7 @@ include '../modelos/api_db.php';
 								$existeInventarioId= 1;
 								
 							} else {
-								$cve = $Api->getDefaultBancoCve();
+								 
 								$datafieldsInventarios = array('tipo','no_serie','modelo','estatus','estatus_inventario','cantidad','ubicacion','id_ubicacion','creado_por','fecha_entrada','fecha_creacion','fecha_edicion','cve_banco');
 							
 								$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInventarios), '?'));
@@ -113,15 +116,17 @@ include '../modelos/api_db.php';
 									$fecha,
 									$fecha,
 									$fecha,
-									$cve 
+									$cveBanco 
 								);
 
 								$existeInventarioId = $Api->insert($sql,$arrayString);
 							} 
 							
+							file_put_contents("search_tpvDemo.json", "ID: ".$existeInventarioId);
+							
 							if($existeInventarioId ) {
 							
-								$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','aceptada','creado_por','fecha_creacion','fecha_modificacion');
+								$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','aceptada','creado_por','fecha_creacion','fecha_modificacion','cve_banco');
 
 								$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
 
@@ -133,10 +138,13 @@ include '../modelos/api_db.php';
 									1,
 									$tecnico,
 									$fecha,
-									$fecha
+									$fecha,
+									$cveBanco
 								);
 								
 								$Api->insert($sql,$arrayString); 
+								 
+								file_put_contents("search_tpvDemo.json",$sql." ".json_encode($arrayString));
 
 								$prepareStatement = "INSERT INTO `historial`
 									( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)

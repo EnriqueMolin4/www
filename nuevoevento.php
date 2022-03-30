@@ -21,8 +21,11 @@
                                         <input class="input-file" type="file" id="excelMasivo" name="excelMasivo">
                                         <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-2">
                                         <a href="layouts/LayoutCargaMasivaEventos.xlsx" download>Template Carga Masiva Eventos</a>
+                                    </div>
+                                    <div class="col-2">
+                                        <select class="form-control form-control-sm searchInventario" name="cveBanco" id="cveBanco"></select>
                                     </div>
                                     <div class="col-sm-3">
                                         <button type="button" class="btn btn-primary" id="btnProcesosActivos">

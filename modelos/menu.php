@@ -83,7 +83,7 @@
                                 <?php 
                                     } 
 
-                                    if ( searchMenu($_SESSION['Modules'],'url','eventoscierre')) {
+                                    if ( searchMenu($_SESSION['Modules'],'url','eventoscierres')) {
                                 ?>
                                     <li id="eventoscierrelink">
                                         <a href="eventoscierre.php">Cierre Eventos</a>

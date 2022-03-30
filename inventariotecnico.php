@@ -53,6 +53,7 @@
                     <table id="inventario"  class="table table-responsive table-bordered" style="width:100%">
                         <thead>
                             <tr>
+								 <th width="10%">Banco</th>
                                 <th width="10%">Tecnico</th>
                                 <th width="10%">Producto</th>
                                 <th width="15%">No Serie</th>

@@ -26,6 +26,14 @@
 			    </div>
             </div>
             <div class="row">
+                <div class="col-sm-3">
+                    <label for="cve_banco" class="col-form-label-sm">BANCO</label>
+                    <select name="cve_banco" id="cve_banco" class="form-control form-control-sm searchBitacora">
+                        
+                    </select>
+                </div>
+            </div><br>
+            <div class="row">
                 <div class="col">
                     <table id="bitacora"  class="table table-md table-bordered " style="width:100%">
                         <thead>
@@ -138,6 +146,7 @@
     <script>
     var bitacora;
         $(document).ready(function() {
+            getBancosf();
             ResetLeftMenuClass("submenureportes", "ulsubmenureportes", "repbitacoraodtlink")
            
                
@@ -151,12 +160,13 @@
                     searching: true,
                     order: [[ 0, "ASC" ]],
                     lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
-                    order: [[ 0, "desc" ]],
+                    order: [[ 5, "desc" ]],
                     ajax: {
                         url: 'modelos/bitacoraODT_db.php',
                         type: 'POST',
                         data: function( d ) {
-                            d.module = 'getTable'
+                            d.module = 'getTable',
+                            d.banco = $("#cve_banco").val()
                         }
                     },
                     columns : [
@@ -285,7 +295,9 @@
                 
 
                 
-        
+           $(".searchBitacora").on('change', function(){
+               $("#bitacora").DataTable().ajax.reload();
+            })
 
                
             });
@@ -362,6 +374,26 @@
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     alert(textStatus)
+                }
+            });
+        }
+
+        function getBancosf() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php', // call your php file
+                data: 'module=getBancos',
+                cache: true,
+                success: function(data) {
+                    console.log(data);
+
+                    $("#cve_banco").html(data);
+                    
+
+                },
+                error: function(error) {
+                    var demo = error;
                 }
             });
         }

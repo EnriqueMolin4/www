@@ -195,7 +195,8 @@ class Eventos implements IConnections {
 				CASE WHEN (e.fecha_cierre > e.fecha_vencimiento) THEN DATEDIFF(e.fecha_cierre, e.fecha_vencimiento) ELSE 0 END dias,
 				e.estatus,
 				e.estatus_servicio,
-				GetNameById(e.estatus_servicio,'EstatusServicio') nombreEstatusServicio,
+				
+				CASE WHEN ee.nombre is null then GetNameById(e.estatus_servicio,'EstatusServicio') ELSE ee.nombre END nombreEstatusServicio,
 				e.municipio,
 				e.comentarios_cierre,
 				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
@@ -209,9 +210,10 @@ class Eventos implements IConnections {
 				LEFT JOIN comercios c ON  e.comercio = c.id
 				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
 				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				LEFT JOIN estatus_equivalencias ee ON ee.cve_banco = e.cve_banco AND ee.estatus_id = e.estatus AND ee.estatus_servicio = e.estatus_servicio
 				WHERE date(e.fecha_alta) BETWEEN '$inicio' AND '$fin'
 				$where
-				group by id,img.totalImg,du.nombre,du.apellidos
+				group by id,img.totalImg,du.nombre,du.apellidos,ee.nombre
 				$order
 				$filter ";	
 			//AND e.cve_banco IN ('$cveBanco')
@@ -261,7 +263,8 @@ class Eventos implements IConnections {
 				cevento.informacion faltainformacion,
 				cevento.ubicacion faltaubicacion,
 				cevento.aplica_exito,
-				cevento.aplica_rechazo_2
+				cevento.aplica_rechazo_2,
+				ee.nombre nombreStatus
 				from eventos 
 				LEFT JOIN detalle_usuarios u ON u.cuenta_id = tecnico
 				LEFT JOIN comercios c ON c.id = eventos.comercio
@@ -273,6 +276,7 @@ class Eventos implements IConnections {
 				LEFT JOIN inventario simIn ON eventos.sim_instalado= simIn.no_serie
 				LEFT JOIN inventario simRe ON eventos.sim_retirado = simRe.no_serie
 				LEFT JOIN checklist_evento cevento ON cevento.odt = eventos.odt AND cevento.tecnico = eventos.tecnico
+				LEFT JOIN estatus_equivalencias ee ON ee.cve_banco = eventos.cve_banco AND ee.estatus_id = eventos.estatus AND ee.estatus_servicio = eventos.estatus_servicio
 				where eventos.id = $id ";
 
 				//self::$logger->error($sql);
@@ -462,17 +466,23 @@ class Eventos implements IConnections {
 	
 	/**/
 	
-	function getTipoServicios($tipo) {
+	function getTipoServicios($tipo,$banco) {
 		$where = "";
      if( $tipo != '0') {
        $where = " AND tipo = '$tipo' ";
      }
+
+     if ($banco == '') {
+     	$banco = '037';
+     }
      
-		$sql = "SELECT * from tipo_servicio WHERE status=1  $where";
+		$sql = "SELECT * from tipo_servicio WHERE status=1 AND cve_banco = ? $where";
+
+		//self::$logger->error($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );
-            $stmt->execute ();
+            $stmt->execute (array($banco));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: eventos_db.php;	Method Name: getTipoServicios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
@@ -490,6 +500,21 @@ class Eventos implements IConnections {
 		   } catch ( PDOException $e ) {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getTipoSubServicios();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
 		   }
+	}
+
+	function getTipoServiciosBanco($banco) {
+		    
+		$sql = "SELECT * from tipo_servicio where cve_banco = '$banco'";
+
+		//self::$logger->error($sql);
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getTipoServiciosBanco();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
 	}
  
 	function getCveBanco($cvebanco) {
@@ -557,12 +582,12 @@ class Eventos implements IConnections {
         }
 	}
  
-	function getModelos($nserie) {
-		$sql = "SELECT id,modelo from modelos where estatus=1 ";
+	function getModelos($nserie,$cve_banco) {
+		$sql = "SELECT id,modelo from modelos where estatus=1 AND cve_banco=? ";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
-            $stmt->execute (array($nserie));
+            $stmt->execute (array($cve_banco));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: eventos_db.php;	Method Name: getModelos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
@@ -570,7 +595,7 @@ class Eventos implements IConnections {
 	}
 
 	function getListaModelos() {
-		$sql = "SELECT id,modelo from modelos WHERE estatus=1  and clave_elavon != 0 ";
+		$sql = "SELECT id,modelo from modelos WHERE estatus=1 AND clave_elavon != 0 ";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -581,12 +606,12 @@ class Eventos implements IConnections {
         }
 	}
 
-	function getListaConectividad() {
-		$sql = "SELECT id,nombre from tipo_conectividad WHERE estatus=1 and clave_elavon != 0 ";
+	function getListaConectividad($cve_banco) {
+		$sql = "SELECT id,nombre from tipo_conectividad WHERE estatus=1 AND cve_banco=?";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
-            $stmt->execute (array());
+            $stmt->execute (array($cve_banco));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: eventos_db.php;	Method Name: getListaConectividad();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
@@ -878,13 +903,14 @@ class Eventos implements IConnections {
 		   }
 		}
 		
- 	function getEstatusServicio() {
+ 	function getEstatusServicio($cve_banco) {
  
-		  $sql = "SELECT * FROM `tipo_estatus` WHERE `tipo` = 12 Order by id ";
+		  //$sql = "SELECT * FROM `tipo_estatus` WHERE `tipo` = 12 Order by id ";
+		  $sql = "SELECT tipo_estatus.id , CASE WHEN estatus_equivalencias.estatus_servicio is null THEN tipo_estatus.nombre ELSE estatus_equivalencias.nombre END nombre
+					FROM tipo_estatus
+					LEFT JOIN estatus_equivalencias ON tipo_estatus .id = estatus_equivalencias.estatus_servicio AND cve_banco = '$cve_banco'
+					where tipo_estatus.tipo = 12";
 	
-		
-		   
-		   
 		   try {
 			   $stmt = self::$connection->prepare ($sql );
 			   $stmt->execute (array());
@@ -893,6 +919,7 @@ class Eventos implements IConnections {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusServicio();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		   }
 	}
+	
 
 	function getEstatusCancelado() {
  
@@ -922,14 +949,14 @@ class Eventos implements IConnections {
 		   }
 	}
 
-	function getProductos() {
+	function getProductos($cve_banco) {
  
-		$sql = "SELECT * FROM `tipo_producto`  WHERE status = 1 and clave_elavon != 0  ";
+		$sql = "SELECT * FROM `tipo_producto`  WHERE status = 1 and cve_banco=?  ";
   
 
 		 try {
 			 $stmt = self::$connection->prepare ($sql );
-			 $stmt->execute (array());
+			 $stmt->execute (array($cve_banco));
 			 return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		 } catch ( PDOException $e ) {
 			 self::$logger->error ("File: eventos_db.php;	Method Name: getProductos();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
@@ -953,8 +980,8 @@ class Eventos implements IConnections {
 	}
 	 
 	 
-	 function getEventobyTecnico($id) {
-		$sql = "select eventos.id, eventos.odt,afiliacion folio,fecha_alta,direccion,colonia,ticket,
+	function getEventobyTecnico($id) {
+		$sql = "select eventos.id, eventos.odt,afiliacion folio,fecha_alta,direccion,colonia,ticket,eventos.estatus,
 				GetNameById(servicio,'TipoServicio') servicio,
 				GetNameById(estado,'Estado') estadoNombre,
 				GetNameById(municipio,'Municipio') municipioNombre,
@@ -1306,26 +1333,26 @@ class Eventos implements IConnections {
         }
 	}
 
-	function getVersion() {
+	function getVersion($cve_banco) {
  
-		$sql = "SELECT * FROM `tipo_version`   WHERE estatus = 1  Order by nombre ";
+		$sql = "SELECT * FROM `tipo_version`   WHERE estatus = 1 AND cve_banco=? Order by nombre ";
 
 		 try {
 			 $stmt = self::$connection->prepare ($sql );
-			 $stmt->execute (array());
+			 $stmt->execute (array($cve_banco));
 			 return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		 } catch ( PDOException $e ) {
 			 self::$logger->error ("File: eventos_db.php;	Method Name: getVersion();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		 }
   }
   
-  	function getAplicativo() {
+  	function getAplicativo($cve_banco) {
  
-		$sql = "SELECT * FROM `tipo_aplicativo`   WHERE estatus = 1 and clave_elavon != 0 Order by nombre ";
+		$sql = "SELECT * FROM `tipo_aplicativo`   WHERE estatus = 1 AND cve_banco=?  Order by nombre ";
 
 		 try {
 			 $stmt = self::$connection->prepare ($sql );
-			 $stmt->execute (array());
+			 $stmt->execute (array($cve_banco));
 			 $result = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 			 return $result;
 		 } catch ( PDOException $e ) {
@@ -1361,7 +1388,21 @@ class Eventos implements IConnections {
 
 	function getOdtById($odtid)
 	{
-		$sql = "SELECT odt FROM eventos WHERE id= '$odtid' ";
+		$sql = "SELECT odt,cve_banco FROM eventos WHERE id= '$odtid' ";
+
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			$result = $stmt->fetch ( PDO::FETCH_ASSOC );
+			return $result;
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: eventos_db.php;	Method Name: getOdtById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+		}
+
+	}
+	function getOdtCveById($odtid)
+	{
+		$sql = "SELECT cve_banco FROM eventos WHERE id= '$odtid' ";
 
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1369,10 +1410,11 @@ class Eventos implements IConnections {
 			$result = $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 			return $result;
 		} catch ( PDOException $e ) {
-			self::$logger->error ("File: eventos_db.php;	Method Name: getOdtById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+			self::$logger->error ("File: eventos_db.php;	Method Name: getOdtCveById();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
 		}
 
 	}
+
 	function getModeloConectividad($noserie,$tipo) {
 		$sql = "SELECT id datos FROM inventario WHERE no_serie= '$noserie' and tipo = $tipo ";
 		
@@ -1426,6 +1468,19 @@ class Eventos implements IConnections {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getTipoSubServicio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
 		   }
 
+	}
+
+	function getTipoSubServ()
+	{
+		$sql = "SELECT tipo_subservicios.id, tipo_subservicios.nombre from tipo_subservicios WHERE tipo_subservicios.status= 1";
+
+		try {
+			   $stmt = self::$connection->prepare ($sql );
+			   $stmt->execute (array());
+			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		   } catch ( PDOException $e ) {
+			   self::$logger->error ("File: eventos_db.php;	Method Name: getTipoSubServ();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+		   }
 	}
 
 	function getCausasCambio()
@@ -1490,6 +1545,21 @@ class Eventos implements IConnections {
 		}
 	}
 
+	function getOdtenServicioTecnico($tecnico)
+	{
+		$sql = "SELECT * FROM eventos WHERE eventos.tecnico = ?  and estatus = 20";
+
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute(array($tecnico));
+			$result = $stmt->fetch ( PDO::FETCH_ASSOC );
+			return $result;
+		} catch (PDOException $e) {
+			self::$logger->error ("File: eventos_db.php;	Method Name: getFechaAtencion();	Functionality: Search Extras;	Log:". $sql . $e->getMessage () );
+		}
+
+	}
+
 }
 //
 include 'DBConnection.php';
@@ -1502,6 +1572,12 @@ $module = $params['module'];
 if($module == 'getOdtById') {
 
 	$rows = $Eventos->getOdtById($params['id']);
+
+	echo json_encode($rows);
+}
+if($module == 'getOdtCveById') {
+
+	$rows = $Eventos->getOdtCveById($params['id']);
 
 	echo $rows;
 }
@@ -1524,6 +1600,7 @@ if($module == 'getTerritoriales')
 	}
 	echo $val;
 }
+
 
 if($module == 'getModeloConectividad') {
 	$data = '';
@@ -1746,7 +1823,7 @@ if($module == 'getInfoExtra') {
 	echo json_encode($rows);
 }
 if($module == 'getBancos') {
-    $val = '<option value="0">Seleccionar</option>';
+    $val = '<option value="0">Seleccionar Banco</option>';
     $rows = $Eventos->getBancos();
     foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['cve'] . '">' . $row ['banco'] . '</option>';
@@ -1784,7 +1861,7 @@ if($module == 'getEquipos') {
 
 if($module == 'getModelos') {
     $val = '<option value="0">Seleccionar Modelos</option>';
-    $rows = $Eventos->getModelos($params['modeloId']);
+    $rows = $Eventos->getModelos($params['modeloId'],$params['cve_banco']);
     foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['modelo'] . '</option>';
 	}
@@ -1827,7 +1904,7 @@ if($module == 'getListaModelos') {
 
 if($module == 'getListaConectividad') {
     $val = '<option value="0" selected>Seleccionar Conectividad</option>';
-    $rows = $Eventos->getListaConectividad();
+    $rows = $Eventos->getListaConectividad($params['cve_banco']);
     foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
 	}
@@ -1960,7 +2037,7 @@ if($module == 'getConsultaODT') {
 }
 
 if($module == 'getTipoServicios') {
-	$rows = $Eventos->getTipoServicios($params['tipo']);
+	$rows = $Eventos->getTipoServicios($params['tipo'], $params['cve']);
 	$val = '<option value="0">Seleccionar</option>';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
@@ -1970,6 +2047,24 @@ if($module == 'getTipoServicios') {
 
 if($module == 'getTipoSubServicios') {
 	$rows = $Eventos->getTipoSubServicios($params['servicio_id']);
+	$val = '<option value="0">Seleccionar</option>';
+	foreach ( $rows as $row ) {
+		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
+}
+
+if ($module == 'getSubServ') {
+	$rows = $Eventos->getTipoSubServ();
+	$val = '<option value="0">Seleccionar</option>';
+	foreach ( $rows as $row){
+		$val .= '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
+}
+
+if($module == 'getTipoServiciosBanco') {
+	$rows = $Eventos->getTipoServiciosBanco($params['cve']);
 	$val = '<option value="0">Seleccionar</option>';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
@@ -2101,7 +2196,7 @@ if($module == 'getestatusevento') {
 }
 
 if($module == 'getEstatusServicio') {
-	$rows = $Eventos->getEstatusServicio();
+	$rows = $Eventos->getEstatusServicio($params['cve_banco']);
 	  $val = '<option value="0" selected>Seleccionar</option>';
 	  foreach ( $rows as $row ) {
 		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
@@ -2141,7 +2236,7 @@ if($module == 'getEstatusSubRechazo') {
 }
 
 if($module == 'getProductos') {
-	$rows = $Eventos->getProductos();
+	$rows = $Eventos->getProductos($params['cve_banco']);
 	  $val = '<option value="0" selected>Seleccionar</option>';
 	  foreach ( $rows as $row ) {
 		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
@@ -2161,7 +2256,7 @@ if($module == 'getCreditos') {
 }
 
 if($module == 'getVersion') {
-	$rows = $Eventos->getVersion();
+	$rows = $Eventos->getVersion($params['cve_banco']);
 	  $val = '<option value="0" selected>Seleccionar</option>';
 	  foreach ( $rows as $row ) {
 		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
@@ -2171,7 +2266,7 @@ if($module == 'getVersion') {
 }
 
 if($module == 'getAplicativo') {
-	$rows = $Eventos->getAplicativo();
+	$rows = $Eventos->getAplicativo($params['cve_banco']);
 	  $val = '<option value="0" selected>Seleccionar</option>';
 	  foreach ( $rows as $row ) {
 		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
@@ -3071,6 +3166,40 @@ if($module == "cambiarReConnect"){
 }
 
 
+if ($module== 'cambiarEstatusenTransito') {
+
+	$status = $params['estatus'];
+	$odt = $params['odtid'];
+	$tecnico = $params['tecnico'];
+	$user = $_SESSION['userid'];
+	$msg= '';
+	$result = 0;
+
+	$evento = $Eventos->getOdtenServicioTecnico($tecnico);
+
+	if($evento) 
+	{
+		$msg = 'Ya tiene un evento con estatus En Tránsito';
+
+	} else{
+		$prepareStatement = "UPDATE eventos SET
+		                     estatus=?,
+		                     modificado_por=?;
+		                     ";
+
+		 $arrayString = array (
+		 	$status,
+		 	$user
+		 );
+
+		 $upd = $Eventos->insert($prepareStatement, $arrayString);
+		 $result = 1;
+	}
+	echo $result;
+
+}
+
+
 if($module == 'cerrarEvento') {
 
 	
@@ -3100,6 +3229,7 @@ if($module == 'cerrarEvento') {
 	$cancelado = $params['cancelado'];
 	
 	$tpv = strlen($params['tpv']) > 0 ? $params['tpv'] : null;
+	
 	$tvpInModelo = $params['tvpInModelo'];
 	$tpvInConnect = $params['tpvInConnect'];
 	$tpvRetirado = !strlen($params['tpvRetirado']) ? null : $params['tpvRetirado'];
@@ -3181,7 +3311,7 @@ if($module == 'cerrarEvento') {
 						`codigo_servicio`=?,
 						`codigo_servicio_2`=?,
 						`tipo_atencion`=?,
-						`fecha_programacion`=?,
+						`fecha_programacion`=?
 						 WHERE `odt`=? ; 
 						 ";
 
@@ -3288,7 +3418,12 @@ if($module == 'cerrarEvento') {
 	
 	if($estatus == '14' || $estatus == '15') 
 	{
-		
+		if( $estatus == '15' && !is_null($fecha_reprogramacion) ){
+			$nuevaFechaProg= $fecha_reprogramacion." 23:59:00";
+			$sql = "UPDATE eventos SET fecha_vencimiento= ? ,estatus=?,estatus_servicio=?,fecha_atencion=?,hora_salida=?,hora_llegada=? WHERE odt=?";
+
+			$resultado = $Procesos->insert($sql, array($nuevaFechaProg,2,16,NULL,NULL,NULL,$odt));
+		}
 		
 	} else {
 		
@@ -3895,6 +4030,7 @@ if($module == 'eventoMasivo') {
 	$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 	$uploadOk = 1;
 	$fecha = date ( 'Y-m-d H:i:s' );
+	$cveBanco = $params['cveBanco'];
 
 	if($imageFileType != "csv" && $imageFileType != "xls" && $imageFileType != "xlsx" ) {
   		echo "Error solo archivos CSV o XSL";
@@ -3908,7 +4044,7 @@ if($module == 'eventoMasivo') {
 	} else {
 		if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
 			 
-			$datafieldsCargar = array('tipo','archivo','creado_por','fecha_creacion','fecha_modificacion');
+			$datafieldsCargar = array('tipo','archivo','creado_por','fecha_creacion','fecha_modificacion', 'cve_banco');
 			
 			$question_marks = implode(', ', array_fill(0, sizeof($datafieldsCargar), '?'));
 			$sql = "INSERT INTO carga_archivos (" . implode(",", $datafieldsCargar ) . ") VALUES (".$question_marks.")"; 
@@ -3918,7 +4054,8 @@ if($module == 'eventoMasivo') {
 				$_FILES["file"]["name"],
 				$_SESSION['userid'],
 				$fecha,
-				$fecha
+				$fecha,
+				$cveBanco
 			);
 		
 			$id = $Eventos->insert($sql,$arrayString);

@@ -68,6 +68,7 @@ $(document).ready(function() {
             [6, "ASC"]
         ],
         dom: 'lfrtiBp',
+        autoWidth: true,
         buttons: [
             {
             charset: 'utf-8',
@@ -159,25 +160,39 @@ $(document).ready(function() {
             {
                 "targets": [13],
                 "mRender": function(data, type, row) {
+
                     var btnALL = '';
-                    var btnCambiarEstatus = '<a href="#" title="Cambiar Estatus" class="btnCambiarEst" data="' + row.id + '"><i class="fas fa-undo fa-2x" style="color:#3EA399"></i></a>';
-                    var btnEstatusEnTransito = '<a href="#" title="Estatus en Transito" class="btnEstatusEnTransito" data="' + row.id + '"><i class="fas fa-undo fa-2x"></i></a>';
-                    var btnInfo = '<a href="#" class="editCom" title="Información del evento" data="' + row.id + '"><i class="fas fa-edit fa-2x " style="color:#187CD0"></i></a>';
-                    var btnCambiarOdt = '<a href="#" title="Cambiar ODT" class="chgODT" data="' + row.odt + '"><i class="fas fa-exchange-alt fa-2x " style="color:red"></i></a>';
-                    var btnHistoria = '<a href="#" class="mostrarHistoria" data="' + row.odt + '"><i class="fas fa-history fa-2x" style="color:#C17137"></i> </a>';
-                    var btnCerrar = '<a href="#" class="endEvent" title="Cerrar evento" data="' + row.id + '"><i class="far fa-calendar fa-2x " style="color:#E04242"></i></a>';
-                    var btnDates = '<a href="#" class="editFecha" title="Cambiar Fechas" data="' + row.id + '"><i class="far fa-calendar-alt fa-2x " style="color:#3EA399"></i></a>';
-                    if (row.nombreEstatus === 'Cerrado' && $("#tipo_user").val() == 'callcenterADM') {
+                    var btnCambiarEstatus = '<a href="#" title="Cambiar Estatus" class="dropdown-item btnCambiarEst" data="' + row.id + '"><i class="fas fa-undo fa-sm" style="color:#3EA399"></i> Cambiar estatus</a>';
+                    var btnEstatusEnTransito = '<a href="#" title="Estatus en Transito" class="dropdown-item btnEstatusEnTransito" data="' + row.id + '"><i class="fas fa-undo fa-sm"></i> Estatus en tránsito</a>';
+                    var btnInfo = '<a href="#" class="dropdown-item editCom" title="Información del evento" data="' + row.id + '"><i class="fas fa-edit fa-sm " style="color:#187CD0"></i> Información del evento</a>';
+                    var btnCambiarOdt = '<a href="#" title="Cambiar ODT" class="dropdown-item chgODT" data="' + row.odt + '"><i class="fas fa-exchange-alt fa-sm " style="color:red"></i> Cambiar ODT</a>';
+                    var btnHistoria = '<a href="#" class="dropdown-item mostrarHistoria" data="' + row.odt + '"><i class="fas fa-history fa-sm" style="color:#C17137"></i> Historial </a>';
+                    var btnCerrar = '<a href="#" class="dropdown-item endEvent" title="Cerrar evento" data="' + row.id + '"><i class="far fa-calendar fa-sm " style="color:#E04242"></i> Cerrar Servicio</a>';
+                    var btnDates = '<a href="#" class="dropdown-item editFecha" title="Cambiar Fechas" data="' + row.id + '"><i class="far fa-calendar-alt fa-sm " style="color:#3EA399"></i> Cambiar Fechas</a>';
+
+                    if (row.nombreEstatus === 'Cerrado' && $("#tipo_user").val() == 'callcenterADM') 
+                    {
                         btnALL = btnCambiarEstatus + btnInfo + btnCambiarOdt + '<br>' + btnHistoria + btnDates;
-                    } else if (row.sync = '0') {
+                    }else if (row.sync = '0') {
                         btnALL = btnInfo + btnCerrar + btnCambiarOdt + btnHistoria + btnDates;
-						if( $("#tipo_user").val() == 'supOp' || $("#tipo_user").val() == 'admin' )
+                        if( $("#tipo_user").val() == 'supOp' || $("#tipo_user").val() == 'admin' )
                         {
                             btnALL = btnALL + btnEstatusEnTransito;
-                        }                    
-					}
+                        }  
+                        else 
+                        {
+                            btnALL = btnInfo;
+                        }                 
+                    }
 
-                    return btnALL;
+                   return   '<div class="dropdown" style="background-color: #5dadd9; position: inherit;">'+
+                                '<a class="btn dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">'+
+                                    '<i class="fas fa-caret-square-down"></i>'+
+                                '</a>'+
+                                '<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">'+
+                                    btnALL+
+                                '</div>'+
+                            '</div>';
                 }
             }
         ],
@@ -230,7 +245,7 @@ $(document).ready(function() {
         }
     });
 
-
+    tableEventos.columns.adjust().draw();
     $('#historia').DataTable({
         "responsive": true,
         language: {
@@ -996,7 +1011,6 @@ $(document).ready(function() {
 
     })
 
-
     $(document).on('click', '.btnDelImage', function() {
         var idImg = $(this).attr('data');
         $.ajax({
@@ -1038,10 +1052,7 @@ $(document).ready(function() {
 
         showDocumentos();
 
-
-
     })
-
 
 
     $('#showDocumentos').on('hide.bs.modal', function(e) {

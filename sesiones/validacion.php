@@ -82,8 +82,8 @@ if( !empty( $_POST['user'] ) and !empty( $_POST['pass'] ) ) {
 
 				$_SESSION['tipo_user'] = 'tecnico';
 				$_SESSION['user_role'] = 'Tecnico';
-				//$urlRedirect = 'index.html';
-			//header('Location: ../index.php');
+				//$urlRedirect = 'mobile/index.html';
+			header('Location: ../index.php');
 
 				break;
 
@@ -212,10 +212,18 @@ if( !empty( $_POST['user'] ) and !empty( $_POST['pass'] ) ) {
 
 			break;
 
+			case '20' :
+				$_SESSION['tipo_user'] = 'FA';
+				$_SESSION['cve'] = $dato_acces['cve'];
+				$_SESSION['user_role'] = 'Finanzas';
+			break;
+
+
 		}
 		
 		
-		header("location: http://".$_SERVER['HTTP_HOST']."".$urlRedirect);
+		header("location: http://".$_SERVER['HTTP_HOST']."/www/".$urlRedirect);
+		//header("location: https://".$_SERVER['HTTP_HOST']."".$urlRedirect);
 
 
 	}
@@ -225,7 +233,8 @@ if( !empty( $_POST['user'] ) and !empty( $_POST['pass'] ) ) {
 		//echo 'USUARIO O CONTRASEÑA NO VALIDOS';
 
 		session_destroy();
-		header("location: http://".$_SERVER['HTTP_HOST']."/index.php?msg=1");
+		header("location: http://".$_SERVER['HTTP_HOST']."/www/index.php?msg=1");
+		//header("location: http://".$_SERVER['HTTP_HOST']."/index.php?msg=1");
 
 	}
 
@@ -235,7 +244,9 @@ else{
 
 	//echo 'LLENA AMBOS CAMPOS';
 	session_destroy();
-	header("location: http://".$_SERVER['HTTP_HOST']."/index.php?msg=2");
+	header("location: http://".$_SERVER['HTTP_HOST']."/www/index.php?msg=2");
+	//header("location: http://".$_SERVER['HTTP_HOST']."/index.php?msg=2");
+
 
 }
 

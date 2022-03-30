@@ -149,7 +149,7 @@ class Almacen implements IConnections {
 		$bancos = $params['banco'];
 
 		if( $bancos != '0' ) {
-			$where .= " AND b.id = $bancos ";
+			$where .= " AND b.cve = $bancos ";
 		}  
 
 		if( $ubicacion != '0' ) {
@@ -225,6 +225,8 @@ class Almacen implements IConnections {
 				inv.fecha_edicion,
 				inv.fecha_entrada,
 				inv.id_ubicacion,
+				CONCAT(du.nombre,' ',du.apellidos) tecnco,
+				cm.comercio,
 				CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad END cantidad,
 				b.banco, 
 				inv.cve_banco
@@ -370,6 +372,7 @@ class Almacen implements IConnections {
 
 
 		$sql = "SELECT DISTINCT
+				b.banco,
 				it.id,
 				tecnico,
 				CONCAT(du.nombre,' ',ifnull(du.apellidos,'')) nombreTecnico,
@@ -383,12 +386,13 @@ class Almacen implements IConnections {
 				fecha_modificacion,
 				i.estatus estatusId
 				FROM inventario_tecnico it
-				LEFT JOIN traspasos tp ON tp.no_serie = it.no_serie
+				LEFT JOIN traspasos tp ON tp.no_serie = it.no_serie AND tp.cve_banco = it.cve_banco
+				LEFT JOIN bancos b ON b.cve = it.cve_banco
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = it.tecnico, inventario i
 				LEFT JOIN tipo_estatus_modelos tm ON i.estatus = tm.id
-				LEFT JOIN modelos m ON i.modelo = m.id
-				LEFT JOIN tipo_conectividad	tc ON tc.id = i.conectividad
-				LEFT JOIN tipo_aplicativo ta ON ta.id = i.aplicativo					  
+				LEFT JOIN modelos m ON i.modelo = m.id AND m.cve_banco = i.cve_banco
+				LEFT JOIN tipo_conectividad	tc ON tc.id = i.conectividad AND tc.cve_banco = i.cve_banco
+				LEFT JOIN tipo_aplicativo ta ON ta.id = i.aplicativo AND ta.cve_banco = i.cve_banco				  
 				WHERE it.no_serie = i.no_serie
 				$where
 				$filter ";
@@ -496,12 +500,26 @@ class Almacen implements IConnections {
 		}
 	}
 
-	/* Consulta que toma la información de los modelos  */
+	function getPlazasbyAlmacen($almacen)
+	{
+		$sql = "SELECT plazas_almacen.id id ,plazas.nombre nombre FROM plazas_almacen LEFT JOIN plazas ON plazas_almacen.plaza_id=plazas.id WHERE plazas_almacen.almacen_id = '$almacen' ";
+
+		//self::$logger->error($sql);
+
+
+		try {
+		    $stmt = self::$connection->prepare ($sql );
+		    $stmt->execute (array($almacen));
+		    return  $stmt->fetchAll ( PDO::FETCH_ASSOC);
+		} catch ( PDOException $e ) {
+		    self::$logger->error ("File: almacen_db.php;	Method Name: getPlazasbyAlmacen();	Functionality: Get Insumos price From PriceLists;	Log:" . $e->getMessage () );
+		}
+	}
+
 	function getModelos() {
 
 		$sql = "select id, modelo from modelos ";
 		
-	
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute ();
@@ -855,7 +873,7 @@ class Almacen implements IConnections {
 		$where = '';
 		
 		
-		if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'AN' || $_SESSION['tipo_user'] == 'AL' || $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'supervisor') {
+		if($_SESSION['tipo_user'] == 'FA' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'AN' || $_SESSION['tipo_user'] == 'AL' || $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'supervisor') {
 			
 			$where = " ";
 		} else {
@@ -868,8 +886,8 @@ class Almacen implements IConnections {
 				du.nombre,
 				du.apellidos,
 				pt.tecnico_id,
-				pt.plaza_id,
-				ta.territorio_id
+				group_concat(pt.plaza_id) plaza_id,
+				group_concat(ta.territorio_id) territorio_id
 				FROM cuentas c,detalle_usuarios du,plaza_tecnico pt,territorio_plaza ta, supervisor_territorio st
 				WHERE c.id = du.cuenta_id
 				AND c.estatus=1
@@ -877,8 +895,10 @@ class Almacen implements IConnections {
 				AND du.cuenta_id= pt.tecnico_id
                 AND ta.territorio_id = st.territorio_id
 				$where
+				group by du.nombre, du.apellidos, pt.tecnico_id
 				ORDER BY du.nombre,du.apellidos
 				";
+				//self::$logger->error($sql);
 
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -930,6 +950,19 @@ class Almacen implements IConnections {
 			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: almacen_db.php;	Method Name: getAlmacen();	Functionality: Search No_Serie;	Log:". $sql . $e->getMessage () );
+		}
+	}
+
+	function getAlmacenCuenta(){
+		$sql = "SELECT * FROM `cuentas` WHERE `tipo_user` = 2 AND `estatus` = 1";
+
+		try {
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute();
+			return $stmt->fetchAll( PDO::FETCH_ASSOC);
+			
+		} catch (PDOException $e) {
+			self::$logger->error("File: almacen_db.php;     Method Name: getAlmacen();   Functionality: Search Products:   Log:".$sql. $e->getMessage () );
 		}
 	}
 
@@ -1019,7 +1052,7 @@ class Almacen implements IConnections {
 				$filter
 				
 				";
-				//self::$logger->error($sql);
+				//Xself::$logger->error($sql);
 		
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1080,6 +1113,8 @@ class Almacen implements IConnections {
 				 where t.no_guia = '$noguia' 
 				 $where 
 				 $filter ";
+
+				 //self::$logger->error($sql);
 
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1266,6 +1301,20 @@ class Almacen implements IConnections {
 		}
 	}
 	
+	function getInventarioInfo2($noserie,$cve_banco) {
+		$sql = "SELECT * FROM inventario WHERE no_serie= '$noserie' AND cve_banco ='$cve_banco'";
+		
+		//self::$logger->error($sql);
+		
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return $result = $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getInventarioInfo2();	Functionality: Search Carriers;	Log:". $sql . $e->getMessage () );
+		}
+	}
+
 	function getAlmacenId($almacen) {
 		$sql = "SELECT id FROM tipo_ubicacion WHERE nombre= '$almacen' ";
 		
@@ -1342,11 +1391,25 @@ class Almacen implements IConnections {
         }
 	}
 	
+	function getComercioInfo($afiliacion)
+	{
+		$sql = "SELECT * FROM comercios WHERE afiliacion = '$afiliacion'";
+
+		//self::$logger->error($sql);
+		try {
+		    $stmt = self::$connection->prepare ($sql);
+		    $stmt->execute (array ($afiliacion));
+		    return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+		    self::$logger->error ("File: almacen_db.php;	Method Name: getComercioInfo();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+		}
+	}
 	
 	//Existencia de serie para reporte
 	function getSerieInfo($serie) 
 	{
 		$sql = "SELECT
+		b.banco,
 		i.no_serie,
 		modelos.modelo,
 		tipo_conectividad.nombre conectividad,
@@ -1377,6 +1440,7 @@ class Almacen implements IConnections {
 		LEFT JOIN comercios c ON c.id = i.id_ubicacion
 		LEFT JOIN tipo_ubicacion tu2 ON tu2.id = i.id_ubicacion
 		LEFT JOIN detalle_usuarios du ON du.cuenta_id = i.modificado_por
+		LEFT JOIN bancos b ON i.cve_banco = b.cve
 			WHERE i.no_serie = '$serie' ";
 
 		//self::$logger->error($sql);
@@ -1470,7 +1534,7 @@ class Almacen implements IConnections {
 
 	function getSerieInfoH($serie) 
 	{
-		$sql = " SELECT  
+		$sql = " SELECT 
 		i.no_serie,
 		IFNULL(m.modelo ,'') modelo ,
 		IFNULL(tc.nombre ,'') conectividad,
@@ -1483,6 +1547,8 @@ class Almacen implements IConnections {
 		LEFT JOIN tipo_conectividad tc ON tc.id = i.conectividad
 		WHERE i.no_serie = '$serie' ";
 		
+		//self::$logger->error($sql);
+
         try {
             $stmt = self::$connection->prepare ($sql);
             $stmt->execute ();
@@ -1565,11 +1631,13 @@ class Almacen implements IConnections {
 						p.fecha_creacion,
 						p.modificado_por,
 						GROUP_CONCAT(DISTINCT du.nombre, ' ', du.apellidos) creadopor,
-						GROUP_CONCAT(DISTINCT dut.nombre, ' ',dut.apellidos) tecnico
+						GROUP_CONCAT(DISTINCT dut.nombre, ' ',dut.apellidos) tecnico,
+						tu.nombre almacen
 						FROM peticiones p
 						LEFT JOIN detalle_usuarios du ON du.cuenta_id = p.creado_por
 						LEFT JOIN detalle_peticiones dp ON dp.peticiones_id = p.id
 						LEFT JOIN detalle_usuarios dut ON dut.cuenta_id = dp.tecnico_id
+						LEFT JOIN tipo_ubicacion tu ON p.almacen_destino = tu.id
 						WHERE p.creado_por IS NOT NULL
 						$where
 						GROUP BY p.id
@@ -1623,16 +1691,18 @@ class Almacen implements IConnections {
 		}
 
 		if( !empty($params['search']['value'])) {   
-			$where .=" where ";
+			$where .=" AND ";
 			$where .=" ( ti.nombre LIKE '".$params['search']['value']."%' ";
-			$where .=" OR tc.nombre LIKE '".$params['search']['value']."%'  ";
-			$where .=" OR tv.nombre LIKE '".$params['search']['value']."%' ) ";
+			$where .=" OR tc.nombre LIKE '".$params['search']['value']."%')  ";
+			//$where .=" OR tipo LIKE '".$params['search']['value']."%'  ";
 
 		}
 
 		$sql = "Select 
 				peticiones_id,
 				 dp.id id_dp,
+				 b.cve,
+				 b.banco,
 				CONCAT(du.nombre,' ',du.apellidos) tecnico,
 				CASE WHEN dp.tipo = 1 THEN 'TPV' WHEN dp.tipo = 2 THEN 'SIM' WHEN dp.tipo = 3 THEN 'INSUMO' END tipo,
 				CASE WHEN dp.tipo = 2 THEN  c.nombre END carrier,
@@ -1640,6 +1710,8 @@ class Almacen implements IConnections {
 				ti.nombre insumo ,
 				tc.nombre conectividad,
 				tp.nombre producto,
+				dp.no_series,
+				cp.insumo insumoCaja,
 				dp.cantidad,
 				dp.id,
 				dp.tipo tipoid,
@@ -1652,9 +1724,13 @@ class Almacen implements IConnections {
 				LEFT JOIN tipo_conectividad tc  ON dp.conectividad = tc.id
 				LEFT JOIN tipo_producto tp ON dp.producto = tp.id
 				LEFT JOIN tipo_estatus_modelos te ON te.id = dp.estatus
-				LEFT JOIN inventario inv ON inv.no_serie = ti.codigo
+				LEFT JOIN inventario inv ON inv.no_serie = ti.codigo AND inv.cve_banco = dp.cve_banco
+				LEFT JOIN bancos b ON dp.cve_banco = b.cve
+				LEFT JOIN cajas_peticion cp ON cp.peticion_id = dp.id
 				WHERE dp.peticiones_id = $peticion
+				
 				$where
+				
 				$filter  ";
 
 		//self::$logger->error($sql);
@@ -1696,7 +1772,7 @@ class Almacen implements IConnections {
 
 	}
 
-	function validarSerie($noserie,$tipo) {
+	function validarSerie($noserie,$tipo,$banco) {
 
 		$where = '';
 		$tipoUser = $_SESSION['tipo_user'];
@@ -1710,24 +1786,28 @@ class Almacen implements IConnections {
 
 		if ($tipo == '1') {
 
-			$sql = "  SELECT no_serie,m.modelo ,count(i.id) total
+			$sql = "  SELECT b.banco,i.no_serie,m.modelo ,count(i.id) total
 				  FROM inventario i
 				  LEFT JOIN modelos m ON m.id = i.modelo 
+				  LEFT JOIN bancos b ON i.cve_banco = b.cve
 				  WHERE i.no_serie = ?
 				  AND i.ubicacion = 1
 				  AND i.tipo = ?
+				  AND i.cve_banco = ?
 				  $where	
-				  group by no_serie,m.modelo			
+				  group by b.banco, i.no_serie,m.modelo			
 			   ";
 		} else {
-			$sql = "  SELECT no_serie,m.nombre modelo ,count(i.id) total
+			$sql = "  SELECT b.banco,i.no_serie,m.nombre modelo ,count(i.id) total
 				  FROM inventario i
 				  LEFT JOIN carriers m ON m.id = i.modelo 
+				  LEFT JOIN bancos b ON i.cve_banco = b.cve
 				  WHERE i.no_serie = ?
 				  AND i.ubicacion = 1
 				  AND i.tipo = ?
+				  AND i.cve_banco = ?
 				  $where	
-				  group by no_serie,m.nombre			
+				  group by b.banco,i.no_serie,m.nombre			
 			   ";
 		}
 
@@ -1736,7 +1816,7 @@ class Almacen implements IConnections {
 		
         try {
             $stmt = self::$connection->prepare ($sql);
-            $stmt->execute (array($noserie,$tipo));
+            $stmt->execute ( array($noserie,$tipo, $banco) );
             return  $stmt->fetch ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: almacen_db.php;	Method Name: validarSerie();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
@@ -1764,6 +1844,19 @@ class Almacen implements IConnections {
         } catch ( PDOException $e ) {
             self::$logger->error ("File: almacen_db.php;	Method Name: detallePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
+	}
+
+	function infoPeticion($peticion)
+	{
+		$sql = "SELECT * FROM peticiones WHERE peticiones.id = ?";
+
+		try {
+		    $stmt = self::$connection->prepare ($sql);
+		    $stmt->execute (array($peticion));
+		    return  $stmt->fetch ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+		    self::$logger->error ("File: almacen_db.php;	Method Name: infoPeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+		}
 	}
 
 	function getNoSeriePeticion($id) {
@@ -1807,7 +1900,7 @@ class Almacen implements IConnections {
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: almacen_db.php;	Method Name: getDetallePeticion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
-        }
+    }
 
 	}
 
@@ -1847,10 +1940,15 @@ class Almacen implements IConnections {
 		$query = "";
 		$where = '';
 		$peticion = $params['idp'];
+		$guia = $params['guia'];
 
 		
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( $guia != '0' ) {
+			$where .= " AND cajas_peticion.guia = '$guia' ";
 		}
 
 		if( !empty($params['search']['value'])) {   
@@ -1861,7 +1959,9 @@ class Almacen implements IConnections {
 
 		}
 
-		$sql = " SELECT cajas_peticion.insumo,cajas_peticion.no_serie, cajas_peticion.no_caja
+		
+
+		$sql = " SELECT cajas_peticion.id,cajas_peticion.insumo,cajas_peticion.no_serie, cajas_peticion.no_caja, cajas_peticion.guia
 				FROM cajas_peticion
 				LEFT JOIN detalle_peticiones ON cajas_peticion.peticion_id = detalle_peticiones.id
 				WHERE detalle_peticiones.peticiones_id = $peticion
@@ -1875,8 +1975,26 @@ class Almacen implements IConnections {
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: almacen_db.php;	Method Name: getdetallePeticiones();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: almacen_db.php;	Method Name: getSeriesCajas();	Functionality: Get Historia;	Log:" . $e->getMessage () );
 		}
+	}
+
+	function getGuiasCaja($id)
+	{
+		$sql = "SELECT cajas_peticion.guia FROM cajas_peticion LEFT JOIN detalle_peticiones ON cajas_peticion.peticion_id = detalle_peticiones.id WHERE
+				detalle_peticiones.peticiones_id = '$id' GROUP BY cajas_peticion.guia";
+
+		//self::$logger->error($sql);
+
+		try {
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute();
+			return $stmt->fetchAll( PDO::FETCH_ASSOC);
+			
+		} catch (PDOException $e) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: getGuiasCaja();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+		}
+
 	}
 
 	function getProducto() {
@@ -1936,6 +2054,20 @@ class Almacen implements IConnections {
 		}
 		catch ( PDOException $e){
 			self::$logger->error("File: almacen_db.php;	Method Name: getCantidadRollos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+		}
+	}
+
+	function buscarAfiliacion($search)
+	{
+		$sql = "SELECT c.id, c.afiliacion, c.comercio, CONCAT (c.afiliacion,' ',c.comercio) datos from comercios c WHERE ( afiliacion LIKE '%$search%' ) 
+		        Group by c.id";
+
+		try {
+			$stmt = self::$connection->prepare ($sql );
+			$stmt->execute ();
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: almacen_db.php;	Method Name: buscarAfiliacion();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
 		}
 	}
 	
@@ -2039,6 +2171,7 @@ if ($module == 'guardarCajaTraspaso') {
 	$fecha_alta = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
 	$id = $params['id'];
+	$guiaCaja = $params['guiaCaja'];
 	$seriesPeticion = $Almacen->getNoSeriePeticion($id);
 	//$detallePeticion = $Almacen->getDetallePeticion($id);
 	
@@ -2053,12 +2186,13 @@ if ($module == 'guardarCajaTraspaso') {
 			{
 				foreach ($noSeries as $key => $serie) 
 				{
-					$datafieldsCaja = array ('peticion_id','no_serie','no_caja','fecha_creacion','creado_por');
+					$datafieldsCaja = array ('peticion_id','guia','no_serie','no_caja','fecha_creacion','creado_por');
 					$question_marks = implode (', ', array_fill(0, sizeof($datafieldsCaja), '?'));
 					$sql = "INSERT INTO cajas_peticion (" . implode(",", $datafieldsCaja) . ") VALUES (". $question_marks .") ";
 
 						$arrayString = array(
 							$id,
+							$guiaCaja,
 							$serie['NoSerie'],
 							$params['caja'],
 							$fecha_alta,
@@ -2077,17 +2211,17 @@ if ($module == 'guardarCajaInsumos')
 	$user = $_SESSION['userid'];
 	$id = $params['detalleId'];
 	$insumo = $params['insumo'];
+	$guiaCaja = $params['cajaGuia'];
 
 	$cajas = json_decode( $params['cajaNo']);
 
 	$box = implode(",", $cajas);
 
-	print_r($box);
+	//print_r($box);
 
 	//var_dump(json_encode($cajas));
-	
 
-	$datafieldsCaja = array('peticion_id','insumo','no_caja','fecha_creacion','creado_por');
+	$datafieldsCaja = array('peticion_id','insumo','guia','no_caja','fecha_creacion','creado_por');
 	$question_marks = implode (', ', array_fill(0, sizeof($datafieldsCaja), '?'));
 
 	$sql = "INSERT INTO `cajas_peticion` (" . implode(",", $datafieldsCaja) . ") VALUES (" . $question_marks . ")";
@@ -2095,16 +2229,44 @@ if ($module == 'guardarCajaInsumos')
 	$arrayString =  array(
 		$id,
 		$insumo,
+		$guiaCaja,
 		$box,
 		$fecha_alta,
 		$user
 	);
 
 	$Almacen->insert($sql,$arrayString);
+}
 
-	
+if ($module == 'guardarCajaCambio') 
+{
+	$fecha_act = date("Y-m-d H:i:s");
+	$user = $_SESSION['userid'];
+	$caja = $params['caja'];
+	$serie = $params['serie'];
+	$id = $params['id'];
+	$guia = $params['guia'];
+
+	$prepareStatement = "UPDATE `cajas_peticion` SET `guia` = ?,`no_caja` = ?, `modificado_por` = ?, `fecha_modificacion` = ? WHERE `id` = ? ; ";
+
+	$arrayString = array (
+		$guia,
+		$caja,
+		$user,
+		$fecha_act,
+		$id
+	);
+
+	$Almacen->insert($prepareStatement,$arrayString);
 
 
+
+}
+
+if ($module == 'buscarAfiliacion') {
+	$rows = $Almacen->buscarAfiliacion($params['term']);
+
+	echo json_encode($rows);
 }
 
 if($module == 'getInventarioTecnico') {
@@ -2131,6 +2293,18 @@ if($module == 'getPlazas'){
 	$rows = $Almacen->getPlazas();
 	foreach ($rows as $row) {
 		$val .= '<option value="' . $row['id'] . '" >' . $row['nombre'] . '</option>';
+	}
+	echo $val;
+}
+
+if ($module == 'getPlazasbyAlmacen') 
+{
+	$almacen = $_SESSION['almacen'];
+
+	$val = '<option value="0">Seleccionar</option>';
+	$rows = $Almacen->getPlazasbyAlmacen($almacen);
+	foreach($rows as $row){
+		$val .= '<option value="' .$row['id']. '">'.$row['nombre']. '</option>';
 	}
 	echo $val;
 }
@@ -2162,6 +2336,16 @@ if($module == 'getSupervisores') {
 	$val = '<option value="0" data-id="0" selected>Seleccionar</option>';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['cuenta_id'] . '">' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
+}
+
+if ($module == 'getGuiasCaja') {
+	$rows = $Almacen->getGuiasCaja($params['idp']);
+	$val = '<option value="0" data_id="0"  selected >Seleccionar</option>';
+	foreach ($rows as $row) 
+	{
+		$val .= '<option value="' . $row['guia'] . '">' .$row['guia'] . '</option>';
 	}
 	echo $val;
 }
@@ -2270,6 +2454,19 @@ if ($module == 'borrarPeticion')
 		$arrayString3 = array($del2);
 		$Almacen->insert($prepareStatement3, $arrayString3);
 	
+
+}
+
+if ($module == 'eliminarTraspaso') 
+{
+	$id = $params['guiaTrasp'];
+
+	$prepareStatement = "DELETE FROM traspasos WHERE no_guia = ? ";
+	$arrayString = array($id);
+	$Almacen->insert($prepareStatement, $arrayString);
+
+	echo "Envío eliminado";
+
 
 }
 
@@ -2440,6 +2637,30 @@ if($module == 'getAlmacen') {
 	echo $val;
 }
 
+if($module == 'getAlmacenO')
+{
+	$val = '<option value="0">Seleccionar</option>';
+    $rows = $Almacen->getAlmacen();
+
+    foreach ( $rows as $row ) {
+			
+		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	
+		
+	}
+	echo $val;
+}
+
+if ($module == 'getAlmacenPeticion') {
+	$val = '<option value="0">Seleccionar</option>';
+	$rows = $Almacen->getAlmacenCuenta();
+
+	foreach ($rows as $row) {
+		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
+}
+
 if($module == 'buscarUbicacion') {
 
 	$term = $params['term'];
@@ -2542,6 +2763,8 @@ if($module == 'altaAlmacen') {
 			
 				$id = $Almacen->insert($prepareStatement,$arrayString);
 
+				print_r($arrayString);
+
 				if($params['estatusinv'] == '3' || $params['estatusinv'] == 2) 
 				{
 					$prepareStatement = "INSERT INTO `inventario_tecnico`
@@ -2607,6 +2830,8 @@ if($module == 'updateInvProd')
 	$fecha = date("Y-m-d H:i:s");
 	$user = $_SESSION['userid'];
 	$historial_estatus = '';
+	$id_ubicacion = $params["ubicacion"];
+	$valido = 0;
 
 	switch ($params['estatus']) {
 		case '2':
@@ -2647,85 +2872,115 @@ if($module == 'updateInvProd')
 		break;
 	}
 	
-	$prepareStatement = "UPDATE `inventario` 
-						SET `tipo` = ?, 
-							`modelo` = ?, 
-							`aplicativo` = ?, 
-							`conectividad` = ?, 
-							`estatus` = ?,
-							`ubicacion` = ?,  
-							`id_ubicacion` = ?,
-							`estatus_inventario` = ?,
-							`cantidad` = ?, 
-							`modificado_por` = ?,
-							`fecha_edicion` = ?
-						WHERE `no_serie` = ? ";
-
-	$arrayString = array (
-			$params['tipo'],
-			$params['modelo'],
-			$params['aplicativo'],
-			$params['conectividad'],
-			$params['estatus'],
-			$params['ubicacion'],
-			$params['ubicacion'],
-			$params['estatusinventario'],
-			$params['cantidad'],
-			$user,
-			$fecha,
-			$params['noserie']
-	);
-	//print_r($arrayString);
-	$id = $Almacen->insert($prepareStatement,$arrayString);
-
-	if($id != 0)
+	if($params["ubicacion"] == '9')
 	{
-		echo json_encode(["msg" => "No se actualizaron los datos", "data" => json_encode($arrayString),'id' => $id ]);
+		$id_ubicacion = $params["tecnico"];
 	}
-	else
+	else if ($params["ubicacion"] == "2")
 	{
+		$id_ubicacion = $params["id_ubicacion"];
+	}
+
+	if ($params['afiliacion'] > '0') 
+	{
+		$comercio = $Almacen->getComercioInfo($params['afiliacion']);
+
+		if ($comercio) {
+			
+			//print_r($comercio);
+			$id_ubicacion = $comercio[0]['id'];
+		}else
+		{
+			$msg = "No se encontró el comercio, revisar afiliación";
+			$valido++;
+		}
 		
-		
-		if($params['tipo'] == '1' || $params['tipo'] == '2') {
+	}
 
-			if($params['estatusinventario'] == '1' || $params['estatusinventario'] == '4' ) {
-				$querySIM = " DELETE FROM inventario_tecnico  WHERE no_serie=?";
+	if ($valido == 0) 
+	{
+		$prepareStatement = "UPDATE `inventario` 
+							SET `tipo` = ?,
+								`cve_banco` = ?,
+								`modelo` = ?, 
+								`aplicativo` = ?, 
+								`conectividad` = ?, 
+								`estatus` = ?,
+								`ubicacion` = ?,  
+								`id_ubicacion` = ?,
+								`estatus_inventario` = ?,
+								`cantidad` = ?, 
+								`modificado_por` = ?,
+								`fecha_edicion` = ?
+							WHERE `no_serie` = ? ";
 
-				$arrayString = array (
-					$params['noserie']
-				);
+		$arrayString = array (
+				$params['tipo'],
+				$params['banco'],
+				$params['modelo'],
+				$params['aplicativo'],
+				$params['conectividad'],
+				$params['estatus'],
+				$params['ubicacion'],
+				$id_ubicacion,
+				$params['estatusinventario'],
+				$params['cantidad'],
+				$user,
+				$fecha,
+				$params['noserie']
+		);
+		//print_r($arrayString);
+		$id = $Almacen->insert($prepareStatement,$arrayString);
 
-				$Almacen->insert($querySIM,$arrayString);
+		if($id != 0)
+		{
+			$msg = 'No se actualizaron los datos';
+			
+		}
+		else
+		{
+			if($params['tipo'] == '1' || $params['tipo'] == '2') {
+
+				if($params['estatusinventario'] == '1' || $params['estatusinventario'] == '4' ) {
+					$querySIM = " DELETE FROM inventario_tecnico  WHERE no_serie=?";
+
+					$arrayString = array (
+						$params['noserie']
+					);
+
+					$Almacen->insert($querySIM,$arrayString);
+					
+				}
+			}	
 				
-				
-			}
 		}
 			
+			$getIdInv = $Almacen->getInventarioInfo($params['noserie']);
+		
+			$prepareStatement = "INSERT INTO `historial`
+						( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)
+						VALUES
+						(?,?,?,?,?,?,?,?,?);
+					";
+			$arrayString = array (
+					$getIdInv[0]['id'],
+					$fecha_alta,
+					$historial_estatus,
+					$params['ubicacion'],
+					$params['noserie'],
+					$getIdInv[0]['tipo'],
+					$params['cantidad'],
+					$getIdInv[0]['id_ubicacion'],
+					$user
+			);
+
+			$Almacen->insert($prepareStatement,$arrayString);
+			$msg = 'Se actualizaron los datos';
 			
 	}
-		
-		$getIdInv = $Almacen->getInventarioInfo($params['noserie']);
 	
-		$prepareStatement = "INSERT INTO `historial`
-					( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)
-					VALUES
-					(?,?,?,?,?,?,?,?,?);
-				";
-		$arrayString = array (
-				$getIdInv[0]['id'],
-				$fecha_alta,
-				$historial_estatus,
-				$params['ubicacion'],
-				$params['noserie'],
-				$getIdInv[0]['tipo'],
-				$params['cantidad'],
-				$getIdInv[0]['id_ubicacion'],
-				$user
-		);
-
-		$Almacen->insert($prepareStatement,$arrayString);
-		
-		echo "Se actualizaron los datos";
+	echo $msg;
+	
 	
 }
 
@@ -3204,28 +3459,42 @@ if($module == 'aceptarTraspaso') {
 
 	$traspaso = $Almacen->getTraspasosbyId($params['traspasoId']);
 
+	print_r($traspaso);
+
 	$fecha = date ( 'Y-m-d H:i:s' );
-	$sql = " UPDATE `inventario` SET `estatus_inventario`=?,`ubicacion`=?,`fecha_edicion`=? ,`id_ubicacion`=? WHERE `no_serie`=? "; 
+	$sql = " UPDATE `inventario` SET `estatus_inventario`=?, `ubicacion`=?,`fecha_edicion`=? ,`id_ubicacion`=? WHERE `no_serie`=? "; 
 
 	$arrayString = array (
-		$traspaso[0]['destino'],
+		1,
 		1,
 		$fecha,
-		0,
+		$traspaso[0]['destino'],
 		$traspaso[0]['no_serie']
 	);
 
-	$Almacen->insert($sql,$arrayString);
+	$id = $Almacen->insert($sql,$arrayString);
+	print_r($id);
 
 	//Borrar del Inventario Tecnico 
-	$sql = " DELETE FROM  `inventario_tecnico`  WHERE `no_serie`=? "; 
+	$sql2 = " DELETE FROM  `inventario_tecnico`  WHERE `no_serie`=? "; 
 
-	$arrayString = array (
+	$arrayString2 = array (
 		$traspaso[0]['no_serie']
 	);
 
-	$Almacen->insert($sql,$arrayString);
+	$Almacen->insert($sql2,$arrayString2);
 
+	//Actualiza estatus traspaso
+	
+	$sql3 = " UPDATE `traspasos` SET `estatus`=? WHERE `id`=? ";
+
+	$arrayString3 = array (
+		1,
+		$traspaso[0]['id']
+	);
+
+	$Almacen->insert($sql3,$arrayString3);
+	
 	echo json_encode(['traspaso' => $traspaso[0] ]);
 
 }
@@ -3487,7 +3756,7 @@ if( $module == 'guardarPeticion' )
 		print_r($datos);
 	}
 	
-	$prepareStatement = "INSERT INTO `peticiones` SET `supervisor_id`=?,`comentarios`=?,`tipo_envio`=?,`direccion_envio`=?,`creado_por`=?,`fecha_creacion`=?,`modificado_por`=?,`fecha_modificacion`=? ;
+	$prepareStatement = "INSERT INTO `peticiones` SET `supervisor_id`=?,`comentarios`=?,`tipo_envio`=?,`direccion_envio`=?,`almacen_destino`=?,`almacen_origen`=?,`creado_por`=?,`fecha_creacion`=?,`modificado_por`=?,`fecha_modificacion`=? ;
 					";
 	
 	$arrayString = array (
@@ -3495,6 +3764,8 @@ if( $module == 'guardarPeticion' )
 			$datos['comentario_supervisior'],
 			$datos['tipo_envio'],
 			$datos['direccion_envio'],
+			$datos['almacen_destino'],
+			$datos['almacen_origen'],
 			$user,
 			$fecha_alta,
 			$user,
@@ -3509,9 +3780,9 @@ if( $module == 'guardarPeticion' )
 	{
 		echo "SE GUARDARON LOS DATOS";//,
 		$prepareStatementDet = "INSERT INTO `detalle_peticiones` 
-					(`peticiones_id`,`tecnico_id`,`tipo`,`estatus`,`insumo`,`carrier`,`conectividad`,`producto`,`cantidad`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
+					(`peticiones_id`,`tecnico_id`,`tipo`,`estatus`,`insumo`,`carrier`,`conectividad`,`producto`,`cantidad`,`cve_banco`,`creado_por`,`fecha_creacion`,`modificado_por`,`fecha_modificacion`)
 					 VALUES
-					 (?,?,?,?,?,?,?,?,?,?,?,?,?);
+					 (?,?,?,?,?,?,?,?,?,?,?,?,?,?);
 					 ";
 					 
 		foreach ($info as $data) 
@@ -3528,6 +3799,7 @@ if( $module == 'guardarPeticion' )
 				$data['conectividad'],
 				$data['producto'],
 				$data['cantidad'],
+				$data['banco'],
 				$user,
 				$fecha_alta,
 				$user,
@@ -3548,7 +3820,7 @@ if( $module == 'guardarPeticion' )
 /*Validar NoSerie */
 if( $module == 'validarSerie') {
 
-	$rows = $Almacen->validarSerie($params['serie'],$params['tipo']);
+	$rows = $Almacen->validarSerie($params['serie'],$params['tipo'],$params['banco']);
 
 	echo json_encode($rows);
 }
@@ -3564,6 +3836,7 @@ if($module == 'generarEnvio') {
 
 	$peticion = $Almacen->detallePeticion( $params['peticionId'] );
 	$peticiondetalle = $Almacen->getDetallePeticion($params['peticionId']);
+	$infoPeticion = $Almacen->infoPeticion($params['peticionId']);
 	$user = $_SESSION['userid'];
 	$AlmOrigen = $_SESSION['almacen'];
 	$nameInsumo = '';
@@ -3571,6 +3844,7 @@ if($module == 'generarEnvio') {
 	$enviado = '';
 
 	foreach($peticiondetalle as $detalle) {
+
 		
 		$fecha = date("Y-m-d H:i:s");
 
@@ -3588,12 +3862,21 @@ if($module == 'generarEnvio') {
 			$tipo = 'SIM';
 		}
 
+		if ($detalle['tecnico_id'] == '0') 
+		{
+			$destino = $infoPeticion['almacen_destino'];
+		}
+		else
+		{
+			$destino = 0;
+		}
 
 		if ($detalle['tipo'] == '3' ) 
 		{
 			$insumo = $Almacen->getInsumosId($detalle['insumo']);
-			$insumoCod = $Almacen->getInventarioInfo($insumo['codigo']);
-				
+			$insumoCod = $Almacen->getInventarioInfo2($insumo['codigo'],$detalle['cve_banco']);
+			
+							
 			if ($cant > $insumoCod[0]['cantidad'])
 			{
 				
@@ -3602,9 +3885,11 @@ if($module == 'generarEnvio') {
 			}
 			else 
 			{
+				
+
 				$tipoInsumo = $Almacen->getInsumosId($detalle['insumo']);
 
-				$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act','creado_por');
+				$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','cve_banco','fecha_creacion','ultima_act','creado_por');
 		
 				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsTraspasos), '?'));
 
@@ -3618,19 +3903,20 @@ if($module == 'generarEnvio') {
 					$params['no_guia'],
 					$params['codigo_rastreo'],
 					$AlmOrigen,
-					0,
+					$destino,
 					$detalle['tecnico_id'],
 					0,
+					$insumoCod[0]['cve_banco'],
 					$fecha,
 					$fecha,
 					$user
 				);
 
 			
-				$id = $Almacen->insert($sql,$arrayString);		
+				$id = $Almacen->insert($sql,$arrayString);
 
 				//Modificar inventario general
-				$item = $Almacen->getInventarioInfo($tipoInsumo['codigo']);
+				$item = $Almacen->getInventarioInfo2($tipoInsumo['codigo'], $detalle['cve_banco']);
 			
 				$nuevaCant = (int) $item[0]['cantidad'] - (int) $cant;
 
@@ -3725,7 +4011,7 @@ if($module == 'generarEnvio') {
 
 				
 
-				$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','fecha_creacion','ultima_act','creado_por');
+				$datafieldsTraspasos = array('tipo','no_serie','modelo','cantidad','no_guia','codigo_rastreo','origen','destino','cuenta_id','estatus','cve_banco','fecha_creacion','ultima_act','creado_por');
 			
 				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsTraspasos), '?'));
 
@@ -3739,9 +4025,10 @@ if($module == 'generarEnvio') {
 					$params['no_guia'],
 					$params['codigo_rastreo'],
 					$AlmOrigen,
-					0,
+					$destino,
 					$detalle['tecnico_id'],
 					0,
+					$inventario[0]['cve_banco'],
 					$fecha,
 					$fecha,
 					$user
@@ -3758,32 +4045,40 @@ if($module == 'generarEnvio') {
 				$arrayString = array (
 					2,
 					4,
-					$detalle['tecnico_id'],
+					$destino,
 					$user,
 					$fecha,
 					$item[0]['id']
 				);
 
 				$Almacen->insert($sql,$arrayString);
-				
-				//Grabar en Inventario Tecnico
-				$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','creado_por','fecha_creacion','fecha_modificacion');
-				
-				$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
+				if ($detalle['tecnico_id'] == 0) 
+				{
+					
+				} else
+				{
+					//Grabar en Inventario Tecnico
+					$datafieldsInvTecnico = array('tecnico','no_serie','cantidad','no_guia','aceptada','cve_banco','creado_por','fecha_creacion','fecha_modificacion');
+					
+					$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInvTecnico), '?'));
 
-				$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
-				$arrayString = array (
-					$detalle['tecnico_id'],
-					$noserie->NoSerie,
-					$cant,
-					$params['no_guia'],
-					0,
-					$user,
-					$fecha,
-					$fecha
-				);
+					$sql = "INSERT INTO inventario_tecnico (" . implode(",", $datafieldsInvTecnico ) . ") VALUES (".$question_marks.")"; 
+					$arrayString = array (
+						$detalle['tecnico_id'],
+						$noserie->NoSerie,
+						$cant,
+						$params['no_guia'],
+						0,
+						$inventario[0]['cve_banco'],
+						$user,
+						$fecha,
+						$fecha
+					);
 
-				$Almacen->insert($sql,$arrayString);
+					$Almacen->insert($sql,$arrayString);
+				}
+				
+				
 				
 				//GRABAR HISTORIA 
 				
@@ -3800,7 +4095,7 @@ if($module == 'generarEnvio') {
 					$noserie->NoSerie,
 					$item[0]['tipo'],
 					$cant,
-					$detalle['tecnico_id'],
+					$destino,
 					$user
 				);
 			
@@ -4092,13 +4387,18 @@ if($module == 'grabarInventario')
 		$existElavonUniverso = 1;
 	}
 
+	if ($info[19] == '038') 
+	{
+		$existElavonUniverso = 1;
+	}
+
 	if( $existElavonUniverso == '0' ) 
 	{
 		echo " $info[1] No existe en Universo Elavon ";
 	} 
 	else 
 	{
-	
+		
 		$datafieldsInventarios = array('tipo',
 										'no_serie',
 										'linea',
@@ -4248,6 +4548,7 @@ if($module == 'InventarioElavon')
 	$GuiaYaCargadas = array();
 	$mensajeYaCargadas = '';
 	$eventoMasivo = new CargasMasivas();
+	$user = $_SESSION['userid'];
 
 	$hojaDeProductos = $eventoMasivo->loadFile($_FILES);
 
@@ -4267,13 +4568,15 @@ if($module == 'InventarioElavon')
 	{
 		# Las columnas están en este orden:
 		# Código de barras, Descripción, Precio de Compra, Precio de Venta, Existencia
-		 
+	
 		$No_serie = $hojaDeProductos->getCellByColumnAndRow(1, $indiceFila);
 		$No_serie = trim(utf8_decode($No_serie->getValue())," \t\n\r\0\x0B\xA0");
 		$No_serie = preg_replace( '/[^a-z0-9 ]/i', '', $No_serie);
 		$Fabricante = $hojaDeProductos->getCellByColumnAndRow(2, $indiceFila);
 		$Estatus = $hojaDeProductos->getCellByColumnAndRow(3, $indiceFila);
 		$Estatus_Modelo = 3;
+		$cve_banco = $hojaDeProductos->getCellByColumnAndRow(4, $indiceFila);
+		
 		
 		//Validar que tenga permisos para cargar en otros almacenes
 		$valido = 0;
@@ -4346,24 +4649,26 @@ if($module == 'InventarioElavon')
 						);*/
 						$fab = $Fabricante->getValue();
 						$est = $Estatus->getValue();
+						$cveBanco = $cve_banco->getValue();
 						$fecha =date ( 'Y-m-d H:i:s' );
 						
-						$sql = "INSERT INTO elavon_universo (id,serie,fabricante,estatus,estatus_modelo,tipo,modificado_por) 
-						VALUES(NULL,'$No_serie','$fab','$est',$Estatus_Modelo,$Tipo,1) 
+						$sql = "INSERT INTO elavon_universo (id,serie,fabricante,estatus,estatus_modelo,tipo,cve_banco,modificado_por) 
+						VALUES(NULL,'$No_serie','$fab','$est',$Estatus_Modelo,$Tipo,$cveBanco,$user) 
 						ON DUPLICATE KEY     
 						UPDATE serie =	'$No_serie'
 						,fabricante = '$fab'
 						,estatus = '$est'
 						,estatus_modelo = $Estatus_Modelo
 						,tipo =	$Tipo
-						,modificado_por = 1
+						,cve_banco = $cveBanco
+						,modificado_por = $user
 						";
 
 						$id = $Almacen->insert($sql,array());
 
 						
 
-						$mensajeYaCargadas .= " Se Actualizo El Num de serie $No_serie $fab <br />" ;
+						$mensajeYaCargadas .= " Se Actualizo El Num de serie $No_serie $fab con clave banco $cveBanco<br />" ;
 					//	$yaExiste = 0;
 					//}
 
@@ -4395,21 +4700,23 @@ if($module == 'grabarInventarioElavon')
 	$info = json_decode($params['info']);
 	$new = 0;
 	$arrayString = null;
+	$user = $_SESSION['userid'];
 	/*if($info[5] == '0') 
 	{ */
-		$datafieldsInventarios = array('id','serie','fabricante','estatus','estatus_modelo','tipo','modificado_por');
+		$datafieldsInventarios = array('id','serie','fabricante','estatus','estatus_modelo','tipo','cve_banco','modificado_por');
 				
 		$question_marks = implode(', ', array_fill(0, sizeof($datafieldsInventarios), '?'));
  
 		$sql = "INSERT INTO elavon_universo (" . implode(",", $datafieldsInventarios ) . ") 
-				VALUES(NULL,'$info[0]','$info[1]','$info[2]',$info[3],$info[4],1) 
+				VALUES(NULL,'$info[1]','$info[2]','$info[3]',$info[4],$info[5],$info[6],$user) 
 				ON DUPLICATE KEY     
-				UPDATE serie =	'$info[0]'
-				,fabricante = '$info[1]'
-				,estatus = '$info[2]'
-				,estatus_modelo = $info[3]
-				,tipo =	$info[4]
-				,modificado_por = 1
+				UPDATE serie =	'$info[1]'
+				,fabricante = '$info[2]'
+				,estatus = '$info[3]'
+				,estatus_modelo = $info[4]
+				,tipo =	$info[5]
+				,cve_banco = $info[6]
+				,modificado_por = $user
 				";
 
 		$id = $Almacen->insert($sql,$arrayString);
@@ -4449,7 +4756,7 @@ if($module == 'grabarInventarioElavon')
 	 
 
 	//if($id > 0 ) {
-		echo " Se Actualizo Elavon Universo el numero de serie $info[0] del Fabricante $info[1]  ";
+		echo " Se Actualizo Elavon Universo el numero de serie $info[1] del Fabricante $info[2]  ";
 	//} else {
 	//	echo " No se Cargo a Elavon Universo el numero de serie $info[0] del Fabricante $info[1] ";
 	// }
@@ -4555,20 +4862,23 @@ if ($module == 'InventarioEditar')
 	$exist = 0;
 	$yaExiste = 0;
 	
-	for ($indiceFila = 2; $indiceFila <= $numeroMayorDeFila; $indiceFila++)
+	for ($indiceFila = 3; $indiceFila <= $numeroMayorDeFila; $indiceFila++)
 	{
 		$Tipo = $hojaDeProductos->getCellByColumnAndRow(1, $indiceFila);
+
+		$cve_banco = $hojaDeProductos->getCellByColumnAndRow(2, $indiceFila);
 		
-		$No_serie = $hojaDeProductos->getCellByColumnAndRow(2, $indiceFila);
+		$No_serie = $hojaDeProductos->getCellByColumnAndRow(3, $indiceFila);
 		$No_serie = trim(utf8_decode($No_serie->getValue())," \t\n\r\0\x0B\xA0");
 		$No_serie = preg_replace( '/[^a-z0-9 ]/i', '', $No_serie);
 		
-		$Modelo = $hojaDeProductos->getCellByColumnAndRow(3, $indiceFila);
-		$Aplicativo = $hojaDeProductos->getCellByColumnAndRow(4, $indiceFila);
-		$Conectividad = $hojaDeProductos->getCellByColumnAndRow(5, $indiceFila);
-		$Estatus = $hojaDeProductos->getCellByColumnAndRow(6, $indiceFila);
-		$Estatus_ubicacion = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
-		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(8, $indiceFila);
+
+		$Modelo = $hojaDeProductos->getCellByColumnAndRow(4, $indiceFila);
+		$Aplicativo = $hojaDeProductos->getCellByColumnAndRow(5, $indiceFila);
+		$Conectividad = $hojaDeProductos->getCellByColumnAndRow(6, $indiceFila);
+		$Estatus = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
+		$Estatus_ubicacion = $hojaDeProductos->getCellByColumnAndRow(8, $indiceFila);
+		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(9, $indiceFila);
 		
 		//$ModeloId = $Almacen->getModeloId($Modelo->getValue());
 		//$ConectividadId = $Almacen->getConectividadId($Conectividad->getValue());
@@ -4615,6 +4925,7 @@ if ($module == 'InventarioEditar')
 		{
 			
 			$TipoId =$Tipo->getValue();
+			$banco = $cve_banco->getValue();
 
 			if($Tipo->getValue() == '1' )  
 				{
@@ -4645,6 +4956,7 @@ if ($module == 'InventarioEditar')
 				
 				$arrayString = array (
 				$TipoId,
+				$banco,
 				$No_serie,
 				$ModeloId,
 				$AplicativoId,
@@ -4688,43 +5000,45 @@ if ($module == 'UpdateInventario')
 		$fecha
 	);
 
-
-
-	 if($info[2]) {
-		 $campoUpdate .= " ,modelo=? ";
-		 array_push($arrayString,$info[2]);
-	 }
+	if ($info[1]) {
+		$campoUpdate .= " ,cve_banco=? ";
+		array_push($arrayString,$info[1]);
+	}
 
 	 if($info[3]) {
-		$campoUpdate .= " ,aplicativo=? ";
-		array_push($arrayString,$info[3]);
+		 $campoUpdate .= " ,modelo=? ";
+		 array_push($arrayString,$info[3]);
 	 }
 
 	 if($info[4]) {
-		$campoUpdate .= " ,conectividad=? ";
+		$campoUpdate .= " ,aplicativo=? ";
 		array_push($arrayString,$info[4]);
 	 }
+
 	 if($info[5]) {
-		$campoUpdate .= " ,estatus=? ";
+		$campoUpdate .= " ,conectividad=? ";
 		array_push($arrayString,$info[5]);
 	 }
 	 if($info[6]) {
-		$campoUpdate .= " ,estatus_inventario=? ";
+		$campoUpdate .= " ,estatus=? ";
 		array_push($arrayString,$info[6]);
 	 }
 	 if($info[7]) {
-		$campoUpdate .= " ,ubicacion=? ";
+		$campoUpdate .= " ,estatus_inventario=? ";
 		array_push($arrayString,$info[7]);
 	 }
+	 if($info[8]) {
+		$campoUpdate .= " ,ubicacion=? ";
+		array_push($arrayString,$info[8]);
+	 }
 
-	 array_push($arrayString,$info[1]);
+	 array_push($arrayString,$info[2]);
 
 	$sql = "UPDATE inventario 
 			SET 
 			$campoUpdate
 			WHERE no_serie=?" ;
 
-	
 
 	$id = $Almacen->insert($sql,$arrayString);
 
@@ -4734,11 +5048,11 @@ if ($module == 'UpdateInventario')
 	
 	if ($id < 0)
 	{
-		echo " No se $msg Inventario el numero de serie $info[1] de tipo $info[0]  ";
+		echo " No se $msg Inventario el numero de serie $info[2] de tipo $info[0]  ";
 	}
 	else
 	{
-		echo " Se $msg Inventario el numero de serie $info[1] de tipo $info[0]  ";
+		echo " Se $msg Inventario el numero de serie $info[2] de tipo $info[0]  ";
 	}
 
 

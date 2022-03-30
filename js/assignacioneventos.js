@@ -45,6 +45,7 @@ $(document).ready(function() {
                 }
             },
             columns : [
+                { data: 'banco'},
                 { data: 'odt'},
                 { data: 'afiliacion' },
                 { data: 'NombreComercio' },
@@ -62,13 +63,13 @@ $(document).ready(function() {
                     
                 },
                 {
-                    "targets": [7],
+                    "targets": [8],
                     "mRender": function ( data,type, row ) {
                         return '<a href="#" class="btn btn-success btnInfo" data="'+row.id+'">Detalle</a>';
                     }
                 },
                 {
-                    "targets": [8],
+                    "targets": [9],
                     "mRender": function ( data,type, row ) {
                         return '<div class="checkbox"> <label><input type="checkbox"></label></div>';
                     }
@@ -90,7 +91,7 @@ $(document).ready(function() {
             } 
 
             $.each(data, function(index,value) {
-                if( dtAsig.cell(index,8).nodes().to$().find('input').is(":checked") ) {
+                if( dtAsig.cell(index,9).nodes().to$().find('input').is(":checked") ) {
                     total++;
 
                     var valueToPush = new Object();

@@ -74,6 +74,7 @@ $(document).ready(function() {
                 }
             }
         ]
+        
     });
 
 
@@ -116,13 +117,27 @@ $(document).ready(function() {
                     return '<a href="#" title="Aceptar Entrada" class="aceptarItem" data-id="'+row.id+' "><i class="fas fa-sign-in-alt fa-2x"></i></a><br><a href="#" title="Retornar" class="retornarItem" data-id="'+row.id+' "><i class="fas fa-undo fa-2x" style="color:#3489eb"></i></a><br><hr><a href="#" title="Ajuste" class="retornarItem" data-id="'+row.id+' "><i class="fas fa-sliders-h fa-2x" style="color:#C17137"></i></a>';
                 }
             }
-        ]
+        ],
+        fixedColumns: true,
+        rowCallback: function(row,data,index,full){
+            var col = this.api().column(5).index('visible');
+            if (data.aceptada == 'TRANSITO') 
+            {
+                $('td', row).eq(col).css('color', '#000');
+                $('td', row).eq(col).css('background-color', '#f7f774');
+            }else{
+                $('td', row).eq(col).css('color', '#000');
+                $('td', row).eq(col).css('background-color', '#1ac972');
+            }
+
+        }
     });
 
    
     $(document).on("click",".aceptarItem", function() {
         
-        var traspasoId = $(".aceptarItem").data('id');
+        //var traspasoId = $(".aceptarItem").data('id');
+        var traspasoId = $(this).data('id');
         
         $.ajax({
             type: 'GET',
@@ -135,6 +150,8 @@ $(document).ready(function() {
                   'Serie aceptada!',
                   'success'
                 );
+
+                tableTraspasosItems.ajax.reload();
                
             $("#tecnico").html(data);   
             $("#add-tecnico").html(data);  

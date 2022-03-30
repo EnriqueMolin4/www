@@ -132,11 +132,12 @@ class Assignacion implements IConnections {
 			
 		}
 
-		$sql = "SELECT eventos.id,eventos.odt,eventos.afiliacion,eventos.fecha_vencimiento,tipo_estatus.nombre estatus,eventos.comercio comercio_id,eventos.estado,
+		$sql = "SELECT bancos.banco,eventos.id,eventos.odt,eventos.afiliacion,eventos.fecha_vencimiento,tipo_estatus.nombre estatus,eventos.comercio comercio_id,eventos.estado,
 				 territorial.NombreComercio,
 				CASE WHEN territorial.tipo_comercio IS NULL THEN 'NA' ELSE getNameById(territorial.tipo_comercio,'TipoComercio') END TipoComercio ,territorial.cp, territorial.ciudad
 				from eventos 
 				LEFT JOIN tipo_estatus ON eventos.estatus = tipo_estatus.id
+				LEFT JOIN bancos ON bancos.cve = eventos.cve_banco
 				LEFT JOIN (  select cp_territorios.territorio_id,cp_territorios.cp,comercios.ciudad, comercios.comercio NombreComercio,comercios.tipo_comercio,comercios.afiliacion FROM cp_territorios,comercios,supervisor_territorio
 				WHERE supervisor_territorio.territorio_id = cp_territorios.territorio_id
 				AND comercios.cp = cp_territorios.cp 

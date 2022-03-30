@@ -15,6 +15,8 @@ $(document).ready(function() {
     getEstatusUbicacion();
     getCarriers();
     getBancos();
+    getTecnicosxAlmacen();
+    campos_tipo();
 
     $("#fechaVen_inicio").datetimepicker({
         format:'Y-m-d'
@@ -387,12 +389,29 @@ $(document).ready(function() {
             return $(this).text() == data.modelo;
             }).prop('selected', true);
         }
-        //Modelo
-        
+        if(data.ubicacionId == 9 || data.estatus_inventario == 3)
+        {
+            $("#divTecnico").show();
+        }
+        else
+        {
+            $("#divTecnico").hide()
+        }
 
+        if(data.ubicacionId == 2 || data.estatus_inventario == 4)
+        {
+            $("#divComercio").show();
+            $("#divAfiliacion").hide();
+        }
+        else
+        {
+            $("#divComercio").hide();
+            $("#divAfiliacion").hide();
+        }
+        
         //Conectividad
         $("#det-conectividad option").filter(function() {
-            return $(this).text() == data.conect
+            return $(this).text() == data.conect;
           }).prop("selected", "selected");
 
         //Estatus
@@ -404,7 +423,13 @@ $(document).ready(function() {
         $("#det-estatus-inventario option").filter(function() {
           return $(this).text() == data.estatus_inventario;
         }).prop('selected', true);
+        //tecnico
+        $("#det-tecnico option").filter(function() {
+            return $(this).text() == data.tecnco;
+          }).prop('selected', true);
         
+          //comercio
+        $("#det-comercio").val(data.comercio);
         //Ubicación
         /*$("#det-ubicacion option").filter(function() {
           return $(this).text() == data.ubicacion;
@@ -421,7 +446,7 @@ $(document).ready(function() {
             $("#det-qty").attr('readonly',true);
         }
        
-        $("#ubicacionId").val(data.id_ubicacion);
+        $("#ubicacion_id").val(data.id_ubicacion);
 
         $("#showDetalle").modal("show");
     })
@@ -429,6 +454,36 @@ $(document).ready(function() {
     $('#showDetalle').on('hide.bs.modal', function () {
          cleartext();
 
+    });
+
+    $("#det-afiliacion").autocomplete({
+        
+        source: function( request, response){
+            $.ajax({
+                url: "modelos/almacen_db.php",
+                type:"GET",
+                dataType: "json",
+                data: {
+                    term: request.term,
+                    module: 'buscarAfiliacion'
+                },
+                success: function( data ){
+                    //cleartext();
+                    response( $.map( data, function( item ){
+                        return {
+                            label: item.datos,
+                            value: item.afiliacion,
+                            data : item
+                        }
+                    }));
+                },
+                error: function(error) {
+                    var demo = error;
+                    
+                }
+            });
+        }
+        
     });
     
     $("#btnCambiarInv").on("click",function() {
@@ -442,8 +497,11 @@ $(document).ready(function() {
         var estatus =           $("#det-estatus").val();
         var estatusinventario = $("#det-estatus-inventario").val();
         var ubicacion =         $("#det-ubicacion").val();
+        var tecnico =           $("#det-tecnico").val();
+        var comercio =          $("#det-comercio").val();
         var cantidad =          $("#det-qty").val();
-        //var ubicacionId =       $("#ubicacionId").val();
+        var afiliacion =        $("#det-afiliacion").val();
+        var id_ubicacion =       $("#ubicacion_id").val();
         
         //Validar Ubicacion y Estatus
         valido = 0;
@@ -495,7 +553,7 @@ $(document).ready(function() {
             $.ajax({
                 type: 'GET',
                 url: 'modelos/almacen_db.php', // call your php file'
-                data: 'module=updateInvProd&noserie='+noserie+'&banco='+banco+'&tipo='+tipo+'&modelo='+modelo+'&aplicativo='+aplicativo+'&conectividad='+conectividad+'&estatus='+estatus+'&ubicacion='+ubicacion+'&estatusinventario='+estatusinventario+'&cantidad='+cantidad,
+                data: 'module=updateInvProd&noserie='+noserie+'&banco='+banco+'&tipo='+tipo+'&modelo='+modelo+'&aplicativo='+aplicativo+'&conectividad='+conectividad+'&estatus='+estatus+'&ubicacion='+ubicacion+'&estatusinventario='+estatusinventario+'&tecnico='+tecnico+'&comercio='+comercio+'&afiliacion='+afiliacion+'&cantidad='+cantidad+'&id_ubicacion='+id_ubicacion,
                 cache: false,
                 success: function(data)
                 {
@@ -507,6 +565,7 @@ $(document).ready(function() {
                         title: 'Aviso',
                         priority : 'info'
                     });  
+                     
                      cleartext();
                 },
                 error: function(error){
@@ -517,9 +576,9 @@ $(document).ready(function() {
         } else {
             
             $.toaster({
-                message: msg,
+                message: data,
                 title: 'Aviso',
-                priority : 'info'
+                priority : 'warning'
             });  
         }
     })
@@ -781,6 +840,29 @@ $(document).ready(function() {
 
 });
 
+function campos_tipo()
+{
+    var ei = document.getElementById("det-estatus-inventario").value;
+
+    if (ei == "1") 
+    {
+        $("#divTecnico").hide();
+        $("#divComercio").hide();
+        $("#divAfiliacion").hide();
+    }
+    if (ei == "3") 
+    {
+        $("#divTecnico").show();
+        $("#divComercio").hide();
+    }
+    if (ei == "4") {
+        $("#divTecnico").hide();
+        $("#divComercio").hide();
+        $("#divAfiliacion").show();
+    }
+
+}
+
 
 function getProcesosActivos() {
 
@@ -954,6 +1036,22 @@ function getTecnicos() {
     });
 }
 
+function getTecnicosxAlmacen() {
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/almacen_db.php', // call your php file
+        data: 'module=getTecnicosxAlmacen',
+        cache: false,
+        success: function(data){
+            console.log(data);
+        $("#det-tecnico").html(data);            
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
 function getBancos() {
     $.ajax({
         type: 'GET',
@@ -985,5 +1083,8 @@ function cleartext()
     $("#det-qty").val("0");
     $("#correo").val("")
     $("#proveedor").val("0");
+    $("#det-tecnico").val("0");
+    $("#det-comercio").val("");
+    $("#det-afiliacion").val("");
 
 }

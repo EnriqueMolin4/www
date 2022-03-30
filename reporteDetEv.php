@@ -22,6 +22,12 @@
                             <label for="proveedor" class="col-form-label-sm">PROVEEDOR</label>
                             <input type="text" class="form-control form-control-sm" id="proveedor" name="proveedor" value="Sinttecom" readonly>
                         </div>
+                        <div class="col-sm-3">
+                            <label for="cve_banco" class="col-form-label-sm">BANCO</label>
+                            <select hidden class="custom-select form-control-sm" id="cve_banco" name="cve_banco[]" multiple>
+                                
+                            </select>
+                        </div>
                     </div>
                      <div class="row">
                         <div class="col-sm-3 mt-4">

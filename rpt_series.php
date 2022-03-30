@@ -64,6 +64,7 @@
 				<table id="table_inventario" class="table table-md table-bordered" style="width:100%;display:none">
 					<thead>
 						<tr>
+							<th>Banco</th>
 							<th>Serie</th>
 							<th>Modelo</th>
 							<th>Conectividad</th>

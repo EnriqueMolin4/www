@@ -315,6 +315,10 @@
                                 <label for="serie_" class="form-control-label">SERIE</label>
                                 <input type="text" class="form-control form-control-sm" name="serie_" id="serie_" readonly>
                             </div>
+                            <div class="col-4">
+                                <label for="guia_caja" class="form-control-label">GUIA</label>
+                                <input class="form-control form-control-sm" type="text" id="guia_caja" name="guia_caja" >
+                            </div>
                         
                         
                             <div class="col-4">
@@ -452,9 +456,22 @@
 
                         var cant = "<h7>Cantidad Actual: <a title ='Cantidad Almacén' href='#' style='color:#b52424'>"+row.qty+"</a></h7>";
 
-                        var btnCaja = "<a href='#' title='Elegir caja para insumo' class='addInsumo' data-banco='"+row.banco+"' data-cve='"+row.cve+"' data-insumo='"+row.insumo+"' data-qty='"+row.cantidad+"' data-cant='"+row.qty+"' data-idp='"+row.id_dp+"' ><i class='fas fa-box-open fa-2x' style='color:#187CD0'></i></a> ";
+                        if (row.insumoCaja == null || row.insumoCaja == '') 
+                        {
+                            var btnCaja = "<a href='#' title='Elegir caja para insumo' class='addInsumo' data-banco='"+row.banco+"' data-cve='"+row.cve+"' data-insumo='"+row.insumo+"' data-qty='"+row.cantidad+"' data-cant='"+row.qty+"' data-idp='"+row.id_dp+"' ><i class='fas fa-box-open fa-2x' style='color:#db4e44'></i></a> ";
+                        }
+                        else {
+                            var btnCaja = "<a href='#' title='Elegir caja para insumo' class='addInsumo' data-banco='"+row.banco+"' data-cve='"+row.cve+"' data-insumo='"+row.insumo+"' data-qty='"+row.cantidad+"' data-cant='"+row.qty+"' data-idp='"+row.id_dp+"' ><i class='fas fa-box-open fa-2x' style='color:#187CD0'></i></a> ";
+                        }
 
-                        var btnCarga = "<a href='#' title='Cargar Series' class='addSeries' data-banco='"+row.banco+"' data-cve='"+row.cve+"' data-producto='"+row.producto+"' data-tipo='"+row.tipoid+"' data-id='"+data+"' data-qty='"+row.cantidad+"' ><i class='fas fa-box-open fa-2x' style='color:#187CD0'></i></a> ";
+                        if (row.no_series == null || row.no_series == '') 
+                        {
+                            var btnCarga = "<a href='#' title='Cargar Series' class='addSeries' data-banco='"+row.banco+"' data-cve='"+row.cve+"' data-producto='"+row.producto+"' data-tipo='"+row.tipoid+"' data-id='"+data+"' data-qty='"+row.cantidad+"' ><i class='fas fa-box-open fa-2x' style='color:#db4e44'></i></a> ";
+                        }
+                        else
+                        {
+                            var btnCarga = "<a href='#' title='Cargar Series' class='addSeries' data-banco='"+row.banco+"' data-cve='"+row.cve+"' data-producto='"+row.producto+"' data-tipo='"+row.tipoid+"' data-id='"+data+"' data-qty='"+row.cantidad+"' ><i class='fas fa-box-open fa-2x' style='color:#187CD0'></i></a> ";
+                        }
 
                         if(row.tipoid == '3') 
                         {
@@ -587,6 +604,7 @@
             
             $("#insumo_").val(data.insumo);
             $("#serie_").val(data.no_serie);
+            $("#guia_caja").val(data.guia);
             $("#id_").val(data.id);
             
             if (data.insumo == null) 
@@ -621,7 +639,9 @@
             $("#iBanco").val(banco);
             $("#sPend").html(totalSeries);
             $("#peticionDetalleId").val(id);
+
             getSeriesPeticion(tplSeries,id);
+
             $("#agregarSeries").modal({show: true,backdrop: false,keyboard: false});
 
         })
@@ -674,7 +694,7 @@
 	    })
 
         $(document).on('keypress',function(e) {
-            if(e.which == 13) {
+            if(e.which == 14) {
                 validarSerie( $("#iSerie").val(),tplSeries )
             }
         });
@@ -804,12 +824,12 @@
                 //console.log(cajaNum);
 
                 //validar caja seleccionada
-                if ($("#no_caja").val() == "0") 
+                if ($("#no_caja").val() == "0" || $("#caja_guia").val() == "") 
                 {
                     Swal.fire({
                         icon: 'error',
                         title: 'Aviso',
-                        text: 'Favor de elegir caja.'
+                        text: 'Favor de elegir caja e ingresar guia.'
 
                     });
                 }else{
@@ -849,6 +869,7 @@
         })
 
         $("#btnCambiarCaja").on("click", function(){
+            var guiac = $("#guia_caja").val();
             var cajaD = $("#caja_").val();
             var serieD = $("#serie_").val();
             var id = $("#id_").val();
@@ -865,7 +886,7 @@
                 $.ajax({
                     type: 'POST',
                     url: 'modelos/almacen_db.php',
-                    data: 'module=guardarCajaCambio&caja=' + cajaD + '&serie=' + serieD + '&id=' +id,
+                    data: 'module=guardarCajaCambio&caja=' + cajaD + '&serie=' + serieD + '&id=' + id + '&guia=' + guiac,
                     cache: false,
                     success: function(data){
                         Swal.fire({
@@ -877,6 +898,8 @@
                         });
                         $("#editSerie").modal("hide");
                         $('#tblSeriesCaja').DataTable().ajax.reload();
+                        getGuias(idp);
+
 
                     },error: function(error){
                         var demo = error;
@@ -1018,7 +1041,7 @@
                 
 
                     $.each(info, function(index,detalle) {
-                        tbl.row.add( [ detalle.banco,detalle.NoSerie,detalle.Modelo,detalle.Producto, 1 ] );
+                        tbl.row.add( [ detalle.Banco,detalle.NoSerie,detalle.Modelo,detalle.Producto, 1 ] );
                     })
 
                     tbl.draw();  

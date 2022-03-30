@@ -4,6 +4,7 @@ include '../modelos/api_db.php';
 	$result = json_encode($_POST);
 
     $odt = trim($_POST['odt']);
+	$cve_banco = $Api->getcveBanco($odt);
 	
 	//Save odt
 	file_put_contents("json/insert_$odt.json",$result);
@@ -19,7 +20,7 @@ include '../modelos/api_db.php';
     $comentarios = $_POST['comentarios'];
     $latitud = $_POST['latitud'];
     $longitud = $_POST['longitud'];
-    $cve_banco = $_POST['cve_banco'];
+    $cve_banco = $cve_banco['cve_banco'];
     $tpv_retirado = !strlen( str_replace('-','',$_POST['tvpsalida']) ) ? null : str_replace('-','',$_POST['tvpsalida']); 
     $tvp_instalado = !strlen( str_replace('-','',$_POST['tvpentrada']) ) ? null : str_replace('-','',$_POST['tvpentrada']) ;  
 	$tvp_instalado = $tvp_instalado == '0' ? null : $tvp_instalado;
@@ -47,7 +48,7 @@ include '../modelos/api_db.php';
 	$causacambio = isset($_POST['causacambio']) ? (int) $_POST['causacambio'] : 0 ;
 	$causacambio = explode("-",$causacambio)[0]; 
 	$simComercio = $_POST['simComercio'];
-	$permisos = $Api->getCamposObligatorios($tipoServicio['tipo_servicio']);
+	$permisos = $Api->getCamposObligatorios($tipoServicio['tipo_servicio'],$cve_banco);
 
 	 
     
@@ -300,10 +301,12 @@ include '../modelos/api_db.php';
 				$Api->insert($sql,$arrayString); 
 			}
 			
-			if( $rollos_entregados > 0  && $datosODT[0]['estatus'] == '20' ) {
+			
+			if( $rollos_entregados > 0  && $datosODT[0]['estatus'] == '2' ) {
 
 				//Actualizar Rollos 
-				$invenInsumo = $Api->getInsumos('ROLS',$tecnico);
+				$invenInsumo = $Api->getInsumos('ROLS',$tecnico,$cve_banco);
+				file_put_contents("rollos.json",$invenInsumo." ".'ROLS'.$tecnico." ".$cve_banco);
 				$InsumoActual = max((int) $invenInsumo['cantidad'] - (int) $rollos_entregados,0);
 
 				$queryRollos = " UPDATE inventario_tecnico SET cantidad=?,fecha_modificacion=? WHERE id =?";
