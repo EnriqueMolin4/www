@@ -65,6 +65,7 @@ class Usuarios implements IConnections {
 		$start = $params['start'];
 		$length = $params['length'];
 		$catalogo = $params['catalogo'];
+		$banco = $params['f_banco'];
 		
 
         $orderField =  $params['columns'][$params['order'][0]['column']]['data'];
@@ -85,11 +86,19 @@ class Usuarios implements IConnections {
 			$filter .= " LIMIT  $start , $length";
 		}
 
+
+		
+
 		if( !empty($params['search']['value'])  &&  $total) {   
-			$where .=" WHERE ";
-			$where .=" ( nombre LIKE '".$params['search']['value']."%' ) ";    
+			$where .=" AND ";
+			$where .=" ( $catalogo.nombre LIKE '".$params['search']['value']."%' ) ";    
 
 		}
+
+		if ($banco != '0') {
+			$where .= " AND $catalogo.cve_banco = $banco";
+		}
+
 
         if($catalogo == "0") {
       
@@ -98,13 +107,14 @@ class Usuarios implements IConnections {
 				$order
                 $filter ";
         } else {
-            $sql = "SELECT id,nombre,status from $catalogo
+            $sql = "SELECT $catalogo.id,$catalogo.nombre,$catalogo.status, bancos.banco from $catalogo LEFT JOIN bancos ON bancos.cve = $catalogo.cve_banco
+            		WHERE $catalogo.nombre IS NOT NULL
             $where 
 			$order
             $filter ";
         }
 
-	
+		//self::$logger->error($sql);
 		try {
 			$stmt = self::$connection->prepare ($sql);
 			$stmt->execute();
@@ -165,18 +175,20 @@ class Usuarios implements IConnections {
         }
 	}
 
-	function searchParam($nombreP) {
-		$params = $_REQUEST;
+	function searchParam($nombre, $cve) {
+		//$params = $_REQUEST;
 
-		$module = $params['module'];
+		//$module = $params['module'];
 		
-		$table = $params['catalogo'];
+		//$table = $params['catalogo'];
 
-		$sql = "select * from $table where nombre = ? ";
+		$sql = "select * from tipo_evidencias where nombre = ? AND cve_banco = ? ";
+
+		self::$logger->error($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );
-            $stmt->execute (array($nombreP));
+            $stmt->execute (array($nombre,$cve));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: parametros_db.php;	Method Name: searchParam();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
@@ -237,8 +249,6 @@ if($module == 'getTable') {
 
 
 
-
-
 if($module == 'getSupervisores') {
 $rows = $Usuario->getSupervisores();
 	$val = '<option value="0">Seleccionar</option>';
@@ -253,9 +263,6 @@ if($module == "buscarTecnico") {
 
 	echo json_encode($rows);
 }
-
-
-	
 
 
 if($module == 'addParametro') 
@@ -283,15 +290,8 @@ if($module == 'addParametro')
 			priority : 'danger'
 			})</script>";
 	}
-
-
-	
-
 	
 }
-
-
-
 
 
 if($module == 'parametroUpdate') {
@@ -311,6 +311,44 @@ if($module == 'parametroUpdate') {
     echo 1;
 }
 
+
+if ($module == 'grabarCatalogo') 
+{
+	$catalogo = $params['catalogo'];
+	$nombre = $params['nombre'];
+	$cve = $params['cve'];
+	$mensaje = '';
+	$valido = 0;
+
+	$existe = $Usuario->searchParam($nombre, $cve);
+
+	//print_r($existe);
+
+	if ($existe) 
+	{
+		$mensaje = "El registro ya existe";
+		$valido++;
+	}
+	else
+	{
+		$prepareStatement = "INSERT INTO $catalogo (`nombre`,`cve_banco`) VALUES (?, ?) ";
+
+		$arrayString = array($nombre, $cve);
+
+		$Usuario->insert($prepareStatement, $arrayString);
+
+		$mensaje = "Registro agregado con éxito";
+
+	}
+
+	echo json_encode(['existe' => $existe,'msg' => $mensaje, 'valido' => $valido]);
+
+}
+
+/*if ($module == 'grabarServicio') 
+{
+	
+}*/
 
 
 

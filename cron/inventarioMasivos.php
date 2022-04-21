@@ -16,13 +16,16 @@ if($processActive) {
 
     if($proceso) {
         echo "Buscar Proceso mas Viejo I ".$proceso['fecha_creacion']. " \n ";
-        $fecha = date ( 'Y-m-d H:m:s' );
+        $fecha = date ( 'Y-m-d H:i:s' );
         
-
-        //$eventoMasivo = new CargasMasivas();
+		    //$archivo =  '/var/www/html/cron/files/'.$proceso['archivo'];
         $archivo =  '/var/www/dev.sinttecom.net/cron/files/'.$proceso['archivo'];
-
-        $spreadsheet = IOFactory::load($archivo);
+        $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($archivo);
+        #ARCHIVOS LOCAL
+        //$archivo = '/home/webdeveloper/sitios/sinttecom/cron/files/'.$proceso['archivo'];
+		    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+		    $reader->setInputEncoding('CP1252'); 
+        $spreadsheet = $reader->load($archivo);
         $hojaDeProductos= $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
         
         
@@ -61,7 +64,7 @@ if($processActive) {
                 $Tipo =  $hojaDeProductos[$indiceFila]['A'] ;
                 $Linea = $hojaDeProductos[$indiceFila]['C'];
                 $Modelo = $hojaDeProductos[$indiceFila]['D'];
-				$Aplicativo = $hojaDeProductos[$indiceFila]['E'];
+				        $Aplicativo = $hojaDeProductos[$indiceFila]['E'];
                 $Conectividad = $hojaDeProductos[$indiceFila]['F'];
                 $Estatus = $hojaDeProductos[$indiceFila]['G'];
                 $Anaquel = $hojaDeProductos[$indiceFila]['H'];
@@ -74,15 +77,18 @@ if($processActive) {
 				if($Tipo == '1') {
 					$ModeloId =  $Procesos->getModeloxNombre($Modelo,$CveBanco);
 					$AplicativoId = $Procesos->getAplicativoxNombre($Aplicativo,$CveBanco);
+					$ConectividadId = $Procesos->getConectividadxNombre($Conectividad,$CveBanco);
 				} else if ( $Tipo == '2' ) {
 					
 					$ModeloId =  $Procesos->getCarriersxNombre($Modelo,$CveBanco);
+					$ConectividadId = 0;
 				} else {
 					$ModeloId= 0;
+					$ConectividadId = 0;
 				}
 				
                 
-                $ConectividadId = $Procesos->getConectividadxNombre($Conectividad,$CveBanco);
+                
                 $EstatusId = $Procesos->getEstatusxNombre($Estatus);
                 $AlmacenId = $Procesos->getAlmacenxNombre($Almacen);
 				
@@ -93,6 +99,8 @@ if($processActive) {
 					$existeElavon = 1;
 				}
 				
+				 
+                
                 if($existeElavon) {
 
 

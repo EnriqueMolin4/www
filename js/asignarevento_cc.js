@@ -1,13 +1,14 @@
 var infoAjax = 0;
 var tableAsignaciones;
 $(document).ready(function() {
-        ResetLeftMenuClass("submenueventos", "ulsubmenueventos", "asignacioneventoslink")
+        ResetLeftMenuClass("submenueventos", "ulsubmenueventos", "cierreasignlink")
 		 $.datetimepicker.setLocale('es');
         getTipoEvento();
         getSupervisores();
         getEstados();
+        getAgentes();
+        getEstatus();
         getBancos();
-        
         //getTecnicos();
         $("#fechaVen_inicio").datetimepicker({
             timepicker:false,
@@ -20,10 +21,10 @@ $(document).ready(function() {
         });
 
         $(".searchEvento").on('change', function() {
-            $('#assignaciones').DataTable().ajax.reload();
+            $('#tblAsignaciones').DataTable().ajax.reload();
         })
 
-        tableAsignaciones = $('#assignaciones').DataTable({
+        tableAsignaciones = $('#tblAsignaciones').DataTable({
             "responsive": true,
             language: {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
@@ -37,8 +38,8 @@ $(document).ready(function() {
                 url: 'modelos/assignacioneventos_db.php',
                 type: 'POST',
                 data: function( d ) {
-                    d.module = 'getTable',
-                    d.estatusSearch = $("#estatus_busqueda").val(),
+                    d.module = 'getTableCierre',
+                    d.estatusSearch = $("#estatus_servicio").val(),
                     d.tipoevento = $("#tipo_evento").val(),
                     d.fechaVen_inicio = $("#fechaVen_inicio").val(),
                     d.fechaVen_fin = $("#fechaVen_fin").val(),
@@ -53,9 +54,9 @@ $(document).ready(function() {
                 { data: 'afiliacion' },
                 { data: 'NombreComercio' },
                 { data: 'estatus' },
-                { data: 'TipoComercio' },
+                { data: 'nombreEstatusServicio'},
                 { data: 'fecha_vencimiento'},
-                { data: 'cp' },
+                { data: 'totalImg' },
                 { data: 'comercio_id' },
                 { data: 'id'}
             ],
@@ -80,16 +81,16 @@ $(document).ready(function() {
             ]
         });
 
-        $("#btnAsignarTecnico").on('click',function(){ 
+        $("#btnAsignarAgente").on('click',function(){ 
             var alerta = '';
-            var dtAsig = $("#assignaciones").DataTable();
+            var dtAsig = $("#tblAsignaciones").DataTable();
             var data = dtAsig.rows().data();
             var total = 0;
             var error = 0;
             var datos=[];
 
-            if( $("#tecnico_asig").val() == '0') {
-                alerta += "Favor de Seleccionar un Tecnico \n";
+            if( $("#ajentes_cc").val() == '0') {
+                alerta += "Favor de seleccionar un usuario \n";
                 error++;
             } 
 
@@ -100,29 +101,30 @@ $(document).ready(function() {
                     var valueToPush = new Object();
 					valueToPush["ID"] = value.id;
                     valueToPush["ODT"] = value.odt;
-                    valueToPush["Tecnico"] = $("#tecnico_asig").val();
+                    valueToPush["Agente"] = $("#ajentes_cc").val();
                     datos.push(valueToPush);
+                    console.log(datos);
                 }
             })
 
             if(total == 0) {
-                alerta += "Favor de Seleccionar Eventos para asignar \n";
+                alerta += "Favor de seleccionar eventos para asignar \n";
                 error++;
             } 
             
             if(error == 0) {
-                alerta = "Se Asignaron correctamente los Eventos \n";
+                alerta = "Se asignaron correctamente los eventos \n";
                 $.ajax({
                     type: 'POST',
                     url: 'modelos/assignacioneventos_db.php', // call your php file
-                    data: 'module=AsignarTecnicos&odt='+JSON.stringify( datos ),
+                    data: 'module=AsignarAgentes&odt='+JSON.stringify( datos ),
                     cache: false,
                     success: function(data){
                         if(data > 0 ) {
                             tableAsignaciones.ajax.reload();
                             alert(alerta)
                         } else {
-                            alert ("Fallo el cambio de Estatus" );
+                            alert ("Falló el cambio de estatus" );
                         }
                                             
                     },
@@ -142,9 +144,9 @@ $(document).ready(function() {
             
         })
 
-        $("#supervisores").on("change", function() {
+        /*$("#supervisores").on("change", function() {
             getTecnicos();
-        })
+        })*/
 
         $(document).on("click",".btnInfo", function() {
             var id = $(this).attr('data');
@@ -451,8 +453,6 @@ function getTipoEvento() {
     });
 }
 
-
-
 function getTecnicos() {
 
     var supervisores = $("#supervisores").val();
@@ -490,26 +490,53 @@ function getSupervisores() {
     });
 }
 
-function getBancos() {
 
+function getAgentes() {
     $.ajax({
         type: 'GET',
-        url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getBancos',
+        url: 'modelos/assignacioneventos_db.php',
+        data: 'module=getAgentes',
         cache: true,
-        success: function(data) {
+        success: function(data){
             console.log(data);
-
-            $("#cve_banco").html(data);
-
-
+        $("#ajentes_cc").html(data);
         },
-        error: function(error) {
+        error: function(error){
             var demo = error;
         }
     });
 }
 
+function getEstatus(){
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php',
+        data: 'module=getestatusevento',
+        cache: true,
+        success: function(data){
+            console.log(data);
+        $("#estatus_servicio").html(data);
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
+function getBancos(){
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php',
+        data: 'module=getBancos',
+        cache: true,
+        success: function(data){
+            $("#cve_banco").html(data);
+        },
+        error: function(error){
+            var demo = error;
+        }
+    })
+}
 
 function eventoAsignado(fecha) {
     if(fecha.length > 0) {

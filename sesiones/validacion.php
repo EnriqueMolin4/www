@@ -10,7 +10,7 @@ if( !empty( $_POST['user'] ) and !empty( $_POST['pass'] ) ) {
 
 	$pass = sha1($_POST['pass']);
 
-	$qry = "SELECT cuentas.id,cuentas.tipo_user,cuentas.plaza,cuentas.almacen, detalle_usuarios.nombre, detalle_usuarios.apellidos ,cuentas.cve,cuentas.territorial
+	$qry = "SELECT cuentas.id,cuentas.tipo_user,cuentas.validacion,cuentas.plaza,cuentas.almacen, detalle_usuarios.nombre, detalle_usuarios.apellidos ,cuentas.cve,cuentas.territorial
 			from `cuentas`,detalle_usuarios where cuentas.id = detalle_usuarios.cuenta_id AND correo = '$user' and pass = '$pass'";
 
 	$acces = $conexion->query($qry);
@@ -54,6 +54,7 @@ if( !empty( $_POST['user'] ) and !empty( $_POST['pass'] ) ) {
 		$_SESSION['cve_user'] = $dato_acces['cve'];
 		$_SESSION['territorial'] = $dato_acces['territorial'];
 		$_SESSION['Modules'] = $module;
+		$_SESSION['validacion'] = $dato_acces['validacion'];
 		$_SESSION['plaza'] = $dato_acces['plaza'];
 		$_SESSION['almacen'] = $dato_acces['almacen'];
 		$urlRedirect = ''; //'sinttecomprod/index.php';
@@ -91,6 +92,7 @@ if( !empty( $_POST['user'] ) and !empty( $_POST['pass'] ) ) {
 
 				$_SESSION['tipo_user'] = 'callcenter';
 				$_SESSION['user_role'] = 'Call Center';
+				//$_SESSION['validacion'] = $dato_acces['validacion'];
 
 			//header('Location: ../index.php');
 

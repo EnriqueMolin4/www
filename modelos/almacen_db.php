@@ -226,7 +226,7 @@ class Almacen implements IConnections {
 				inv.fecha_entrada,
 				inv.id_ubicacion,
 				CONCAT(du.nombre,' ',du.apellidos) tecnco,
-				cm.comercio,
+				CONCAT(cm.afiliacion,' : ',cm.comercio) comercio,
 				CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad END cantidad,
 				b.banco, 
 				inv.cve_banco
@@ -243,6 +243,7 @@ class Almacen implements IConnections {
 				LEFT JOIN comercios cm ON cm.id = inv.id_ubicacion
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
 				LEFT JOIN bancos b ON inv.cve_banco = b.cve
+				
 				-- LEFT JOIN comercios c ON c.afiliacion = inv.id_ubicacion
 				WHERE inv.no_serie is not null
 				$where
@@ -1827,7 +1828,7 @@ class Almacen implements IConnections {
 
 
 		$sql = "  SELECT CONCAT(du.nombre,' ',du.apellidos) supervisor, p.IsActive,
-					CONCAT(du2.nombre,' ',du2.apellidos) creadopor,p.fecha_creacion,supervisor_id
+					CONCAT(du2.nombre,' ',du2.apellidos) creadopor,p.fecha_creacion,supervisor_id, p.no_guia
 					FROM peticiones p,
 					detalle_usuarios du, 
 					detalle_usuarios du2 
@@ -2912,7 +2913,7 @@ if($module == 'updateInvProd')
 								`cantidad` = ?, 
 								`modificado_por` = ?,
 								`fecha_edicion` = ?
-							WHERE `no_serie` = ? ";
+							WHERE `no_serie` = ? AND `cve_banco` = ?";
 
 		$arrayString = array (
 				$params['tipo'],
@@ -2927,7 +2928,8 @@ if($module == 'updateInvProd')
 				$params['cantidad'],
 				$user,
 				$fecha,
-				$params['noserie']
+				$params['noserie'],
+				$params['banco']
 		);
 		//print_r($arrayString);
 		$id = $Almacen->insert($prepareStatement,$arrayString);
@@ -4653,16 +4655,15 @@ if($module == 'InventarioElavon')
 						$fecha =date ( 'Y-m-d H:i:s' );
 						
 						$sql = "INSERT INTO elavon_universo (id,serie,fabricante,estatus,estatus_modelo,tipo,cve_banco,modificado_por) 
-						VALUES(NULL,'$No_serie','$fab','$est',$Estatus_Modelo,$Tipo,$cveBanco,$user) 
+						VALUES(NULL,'$No_serie','$fab','$est',$Estatus_Modelo,$Tipo,'$cveBanco',$user) 
 						ON DUPLICATE KEY     
 						UPDATE serie =	'$No_serie'
 						,fabricante = '$fab'
 						,estatus = '$est'
 						,estatus_modelo = $Estatus_Modelo
 						,tipo =	$Tipo
-						,cve_banco = $cveBanco
-						,modificado_por = $user
-						";
+						,cve_banco = '$cveBanco'
+						,modificado_por = $user";
 
 						$id = $Almacen->insert($sql,array());
 
@@ -4865,20 +4866,19 @@ if ($module == 'InventarioEditar')
 	for ($indiceFila = 3; $indiceFila <= $numeroMayorDeFila; $indiceFila++)
 	{
 		$Tipo = $hojaDeProductos->getCellByColumnAndRow(1, $indiceFila);
-
-		$cve_banco = $hojaDeProductos->getCellByColumnAndRow(2, $indiceFila);
 		
-		$No_serie = $hojaDeProductos->getCellByColumnAndRow(3, $indiceFila);
+		$No_serie = $hojaDeProductos->getCellByColumnAndRow(2, $indiceFila);
 		$No_serie = trim(utf8_decode($No_serie->getValue())," \t\n\r\0\x0B\xA0");
 		$No_serie = preg_replace( '/[^a-z0-9 ]/i', '', $No_serie);
 		
 
-		$Modelo = $hojaDeProductos->getCellByColumnAndRow(4, $indiceFila);
-		$Aplicativo = $hojaDeProductos->getCellByColumnAndRow(5, $indiceFila);
-		$Conectividad = $hojaDeProductos->getCellByColumnAndRow(6, $indiceFila);
-		$Estatus = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
-		$Estatus_ubicacion = $hojaDeProductos->getCellByColumnAndRow(8, $indiceFila);
-		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(9, $indiceFila);
+		$Modelo = $hojaDeProductos->getCellByColumnAndRow(3, $indiceFila);
+		$Aplicativo = $hojaDeProductos->getCellByColumnAndRow(4, $indiceFila);
+		$Conectividad = $hojaDeProductos->getCellByColumnAndRow(5, $indiceFila);
+		$Estatus = $hojaDeProductos->getCellByColumnAndRow(6, $indiceFila);
+		$Estatus_ubicacion = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
+		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(8, $indiceFila);
+		$cve_banco = $hojaDeProductos->getCellByColumnAndRow(9, $indiceFila);
 		
 		//$ModeloId = $Almacen->getModeloId($Modelo->getValue());
 		//$ConectividadId = $Almacen->getConectividadId($Conectividad->getValue());
@@ -4891,6 +4891,8 @@ if ($module == 'InventarioEditar')
 		$Estatus_ubicacionId = $Almacen->getEstatusInvId($Estatus_ubicacion->getValue());
 		
 		$ubicacionId = $Almacen->getAlmacenId($ubicacion->getValue());
+
+		
 	
 		
 		$valido = 0;
@@ -4956,14 +4958,14 @@ if ($module == 'InventarioEditar')
 				
 				$arrayString = array (
 				$TipoId,
-				$banco,
 				$No_serie,
 				$ModeloId,
 				$AplicativoId,
 				$ConectividadId,
 				$EstatusId,
 				$Estatus_ubicacionId,
-				$ubicacionId
+				$ubicacionId,
+				$banco
 				);
 				
 				array_push($allInventarios, $arrayString);
@@ -5000,35 +5002,35 @@ if ($module == 'UpdateInventario')
 		$fecha
 	);
 
-	if ($info[1]) {
-		$campoUpdate .= " ,cve_banco=? ";
-		array_push($arrayString,$info[1]);
+	if ($info[2]) {
+		$campoUpdate .= " ,modelo=? ";
+		array_push($arrayString,$info[2]);
 	}
 
 	 if($info[3]) {
-		 $campoUpdate .= " ,modelo=? ";
+		 $campoUpdate .= " ,aplicativo=? ";
 		 array_push($arrayString,$info[3]);
 	 }
 
 	 if($info[4]) {
-		$campoUpdate .= " ,aplicativo=? ";
+		$campoUpdate .= " ,conectividad=? ";
 		array_push($arrayString,$info[4]);
 	 }
 
 	 if($info[5]) {
-		$campoUpdate .= " ,conectividad=? ";
+		$campoUpdate .= " ,estatus=? ";
 		array_push($arrayString,$info[5]);
 	 }
 	 if($info[6]) {
-		$campoUpdate .= " ,estatus=? ";
+		$campoUpdate .= " ,estatus_inventario=? ";
 		array_push($arrayString,$info[6]);
 	 }
 	 if($info[7]) {
-		$campoUpdate .= " ,estatus_inventario=? ";
+		$campoUpdate .= " ,ubicacion=? ";
 		array_push($arrayString,$info[7]);
 	 }
 	 if($info[8]) {
-		$campoUpdate .= " ,ubicacion=? ";
+		$campoUpdate .= " ,cve_banco=? ";
 		array_push($arrayString,$info[8]);
 	 }
 
@@ -5048,11 +5050,11 @@ if ($module == 'UpdateInventario')
 	
 	if ($id < 0)
 	{
-		echo " No se $msg Inventario el numero de serie $info[2] de tipo $info[0]  ";
+		echo " No se $msg Inventario el numero de serie $info[1] de tipo $info[0]  ";
 	}
 	else
 	{
-		echo " Se $msg Inventario el numero de serie $info[2] de tipo $info[0]  ";
+		echo " Se $msg Inventario el numero de serie $info[1] de tipo $info[0]  ";
 	}
 
 

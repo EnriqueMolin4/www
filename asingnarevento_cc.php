@@ -15,8 +15,8 @@
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
                 <div class="container-fluid p-5">
-                <h3>Asignación de Eventos</h3>
-                  <div class="row">
+                <h3>Asignación de Eventos Call Center</h3>
+                  <!-- <div class="row">
                     <div class="col-12"> 
                          
                                 <label for="excelMasivo" class="col-form-label-sm">Asignacion Masiva Eventos</label> 
@@ -24,7 +24,7 @@
                                 <button class="btn btn-success btn-sm" id="btnCargarExcelAsignaciones">Cargar</button>     
                          
                     </div>
-                  </div>
+                  </div> -->
                 <h5>Busqueda</h5>
                 <div class="row">
                     <div class="col-md-3">
@@ -42,35 +42,14 @@
                                 <option value="0" selected>Seleccionar</option>
                         </select>
                     </div>
-
                     <div class="col-md-3">
-                        <label for="cve_banco" class="col-form-label-sm">Banco</label>
-                        <select name="cve_banco" id="cve_banco" class="form-control form-control-sm refreshDataTable">
-                            <option value="0" selected>Seleccionar</option>
-                        </select>
-                    </div>
-                    
-                </div><br>
-                 
-                
-                    <div class="row">
-						 <div class="col-sm">
-							<label for="supervisores" class="col-form-label-sm">Supervisores</label>
-							<select id="supervisores" name="supervisores" class="form-control refreshDataTable">
-									<option value="0" selected>Seleccionar</option>
-							</select>
-						</div>
-                        <div class="col-sm">
-							<label for="tecnico_asig" class="col-form-label-sm">Tecnico</label>
-                            <select id="tecnico_asig" name="tecnico_asig" class="form-control mr-1">
-                                    <option value="0" selected>Seleccionar Tecnico</option>
+                            <label for="supervisores" class="col-form-label-sm">Supervisores</label>
+                            <select id="supervisores" name="supervisores" class="form-control form-control-sm refreshDataTable">
+                                    <option value="0" selected>Seleccionar</option>
                             </select>
-                           
-                        </div>
-                        <div class="col-sm mt-4 mb-3">
-                            <a href="#" class="btn btn-success" id="btnAsignarTecnico" name="btnAsignarTecnico">Asignar Evento (s)</a>
-                        </div>
                     </div>
+                                        
+                </div><br>
 
                     <div class="row">
                     <div class="col-md-3">
@@ -85,20 +64,56 @@
                             <option value="0" selected></option>
                         </select>
                     </div>
-                </div><br>
+                    <div class="col-md-3">
+                        <label for="estatus_servicio" class="col-form-label-sm">Estatus Servicio</label>
+                        <select name="estatus_servicio" id="estatus_servicio" class="form-control form-control-sm refreshDataTable">
+                            <option value="0" selected></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="cve_banco" class="col-form-label-sm">Banco</label>
+                            <select name="cve_banco" id="cve_banco" class="form-control form-control-sm refreshDataTable">
+                                <option value="0" selected>Seleccionar</option>
+                            </select>
+                        
+                    </div>
+                </div>
+                 <br><br>
+                
+                     <div class="row" style="border-style: solid; border-width: 1px; border-color: #a8a8a8;">
+						 
+                        <div class="col-md-3">
+                            <label for="agentes_cc" class="col-form-label-sm">Agentes Call Center</label>
+                            <select id="ajentes_cc" name="agentes_cc"  class="form-control form-control-sm">
+                                <option value="0" selected>Seleccionar</option>
+                            </select>
+                        </div><!--
+                        <div class="col-sm">
+							<label for="tecnico_asig" class="col-form-label-sm">Tecnico</label>
+                            <select id="tecnico_asig" name="tecnico_asig" class="form-control mr-1">
+                                    <option value="0" selected>Seleccionar Tecnico</option>
+                            </select>
+                           
+                        </div>-->
+                        <div class="col-md mt-4 mb-3">
+                            <a href="#" class="btn btn-success" id="btnAsignarAgente" name="btnAsignarAgente">Asignar Evento (s)</a>
+                        </div> 
+                    </div>
+
+                    <br>
                 
                 <div class="table-responsive">
-                    <table id="assignaciones"  class="table table-responsive table-md table-bordered " width="100%">
+                    <table id="tblAsignaciones"  class="table table-responsive table-md table-bordered " width="100%">
                         <thead>
                             <tr>
-                                <th>Banco</th>
-                                <th>ODT</th>
+                                <th width="10%">Banco</th>
+                                <th width="20%">ODT</th>
                                 <th width="10%">Afiliacion</th>
                                 <th width="20%">Comercio</th>
                                 <th width="10%">Estatus</th>
-                                <th>Tipo Comercio</th>
+                                <th width="10%">Estatus Servicio</th>
                                 <th width ="15%">Fecha Vencimiento</th>
-                                <th>Codigo Postal</th>
+                                <th>Imagenes</th>
                                 <th>Detalle</th>
                                 <th>Asignar</th>
                                 
@@ -270,7 +285,7 @@
     <script type="text/javascript" src="js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
     <script src="js/main.js"></script>
-    <script type="text/javascript" src="js/assignacioneventos.js"></script>  
+    <script type="text/javascript" src="js/asignarevento_cc.js"></script>  
 </body>
 
 </html>

@@ -476,19 +476,7 @@
    <script src="https://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.7&key=AIzaSyAQCiiA5ZZ1RoIxJquirYDaLOwRbZAQDzA&callback=initMap" async defer></script>
    <script>
       $(document).ready(function() {
-          getTipoEvento();
-          getEstatusEvento();
-          getEstatusServicio($("#cve_banco").val());
-          getRechazos();
-          getSubRechazos();
-          getCancelado();
-          getProductos();
-          getAplicativo();
-          getVersion();
-          getModelos();
-          getConectividad();
-          getCarrier();
-          getCausasCambios();
+          
 
           //GET info from URL
           const queryString = window.location.search;
@@ -523,7 +511,22 @@
               url : 'modelos/eventos_db.php',
               data: 'module=getOdtById&id='+ id,
           }).done(function(result) {
-              $("#odt").val(result);
+			  result = JSON.parse(result);
+              $("#odt").val(result.odt);
+			  $("#cve_banco").val(result.cve_banco);
+			  getTipoEvento();
+			  getEstatusEvento();
+			  getEstatusServicio(result.cve_banco);
+			  getRechazos();
+			  getSubRechazos();
+			  getCancelado();
+			  getProductos(result.cve_banco);
+			  getAplicativo(result.cve_banco);
+			  getVersion(result.cve_banco);
+			  getModelos(result.cve_banco);
+			  getConectividad(result.cve_banco);
+			  getCarrier();
+			  getCausasCambios();
           });
 
           $("#btnEvidencias").on("click",function() {
@@ -829,9 +832,10 @@
                                           $("#rollos_entregados").val(element.rollos_entregados);
                                           $("#sim_instalado").val(element.sim_instalado);
                                           $("#sim_retirado").val(element.sim_retirado);
-                                          $("#estatus_servicio").val(element.estatus_servicio);
+                                          //$("#estatus_servicio").val(element.estatus_servicio);
+										  $("#estatus_servicio option:contains("+element.nombreStatus+")").attr('selected', true);
 										  $("#cve_banco").val(element.cve_banco);
-											getEstatusServicio(element.cve_banco);
+											
                                            //Informacion Faltante
                                           $("#faltaSerie").prop('checked',parseInt(element.faltaserie));
                                           $("#faltaEvidencia").prop('checked',parseInt(element.faltaevidencia))  ;
@@ -1197,7 +1201,7 @@
 					data: dnd,
 					cache: false,
 					success: function(data){    
-							if($("#cve_banco") == '037') {
+							if($("#cve_banco").val() == '037') {
 								Swal.fire({
 									title: 'Cierre de Eventos ',
 									text: "Cerrado Existosamente Deseas<br> Enviar el Evento al Banco?",
@@ -1715,6 +1719,8 @@
                   script = script.replace("#CAJA#",$("#idcaja").val() ) 
                   script = script.replace("#FT#",$("#folio_telecarga").val() ) 
                   script = script.replace("#AMEX#",$("#tieneamex").val() )
+				  script = script.replace("#TECNICO#",$("#tecnico").val() )
+				  script = script.replace("#COMERCIO#",$("#comercio").val() )
                   if($("#tieneamex").val() == 'SI') {
                       script = script.replace("#AFAMEX#",$("#afiliacion_amex").val() )
                       script = script.replace("#AMEXID#",$("#idamex").val() )
@@ -1893,12 +1899,12 @@
 
       }
 
-      function getProductos() {
+      function getProductos(cve_banco) {
         
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=getProductos',
+              data: 'module=getProductos&cve_banco='+cve_banco,
               cache: true,
               success: function(data){
                   console.log(data);
@@ -2004,12 +2010,12 @@
           });
       }
 
-      function getVersion() {
+      function getVersion(cve_banco) {
 
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=getVersion',
+              data: 'module=getVersion&cve_banco='+cve_banco,
               cache: true,
               success: function(data){
                   console.log(data);
@@ -2025,12 +2031,12 @@
           });
       }
 
-      function getAplicativo() {
+      function getAplicativo(cve_banco) {
 
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=getAplicativo',
+              data: 'module=getAplicativo&cve_banco='+cve_banco,
               cache: true,
               success: function(data){
                   console.log(data);
@@ -2046,12 +2052,12 @@
           });
       }
 
-      function getModelos() {
+      function getModelos(cve_banco) {
 
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=getListaModelos',
+              data: 'module=getListaModelos&cve_banco='+cve_banco,
               cache: true,
               success: function(data){
                   console.log(data);
@@ -2067,12 +2073,12 @@
           });
       }
 
-      function getConectividad() {
+      function getConectividad(cve_banco) {
 
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=getListaConectividad',
+              data: 'module=getListaConectividad&cve_banco='+cve_banco,
               cache: true,
               success: function(data){
                   console.log(data);

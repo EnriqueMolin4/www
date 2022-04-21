@@ -48,6 +48,7 @@
                         <label for="tipo_estatus" class="col-form-label-sm">Estatus</label>
                         <select id="tipo_estatus" name="tipo_estatus" class="form-control form-control-sm searchInventario">
                             <option value="0" selected>Seleccionar</option>
+                            <option value="PERTENECE A HSBC">PERTENECE A HSBC</option>
                             <option value="PERTENECE A ELAVON">PERTENECE A ELAVON</option>
                             <option value="DESTRUIDA ¡NO INSTALAR!">DESTRUIDA ¡NO INSTALAR!</option>
                             <option value="QUEBRANTADA ¡NO INSTALAR!">QUEBRANTADA ¡NO INSTALAR!</option>

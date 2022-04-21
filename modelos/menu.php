@@ -155,7 +155,7 @@
                              if ( searchMenu($_SESSION['Modules'],'url','inventarioelavon')) { 
                             ?>  
                                     <li id="inventarioelavonlink">
-                                        <a href="inventarioelavon.php">Inventario Elavon Universo</a>
+                                        <a href="inventarioelavon.php">Inventario TPV</a>
                                     </li> 
                             <?php
                              }

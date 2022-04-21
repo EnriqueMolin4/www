@@ -275,13 +275,13 @@
                 })
 
                 $("#btnRegistrar").on('click', function() {
-                    alert("Grabar")
+                    alert("Grabar");
                     $("#showEvento").modal("hide")
                 })
-
+/*
                 $("#territorios").on("change", function() {
                     territorios.ajax.reload();
-                })
+                })*/
 
                 $("#btnNewPlaza").on('click', function() {
 

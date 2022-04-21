@@ -107,13 +107,16 @@ class Assignacion implements IConnections {
 		$inicio = $params['fechaVen_inicio'];
 		$fin = $params['fechaVen_fin'];
 
+		if ($params['banco'] !=0) {
+			$where .= " AND eventos.cve_banco = ".$params['banco'];
+		}
+
 				
 		if($params['tipoevento'] !=0 ) {
 			$where .= " AND eventos.servicio=".$params['tipoevento'];
 		}
 
-		
-
+	
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
 		}
@@ -156,6 +159,124 @@ class Assignacion implements IConnections {
 			self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
+
+	function getTableEventosCierre($params,$total) {
+
+		$start = $params['start'];
+		$length = $params['length'];
+		$typeUser = $_SESSION['tipo_user'];
+
+		$userId = $params['supervisores'];
+		
+
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
+
+		$filter = "";
+		$param = "";
+		$where = "";
+
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}
+		
+		if($_SESSION['tipo_user'] != 'admin' || $_SESSION['tipo_user'] != 'supervisor' ) 
+		{
+			if($params['supervisores'] != '0') 
+			{
+				$where .= " AND territorial.territorio_id IN ('$userId') " ;
+
+			} 
+			else 
+			{
+				$where .= " AND territorial.territorio_id = -1 " ;
+			}
+		}
+
+		$inicio = $params['fechaVen_inicio'];
+		$fin = $params['fechaVen_fin'];
+
+		if ( $params['banco'] != 0) {
+			$where .= " AND eventos.cve_banco = ".$params['banco'];
+		}
+
+		if ($params['estatusSearch'] != 0 ) 
+		{
+			$where .= " AND eventos.estatus =".$params['estatusSearch'];
+		}
+		else 
+		{
+			$where .= " AND eventos.estatus IN (1,2,10,21,16)";
+		}
+
+		/*if ($_SESSION['tipo_user'] == 17 || $_SESSION['tipo_user'] == 7) {
+			$where .= " AND eventos.estatus IN (1,2,10,21,16) ";
+		}
+		else
+		{
+			$where .= "AND eventos.estatus IN(1,16)";
+		}*/
+
+				
+		if($params['tipoevento'] !=0 ) {
+			$where .= " AND eventos.servicio=".$params['tipoevento'];
+		}
+
+		
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( !empty($params['search']['value'])  &&  $total) {   
+			$where .=" AND ";
+			$where .=" (eventos.odt LIKE '".$params['search']['value']."%' ";    
+			$where .=" OR eventos.afiliacion LIKE '".$params['search']['value']."%' ";
+			$where .=" OR  eventos.receptor_servicio LIKE '".$params['search']['value']."%')";
+
+		}
+
+		 if ($params['ciudade'] != '0' ) 
+		{
+			$where .= " AND territorial.ciudad LIKE '".$params['ciudade']."%'";
+			
+		}
+
+		$sql = "SELECT bancos.banco,eventos.id,eventos.odt,eventos.afiliacion,eventos.fecha_vencimiento,tipo_estatus.nombre estatus,eventos.comercio comercio_id,eventos.estado,
+				 territorial.NombreComercio,
+				CASE WHEN territorial.tipo_comercio IS NULL THEN 'NA' ELSE getNameById(territorial.tipo_comercio,'TipoComercio') END TipoComercio,
+				IFNULL(img.totalImg,0) totalImg,
+				territorial.cp, territorial.ciudad,
+				CASE WHEN ee.nombre is null then GetNameById(eventos.estatus_servicio,'EstatusServicio') ELSE ee.nombre END nombreEstatusServicio
+				from eventos 
+				LEFT JOIN tipo_estatus ON eventos.estatus = tipo_estatus.id
+				LEFT JOIN bancos ON bancos.cve = eventos.cve_banco
+				LEFT JOIN view_total_odt_img img ON img.odt = eventos.odt
+				LEFT JOIN estatus_equivalencias ee ON ee.cve_banco = eventos.cve_banco AND ee.estatus_id = eventos.estatus AND ee.estatus_servicio = eventos.estatus_servicio
+				LEFT JOIN (  select cp_territorios.territorio_id,cp_territorios.cp,comercios.ciudad, comercios.comercio NombreComercio,comercios.tipo_comercio,comercios.afiliacion FROM cp_territorios,comercios,supervisor_territorio
+				WHERE supervisor_territorio.territorio_id = cp_territorios.territorio_id
+				AND comercios.cp = cp_territorios.cp 
+				GROUP BY cp_territorios.territorio_id, cp_territorios.cp,comercios.ciudad,comercios.comercio, comercios.tipo_comercio, comercios.afiliacion) territorial ON territorial.afiliacion = eventos.afiliacion
+				WHERE date(eventos.fecha_alta) BETWEEN '$inicio' AND '$fin' AND eventos.agente_cierre IS NULL 
+				$where
+				ORDER BY CASE eventos.estatus
+				WHEN '10' THEN 1
+				WHEN '21' THEN 2
+				WHEN '2' THEN 3
+				WHEN '1' THEN 4 ELSE 5 END
+				$filter ";
+		
+			   //self::$logger->error($sql);
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: assignacioneventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+		}
+	}
+
 
     function getEvento($id) {
 		$sql = "select eventos.id,eventos.rollos_instalar,
@@ -290,7 +411,7 @@ class Assignacion implements IConnections {
 		$where = "";
 		
 
-		if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor' ) {
+		if($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'callcenterADM') {
 			
 		} else {
 			$where .= " AND cuentas.id =  $user ";
@@ -325,7 +446,24 @@ class Assignacion implements IConnections {
         }
 	}
 
+	function getAgentes(){
 
+		$sql = "SELECT cuentas.id, detalle_usuarios.nombre, detalle_usuarios.apellidos
+				FROM cuentas
+				LEFT JOIN detalle_usuarios ON detalle_usuarios.cuenta_id = cuentas.id
+				WHERE cuentas.tipo_user = '4' AND cuentas.estatus = '1'";
+
+		//self::$logger->error ($sql);
+
+		try{
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute();
+			return $stmt->fetchAll( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ){
+			self::$logger->error("File: assignacioneventos_db.php;  Method Name: getAgentes();  Functionality: Get Agentes;    Log:" . $e->getMessage () );
+		}
+
+	}
 }
 //
 include 'DBConnection.php';
@@ -339,6 +477,15 @@ if($module == 'getTable') {
 
     $rows = $Assignacion->getTable($params,true);
     $rowsTotal = $Assignacion->getTable($params,false);
+    $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+
+	echo json_encode($data); //$val;
+}
+
+if($module == 'getTableCierre') {
+
+    $rows = $Assignacion->getTableEventosCierre($params,true);
+    $rowsTotal = $Assignacion->getTableEventosCierre($params,false);
     $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
 
 	echo json_encode($data); //$val;
@@ -472,6 +619,16 @@ if($module == 'getSupervisores') {
 	echo $options;
 }
 
+if ($module == 'getAgentes') {
+	$rows = $Assignacion->getAgentes();
+	$options = '<option value="0">Seleccionar Agente</option>';
+	foreach($rows as $row){
+		$options .= '<option value="'.$row['id'].'">'.$row['nombre'].' '.$row['apellidos'].'</option>'; 
+	}
+
+	echo $options;
+}
+
 if($module == 'eventoMasivoAssignacion') {
 	$counter = 0;
 	$odtNoCargadas = array();
@@ -498,10 +655,6 @@ if($module == 'eventoMasivoAssignacion') {
 		# Código de barras, Descripción, Precio de Compra, Precio de Venta, Existencia
 		$Tecnico = $hojaDeProductos->getCellByColumnAndRow(1, $indiceFila);
 		$ODT = $hojaDeProductos->getCellByColumnAndRow(2, $indiceFila);
-		
-		
-		
-
 
 		$existeEvento = $Assignacion->existeEvento($ODT);
 
@@ -590,5 +743,28 @@ if($module == 'AsignarTecnicos') {
 		$count++;
 	}
 
+	echo $count;
+}
+
+
+if ($module == 'AsignarAgentes') {
+	$eventos = json_decode($params['odt']);
+	$count = 0;
+	$fecha = date ( 'Y-m-d H:i:s' );
+	$user = $_SESSION['userid'];
+	//print_r($eventos);
+
+	foreach($eventos as $evento)
+	{
+		$sqlEvento = "UPDATE eventos SET agente_cierre = ? WHERE odt=? ";
+
+		$arrayStringEvento = array(
+			$evento->Agente,
+			$evento->ODT
+		);
+
+		$newId = $Assignacion->insert($sqlEvento,$arrayStringEvento);
+		$count++;
+	}
 	echo $count;
 }

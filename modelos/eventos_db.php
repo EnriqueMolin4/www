@@ -106,6 +106,7 @@ class Eventos implements IConnections {
 		$start = $params['start'];
 		$length = $params['length'];
 		$userId = $_SESSION['userid'];
+		$valid = $_SESSION['validacion'];
 		$territorial = $_SESSION['territorial'];
 		$evidencias = $params['evidencias'];
 		$territorio = isset($params['territorialF']) ? $params['territorialF'] : array(); //filtro territorial
@@ -117,12 +118,26 @@ class Eventos implements IConnections {
 		$param = "";
 		$where = "";
 		$cveBanco = $_SESSION['cve_user'];
+		//$userValidacion = $_SESSION['validacion'];
+
+		//echo $userValidacion;
 
 		if(isset($orderField) ) {
 			$order .= " ORDER BY   $orderField   $orderDir";
 		}				   
 		$inicio = $params['fechaVen_inicio'];
 		$fin = $params['fechaVen_fin'];
+
+		if ($_SESSION['tipo_user'] == 'callcenter') {
+
+			if ($_SESSION['validacion'] == '0') {
+				$where .= " AND e.agente_cierre = $userId";
+			}else
+			{
+				$where .= "";
+			}
+			
+		}
 
 		if($params['estatusSearch'] !=0 ) {
 			$where .= " AND e.estatus=".$params['estatusSearch'];
@@ -195,7 +210,6 @@ class Eventos implements IConnections {
 				CASE WHEN (e.fecha_cierre > e.fecha_vencimiento) THEN DATEDIFF(e.fecha_cierre, e.fecha_vencimiento) ELSE 0 END dias,
 				e.estatus,
 				e.estatus_servicio,
-				
 				CASE WHEN ee.nombre is null then GetNameById(e.estatus_servicio,'EstatusServicio') ELSE ee.nombre END nombreEstatusServicio,
 				e.municipio,
 				e.comentarios_cierre,
@@ -476,7 +490,7 @@ class Eventos implements IConnections {
      	$banco = '037';
      }
      
-		$sql = "SELECT * from tipo_servicio WHERE status=1 AND cve_banco = ? $where";
+		$sql = "SELECT * from tipo_servicio WHERE status=1 AND cve_banco IN ($banco) $where";
 
 		//self::$logger->error($sql);
 		
@@ -504,7 +518,7 @@ class Eventos implements IConnections {
 
 	function getTipoServiciosBanco($banco) {
 		    
-		$sql = "SELECT * from tipo_servicio where cve_banco = '$banco'";
+		$sql = "SELECT * from tipo_servicio where cve_banco = '$banco' AND tipo = 'rep'";
 
 		//self::$logger->error($sql);
 		
@@ -1644,7 +1658,7 @@ if($module == 'assignarTecnico') {
 	}
 	echo $val;
 }*/
-	
+
 if($module == 'getTipoSubServicio') {
 
 	$arr = $params['servicio_id'];

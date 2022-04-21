@@ -1,7 +1,7 @@
 <?php
 error_reporting( error_reporting() & ~E_NOTICE ); //undefined Problem
-include('../modelos/procesos_db.php');
 
+require __DIR__.'/../modelos/procesos_db.php';
 require __DIR__ . '/../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -15,12 +15,12 @@ if($processActive) {
     $proceso = $Procesos->getOlderCargas('IA');
 
     if($proceso) {
-        echo "Buscar Proceso mas Viejo ".$proceso['fecha_creacion'];
+        echo "Buscar Proceso mas Viejo ".$proceso['fecha_creacion']." \n ";
         $fecha = date ( 'Y-m-d H:m:s' );
         
-
+		    //$archivo =  '/var/www/html/cron/files/'.$proceso['archivo'];
         //$eventoMasivo = new CargasMasivas();
-        $archivo =  'files/'.$proceso['archivo'];
+        $archivo =  '/var/www/dev.sinttecom.net/cron/files/'.$proceso['archivo'];
 
         $spreadsheet = IOFactory::load($archivo);
         $hojaDeProductos= $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
@@ -58,20 +58,37 @@ if($processActive) {
                 //$counter++;
                  
                 
-                $Tipo = $Procesos->getTipo( $hojaDeProductos[$indiceFila]['A'] );
+                $Tipo = $hojaDeProductos[$indiceFila]['A']; //$Procesos->getTipo( $hojaDeProductos[$indiceFila]['A'] );
                 $Modelo = $hojaDeProductos[$indiceFila]['C'];
-                $Conectividad = $hojaDeProductos[$indiceFila]['D'];
-                $Estatus = $hojaDeProductos[$indiceFila]['E'];
-                $EstatusUbicacion = $hojaDeProductos[$indiceFila]['F'];
-                $Ubicacion = $hojaDeProductos[$indiceFila]['G'];
-                $UbicacionId = $hojaDeProductos[$indiceFila]['H'];
+                $Aplicativo = $hojaDeProductos[$indiceFila]['D'];
+                $Conectividad = $hojaDeProductos[$indiceFila]['E'];
+                $Estatus = $hojaDeProductos[$indiceFila]['F'];
+                $EstatusUbicacion = $hojaDeProductos[$indiceFila]['G'];
+                $Ubicacion = $hojaDeProductos[$indiceFila]['H'];
+                $UbicacionId = $hojaDeProductos[$indiceFila]['I'];
+				$CveBanco = str_pad($hojaDeProductos[$indiceFila]['J'],3,'0',STR_PAD_LEFT);
             
 
-                $ModeloId = $Procesos->getModeloxNombre($Modelo);
-                $ConectividadId = $Procesos->getConectividadxNombre($Conectividad);
+                $ModeloId = $Tipo == '1' ? $Procesos->getModeloxNombre($Modelo,$CveBanco) : $Procesos->getCarriersxNombre($Modelo,$CveBanco);
+                //echo $Tipo." ".$NoSerie." ".$Modelo." ".$ModeloId." \n ";
+                $AplicativoId = $Procesos->getAplicativoxNombre($Aplicativo,$CveBanco);
+                $ConectividadId = $Procesos->getConectividadxNombre($Conectividad,$CveBanco);
                 $EstatusId = $Procesos->getEstatusxNombre($Estatus);
                 $Estatus_ubicacionId = $Procesos->getEstatusInvxNombre($EstatusUbicacion);
-                $Ubicacion_Id = $Procesos->getAlmacenxNombre($Ubicacion);
+                
+
+                if($Estatus_ubicacionId == "5" || $Estatus_ubicacionId == "1" ) {
+                    $UbicacionId = 1;
+                    $Ubicacion_Id = $Procesos->getAlmacenxNombre($Ubicacion);
+                } 
+
+                if($Estatus_ubicacionId == "3" ) {
+                    $Ubicacion_Id =  $UbicacionId;
+					$UbicacionId = 9;
+                     
+                } 
+                
+                
 
 
                 $fecha = date ( 'Y-m-d H:m:s' );
@@ -102,12 +119,12 @@ if($processActive) {
                     array_push($arrayString,$Estatus_ubicacionId);
                 }
                 if($Ubicacion_Id) {
-                    $campoUpdate .= " ,ubicacion=? ";
+                    $campoUpdate .= " ,id_ubicacion=? ";
                     array_push($arrayString,$Ubicacion_Id);
                 }
 
                 if($UbicacionId) {
-                    $campoUpdate .= " ,id_ubicacion=? ";
+                    $campoUpdate .= " ,ubicacion=? ";
                     array_push($arrayString,$UbicacionId);
                 }
 
@@ -117,15 +134,42 @@ if($processActive) {
                         SET 
                         $campoUpdate
                         WHERE no_serie=?" ;
+                
+                
 
                 $id =  $Procesos->update($sql,$arrayString);
+                
+                echo $id." ".$NoSerie." \n ";
 
+                if($UbicacionId == '3') {
+
+                    $prepareStatement = "INSERT INTO `inventario_tecnico`
+                    ( `tecnico`,`no_serie`,`cantidad`,`creado_por`,`fecha_creacion`,`fecha_modificacion`,`cve_banco`)
+                    VALUES (?,?,?,?,?,?);
+                    ";
+                    $arrayString = array (
+                            $Ubicacion_Id,
+                            $NoSerie,
+                            1,
+							              1,
+                            $fecha,
+                            $fecha,
+							              $CveBanco
+                    );
+
+                    $Procesos->insert($prepareStatement,$arrayString);
+					
+					          echo $prepareStatement;
+					          echo json_encode($arrayString);
+                }
                
 
                 if( $id > 0 ) {
                     $counter++;
 
-                    $invData = $Procesos->getInventarioData($NoSerie);
+                    
+
+                    $invData = $Procesos->getInventarioData($NoSerie,$CveBanco);
 
                     $sqlEvento = "UPDATE carga_archivos SET registros_procesados=? WHERE id = ?";
 
@@ -136,63 +180,25 @@ if($processActive) {
 
                     $Procesos->insert($sqlEvento,$arrayStringEvento);
 
-                    $historial_estatus = '';
-
-	switch ($EstatusId) {
-		case '2':
-			$historial_estatus = 'CAMBIO ESTATUS A OBSOLETO';
-		break;
-		case '3':
-			$historial_estatus = 'CAMBIO ESTATUS A DISPONIBLE-USADO';
-		break;
-		case '5':
-			$historial_estatus = 'CAMBIO ESTATUS A DISPONIBLE-NUEVO';
-		break;
-		case '6':
-			$historial_estatus = 'CAMBIO ESTATUS A EN REPARACION';
-		break;
-		case '7':
-			$historial_estatus = 'CAMBIO ESTATUS A DAÑADA';
-		break;
-		case '8':
-			$historial_estatus = 'CAMBIO ESTATUS A IRREPARABLE';
-		break;
-		case '12':
-			$historial_estatus = 'CAMBIO ESTATUS A EN TRANSITO';
-		break;
-		case '13':
-			$historial_estatus = 'CAMBIO ESTATUS A INSTALADO';
-		break;
-		case '14':
-			$historial_estatus = 'CAMBIO ESTATUS A EN PLAZA';
-		break;
-		case '15':
-			$historial_estatus = 'CAMBIO ESTATUS A EN DIAGNOSTICO';
-		break;
-		case '16':
-			$historial_estatus = 'CAMBIO ESTATUS A QUEBRANTO';
-		break;
-		case '17':
-			$historial_estatus = 'CAMBIO ESTATUS A DESTRUCCION';
-		break;
-	}
-
                     $prepareStatement = "INSERT INTO `historial`
-					( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`)
+					( `inventario_id`,`fecha_movimiento`,`tipo_movimiento`,`ubicacion`,`no_serie`,`tipo`,`cantidad`,`id_ubicacion`,`modified_by`,`cve_banco`)
 					VALUES
-					(?,?,?,?,?,?,?,?,?);
+					(?,?,?,?,?,?,?,?,?,?);
                     ";
                     $arrayString = array (
                             $invData['id'],
                             $fecha,
-                            $historial_estatus,
+                            'CAMBIO ESTATUS',
                             $invData['ubicacion'],
                             $NoSerie,
                             $invData[0]['tipo'],
                             $invData['cantidad'],
                             $invData['id_ubicacion'],
-                            $proceso['creado_por']
+                            $proceso['creado_por'],
+							$CveBanco
                     );
+
+                    $Procesos->insert($prepareStatement,$arrayString);
 
                    
                 } else {

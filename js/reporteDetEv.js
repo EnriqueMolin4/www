@@ -5,10 +5,10 @@ $(document).ready(function() {
 
     ResetLeftMenuClass("submenureportes", "ulsubmenureportes", "reportedeteventolink")
 
-    //getTipoServicio();
+    getTipoServicio();
     getEstados();
     getEstatusServicio();
-    //getTipoSubServicio();
+    getTipoSubServicio();
     getEstatusEvento();
     getBancosf();
     //valiDate();
@@ -78,6 +78,7 @@ $(document).ready(function() {
 
     $("#cve_banco").on("change", function() {
         getTipoServicio();
+
     });
 
     $("#tipo_servicio").on("change", function() {

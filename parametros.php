@@ -13,7 +13,7 @@
             <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-5">
             <div class="row">
-                <div class="col-sm-12 p-4">           
+                <div class="col-sm-4">           
                     <label for="catalogo" class="col-form-label-sm">Catalogo</label>
                     <select id="catalogo" name="catalogo" class="form-control form-control-sm">
                         <option value="0">Seleccionar</option>
@@ -23,12 +23,35 @@
                         <option value="tipo_user">Tipo Usuario</option>
                     </select>
                 </div>
+                <div class="col-sm-4">
+                    <label for="fBanco" class="col-form-label-sm">Banco</label>
+                    <select name="fBanco" id="fBanco" class="form-control form-control-sm">
+                        <option value="0">Seleccionar</option>
+                    </select>
+                </div>
+            </div> <br>
+            <div class="row" id="divEvidencia" class="divEvidencia" style="display:none;">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary addEvidencia">Nueva Evidencia</button>
+                </div>
             </div>
+            <div class="row" id="divServicios" class="divServicios" style="display: none;">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary addServicio">Nuevo Servicio</button>
+                </div>
+            </div>
+            <div class="row" id="divUser" class="divUser" id="divUser" style="display:none;">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary addUser">Nuevo Tipo de Usuario</button>
+                </div>
+            </div>
+            <br>
             <table id="parametros"  class="table table-md table-bordered ">
                 <thead>
                     <tr>
                         <th class="idsDeclarados">Nombre</th>
                         <th>Estatus</th>
+                        <th>Banco</th>
                         <th>Accion</th>
                     </tr>
                 </thead>
@@ -39,11 +62,151 @@
                     <tr>
                         <th>Nombre</th>
                         <th>Estatus</th>
+                        <th>Banco</th>
                         <th>Accion</th>
                     </tr>
                 </tfoot>
             </table>
-                <fieldset class="border p-2">
+
+            <!-- Modal Nuevo Subservicio -->
+            <div class="modal" tabindex="-1" role="dialog" id="nuevoSubservicio" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">AGREGAR NUEVO SUBSERVICIO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="servicioNombre" class="col-form-label-sm">Servicio</label>
+                            <input type="text" id="servicioNombre" class="form-control form-control-sm" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="ssNombre" class="col-form-label-sm">Nombre Subservicio</label>
+                            <input type="text" class="form-control form-control-sm" id="ssNombre" name="ssNombre">
+                        </div>
+                        <div class="col">
+                            <label for="ssBanco" class="col-form-label-sm">Banco</label>
+                            <select name="ssBanco" id="ssBanco" class="form-control form-control-sm">
+                                <option value="0" selected>Seleccionar</option>
+                            </select>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <input type="hidden" name="servicio_id" id="servicio_id">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardarSubserv" name="guardarSubserv">Guardar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Modal Nueva Evidencia -->
+            <div class="modal" tabindex="-1" role="dialog" id="nuevaEvidencia" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">AGREGAR NUEVA EVIDENCIA</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="eNombre" class="col-form-label-sm">Nombre</label>
+                            <input type="text" class="form-control form-control-sm" id="eNombre" name="eNombre">
+                        </div>
+                        <div class="col">
+                            <label for="eBanco" class="col-form-label-sm">Banco</label>
+                            <select name="eBanco" id="eBanco" class="form-control form-control-sm">
+                                <option value="0" selected>Seleccionar</option>
+                            </select>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary guardarEvidencia" id="guardarEvidencia" >Guardar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Nuevo Servicio -->
+            <div class="modal" tabindex="-1" role="dialog" id="nuevoServicio" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">AGREGAR NUEVO SERVICIO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="sNombre" class="col-form-label-sm">Nombre</label>
+                            <input type="text" class="form-control form-control-sm" id="sNombre" name="sNombre">
+                        </div>
+                        <div class="col">
+                            <label for="sBanco" class="col-form-label-sm">Banco</label>
+                            <select name="sBanco" id="sBanco" class="form-control form-control-sm">
+                                <option value="0" selected>Seleccionar</option>
+                            </select>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary guardarServicio" id="guardarServicio" >Guardar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Modal Nuevo User -->
+            <div class="modal" tabindex="-1" role="dialog" id="nuevoUsuario" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">AGREGAR NUEVA TIPO DE USUARIO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="uNombre" class="col-form-label-sm">uNombre</label>
+                            <input type="text" class="form-control form-control-sm" id="uNombre" name="uNombre">
+                        </div>
+                        <div class="col">
+                            <label for="uBanco" class="col-form-label-sm">uBanco</label>
+                            <select name="uBanco" id="uBanco" class="form-control form-control-sm">
+                                <option value="0" selected>Seleccionar</option>
+                            </select>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary guardarUsuario" id="guardarUsuario" >Guardar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+                <!-- <fieldset class="border p-2">
                     <legend>Agregar Parámetro</legend>
                     <div class="row">
                         <div class="col-md-4">
@@ -53,7 +216,7 @@
                             <button class="btn btn-success btn-sm" id="btnAddParametro">Agregar</button>
                         </div>
                     </div>
-                </fieldset>
+                </fieldset> -->
             </div>
    
         </main>
@@ -78,11 +241,11 @@
     <script src="js/main.js"></script>
     <script src="js/jquery.rotate.1-1.js"></script>
     <script>
-    var parametros;
+    var parametros, OpCatalogo;
         $(document).ready(function() {
             ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "parametroslink")
-            
 
+            getBancos();
 
             parametros = $('#parametros').DataTable({
                     language: {
@@ -98,12 +261,14 @@
                         type: 'POST',
                         data: function( d ) {
                             d.module = 'getTable',
-                            d.catalogo = $("#catalogo").val()
+                            d.catalogo = $("#catalogo").val(),
+                            d.f_banco = $("#fBanco").val()
                         }
                     },
                     columns : [
                         { data: 'nombre'},
                         { data: 'status' },
+                        { data: 'banco'},
                         { data: 'id'}
                     ],
                     aoColumnDefs: [
@@ -120,25 +285,101 @@
                             }
                         },
                         {
-                            "targets": [2],
+                            "targets": [3],
                             "mRender": function ( data,type, row ) {
+                                var btnall = '';
+                                var subSer = '<a title="Agregar subservicio" href="#" class="addSubservicio" data-nombre="'+row.nombre+'" data-id="'+row.id+'"><i class="fas fa-plus-circle fa-2x"></i><a/>';
                                 var button = '<a title="Desactivar" href="#" class="delParametro" data="'+row.id+'-'+row.status+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a>';
-                                
-                                if(row.status == '0') {
-                                    button = '<a title="Activar" href="#" class="delParametro" data="'+row.id+'-'+row.status+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
+                                var button2 = '<a title="Activar" href="#" class="delParametro" data="'+row.id+'-'+row.status+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a>';
+                               
+
+                                if ($("#catalogo").val() == 'tipo_servicio') 
+                                {
+                                    btnall = subSer + button; 
+                                    
+                                }
+                                else
+                                {
+                                    btnall = button;
                                 }
                                 
-                                return button;
+                                if(row.status == '0') {
+                                    
+                                    btnall = button2;
+                                }
+                                
+                                return btnall;
                             }
                         }
                     ]
                 });
 
                 $("#catalogo").on('change',function() {
-                    parametros.ajax.reload();
-                })
 
                     
+                    parametros.ajax.reload();
+
+                });
+
+                $("#fBanco").on('change',function() {
+                    parametros.ajax.reload();
+                });
+
+                const cat_option = document.getElementById('catalogo');
+
+                cat_option.addEventListener('change', function handleChange(event)
+                {
+                        //console.log(event.target.value);
+                        if (event.target.value == 'tipo_evidencias') 
+                        {
+                            $("#divEvidencia").show();
+                            $("#divServicios").hide();
+
+                        }
+                        else{
+                            $("#divEvidencia").hide();
+                        }
+
+                        if (event.target.value == 'tipo_servicio') 
+                        {
+                            $("#divServicios").show();
+                            $("#divEvidencia").hide();
+                        }
+                        else
+                        {
+                            $("#divServicios").hide();
+                        }
+
+                        if (event.target.value == 'tipo_user') 
+                        {
+                            $("#divUser").show();
+                        }
+                        else
+                        {
+                            $("#divUser").hide();
+                        }
+                });
+
+                $(document).on("click",".addSubservicio", function() {
+
+                    var index = $(this).parent().parent().index();
+                    var data = parametros.row( index ).data();
+
+                    console.log(data);
+
+                    $("#servicioNombre").val(data.nombre);
+                    $("#servicio_id").val(data.id);
+
+                    $("#nuevoSubservicio").modal("show");
+                });
+
+                $(document).on("click",".addEvidencia", function(){
+                    $("#nuevaEvidencia").modal("show");
+                })
+
+                $(document).on("click",".addServicio", function(){
+                    $("#nuevoServicio").modal("show");
+                })
 
                 $("#btnAddParametro").on('click', function(){
 
@@ -157,9 +398,6 @@
 
                     if( $("#newParametro").val().length > 0 )
                     {
-
-
-
                                 $.ajax({
                                    type: 'POST',
                                    url: 'modelos/parametros_db.php', // call your php file
@@ -189,6 +427,155 @@
                        
                 });
 
+
+                $(document).on('click','.guardarEvidencia', function(){
+                    var cat = $("#catalogo").val();
+                    var nombreEvidencia = $("#eNombre").val();
+                    var bancoEvidencia = $("#eBanco").val();
+        
+                    if ( $("#eBanco").val() == '0' ) 
+                    {
+                        $.toaster({
+                            message:'Favor de seleccionar el banco',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        })
+                    }
+                    else
+                    {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'modelos/parametros_db.php',
+                            data: { module: 'grabarCatalogo',catalogo : cat, nombre : nombreEvidencia, cve : bancoEvidencia},
+                            cache: false,
+                            success: function(data){
+                                //console.log(data);
+                                var info = JSON.parse(data);
+                                console.log(info.valido);
+                                if (info.valido == '0') 
+                                {
+                                    $.toaster({
+                                        message: 'Se agregó con éxito',
+                                        title: 'Aviso',
+                                        priority : 'success'
+                                    });
+                                }
+                                else
+                                {
+                                    $.toaster({
+                                        message: 'El registro ya existe',
+                                        title: 'Aviso',
+                                        priority : 'warning'
+                                    });
+                                }
+
+                                parametros.ajax.reload();
+                                $("#nuevaEvidencia").modal("hide");
+                                cleartext();
+
+                                
+                            },
+                            error: function(error){
+                                var demo = error;
+                            }
+                        });
+                    }
+
+                })
+
+                $(document).on('click','.guardarServicio', function(){
+                    var cat = $("#catalogo").val();
+                    var nombreServicio = $("#sNombre").val();
+                    var bancoServicio = $("#sBanco").val();
+
+                    if ( $("#sBanco").val() == '0' ) 
+                    {
+                        $.toaster({
+                            message: 'Favor de seleccionar el banco',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        })
+                    }
+                    else
+                    {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'modelos/parametros_db.php',
+                            data: {module: 'grabarCatalogo',catalogo: cat, nombre: nombreServicio, cve: bancoServicio},
+                            cache: false,
+                            success: function(data){
+                                var info = JSON.parse(data);
+                                if (info.valido == '0') 
+                                {
+                                    $.toaster({
+                                        message: 'Se agregó con éxito',
+                                        title: 'Aviso',
+                                        priority : 'success'
+                                    });
+                                }
+                                else
+                                {
+                                    $.toaster({
+                                        message: 'El registro ya existe',
+                                        title: 'Aviso',
+                                        priority : 'warning'
+                                    });
+                                }
+
+                                parametros.ajax.reload();
+                                $("#nuevoServicio").modal("hide");
+                                cleartext();
+                            }
+                        })
+                    }
+
+                })
+
+                $(document).on('click','.guardarSubserv', function(){
+                    /*var cat = $("#catalogo").val();
+                    var subSer = $("#ssNombre").val();
+                    var ssBanco = $("#ssBanco").val();
+                    var id_servicio = $("#servicio_id").val();*/
+
+                    alert("El botón funciona!!");
+
+                    /*if ( $("#ssBanco").val() == '0' ) 
+                    {
+                        $.toaster({
+                            message: 'Favor de seleccionar el banco',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        });
+                    }
+                    else
+                    {
+                        $.ajax({
+                            type:'GET',
+                            url: 'modelos/parametros_db.php',
+                            data: {module: 'grabarCatalogo',catalogo : cat, sub_servicio : subSer, cve : ssBanco, id_s : id_servicio},
+                            cache: false,
+                            success: function(data){
+                                var info = JSON.parse(data);
+
+                                if (info.valido == '0') {
+                                    $.toaster({
+                                        message: 'Se agregó con éxito',
+                                        title: 'Aviso',
+                                        priority : 'success'
+                                    });
+                                }else
+                                {
+                                    $.toaster({
+                                        message: 'El registro ya existe',
+                                        title: 'Aviso',
+                                        priority : 'warning'
+                                    });
+                                }
+                            }
+                        })
+                    }*/
+                });
+
                
                 $(document).on('click','.delParametro', function() {
                     var parametroid = $(this).attr('data').split('-');
@@ -209,18 +596,14 @@
                         }
                     });
                 })
-         
-
-     
-            
-         
-
-               
-
               
             } );
 
             
+        
+
+
+
         function getSupervisores() {
 
             $.ajax({
@@ -240,15 +623,36 @@
             });
         } 
 
+        function getBancos(){
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/eventos_db.php',
+                data: 'module=getBancos',
+                cache: false,
+                success: function(data){
+                    $("#sBanco").html(data);
+                    $("#ssBanco").html(data);
+                    $("#eBanco").html(data);
+                    $("#uBanco").html(data);
+                    $("#fBanco").html(data);
+                },
+                error: function(error){
+                    var demo = error;
+                }
+            });
+        }
 
         function cleartext() {
-            $("#nombre").val("");
-            $("#apellidos").val("");
-            $("#usuario").val("");
-            $("#supervisor").val("0");
-            $("#tipo").val("0");
-            $("#negocio").val("0");
-            $("#correo").val("")
+            $("#eNombre").val("");
+            $("#eBanco").val("0");
+
+            $("#sNombre").val("");
+            $("#sBanco").val("0");
+
+            $("#ssNombre").val("");
+            $("#ssBanco").val("0");
+
+        
 
         }
 

@@ -25,10 +25,14 @@ if($processActive) {
         
 
         //$eventoMasivo = new CargasMasivas();
+        //$archivo =  '/var/www/html/cron/files/'.$proceso['archivo'];
         $archivo =  '/var/www/dev.sinttecom.net/cron/files/'.$proceso['archivo'];
+        $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($archivo);
         #ARCHIVOS LOCAL
         //$archivo = '/home/webdeveloper/sitios/sinttecom/cron/files/'.$proceso['archivo'];
-        $spreadsheet = IOFactory::load($archivo);
+		$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+		$reader->setInputEncoding('CP1252'); 
+        $spreadsheet = $reader->load($archivo);
         $hojaDeProductos= $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
         
         
@@ -42,7 +46,7 @@ if($processActive) {
         $cveBanco = $proceso['cve_banco'];
   
         $datosCargar = array();
-        $format = "d/m/Y H:i";
+        $format = "d/m/Y H:i:s";
         $numeroMayorDeFila = count($hojaDeProductos); 
         //Updatw PRoceso en ejecucion
         $sqlEvento = "UPDATE carga_archivos SET  procesar= ?,fecha_modificacion= ?,registros_total=? WHERE id = ?";
@@ -79,7 +83,7 @@ if($processActive) {
                     $date = DateTime::createFromFormat($format, $FechaAlta);
                     echo $FechaAlta;
                     $FechaAlta = $date->format("Y-m-d H:i:s");
-                    
+                    echo $FechaVencimiento;
                     $date = DateTime::createFromFormat($format, $FechaVencimiento);
                     $FechaVencimiento = $date->format("Y-m-d H:i:s"); 
                     
@@ -90,14 +94,14 @@ if($processActive) {
                     $TipoComercio = $hojaDeProductos[$indiceFila]['N']; 
                     $Nivel = $hojaDeProductos[$indiceFila]['O']; 
                     $servicio = $hojaDeProductos[$indiceFila]['P'];
-                    $TipoServicio = $Procesos->getServicioxNombre($servicio);
+                    $TipoServicio = $Procesos->getServicioxNombre($servicio,$cveBanco);
                     $SubServicio = $hojaDeProductos[$indiceFila]['Q'];
-                    $SubtipoServicio = $SubServicio = '' ? 0 : $Procesos->getSubServicioxNombre( $SubServicio );
+                    $SubtipoServicio = $SubServicio = '' ? 0 : $Procesos->getSubServicioxNombre( $SubServicio,$cveBanco );
                     $Propietario = $hojaDeProductos[$indiceFila]['R'];
                     $Tecnico = $hojaDeProductos[$indiceFila]['S'];
                     $Proveedor = $hojaDeProductos[$indiceFila]['T'];  
                     $EstatusServicio =  $hojaDeProductos[$indiceFila]['U']; 
-                    $EstatusServicio = $EstatusServicio = '' ? 0 : $Procesos->getEstatusServicioxNombre($EstatusServicio);
+                    $EstatusServicio = $EstatusServicio = '' ? 0 : $Procesos->getEstatusServicioxNombre($EstatusServicio,$cveBanco);
                     
                     $FechaAtencionProveedor = $hojaDeProductos[$indiceFila]['V']; 
                     if($FechaAtencionProveedor == "" ) {
@@ -125,7 +129,7 @@ if($processActive) {
                     $CodigoPostal = $hojaDeProductos[$indiceFila]['Y']; 
                     $Conclusiones = $hojaDeProductos[$indiceFila]['Z']; 
                     $Conectividad = $hojaDeProductos[$indiceFila]['AA']; 
-                    $Conectividad = $Conectividad = '' ? 0 : $Procesos->getConectividadxNombre($Conectividad);
+                    $Conectividad = $Conectividad = '' ? 0 : $Procesos->getConectividadxNombre($Conectividad,$cveBanco);
                     $Modelo = $hojaDeProductos[$indiceFila]['AB']; 
                     $IdEquipo = $hojaDeProductos[$indiceFila]['AC'];
                     $IdCaja = $hojaDeProductos[$indiceFila]['AD']; 
@@ -205,7 +209,7 @@ if($processActive) {
                     $SubServicio = $hojaDeProductos[$indiceFila]['F'];
 					## SUBSERVICIO NOMBRE
 					echo "NOMBRE: ".$SubServicio." \n ";					
-                    $SubtipoServicio = $SubServicio = '' ? 0 : $Procesos->getSubServicioxNombre( $SubServicio );
+                    $SubtipoServicio = $SubServicio = '' ? 0 : $Procesos->getSubServicioxNombre( $SubServicio,'038' );
 					## SUBSERVICIO ID
 					echo "ID: ".$SubtipoServicio." \n ";
                     $TipoServicio = $Procesos->getServiciobySubservicio($SubServicio);
@@ -466,7 +470,7 @@ if($processActive) {
 					### Existe Evento
 					echo "EXISTE EVENTO: ".$existeEvento[0]['estatus_servicio']." \n ";
                     if($existeEvento[0]['estatus_servicio'] == '13' || $existeEvento[0]['estatus_servicio'] == '14' || $existeEvento[0]['estatus_servicio'] == '15' || $existeEvento[0]['estatus_servicio'] == '16' ) {
-                        $sqlEvento = "UPDATE eventos SET  'tipo_servicio'=?,'servicio'=?, fecha_alta= ?,fecha_vencimiento= ? WHERE odt = ?";
+                        $sqlEvento = "UPDATE eventos SET  tipo_servicio=?,servicio=?, fecha_alta= ?,fecha_vencimiento= ? WHERE odt = ?";
 
                         $arrayStringEvento = array (
                             $newTipoServicioId ,

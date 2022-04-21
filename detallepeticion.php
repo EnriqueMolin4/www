@@ -32,6 +32,11 @@
                             <span id="txtFecha" style="font-size: 14px; font-weight: bold;"></span>
                         </p>
                     </div>
+                    <div class="col">
+                        <p><h5>Petición/Guia</h5>
+                            <span id="txtGuiaPeticion" style="font-size: 14px; font-weight: bold;"></span>
+                        </p>
+                    </div>
                 </div>
                
                 <table class="table table-md table-bordered " id="tplDetalle" style="width:100%">
@@ -1067,6 +1072,7 @@
                     $("#txtSupervisor").html(info.supervisor);
                     $("#txtCreadopor").html(info.creadopor);
                     $("#txtFecha").html(info.fecha_creacion);
+                    $("#txtGuiaPeticion").html(info.no_guia);
                     if(info.IsActive == '1') {
                         $("#btnEnvio").attr("disabled",true);
                     }

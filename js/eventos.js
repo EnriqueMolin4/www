@@ -173,8 +173,11 @@ $(document).ready(function() {
                     if (row.nombreEstatus === 'Cerrado' && $("#tipo_user").val() == 'callcenterADM') 
                     {
                         btnALL = btnCambiarEstatus + btnInfo + btnCambiarOdt + '<br>' + btnHistoria + btnDates;
-                    }else if (row.sync = '0') {
+                    }
+                    else if (row.sync = '0') 
+                    {
                         btnALL = btnInfo + btnCerrar + btnCambiarOdt + btnHistoria + btnDates;
+
                         if( $("#tipo_user").val() == 'supOp' || $("#tipo_user").val() == 'admin' )
                         {
                             btnALL = btnALL + btnEstatusEnTransito;
@@ -185,7 +188,7 @@ $(document).ready(function() {
                         }                 
                     }
 
-                   return   '<div class="dropdown" style="background-color: #5dadd9; position: inherit;">'+
+                   return   '<div class="dropdown" style="background-color: #f2b361; position: inherit;">'+
                                 '<a class="btn dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">'+
                                     '<i class="fas fa-caret-square-down"></i>'+
                                 '</a>'+

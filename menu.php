@@ -88,7 +88,15 @@
                   </li>
                   <?php 
                      } 
+
+                     if ( searchMenu($_SESSION['Modules'],'url','asig_eventocierre') ) {
                      ?>
+                  <li id="cierreasignlink">
+                     <a href="asingnarevento_cc.php">Asignar Eventos CC</a>
+                  </li>
+                  <?php
+                     }
+                  ?>
                </ul>
             </div>
          </li>
