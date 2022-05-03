@@ -12,13 +12,43 @@
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-5">
-            <h3>Territorios</h3>
+            <h3>Catálogo Territorios y Plazas</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="catalogo" class="col-form-label-sm">Catalogo</label>
+                    <select id="catalogo" name="catalogo" class="form-control form-control-sm">
+                        <option value="0">Seleccionar</option>
+                        <option value="plazas" selected>Plazas</option>
+                        <option value="territorios">Territorios</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="row" id="divPlazas" class="divPlazas">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary addPlaza">Nueva Plaza</button>
+                </div>
+            </div>
+            <div class="row" id="divTerritorio" class="divTerritorio" style="display:none;">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary addTerritorio">Nuevo Territorial</button>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="excelMasivoCP" class="col-form-label-sm">Carga Masiva Códigos Postales</label> 
+                        <input class="input-file" type="file" id="excelMasivoCP" name="excelMasivoCP">
+                        <button class="btn btn-success btn-sm" id="btnCargarExcel">Cargar</button>
+                </div>
+            </div>
+            <br>
             <div class="row">
                 <div class="col-sm-12 p-4">  
                     <table id="territorios"  class="table table-md table-bordered ">
                         <thead>
                             <tr>
-                                <th>TERRITORIO</th>
+                                <th>NOMBRE</th>
                                 <th>ESTATUS</th>
                                 <th>ACCION</th>
                             </tr>
@@ -32,7 +62,104 @@
                 
             </div>
             
-                <fieldset class="border p-2">
+            <!-- Modal Nueva Plaza -->
+            <div class="modal" tabindex="-1" role="dialog" id="nuevaPlaza" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">AGREGAR NUEVO REGISTRO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="pNombre" class="col-form-label-sm">Nombre</label>
+                            <input type="text" class="form-control form-control-sm" id="pNombre" name="pNombre">
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary guardarPlaza" id="guardarPlaza" >Guardar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Nueva Territorio -->
+            <div class="modal" tabindex="-1" role="dialog" id="nuevoTerritorio" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">AGREGAR NUEVO REGISTRO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="tNombre" class="col-form-label-sm">Nombre</label>
+                            <input type="text" class="form-control form-control-sm" id="tNombre" name="tNombre">
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary guardarTerritorio" id="guardarTerritorio" >Guardar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Ver Códigos Postales -->
+            <div class="modal" tabindex="-1" role="dialog" id="modalCodigos" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">CODIGOS POSTALES</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <label for="nombreTerri" class="col-form-label-sm"></label>
+                            <input type="text" class="form-control" id="nombreTerri" name="nombreTerri" readonly>
+                        </div>
+                        <input type="hidden" id="idTerritorio">
+                    </div><br>
+                    <div class="row">
+                        <div class="col">
+                            <table id="tblCPT" class="table table-md table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>CODIGO POSTAL</th>
+                                        <th>LOCALIDAD</th>
+                                        <th>ACCION</th>
+                                    </tr>
+                                    
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <!--<button type="button" class="btn btn-primary guardarTerritorio" id="guardarTerritorio" >Guardar</button>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+                <!-- <fieldset class="border p-2">
                     <legend>AGREGAR TERRITORIO</legend>
                     <div class="row">
                         <div class="col-md-12 p-4">
@@ -42,7 +169,7 @@
                             <button class="btn btn-success btn-sm" id="btnAddCP">AGREGAR</button>
                         </div>
                     </div>
-                </fieldset>
+                </fieldset> -->
             </div>
    
         </main>
@@ -75,13 +202,18 @@
             territorios = $("#territorios").DataTable({
                 language: {
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                    },
-                serverSide: true,
+                        },
+                    processing: true,
+                    serverSide: true,
+                    searching: true,
+                    order: [[ 0, "asc" ]],
+                    lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
                 ajax: {
                         url: 'modelos/territorial_db.php',
                         type: 'POST',
                         data: function( d ) {
-                            d.module = 'getTableTerritorios'
+                            d.module = 'getTableTerritorios',
+                            d.catalogo = $("#catalogo").val()
                         }
                 },
                 columns : [
@@ -95,21 +227,230 @@
                         "mRender": function ( data,type, row ) {
                             var status= data == '1' ? 'Activo' : 'Desactivado';
                             return status;
-                        }
+                        }   
                     },
                     {
                         "targets": [2],
                         "mRender": function ( data,type, row ) {
-                            return '<a href="#" class="editRelacion" data="'+row.id+'"><i class="fas fa-times fa-2x" style="color:red"></i></a>';
+                            var btnall = '';
+                            var button = ' <a title="Desactivar" href="#" class="delParametro" data="'+row.id+'-'+row.status+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a> ';
+                            var button2 = ' <a title="Activar" href="#" class="delParametro" data="'+row.id+'-'+row.status+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a> ';
+                            var button3 = '<a title="Ver Códigos Postales" href="#" class="verCodigos" data-id="'+row.id+'" data-nombre="'+row.nombre+'"><i class="fas fa-list fa-2x" style="color:#b52424"></i></a>';
+
+                            if ($("#catalogo").val() == 'territorios') 
+                            {
+                                btnall = button3 + button;
+                            }
+                            else
+                            {
+                                btnall = button;
+                            }
+                             
+                            if(row.status == '0') 
+                            {                                                                      
+                                    
+                                btnall = button2;
+                            }
+                                
+                            return btnall;
                         }
                     }
                 ]
             });
 
 
+             $("#catalogo").on('change',function() {
+                    territorios.ajax.reload();
+            });
+
+
+             const cat_option = document.getElementById('catalogo');
+
+                cat_option.addEventListener('change', function handleChange(event)
+                {
+                    if (event.target.value == 'plazas') 
+                        {
+                            $("#divPlazas").show();   
+                            $("#divTerritorio").hide();
+
+                        }else
+                        {
+                            $("#divPlazas").hide();
+                            $("#divTerritorio").show();
+                        }
+
+                });
+
+                $(document).on("click",".addPlaza", function(){
+                    $("#nuevaPlaza").modal("show");
+                })
+
+                $(document).on("click",".addTerritorio", function(){
+                    $("#nuevoTerritorio").modal("show");
+                })
+
+
+                $(document).on('click','.guardarPlaza', function(){
+                    var cat = $("#catalogo").val();
+                    var nombrePlaza = $("#pNombre").val();
+                    
+
+                    if ( $("#pNombre").val().length > 0 ) 
+                    {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'modelos/territorial_db.php',
+                            data: {module: 'grabarCatalogo',catalogo: cat, nombre: nombrePlaza},
+                            cache: false,
+                            success: function(data){
+                                var info = JSON.parse(data);
+                                if (info.valido == '0') 
+                                {
+                                    $.toaster({
+                                        message: 'Se agregó con éxito',
+                                        title: 'Aviso',
+                                        priority : 'success'
+                                    });
+                                }
+                                else
+                                {
+                                    $.toaster({
+                                        message: 'El registro ya existe',
+                                        title: 'Aviso',
+                                        priority : 'warning'
+                                    });
+                                }
+
+                                territorios.ajax.reload();
+                                $("#nuevaPlaza").modal("hide");
+                                cleartext();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                alert(data);
+                            }
+                        })
+                    }
+                    else
+                    {
+                        $.toaster({
+                            message: 'Favor de ingresar la plaza',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        })
+                    }
+
+                });
+
+               $(document).on('click','.guardarTerritorio', function(){
+                    var cat = $("#catalogo").val();
+                    var nombrePlaza = $("#tNombre").val();
+                    
+
+                    if ( $("#tNombre").val().length > 0 ) 
+                    {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'modelos/territorial_db.php',
+                            data: {module: 'grabarCatalogo',catalogo: cat, nombre: nombrePlaza},
+                            cache: false,
+                            success: function(data){
+                                var info = JSON.parse(data);
+                                if (info.valido == '0') 
+                                {
+                                    $.toaster({
+                                        message: 'Se agregó con éxito',
+                                        title: 'Aviso',
+                                        priority : 'success'
+                                    });
+                                }
+                                else
+                                {
+                                    $.toaster({
+                                        message: 'El registro ya existe',
+                                        title: 'Aviso',
+                                        priority : 'warning'
+                                    });
+                                }
+
+                                territorios.ajax.reload();
+                                $("#nuevoTerritorio").modal("hide");
+                                cleartext();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                alert(data);
+                            }
+                        })
+                    }
+                    else
+                    {
+                        $.toaster({
+                            message: 'Favor de ingresar el territorio',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        })
+                    }
+
+                });
+
+
+               $(document).on("click",".verCodigos", function(){
+                    var index = $(this).parent().parent().index();
+                    var data = territorios.row(index).data();
+
+                    var territorioID = $("#idTerritorio").val(data.id);
+                    console.log(data);
+
+                    $("#nombreTerri").val(data.nombre);
+
+
+                    tableCP = $("#tblCPT").DataTable({
+                        language: {
+                                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                                },
+                            processing: true,
+                            serverSide: true,
+                            searching: true,
+                            retrieve: true,
+                            order: [[ 0, "asc" ]],
+                            lengthMenu: [[5,10, 25, -1], [5, 10, 25, "All"]],
+                        ajax: {
+                                url: 'modelos/territorial_db.php',
+                                type: 'POST',
+                                data: function( d ) {
+                                    d.module = 'getCPTerritorios',
+                                    d.tid = $("#idTerritorio").val()
+                                }
+                        },
+                        columns : [
+                            { data: 'cp' },
+                            { data: 'localidad'},
+                            { data: 'id'}
+                        ],
+                        aoColumnDefs: [
+                           
+                            {
+                                "targets": [2],
+                                "mRender": function ( data,type, row ) {
+                                    var btnall = '';
+                                    var button = ' <a title="Desactivar" href="#" class="delParametro" data="'+row.id+'"><i class="fas fa-toggle-on fa-2x" style="color:#24b53c"></i></a> ';
+                                    var button2 = ' <a title="Activar" href="#" class="delParametro" data="'+row.id+'"><i class="fas fa-toggle-off fa-2x" style="color:#b52424"></i></a> ';
+                                    var button3 = '<a title="Ver Códigos Postales" href="#" class="verCodigos" data-id="'+row.id+'" data-nombre="'+row.cp+'"><i class="fas fa-list fa-2x" style="color:#b52424"></i></a>';
+                                        
+                                    return btnall;
+                                }
+                            }
+                        ]
+                    });
+
+                    tableCP.ajax.reload();
+                    $("#modalCodigos").modal("show");
+
+               })
+
+
             $("#btnAddCP").on('click', function() {
                 if( $("#territorial").val() == "0" ) {
-                    alert("Necesitas seleccionar un Territorio");
+                    alert("Necesitas ingresar un Territorio");
                 } else {
                     $.ajax({
                         type: 'POST',
@@ -129,7 +470,69 @@
                 }
             })
 
-            $(document).on('click','.delTerritorio', function() {
+            $("#btnCargarExcel").on("click",function() {
+
+
+                var form_data = new FormData();
+                var excelMasivo = $("#excelMasivoCP");
+                var file_data = excelMasivo[0].files[0];
+                form_data.append('file', file_data);
+                form_data.append('module','cpMasivo');
+
+
+                if( document.getElementById("excelMasivoCP").files.length == 0 )
+                {
+                    $.toaster({
+                        message: 'No hay un archivo seleccionado.',
+                        title: 'Aviso',
+                        priority: 'danger'
+                    });
+                }else
+                {
+                     $.toaster({
+                        message: 'Inicia la Carga Masiva',
+                        title: 'Aviso',
+                        priority : 'success'
+                    });  
+                    $.ajax({
+                        type: 'POST',
+                        url: 'modelos/territorial_db.php', // call your php file
+                        data: form_data,
+                        processData: false,
+                    contentType: false,
+                        success: function(data, textStatus, jqXHR){
+                            var info = JSON.parse(data);
+
+                            if(info.NoCargadas > 0 ) {
+                                $.toaster({
+                                    message: 'No Se Cargaron '+info.NoCargadas+' Plazas',
+                                    title: 'Aviso',
+                                    priority : 'danger'
+                                });  
+                            }
+
+                            if(info.plazaCargados > 0 ) {
+                                $.toaster({
+                                    message: 'Se Cargaron '+info.Cargados+' Plazas',
+                                    title: 'Aviso',
+                                    priority : 'success'
+                                });  
+                            }
+                           
+                            territorios.ajax.reload();
+                            
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            alert(textStatus)
+                    }
+                    });
+                }
+
+
+                   
+                })
+
+           /* $(document).on('click','.delTerritorio', function() {
                 var tid = $(this).attr('data');
 
                 var r = confirm("Se va a borrar el Territorio esta seguro ? ");
@@ -152,15 +555,36 @@
                         }
                     });
                 }
-            })
+            })*/
+
+
+                $(document).on('click','.delParametro', function() {
+                    var parametroid = $(this).attr('data').split('-');
+                    $.ajax({
+                        type: 'GET',
+                        url: 'modelos/parametros_db.php', // call your php file
+                        data: { module: 'parametroUpdate',catalogo: $("#catalogo").val(),parametroid: parametroid[0],statusid: parametroid[1] },
+                        cache: false,
+                        success: function(data){
+                            if(data == "1") {
+                                $.toaster({
+                                    message: 'Se desactivo/activo con éxito  ',
+                                    title: 'Aviso',
+                                    priority : 'success'
+                                });  
+                                territorios.ajax.reload();
+                            }
+                        }
+                    });
+                })
                
               
         } );
 
 
         function cleartext() {
-            $("#territorio").val("");
-          
+            $("#pNombre").val("");
+            $("#tNombre").val("");
 
         }
 

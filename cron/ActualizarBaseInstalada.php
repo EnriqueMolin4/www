@@ -16,7 +16,7 @@ $fecha = date ( 'Y-m-d H:m:s' );
 echo $fecha;  
 
 //$eventoMasivo = new CargasMasivas();
-$archivo =  '/var/www/html/cron/files/Base Instalada.xlsx';
+$archivo =  '/var/www/dev.sinttecom.net/cron/files/Base Instalada.xlsx';
 
 //SPOUT
 $reader = ReaderFactory::create(Type::XLSX);

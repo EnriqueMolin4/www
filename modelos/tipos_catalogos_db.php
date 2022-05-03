@@ -82,6 +82,7 @@ class Usuarios implements IConnections {
 		$start = $params['start'];
 		$length = $params['length'];
         $catalogo = $params['catalogo'];
+        $banco = $params['banco'];
 
         $orderField =  $params['columns'][$params['order'][0]['column']]['data'];
 		$orderDir = $params['order'][0]['dir'];
@@ -102,9 +103,13 @@ class Usuarios implements IConnections {
 		}
 
 		if( !empty($params['search']['value'])  &&  $total) {   
-			$where .=" WHERE ";
-			$where .=" ( nombre LIKE '".$params['search']['value']."%' ) ";    
+			$where .=" AND ";
+			$where .=" ( $catalogo.nombre LIKE '".$params['search']['value']."%' ) ";    
 
+		}
+
+		if ($banco != '0') {
+			$where .= " AND $catalogo.cve_banco = $banco";
 		}
 
         if($catalogo == "0") {
@@ -121,12 +126,14 @@ class Usuarios implements IConnections {
             $filter ";
 
 		} else {
-            $sql = "SELECT id,nombre,estatus from $catalogo
+            $sql = "SELECT $catalogo.id,$catalogo.nombre,$catalogo.estatus,bancos.banco from $catalogo LEFT JOIN bancos ON bancos.cve = $catalogo.cve_banco
+            		WHERE $catalogo.nombre IS NOT NULL
             $where 
 			$order
             $filter ";
         }
 
+        //self::$logger->error($sql);
 	
 		try {
 			$stmt = self::$connection->prepare ($sql);

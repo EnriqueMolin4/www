@@ -29,6 +29,12 @@
                         <option value="0">Seleccionar</option>
                     </select>
                 </div>
+                <div class="col-sm-4" id="lista_servicios" class="lista_servicios" style="display:none;">
+                    <label for="serviciosList" class="col-form-label-sm">Servicios</label>
+                    <select name="serviciosList" id="serviciosList" class="form-control form-control-sm">
+                        <option value="0" selected>Seleccionar</option>
+                    </select>
+                </div>
             </div> <br>
             <div class="row" id="divEvidencia" class="divEvidencia" style="display:none;">
                 <div class="col-md-3">
@@ -101,7 +107,7 @@
                   <div class="modal-footer">
                     <input type="hidden" name="servicio_id" id="servicio_id">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="guardarSubserv" name="guardarSubserv">Guardar</button>
+                    <button type="button" class="btn btn-primary guardarSubserv" id="guardarSubserv" name="guardarSubserv">Guardar</button>
                   </div>
                 </div>
               </div>
@@ -178,7 +184,7 @@
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title">AGREGAR NUEVA TIPO DE USUARIO</h5>
+                    <h5 class="modal-title">AGREGAR NUEVO TIPO DE USUARIO</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -186,11 +192,11 @@
                   <div class="modal-body">
                     <div class="row">
                         <div class="col">
-                            <label for="uNombre" class="col-form-label-sm">uNombre</label>
+                            <label for="uNombre" class="col-form-label-sm">Nombre</label>
                             <input type="text" class="form-control form-control-sm" id="uNombre" name="uNombre">
                         </div>
                         <div class="col">
-                            <label for="uBanco" class="col-form-label-sm">uBanco</label>
+                            <label for="uBanco" class="col-form-label-sm">Banco</label>
                             <select name="uBanco" id="uBanco" class="form-control form-control-sm">
                                 <option value="0" selected>Seleccionar</option>
                             </select>
@@ -246,6 +252,8 @@
             ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "parametroslink")
 
             getBancos();
+            getServicios();
+            camposMostrar();
 
             parametros = $('#parametros').DataTable({
                     language: {
@@ -262,7 +270,8 @@
                         data: function( d ) {
                             d.module = 'getTable',
                             d.catalogo = $("#catalogo").val(),
-                            d.f_banco = $("#fBanco").val()
+                            d.f_banco = $("#fBanco").val(),
+                            d.servicio = $("#serviciosList").val()
                         }
                     },
                     columns : [
@@ -325,40 +334,11 @@
                     parametros.ajax.reload();
                 });
 
-                const cat_option = document.getElementById('catalogo');
+                $("#serviciosList").on('change',function(){
+                    parametros.ajax.reload();
+                })
 
-                cat_option.addEventListener('change', function handleChange(event)
-                {
-                        //console.log(event.target.value);
-                        if (event.target.value == 'tipo_evidencias') 
-                        {
-                            $("#divEvidencia").show();
-                            $("#divServicios").hide();
-
-                        }
-                        else{
-                            $("#divEvidencia").hide();
-                        }
-
-                        if (event.target.value == 'tipo_servicio') 
-                        {
-                            $("#divServicios").show();
-                            $("#divEvidencia").hide();
-                        }
-                        else
-                        {
-                            $("#divServicios").hide();
-                        }
-
-                        if (event.target.value == 'tipo_user') 
-                        {
-                            $("#divUser").show();
-                        }
-                        else
-                        {
-                            $("#divUser").hide();
-                        }
-                });
+                
 
                 $(document).on("click",".addSubservicio", function() {
 
@@ -379,6 +359,10 @@
 
                 $(document).on("click",".addServicio", function(){
                     $("#nuevoServicio").modal("show");
+                })
+
+                $(document).on("click",".addUser", function(){
+                    $("#nuevoUsuario").modal("show");
                 })
 
                 $("#btnAddParametro").on('click', function(){
@@ -427,23 +411,38 @@
                        
                 });
 
-
                 $(document).on('click','.guardarEvidencia', function(){
                     var cat = $("#catalogo").val();
                     var nombreEvidencia = $("#eNombre").val();
                     var bancoEvidencia = $("#eBanco").val();
+                    var valido = 0;
         
-                    if ( $("#eBanco").val() == '0' ) 
+                    if (  $("#eBanco").val() == '0' ) 
                     {
                         $.toaster({
                             message:'Favor de seleccionar el banco',
                             title: 'Aviso',
                             priority: 'danger'
                         })
+                        valido++;
                     }
-                    else
+
+                    if ( $("#eNombre").val().length > 0 ) 
                     {
-                        $.ajax({
+
+                    }else
+                    {
+                        $.toaster({
+                            message:'Favor de ingresar el nombre de la evidencia',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        })
+                        valido++;
+                    }
+
+                    if (valido == 0) 
+                    {
+                         $.ajax({
                             type: 'GET',
                             url: 'modelos/parametros_db.php',
                             data: { module: 'grabarCatalogo',catalogo : cat, nombre : nombreEvidencia, cve : bancoEvidencia},
@@ -480,6 +479,7 @@
                             }
                         });
                     }
+                    
 
                 })
 
@@ -487,6 +487,7 @@
                     var cat = $("#catalogo").val();
                     var nombreServicio = $("#sNombre").val();
                     var bancoServicio = $("#sBanco").val();
+                    var valido = 0;
 
                     if ( $("#sBanco").val() == '0' ) 
                     {
@@ -494,10 +495,25 @@
                             message: 'Favor de seleccionar el banco',
                             title: 'Aviso',
                             priority: 'danger'
-                        })
+                        });
+                        valido++;
                     }
-                    else
+
+                    if ( $("#sNombre").val().length > 0 ) 
                     {
+
+                    }
+                    else 
+                    {
+                        $.toaster({
+                            message: 'Favor de ingresar nombre del servicio',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        });
+                        valido++;
+                    }
+
+                    if (valido==0) {
                         $.ajax({
                             type: 'GET',
                             url: 'modelos/parametros_db.php',
@@ -525,34 +541,54 @@
                                 parametros.ajax.reload();
                                 $("#nuevoServicio").modal("hide");
                                 cleartext();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                alert(data);
                             }
                         })
                     }
+                    
 
                 })
 
                 $(document).on('click','.guardarSubserv', function(){
-                    /*var cat = $("#catalogo").val();
+                    var cat = 'tipo_subservicios';
                     var subSer = $("#ssNombre").val();
                     var ssBanco = $("#ssBanco").val();
-                    var id_servicio = $("#servicio_id").val();*/
+                    var id_servicio = $("#servicio_id").val();
+                    var valido = 0;
+                    //alert("El botón funciona!!");
 
-                    alert("El botón funciona!!");
-
-                    /*if ( $("#ssBanco").val() == '0' ) 
+                    if ( $("#ssBanco").val() == '0' ) 
                     {
                         $.toaster({
                             message: 'Favor de seleccionar el banco',
                             title: 'Aviso',
                             priority: 'danger'
                         });
+                        valido++;
                     }
-                    else
+
+                    if ( $("#ssNombre").val().length > 0 ) 
                     {
-                        $.ajax({
+
+                    }
+                    else 
+                    {
+                        $.toaster({
+                            message: 'Favor de ingresar nombre del sub-servicio',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        });
+                        valido++;
+                    }
+                    
+                    
+                        if (valido == 0) {
+                            $.ajax({
                             type:'GET',
                             url: 'modelos/parametros_db.php',
-                            data: {module: 'grabarCatalogo',catalogo : cat, sub_servicio : subSer, cve : ssBanco, id_s : id_servicio},
+                            data: {module: 'grabarCatalogo',catalogo : cat, nombre : subSer, cve : ssBanco, id_s : id_servicio},
                             cache: false,
                             success: function(data){
                                 var info = JSON.parse(data);
@@ -571,10 +607,85 @@
                                         priority : 'warning'
                                     });
                                 }
+                                parametros.ajax.reload();
+                                $("#nuevoSubservicio").modal("hide");
+                                cleartext();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                alert(data);
                             }
                         })
-                    }*/
+                        }
+                    
                 });
+
+                $(document).on('click','.guardarUsuario', function(){
+                    var cat = $("#catalogo").val();
+                    var nombreUsuario = $("#uNombre").val();
+                    var bancoUsuario = $("#uBanco").val();
+                    var valido = 0;
+
+                     if ( $("#uBanco").val() == '0' ) 
+                    {
+                        $.toaster({
+                            message: 'Favor de seleccionar el banco',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        });
+                        valido++;
+                    }
+
+                    if ( $("#uNombre").val().length > 0 ) 
+                    {
+
+                    }
+                    else 
+                    {
+                        $.toaster({
+                            message: 'Favor de ingresar el nuevo tipo de usuario',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        });
+                        valido++;
+                    }
+                    
+                        if (valido==0) {
+                            $.ajax({
+                            type:'GET',
+                            url: 'modelos/parametros_db.php',
+                            data: {module: 'grabarCatalogo', catalogo : cat, nombre : nombreUsuario, cve : bancoUsuario},
+                            cache: false,
+                            success: function(data)
+                            {
+                                var info = JSON.parse(data);
+
+                                if (info.valido == '0') {
+                                    $.toaster({
+                                        message: 'Se agregó con éxito',
+                                        title: 'Aviso',
+                                        priority : 'success'
+                                    });
+                                }else
+                                {
+                                    $.toaster({
+                                        message: 'El registro ya existe',
+                                        title: 'Aviso',
+                                        priority : 'warning'
+                                    });
+                                }
+                                parametros.ajax.reload();
+                                $("#nuevoUsuario").modal("hide");
+                                cleartext();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                alert(data);
+                            }
+                        });
+                        }
+                    
+
+
+                })
 
                
                 $(document).on('click','.delParametro', function() {
@@ -599,11 +710,6 @@
               
             } );
 
-            
-        
-
-
-
         function getSupervisores() {
 
             $.ajax({
@@ -622,6 +728,22 @@
                 }
             });
         } 
+
+        function getServicios()
+        {
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/parametros_db.php',
+                data : 'module=getServicios',
+                cache: false,
+                success: function(data){
+                    $("#serviciosList").html(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    alert(data);
+                }
+            })
+        }
 
         function getBancos(){
             $.ajax({
@@ -650,12 +772,65 @@
             $("#sBanco").val("0");
 
             $("#ssNombre").val("");
-            $("#ssBanco").val("0");
-
-        
+            $("#ssBanco").val("0");        
 
         }
 
+        function camposMostrar()
+        {
+            const cat_option = document.getElementById('catalogo');
+
+            cat_option.addEventListener('change', function handleChange(event)
+            {
+                    //console.log(event.target.value);
+                    if (event.target.value == 'tipo_evidencias') 
+                    {
+                        $("#divEvidencia").show();
+                        $("#divServicios").hide();
+                        
+                    }
+                    else{
+                        $("#divEvidencia").hide();
+                    }
+
+                    if (event.target.value == 'tipo_servicio') 
+                    {
+                        $("#divServicios").show();
+                        $("#divEvidencia").hide();  
+                        //$("#serviciosList").val("0");
+
+                        
+                    }
+                    else
+                    {
+                        $("#divServicios").hide();
+                    }
+
+                    if (event.target.value == 'tipo_user') 
+                    {
+                        $("#divUser").show();
+                       
+                    }
+                    else
+                    {
+                        $("#divUser").hide();
+                    }
+
+                    if (event.target.value == 'tipo_subservicios') 
+                    {
+                        //$("#lista_servicios").show();
+                    }
+                    else
+                    {
+                        //$("#lista_servicios").hide();
+                        //$("#serviciosList").val("0");
+
+                    }
+
+                    parametros.ajax.reload();
+
+            });
+        }
 
     </script> 
   

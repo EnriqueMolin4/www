@@ -145,7 +145,7 @@ class Reportes implements IConnections {
     function getInventarioCampo($params) {
         $inicio = $params['fechaVen_inicio'];
         $final = $params['fechaVen_fin'];
-        $cve = $params['cve_banco'];
+        $cve = $params['cve_b'];
 
         if ($cve != '0') {
         	$where .= " AND eventos.cve_banco = $cve";
@@ -275,7 +275,7 @@ class Reportes implements IConnections {
 
         if ($bancos != '0') {
         	
-        	$where .= " AND inv.cve_banco in ($banco)";
+        	$where .= " AND inv.cve_banco in ('$banco')";
         }
 
 		if( $ubicacion != '0' ) {
@@ -284,7 +284,7 @@ class Reportes implements IConnections {
 		}
 
 		if( $estatusubicacion != '0' ) {
-			$where .= " AND inv.estatus_inventario in  ( $estatusubicacion )";
+			$where .= " AND inv.estatus_inventarioid in  ( $estatusubicacion )";
 			if($_SESSION['tipo_user'] != 'AL') {
 				
 				//$where .= "  AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) ";
@@ -294,7 +294,7 @@ class Reportes implements IConnections {
 		}
 		
 		if( $estatus != '0' ) {
-			$where .= " AND inv.estatus in  ( $estatus ) ";
+			$where .= " AND inv.estatusid in  ( $estatus ) ";
 		}
 
 		if( $producto != '0' ) {
@@ -320,7 +320,7 @@ class Reportes implements IConnections {
 			//$where .= " ( AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) OR tu.id = $almacen )";
 		}
 
-		$sql = "SELECT 
+		/*$sql = "SELECT 
 						  CASE WHEN inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios' END tipoNombre,
 						  inv.no_serie,	
 						  bancos.banco banco,
@@ -344,6 +344,10 @@ class Reportes implements IConnections {
                             $where
                             $queryInsumos
 					        ORDER BY ubicacion ";
+                                             */
+     $sql = " SELECT * FROM vw_inventario inv
+              WHERE inv.no_serie is not null
+              $where ";                                         
 
 
 				
@@ -410,7 +414,7 @@ class Reportes implements IConnections {
         {
             $estatus_servicioList = implode(",",$estatus_servicio);
 			if($estatus_servicioList != '0') {
-				$where .= " AND eventos.estatus_servicio in ($estatus_servicioList) ";
+				$where .= " AND eventos.estatusservicioId in ($estatus_servicioList) ";
 			}
         } 
 
@@ -418,7 +422,7 @@ class Reportes implements IConnections {
         {
             $estatus_eventoList = implode(",",$estatus_evento);
             if($estatus_eventoList != '0'){
-                $where .= " AND eventos.estatus in ($estatus_eventoList)";
+                $where .= " AND eventos.estatusId in ($estatus_eventoList)";
             }
         }
 
@@ -442,7 +446,11 @@ class Reportes implements IConnections {
             $where .= " AND DATE(eventos.fecha_cierre) <= '$fecha_cierre_hasta'  ";
         }
 
-        $sql = "SELECT  
+		$sql = " SELECT * FROM vw_eventos  eventos
+				 WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
+                $where ";
+		self::$logger->error ($sql);		
+        /*$sql = "SELECT  
 				eventos.odt, 
 				IFNULL(img.totalImg,0) totalImg,
 				eventos.afiliacion, 
@@ -543,8 +551,8 @@ class Reportes implements IConnections {
                 WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
                 $where 
 				 
-                ";
-        self::$logger->error ($sql);
+                "; */
+        
         try {
             $stmt = self::$connection->prepare ($sql);
             $stmt->execute();
@@ -629,6 +637,7 @@ if($module == 'reporte_inventarioCampo') {
 
         # Como ya hay una hoja por defecto, la obtenemos, no la creamos
         $hojaDeProductos = $documento->getActiveSheet();
+        $hojaDeProductos->getStyle('A1')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
         //$hojaDeProductos->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
         $hojaDeProductos->setTitle('InventarioCampo');
 
@@ -645,6 +654,8 @@ if($module == 'reporte_inventarioCampo') {
                 $counter++;
             }
             $numeroDeFila++;
+            
+            
         }
 
         // Get sheet dimension
@@ -791,6 +802,7 @@ if($module == 'reporte_almaceninv') {
 
         # Como ya hay una hoja por defecto, la obtenemos, no la creamos
         $hojaDeProductos = $documento->getActiveSheet();
+
         //$hojaDeProductos->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
         $hojaDeProductos->setTitle('InventarioAlmacen');
 		
@@ -804,26 +816,28 @@ if($module == 'reporte_almaceninv') {
         $numeroDeFila = 2;
 
         foreach($rows as $fields) {
-            
+           
             $totalCol = sizeof($fields);
             $counter = 1;
             foreach($fields as $index => $value) {
 				 
-				$value = $counter == 2 ? "'$value" : $value;
+				    $value = $counter == 2 ? "'$value" : $value;
                 $hojaDeProductos->setCellValueByColumnAndRow($counter, $numeroDeFila, $value);
 				 
                 $counter++;
             }
             $numeroDeFila++;
+            
+            
         }
 
         
                 
-        //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($documento, 'Csv');
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($documento);
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($documento, 'Csv');
+        //$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($documento);
         //header('Content-Type: text/csv');
         header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
-        header('Content-Disposition: attachment; filename="InventarioAlmacen_'. date('YmdHms').'.xls"');
+        header('Content-Disposition: attachment; filename="InventarioAlmacen_'. date('YmdHms').'.csv"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header("Cache-Control: private",false);

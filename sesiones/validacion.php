@@ -54,7 +54,7 @@ if( !empty( $_POST['user'] ) and !empty( $_POST['pass'] ) ) {
 		$_SESSION['cve_user'] = $dato_acces['cve'];
 		$_SESSION['territorial'] = $dato_acces['territorial'];
 		$_SESSION['Modules'] = $module;
-		$_SESSION['validacion'] = $dato_acces['validacion'];
+		$_SESSION['validacion'] = $dato_acces['validacion'];// nueva variable para asignacion de cierres
 		$_SESSION['plaza'] = $dato_acces['plaza'];
 		$_SESSION['almacen'] = $dato_acces['almacen'];
 		$urlRedirect = ''; //'sinttecomprod/index.php';

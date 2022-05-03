@@ -4863,7 +4863,7 @@ if ($module == 'InventarioEditar')
 	$exist = 0;
 	$yaExiste = 0;
 	
-	for ($indiceFila = 3; $indiceFila <= $numeroMayorDeFila; $indiceFila++)
+	for ($indiceFila = 2; $indiceFila <= $numeroMayorDeFila; $indiceFila++)
 	{
 		$Tipo = $hojaDeProductos->getCellByColumnAndRow(1, $indiceFila);
 		
@@ -4878,7 +4878,7 @@ if ($module == 'InventarioEditar')
 		$Estatus = $hojaDeProductos->getCellByColumnAndRow(6, $indiceFila);
 		$Estatus_ubicacion = $hojaDeProductos->getCellByColumnAndRow(7, $indiceFila);
 		$ubicacion = $hojaDeProductos->getCellByColumnAndRow(8, $indiceFila);
-		$cve_banco = $hojaDeProductos->getCellByColumnAndRow(9, $indiceFila);
+		$cve_banco = $hojaDeProductos->getCellByColumnAndRow(10, $indiceFila);
 		
 		//$ModeloId = $Almacen->getModeloId($Modelo->getValue());
 		//$ConectividadId = $Almacen->getConectividadId($Conectividad->getValue());
@@ -4957,11 +4957,11 @@ if ($module == 'InventarioEditar')
 				//$existeNoSerie = $Almacen->existeInventario($No_serie);
 				
 				$arrayString = array (
-				$TipoId,
-				$No_serie,
-				$ModeloId,
-				$AplicativoId,
-				$ConectividadId,
+				$TipoId,	//1
+				$No_serie,	//serie
+				$ModeloId,	//
+				$AplicativoId,//
+				$ConectividadId,//
 				$EstatusId,
 				$Estatus_ubicacionId,
 				$ubicacionId,
@@ -5034,7 +5034,7 @@ if ($module == 'UpdateInventario')
 		array_push($arrayString,$info[8]);
 	 }
 
-	 array_push($arrayString,$info[2]);
+	 array_push($arrayString,$info[1]);
 
 	$sql = "UPDATE inventario 
 			SET 

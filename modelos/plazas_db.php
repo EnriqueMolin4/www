@@ -93,13 +93,13 @@ class Plazas implements IConnections {
 		}
 
 
-        $sql = "select  plazas.id,plazas.nombre ,plazas.estatus,GROUP_CONCAT(territorios.nombre) territorio
-				FROM plazas
-				LEFT JOIN territorio_plaza ON plazas.id = territorio_plaza.plaza_id
+        $sql = "SELECT territorio_plaza.id,territorio_plaza.plaza_id, territorio_plaza.territorio_id, plazas.nombre plaza, territorios.nombre territorio
+				FROM territorio_plaza
+				LEFT JOIN plazas ON plazas.id = territorio_plaza.plaza_id
 				LEFT JOIN territorios ON territorios.id = territorio_plaza.territorio_id
 				WHERE plazas.id != 0
 				$where
-				GROUP BY  plazas.id,plazas.nombre ,plazas.estatus
+				
 				$order
 				$filter ";
 
@@ -179,7 +179,7 @@ class Plazas implements IConnections {
 		$sql = "SELECT t.id, t.nombre,IFNULL(total,0) total FROM territorios t
 				LEFT JOIN (SELECT territorio_id,COUNT(*)  total FROM territorio_plaza WHERE plaza_id = ? 
 				GROUP BY territorio_id) plaza ON t.id = plaza.territorio_id; ";
-			self::$logger->error($sql);
+			//self::$logger->error($sql);
 
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -333,7 +333,6 @@ if($module == 'getTerritoriosSelected') {
 		echo $val;
 }
 
-
 if($module == 'getPlazas') {
 $rows = $Plazas->getPlazas();
 	$val = '<option value="0">Seleccionar</option>';
@@ -470,6 +469,30 @@ if($module == 'saveNewPlaza') {
 
 	echo 1;
 }
+
+if ($module == 'guardarPlazaTerritorio') {
+	
+	$user = $_SESSION['userid'];
+	$plaza = $params['plaza'];
+	$territorial = $params['territorio'];
+	$fecha = date ( 'Y-m-d H:m:s' );
+
+	$prepareStatement = "INSERT INTO  `territorio_plaza` ( `plaza_id`,`territorio_id`,`creado_por`,`fecha_creacion`)  VALUES (?,?,?,?) ; ";
+		$arrayString = array (
+				$plaza,
+				$territorial,
+				$user,
+				$fecha
+		);
+
+	$id = 	$Plazas->insert($prepareStatement,$arrayString);
+
+	echo 1;
+
+}
+
+
+
 
 if($module == 'saveNewCPPlaza') {
 

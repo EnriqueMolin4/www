@@ -114,7 +114,7 @@ class Usuarios implements IConnections {
 	/**/
 	
 	function getPlazas() {
-		$sql = "select id,nombre from plazas where estatus=1 ";
+		$sql = "select id,nombre from plazas where status=1 ";
 		
 	
         try {

@@ -208,10 +208,90 @@ class Territorial implements IConnections {
 
 	}
 	
-	function getTableTerritorios() {
+	function getTableTerritorios($params,$total) {
+
+		$catalogo = $params['catalogo'];
+
+		$start = $params['start'];
+		$length = $params['length'];
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
+
+		$filter = "";
+		$param = "";
+		$where = "";
+		 
+
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( !empty($params['search']['value'])  &&  $total) {   
+			$where .=" AND ";
+			$where .=" ( nombre LIKE '".$params['search']['value']."%' )";    
+
+		}
 
 		
-		$sql = " SELECT *  FROM territorios ";
+		$sql = " SELECT * FROM $catalogo 
+				WHERE nombre IS NOT NULL
+				$where
+				$order
+                $filter ";
+
+	
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: territorial_db.php;	Method Name: getTableTerritorios();	Functionality: Get Territorios;	Log:".$sql . $e->getMessage () );
+		}
+	}
+
+	function getTableCPT($params,$total)
+	{
+		$start = $params['start'];
+		$length = $params['length'];
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
+		$tid = $params['tid'];
+
+		$filter = "";
+		$param = "";
+		$where = "";
+		 
+
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( !empty($params['search']['value'])  &&  $total) {   
+			$where .=" AND ";
+			$where .=" ( cpt.cp LIKE '".$params['search']['value']."%' )";    
+
+		}
+
+		
+		$sql = " SELECT cpt.id,cpt.cp, cpt.territorio_id, territorios.nombre, cpt.localidad
+				FROM cp_territorios cpt
+				LEFT JOIN territorios ON territorios.id = cpt.territorio_id
+				WHERE cpt.cp IS NOT NULL AND cpt.territorio_id = $tid
+				$where
+				$order
+                $filter ";
+
+        //self::$logger->error($sql);
 
 	
 		try {
@@ -363,6 +443,25 @@ class Territorial implements IConnections {
         }
 	}
 
+	function searchParam($nombre) {
+		$params = $_REQUEST;
+
+		//$module = $params['module'];
+		
+		$table = $params['catalogo'];
+
+		$sql = "select * from $table where nombre = ? ";
+
+		
+        try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($nombre));
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: parametros_db.php;	Method Name: searchParam();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
+    }
+
 }
 //
 include 'DBConnection.php';
@@ -402,19 +501,25 @@ if($module == 'getTablePlaza') {
 
 if($module == 'getTableTerritorios') {
 
-	$rows = $Territorial->getTableTerritorios();
-    $rowsTotal = $Territorial->getTableTerritorios();
+	$rows = $Territorial->getTableTerritorios($params,true);
+    $rowsTotal = $Territorial->getTableTerritorios($params,false);
     $data = array("data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
 
 	echo json_encode($data); //$val;
 }
 
+if ($module == 'getCPTerritorios') {
+	
+	$rows = $Territorial->getTableCPT($params,true);
+	$rowsTotal = $Territorial->getTableCPT($params, false);
+	$data = array("data"=>$rows,'recordsTotal'=>    count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
 
-
+	echo json_encode($data);
+}
 
 
 if($module == 'getTerritorios') {
-$rows = $Territorial->getTerritorios();
+	$rows = $Territorial->getTerritorios();
 	$val = '<option value="0">Seleccionar</option>';
 	foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
@@ -459,10 +564,42 @@ if($module == 'cpDelete') {
             $params['cpid']
     );
 	
-    $id = 	$Territorial->insert($prepareStatement,$arrayString);
+    $id = $Territorial->insert($prepareStatement,$arrayString);
     
     echo 1;
 }
+
+
+if ($module == 'grabarCatalogo') 
+{
+	
+	$catalogo = $params['catalogo'];
+	$nombre = $params['nombre'];
+	
+	$mensaje = '';
+	$valido = 0;
+
+	$existe = $Territorial->searchParam($nombre);
+	if ($existe) 
+	{
+		$mensaje = "El registro ya existe";
+		$valido++;
+	}
+	else
+	{
+		
+		$prepareStatement = "INSERT INTO $catalogo (`nombre`) VALUES (?) ";
+		$arrayString = array($nombre);
+		$Territorial->insert($prepareStatement, $arrayString);
+		$mensaje = "Registro agregado con éxito";
+
+		
+	}
+
+	echo json_encode(['existe' => $existe,'msg' => $mensaje, 'valido' => $valido]);
+
+}
+	
 
 if($module == 'TerritoriosMasivo') {
 	$counter = 0;
@@ -524,6 +661,64 @@ if($module == 'TerritoriosMasivo') {
 }
 
 
+if($module == 'cpMasivo') {
+	$counter = 0;
+	$NoCargadas = array();
+	$YaCargadas = array();
+	$eventoMasivo = new CargasMasivas();
+
+	$hojaDeProductos = $eventoMasivo->loadFile($_FILES);
+
+	$consecutivo = 1;
+	$insert_values = array();
+    $FechaAlta = date ( 'Y-m-d H:m:s' );
+    $user = $_SESSION['userid'];
+	$numeroMayorDeFila = $hojaDeProductos->getHighestRow(); // Numérico
+	$letraMayorDeColumna = $hojaDeProductos->getHighestColumn(); // Letra
+	# Convertir la letra al número de columna correspondiente
+	$numeroMayorDeColumna = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($letraMayorDeColumna);
+
+	
+
+	for ($indiceFila = 2; $indiceFila <= $numeroMayorDeFila; $indiceFila++) {
+		# Las columnas están en este orden:
+		# Código de barras, Descripción, Precio de Compra, Precio de Venta, Existencia
+		$cp = $hojaDeProductos->getCellByColumnAndRow(1, $indiceFila);
+		$territorio = $hojaDeProductos->getCellByColumnAndRow(2, $indiceFila);
+		$localidad = $hojaDeProductos->getCellByColumnAndRow(3, $indiceFila);
+	
+		//$cp = (int) $cp;
+		
+		/*$datafields = array('cp','territorio_id','localidad'); 
+
+		$question_marksEvento = implode(', ', array_fill(0, sizeof($datafields), '?'));*/
+
+		$sqlEvento = "INSERT INTO cp_territorios(id,cp,territorio_id,localidad)
+						VALUES(NULL,'$cp','$territorio','$localidad')
+						ON DUPLICATE KEY
+						UPDATE cp = '$cp'
+						,territorio_id = '$territorio'
+						,localidad = '$localidad' ";
+
+       
+		
+        $newId = $Territorial->insert($sqlEvento,array());
+        
+        if($newId != 0) {
+            array_push($YaCargadas,["CP" => $cp->getValue(), "Territorial" => $territorio->getValue() ]);
+            $counter++;
+            
+        } else {
+            
+            array_push($NoCargadas,$cp->getValue());
+        }
+		
+	}
+	
+	echo json_encode([ "registrosArchivo" =>$numeroMayorDeFila, "Cargados" => $counter, "NoCargadas" => sizeof($NoCargadas),"YaCargadas" => $YaCargadas]);
+
+		
+}
 
 
 

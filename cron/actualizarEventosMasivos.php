@@ -14,7 +14,7 @@ $fechaProceso = date ( 'Y-m-d H:m:s' );
 echo "############## $fechaProceso ###########";
 
         //$eventoMasivo = new CargasMasivas();
-        $archivo =  '/var/www/html/cron/MODIFICARFECHAS.xlsx';
+        $archivo =  '/var/www/dev.sinttecom.net/cron/MODIFICARFECHAS.xlsx';
 
         $spreadsheet = IOFactory::load($archivo);
         $hojaDeProductos= $spreadsheet->getActiveSheet()->toArray(null, true, true, true);

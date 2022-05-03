@@ -12,7 +12,7 @@
         <main class="page-content pt-2">
             <div id="overlay" class="overlay"></div>
             <div class="container-fluid p-5">
-            <h3>Plazas</h3>
+            <h3>PLAZAS -TERRITORIO</h3>
                     <div class="row">
                             <div class="col-sm-5"> 
                                 <label for="excelMasivo" class="col-form-label-sm">Carga Masiva</label> 
@@ -36,7 +36,7 @@
                     <tr>
                         <th>PLAZA</th>
                         <th>TERRITORIO</th>
-                        <th>ESTATUS</th>
+                        
                         <th>ACCION</th>
                     </tr>
                 </thead>
@@ -47,7 +47,7 @@
                     <tr>
                         <th>PLAZA</th>
                         <th>TERRITORIO</th>
-                        <th>ESTATUS</th>
+                        
                         <th>ACCION</th>
                     </tr>
                 </tfoot>
@@ -61,21 +61,21 @@
             </div>
    
         </main>
-        <!-- Modal -->
+        <!-- Modal Editar Territorial de Plaza-->
         <div id="newTerritorio" class="modal fade" role="dialog">
             <div class="modal-dialog">
 
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">AGREGAR PLAZA</h4>
+                        <h4 class="modal-title">EDITAR TERRITORIAL DE LA PLAZA</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="plazas">PLAZAS:</label>
                             <div class="col-sm-10">
-                            <input type="newPlazaName" class="form-control" name="newPlazaName" id="newPlazaName" placeholder="Agregar Plaza">
+                            <input type="newPlazaName" class="form-control" name="newPlazaName" id="newPlazaName" placeholder="Agregar Plaza" readonly>
                             </div>
                         </div>                       
                         <div class= "col-sm-10">
@@ -134,31 +134,32 @@
             </div>
         </div>
         <!-- Modal -->
-        <div id="newTerritorio" class="modal fade" role="dialog">
+        <div id="newPlazaTerritorio" class="modal fade" role="dialog">
             <div class="modal-dialog">
 
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">AGREGAR PLAZA</h4>
+                        <h4 class="modal-title">AGREGAR PLAZA - TERRITORIAL</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="plazas">PLAZAS:</label>
                             <div class="col-sm-10">
-                            <input type="newPlazaName" class="form-control" name="newPlazaName" id="newPlazaName" placeholder="Agregar Plaza">
+                              <select class="form-control form-control-sm" name="plazaN" id="plazaN"></select>
                             </div>
                         </div>                       
                         <div class= "col-sm-10">
-                            <select class="custom-select" name="listTerritorio" id="listTerritorio" multiple>
+                            <label for="territoriosL" class="control-label col-sm-2">TERRITORIAL</label>
+                                <select class="form-control form-control-sm" name="territoriosL" id="territoriosL">
                             </select>
                         </div>
                  
                     </div>
                     <div class="modal-footer">
                         <input type="hidden" id="plazaId" name="plazaId">
-                        <button type="button" class="btn btn-success" id="btnGrabarNuevo">Grabar</button>
+                        <button type="button" class="btn btn-success" id="btnNuevoTP">Grabar</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
@@ -191,9 +192,8 @@
         $(document).ready(function() {
             ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "plazaslink")
             getTerritorios();
+            getPlazas();
  
-
-
             plazas = $('#plazas').DataTable({
                     language: {
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
@@ -213,23 +213,18 @@
                         }
                     },
                     columns : [
-                        { data: 'nombre' },
+                        { data: 'plaza' },
                         { data: 'territorio' },
-                        { data: 'estatus' },
+                        //{ data: 'estatus' },
                         { data: 'id'}
                     ],
                     aoColumnDefs: [
+                       
                         {
                             "targets": [2],
                             "mRender": function ( data,type, row ) {
-                                var estatus = data == '1' ? 'Activo' : 'Desactivo';
-                                return estatus;
-                            }
-                        },
-                        {
-                            "targets": [3],
-                            "mRender": function ( data,type, row ) {
-                                return '<a href="#" class="editPlaza" data="'+row.id+'" data-name="'+row.nombre+'"><i class="fas fa-edit fa-2x"></i></a><a href="#" class="editCPPlaza" data-id="'+row.id+'" data-name="'+row.nombre+'"></i><i class="fas fa-plus-square fa-2x" style="color:green"></i></a>';
+                                return '<a href="#" class="editPlaza" data="'+row.id+'" data-name="'+row.plaza+'"><i class="fas fa-edit fa-2x"></i></a>';
+                                /*<a href="#" class="editCPPlaza" data-id="'+row.id+'" data-name="'+row.nombre+'"></i><i class="fas fa-plus-square fa-2x" style="color:green"></i></a>';*/
                             }
                         }
                     ]
@@ -239,6 +234,7 @@
                     var plazaid = $(this).attr('data');
                     var plazaName = $(this).attr('data-name');
                     $("#plazaId").val(plazaid);
+                    $("#newPlazaName").val(plazaName);
                     $.ajax({
                         type: 'POST',
                         url: 'modelos/plazas_db.php', // call your php file
@@ -285,7 +281,9 @@
 
                 $("#btnNewPlaza").on('click', function() {
 
-                    $('option', $('#listTerritorio')).each(function(element) {
+                    $("#newPlazaTerritorio").modal('show');
+
+                    /*$('option', $('#listTerritorio')).each(function(element) {
                         $(this).removeAttr('selected').prop('selected', false);
                     });
 
@@ -305,7 +303,7 @@
                         error: function(jqXHR, textStatus, errorThrown) {
                             alert(data)
                         }
-                    });
+                    });*/
 
                 })
 
@@ -346,8 +344,25 @@
                         data: { module: 'saveNewPlaza', plazaid : plazaId, territorios : territoriosSel },
                         cache: false,
                         success: function(data, textStatus, jqXHR){
-                            
-                           
+                            if (data > 0) 
+                            {
+                                $.toaster({
+                                    message: 'Se actualizó el territorio ligado a la plaza',
+                                    title: 'Aviso',
+                                    priority: 'success'
+                                });
+                                ("#newTerritorio").modal('hide');
+                                plazas.ajax.reload();
+
+                            }
+                            else
+                            {
+                                $.toaster({
+                                    message: 'No se actualizó',
+                                    title: 'Aviso',
+                                    priority: 'danger'
+                                });
+                            }
                             
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -355,7 +370,58 @@
                         }
                     });
 
+                });
+
+                $("#btnNuevoTP").on("click",function(){
+                    var nuevaPlaza = $("#plazaN").val();
+                    var nuevoTerr = $("#territoriosL").val();
+
+                    if ( $("#plazaN").val() == "0" || $("#territoriosL").val() == "0" ) 
+                    {
+                        $.toaster({
+                            message: 'Favor de seleccionar plaza y territorial',
+                            title: 'Aviso',
+                            priority:'warning'
+                        });
+
+                    }
+                    else
+                    {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'modelos/plazas_db.php',
+                            data: { module:'guardarPlazaTerritorio', plaza: nuevaPlaza, territorio : nuevoTerr },
+                            cache: false,
+                            success: function(data, textStatus, jqXHR){
+                                if (data > 0) 
+                                {
+                                    $.toaster({
+                                        message: 'Se guardó con éxito',
+                                        title: 'Aviso',
+                                        priority:'success'
+                                    });
+                                    $("#newPlazaTerritorio").modal('hide');
+                                    plazas.ajax.reload();
+
+                                }
+                                else
+                                {
+                                    $.toaster({
+                                        message: 'Hubo un error',
+                                        title: 'Aviso',
+                                        priority: 'warning'
+                                    })
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                alert(data);
+                            }
+                        })
+                    }
+
                 })
+
+
          
                 $("#btnCargarExcel").on("click",function() {
                     var form_data = new FormData();
@@ -415,8 +481,27 @@
                 success: function(data, textStatus, jqXHR){
                     
                     $("#territorios").html(data);
+                    $("#territoriosL").html(data);
                      
                     
+                    
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert(data)
+                }
+            });
+        } 
+
+        function getPlazas() {
+
+            $.ajax({
+                type: 'POST',
+                url: 'modelos/plazas_db.php', // call your php file
+                data: { module: 'getPlazas' },
+                cache: false,
+                success: function(data, textStatus, jqXHR){
+                    
+                    $("#plazaN").html(data);        
                     
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

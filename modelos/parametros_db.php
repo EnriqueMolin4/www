@@ -66,6 +66,7 @@ class Usuarios implements IConnections {
 		$length = $params['length'];
 		$catalogo = $params['catalogo'];
 		$banco = $params['f_banco'];
+		$servicio = $params['servicio'];
 		
 
         $orderField =  $params['columns'][$params['order'][0]['column']]['data'];
@@ -97,6 +98,11 @@ class Usuarios implements IConnections {
 
 		if ($banco != '0') {
 			$where .= " AND $catalogo.cve_banco = $banco";
+		}
+
+		if ($servicio != '0') {
+			$where .=" AND $catalogo.servicio_id = $servicio ";
+
 		}
 
 
@@ -175,16 +181,31 @@ class Usuarios implements IConnections {
         }
 	}
 
+	function getTipoServicios()
+	{
+		$sql = " SELECT * from tipo_servicio where status = 1";
+
+		//self::$logger->error($sql);
+
+		try {
+			$stmt = self::$connection->prepare ($sql );
+            $stmt->execute();
+            return  $stmt->fetchAll( PDO::FETCH_ASSOC );
+		} catch (PDOException $e) {
+			self::$logger->error("File: parametros_db.php; Method Name:  getTipoServicios();    Functionality: Get Products price From PriceLists;   Log:" . $e->getMessage() );
+		}
+	}
+
 	function searchParam($nombre, $cve) {
-		//$params = $_REQUEST;
+		$params = $_REQUEST;
 
 		//$module = $params['module'];
 		
-		//$table = $params['catalogo'];
+		$table = $params['catalogo'];
 
-		$sql = "select * from tipo_evidencias where nombre = ? AND cve_banco = ? ";
+		$sql = "select * from $table where nombre = ? AND cve_banco = ? ";
 
-		self::$logger->error($sql);
+		//self::$logger->error($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );
@@ -193,6 +214,19 @@ class Usuarios implements IConnections {
         } catch ( PDOException $e ) {
             self::$logger->error ("File: parametros_db.php;	Method Name: searchParam();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
         }
+    }
+
+    function searchSubservicio($nombre, $cve)
+    {
+    	$sql = "select * from tipo_subservicios where nombre=? AND cve_banco =? ";
+
+    	try {
+    		$stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($nombre,$cve));
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+    	} catch (PDOException $e) {
+    		self::$logger->error ("File: parametros_db.php;	Method Name: searchSubservicio();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+    	}
     }
     
     function buscarTecnico($search) {
@@ -258,6 +292,17 @@ $rows = $Usuario->getSupervisores();
 	echo $val;
 }
 
+if ($module == 'getServicios') {
+	$rows = $Usuario->getTipoServicios();
+	//print_r($rows);
+	$val = '<option value ="0">Seleccionar</option>';
+	foreach( $rows as $row)
+	{
+		$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
+}
+
 if($module == "buscarTecnico") {
 	$rows = $Usuario->buscarTecnico($params['term']);
 
@@ -314,6 +359,7 @@ if($module == 'parametroUpdate') {
 
 if ($module == 'grabarCatalogo') 
 {
+	
 	$catalogo = $params['catalogo'];
 	$nombre = $params['nombre'];
 	$cve = $params['cve'];
@@ -331,18 +377,53 @@ if ($module == 'grabarCatalogo')
 	}
 	else
 	{
-		$prepareStatement = "INSERT INTO $catalogo (`nombre`,`cve_banco`) VALUES (?, ?) ";
+		if ($catalogo == 'tipo_subservicios') 
+		{
+			$idServicio = $params['id_s'];
+			
+			$prepareStatement = "INSERT INTO $catalogo (`nombre`,`servicio_id`,`cve_banco`) VALUES (?,?,?) ";
 
-		$arrayString = array($nombre, $cve);
+			$arrayString = array($nombre, $idServicio, $cve);
+		}
+		else if ($catalogo == 'tipo_aplicativo' || $catalogo == 'tipo_conectividad' || $catalogo == 'tipo_causas_cambio') 
+		{
+			$claveE = $params['clave'];
+			
+			$prepareStatement = "INSERT INTO $catalogo (`nombre`,`clave_elavon`,`cve_banco`) VALUES (?,?,?) ";
 
+			$arrayString = array($nombre, $claveE, $cve);
+
+		}else if ($catalogo == 'tipo_cancelacion') 
+		{
+
+			$claveE = $params['clave'];
+			
+			$prepareStatement = "INSERT INTO $catalogo (`nombre`,`descripcion`,`clave_elavon`,`cve_banco`) VALUES (?,?,?,?) ";
+
+			$arrayString = array($nombre, $nombre, $claveE, $cve);
+
+		}else
+		{
+			$prepareStatement = "INSERT INTO $catalogo (`nombre`,`cve_banco`) VALUES (?, ?) ";
+
+			$arrayString = array($nombre, $cve);
+
+			
+		}
 		$Usuario->insert($prepareStatement, $arrayString);
 
 		$mensaje = "Registro agregado con éxito";
+		
 
 	}
 
 	echo json_encode(['existe' => $existe,'msg' => $mensaje, 'valido' => $valido]);
 
+}
+
+if ($module == 'grabarSubservicio') 
+{
+	$catalogo = $params['catalogo'];
 }
 
 /*if ($module == 'grabarServicio') 
