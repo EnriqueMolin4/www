@@ -377,7 +377,7 @@ class Assignacion implements IConnections {
 				and cuentas.territorial IN ('$userId') 
 				ORDER BY du.nombre,du.apellidos ";
 
-		//self::$logger->error($sql);
+		self::$logger->error($sql);
 		
         try {
             $stmt = self::$connection->prepare ($sql );
