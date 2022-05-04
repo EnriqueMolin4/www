@@ -608,12 +608,12 @@ class Eventos implements IConnections {
         }
 	}
 
-	function getListaModelos() {
-		$sql = "SELECT id,modelo from modelos WHERE estatus=1 AND clave_elavon != 0 ";
+	function getListaModelos($cve_banco) {
+		$sql = "SELECT id,modelo from modelos WHERE estatus=1 AND cve_banco =?";
 		
         try {
             $stmt = self::$connection->prepare ($sql );
-            $stmt->execute (array());
+            $stmt->execute (array($cve_banco));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
             self::$logger->error ("File: eventos_db.php;	Method Name: getListaModelos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
@@ -1908,7 +1908,8 @@ if($module == 'getHistorialEvento'){
 
 if($module == 'getListaModelos') {
     $val = '<option value="0" selected>Seleccionar Modelos</option>';
-    $rows = $Eventos->getListaModelos();
+    $rows = $Eventos->getListaModelos($params['cve_banco']);
+
     foreach ( $rows as $row ) {
 		$val .=  '<option value="' . $row ['id'] . '">' . $row ['modelo'] . '</option>';
 	}
@@ -1950,13 +1951,13 @@ if($module == "getImagenesODT") {
 	$odt = $params['odt'];
 	$lstImagenes = array();
 	$rows = $Eventos->getImagenesODT($params['odt']);
-	if( file_exists($_SERVER["DOCUMENT_ROOT"].'/img/'.$odt) ) {
+	if( file_exists($_SERVER["DOCUMENT_ROOT"].'/www/img/'.$odt) ) {
 		//CORRECT
-	} else if ( file_exists($_SERVER["DOCUMENT_ROOT"].'/img/'.strtoupper($odt)) ) {
+	} else if ( file_exists($_SERVER["DOCUMENT_ROOT"].'/www/img/'.strtoupper($odt)) ) {
 		$odt = strtoupper($odt);
 	}
 
-	if(sizeof($rows) > 0 &&  file_exists($_SERVER["DOCUMENT_ROOT"].'/img/'.$odt)){
+	if(sizeof($rows) > 0 &&  file_exists($_SERVER["DOCUMENT_ROOT"].'/www/img/'.$odt)){
 		$odtHistory = $Eventos->getHistoriaODT($odt,$_SESSION['user']);
 
 		//if(sizeof($odtHistory) == 0 ) {
@@ -3242,7 +3243,8 @@ if($module == 'cerrarEvento') {
 	$subrechazo = $params['subrechazo'];
 	$cancelado = $params['cancelado'];
 	
-	$tpv = strlen($params['tpv']) > 0 ? $params['tpv'] : null;
+	//$tpv = strlen($params['tpv']) > 0 ? $params['tpv'] : null;
+	$tpv = !sterlen($params['tpv']) ? null : $params['tpv'];
 	
 	$tvpInModelo = $params['tvpInModelo'];
 	$tpvInConnect = $params['tpvInConnect'];
