@@ -147,6 +147,10 @@ class Almacen implements IConnections {
 		$estatusubicacion = $params['tipo_estatusubicacion'];
 		$almacen = $_SESSION['almacen'];
 		$bancos = $params['banco'];
+		$modelos = $params['tipo_modelo'];
+		$conect = $params['tipo_conect'];
+		$carrier = $params['tipo_carrier'];
+
 
 		if( $bancos != '0' ) {
 			$where .= " AND b.cve = $bancos ";
@@ -182,8 +186,24 @@ class Almacen implements IConnections {
 
 		if( $producto != '0' ) {
 			$where .= " AND inv.tipo = $producto ";
+
+			if ( $producto == '2' ) 
+			{
+				if ( $carrier != '0') {
+					$where .= " AND inv.modelo = $carrier";
+				}
+			}
 		}
 
+		if ( $modelos != '0' ) {
+			$where .= " AND inv.modelo = $modelos";
+		}
+
+		if ( $conect != '0' ) {
+			$where .= " AND inv.conectividad = $conect";
+		}
+
+		
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
 		}

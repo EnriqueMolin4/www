@@ -79,8 +79,27 @@
                         <select id="tipo_estatus" name="tipo_estatus" class="form-control form-control-sm searchInventario">
                                 <option value="0" selected>Seleccionar</option>
                         </select>
-                    </div>   
-                    
+                    </div>  
+                    <div class="col">
+                        <label for="tipo_modelo" class="col-form-label-sm">Modelo</label>
+                        <select name="tipo_modelo" id="tipo_modelo" class="form-control form-control-sm searchInventario">
+                            <option value="0" selected>Seleccionar</option>
+                        </select>
+                    </div> 
+                    <div class="col">
+                        <label for="tipo_conect" class="col-form-label-sm">Conectividad</label>
+                        <select name="tipo_conect" id="tipo_conect" class="form-control form-control-sm searchInventario">
+                            <option value="0" selected>Seleccionar</option>
+                        </select>
+                    </div>                 
+                </div>
+                <div class="row" style="display: none" id="divCarrier">
+                    <div class="col-sm-4">
+                        <label for="tipo_carrier" class="col-form-label-sm">Carrier</label>
+                        <select name="tipo_carrier" id="tipo_carrier" class="form-control form-control-sm searchInventario">
+                            <option value="0" selected>Seleccionar</option>
+                        </select>
+                    </div> 
                 </div>
                 <br>
 				<div class="d-flex justify-content-end">

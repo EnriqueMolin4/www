@@ -70,6 +70,9 @@ $(document).ready(function() {
                 d.tipo_estatus = $("#tipo_estatus").val(),
                  d.tipo_estatusubicacion = $("#tipo_estatusubicacion").val(),
                 d.tipo_producto = $("#tipo_producto").val(),
+                d.tipo_modelo = $("#tipo_modelo").val(),
+                d.tipo_conect = $("#tipo_conect").val(),
+                d.tipo_carrier = $("#tipo_carrier").val(),
                 d.banco = $("#banco").val()
             }
         },
@@ -836,7 +839,26 @@ $(document).ready(function() {
     })
 
 
+     $("#banco").on("change",function(){
+        var cve = $("#banco").val();
 
+        getModelosBanco(cve);
+        //getConectBanco(cve);
+
+     });
+
+     $("#tipo_producto").on("change",function(){
+        var tp = $("#tipo_producto").val();
+
+        if (tp == '2') 
+        {
+            $("#divCarrier").show();
+        }
+        else
+        {
+            $("#divCarrier").hide();
+        }
+     })
 
 });
 
@@ -934,6 +956,7 @@ function getCarriers() {
         success: function(data){
              
             $("#det-carrier").html(data);
+            $("#tipo_carrier").html(data);
             
             
         },
@@ -952,6 +975,7 @@ function getConectividad() {
         success: function(data){
              
             $("#det-conectividad").html(data);
+            $("#tipo_conect").html(data)
             
             
         },
@@ -1069,6 +1093,42 @@ function getBancos() {
     });
 }
 
+function getModelosBanco(cve_banco){
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/eventos_db.php', // call your php file
+        data: 'module=getListaModelos&cve_banco='+cve_banco,
+        cache: true,
+        success: function(data){
+            console.log(data);
+      
+        $("#tipo_modelo").html(data);      
+          
+        },
+        error: function(error){
+            var demo = error;
+        }
+    });
+}
+
+ function getConectBanco(cve_banco) {
+
+          $.ajax({
+              type: 'GET',
+              url: 'modelos/eventos_db.php', // call your php file
+              data: 'module=getListaConectividad&cve_banco='+cve_banco,
+              cache: true,
+              success: function(data){
+                  console.log(data);
+            
+              //$("#tipo_conect").html(data);          
+                
+              },
+              error: function(error){
+                  var demo = error;
+              }
+          });
+      }
 
 function cleartext() 
 { 
