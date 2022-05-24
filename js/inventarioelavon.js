@@ -5,6 +5,7 @@ var fecha_hoy;
 $(document).ready(function() {
     usrPerm = $("#userPerm").val();
     getBancosf();
+    getFabricantes();
     ResetLeftMenuClass("submenualmacen", "ulsubmenualmacen", "almacenlink")
     $("#colFabricante").hide();
     $("#colCarrier").hide();
@@ -303,6 +304,22 @@ function getBancosf() {
             var demo = error;
         }
     });
+}
+
+function getFabricantes()
+{
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/inventarioelavon_db.php',
+        data: 'module=getFabricantes',
+        cache: true,
+        success: function(data){
+            $("#fabricante").html(data);
+        },
+        error: function(error){
+            var demo = error;
+        }
+    })
 }
 
 function clear() {

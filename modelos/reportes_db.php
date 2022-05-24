@@ -15,44 +15,44 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 include 'IConnections.php';
 class Reportes implements IConnections {
-	private static $connection;
-	private static $logger;
-	function __construct($db, $log) {
-		self::$connection = $db->getConnection ( 'sinttecom' );
-		self::$logger=  $log;
-	}
-	function fetch() {
-		if (isset ( self::$connection )) {
-			return self::execute_sel ();
-		} else {
-			return array ();
-		}
-	}
-	private function execute_sel() {
-		try {
-			$stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
-			$stmt->execute ( array () );
-			return $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		} catch ( PDOException $e ) {
-			self::$logger->error ("File: reportes_db.php;	Method Name: execute_sel();	Functionality: Select Warehouses;	Log:" . $e->getMessage () );
-		}
-	}
-	private function execute_ins($prepareStatement, $arrayString) {
-		try {
-			$stmt = self::$connection->prepare ( $prepareStatement );
-			$stmt->execute ( $arrayString );
-			$stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
-			return $stmt->fetchColumn();
-		} catch ( PDOException $e ) {
-			self::$logger->error ("File: reportes_db.php;	Method Name: execute_ins();	Functionality: Insert/Update ProdReceival;	Log:" . $prepareStatement . " " . $e->getMessage () );
-		}
-	}
-	function insert($prepareStatement, $arrayString) {
+    private static $connection;
+    private static $logger;
+    function __construct($db, $log) {
+        self::$connection = $db->getConnection ( 'sinttecom' );
+        self::$logger=  $log;
+    }
+    function fetch() {
+        if (isset ( self::$connection )) {
+            return self::execute_sel ();
+        } else {
+            return array ();
+        }
+    }
+    private function execute_sel() {
+        try {
+            $stmt = self::$connection->prepare ( "SELECT * FROM `eventos`" );
+            $stmt->execute ( array () );
+            return $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: reportes_db.php;   Method Name: execute_sel(); Functionality: Select Warehouses;   Log:" . $e->getMessage () );
+        }
+    }
+    private function execute_ins($prepareStatement, $arrayString) {
+        try {
+            $stmt = self::$connection->prepare ( $prepareStatement );
+            $stmt->execute ( $arrayString );
+            $stmt = self::$connection->query("SELECT LAST_INSERT_ID()");
+            return $stmt->fetchColumn();
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: reportes_db.php;   Method Name: execute_ins(); Functionality: Insert/Update ProdReceival;  Log:" . $prepareStatement . " " . $e->getMessage () );
+        }
+    }
+    function insert($prepareStatement, $arrayString) {
 
-			return self::execute_ins ( $prepareStatement, $arrayString );
+            return self::execute_ins ( $prepareStatement, $arrayString );
 
-	}
-	
+    }
+    
     function getEventos($params) {
 
         $inicio = $params['fechaVen_inicio'];
@@ -74,17 +74,17 @@ class Reportes implements IConnections {
                 from eventos 
                 WHERE fecha_alta BETWEEN ?  AND ? 
                 $filter ";
-		
+        
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute (array($inicio,$final));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getEventos();	Functionality: Get VO Eventos;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;   Method Name: getEventos();  Functionality: Get VO Eventos;  Log:" . $e->getMessage () );
         }
-	}
+    }
 
-	function getVo($params) {
+    function getVo($params) {
 
         $inicio = $params['fechaVen_inicio'];
         $final = $params['fechaVen_fin'];
@@ -101,15 +101,15 @@ class Reportes implements IConnections {
                 from eventos where servicio= 15 
                 AND fecha_alta BETWEEN ?  AND ? 
                 $filter ";
-		
+        
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute (array($inicio,$final));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getVo();	Functionality: Get VO Eventos;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;   Method Name: getVo();   Functionality: Get VO Eventos;  Log:" . $e->getMessage () );
         }
-	}
+    }
 
     function getImagenesTecnico($params) {
 
@@ -120,7 +120,7 @@ class Reportes implements IConnections {
         $filter = "";
 
         if ($cve != '0') {
-        	$filter .= " AND cve = $cve ";
+            $filter .= " AND cve = $cve ";
         }
 
         if($tecnico != '0') {
@@ -128,17 +128,17 @@ class Reportes implements IConnections {
         }
 
         $sql = "Select *
-				FROM view_odt_img
-				WHERE ultima_act BETWEEN ?  AND ? 
+                FROM view_odt_img
+                WHERE ultima_act BETWEEN ?  AND ? 
                 $filter ";
-				
-		//self::$logger->error ($sql);
+                
+        //self::$logger->error ($sql);
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute (array($inicio,$final));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getImagenesTecnico();	Functionality: Get Imagenes Tecnico;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;   Method Name: getImagenesTecnico();  Functionality: Get Imagenes Tecnico;    Log:" . $e->getMessage () );
         }
     }
     
@@ -148,26 +148,26 @@ class Reportes implements IConnections {
         $cve = $params['cve_b'];
 
         if ($cve != '0') {
-        	$where .= " AND eventos.cve_banco = $cve";
+            $where .= " AND eventos.cve_banco = $cve";
         }
 
 
         $sql = "Select 
-				eventos.ODT,
-				bancos.banco,
-				eventos.afiliacion,
-				cuentas.nombre Tecnico,
-				eventos.fecha_alta ,
-				eventos.fecha_atencion ,
-				evidencias.fecha  FechaEvidencias,
-				eventos.tpv_retirado tpv_retirado, 
-				eventos.tpv_instalado tpv_instalado,
-				eventos.sim_retirado sim_retirado,
-				eventos.sim_instalado sim_instalado,
-				tipo_estatus.nombre Estatus, 
-				tipo_servicio.nombre Servicio,
-				tipo_subservicios.nombre SubServicio,
-				evidencias.cantImagenes 
+                eventos.ODT,
+                bancos.banco,
+                eventos.afiliacion,
+                cuentas.nombre Tecnico,
+                eventos.fecha_alta ,
+                eventos.fecha_atencion ,
+                evidencias.fecha  FechaEvidencias,
+                eventos.tpv_retirado tpv_retirado, 
+                eventos.tpv_instalado tpv_instalado,
+                eventos.sim_retirado sim_retirado,
+                eventos.sim_instalado sim_instalado,
+                tipo_estatus.nombre Estatus, 
+                tipo_servicio.nombre Servicio,
+                tipo_subservicios.nombre SubServicio,
+                evidencias.cantImagenes 
                 from eventos
                 LEFT JOIN tipo_subservicios ON eventos.servicio = tipo_subservicios.id
                 LEFT JOIN bancos ON bancos.cve = eventos.cve_banco
@@ -182,76 +182,76 @@ class Reportes implements IConnections {
                 $where";
             
                 //self::$logger->error($sql);
-		
+        
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute (array($inicio,$final));
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getInventarioCampo();	Functionality: Get Imagenes Tecnico;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;   Method Name: getInventarioCampo();  Functionality: Get Imagenes Tecnico;    Log:" . $e->getMessage () );
         }
     }
 
 
     ////////REPORTE ALMACEN////
     function getubi() {
-		
-		
-		$sql = "SELECT * from tipo_ubicacion where status=1 AND almacen=1  order by almacen DESC"; /* tipo_ubicacion */
-		
+        
+        
+        $sql = "SELECT * from tipo_ubicacion where status=1 AND almacen=1  order by almacen DESC"; /* tipo_ubicacion */
+        
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getubi();	Functionality: Get Ubicaciones;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;   Method Name: getubi();  Functionality: Get Ubicaciones; Log:" . $e->getMessage () );
         }
-	}
+    }
     function getEstatus() /*tipo_estatus_modelos*/
     {
-		
-		$sql = "select * from tipo_estatus_modelos WHERE estatus=1 ";
-		
-	
+        
+        $sql = "select * from tipo_estatus_modelos WHERE estatus=1 ";
+        
+    
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getEstatus();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;   Method Name: getEstatus();  Functionality: Get Products price From PriceLists;  Log:" . $e->getMessage () );
         }
     }
 
     function getubicacion() /* tipo_estatus_inventario*/
     {
-		
-		$sql = "select * from tipo_estatus_inventario where estatus=1";
-		
-	
+        
+        $sql = "select * from tipo_estatus_inventario where estatus=1";
+        
+    
         try {
             $stmt = self::$connection->prepare ($sql );
             $stmt->execute ();
             return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
         } catch ( PDOException $e ) {
-            self::$logger->error ("File: reportes_db.php;	Method Name: getubicacion();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+            self::$logger->error ("File: reportes_db.php;   Method Name: getubicacion();    Functionality: Get Products price From PriceLists;  Log:" . $e->getMessage () );
         }
     }
 
     function getAlmaceninventario($params,$total) {
 
-	/* 	$start = $params['start'];
-		$length = $params['length']; */
+    /*  $start = $params['start'];
+        $length = $params['length']; */
 
-		$filter = "";
-		$param = "";
-		$where = "";
+        $filter = "";
+        $param = "";
+        $where = "";
         $queryInsumos = "";
         $banco = is_null($params['cve_banco']) ? '0' : implode(', ',$params['cve_banco']);
-		$ubicacion = is_null($params['tipo_ubicacion']) ? '0' : implode(', ',$params['tipo_ubicacion']) ;
-		$estatus = is_null($params['tipo_estatus']) ? '0' : implode(', ',$params['tipo_estatus']);
-		$producto = is_null($params['tipo_producto']) ? '0' : implode(', ',$params['tipo_producto']);
-		$estatusubicacion = is_null( $params['tipo_estatusubicacion'] ) ? '0' : implode(', ',$params['tipo_estatusubicacion']) ;
-		$almacen = $_SESSION['almacen'];
+        $ubicacion = is_null($params['tipo_ubicacion']) ? '0' : implode(', ',$params['tipo_ubicacion']) ;
+        $estatus = is_null($params['tipo_estatus']) ? '0' : implode(', ',$params['tipo_estatus']);
+        $producto = is_null($params['tipo_producto']) ? '0' : implode(', ',$params['tipo_producto']);
+        $estatusubicacion = is_null( $params['tipo_estatusubicacion'] ) ? '0' : implode(', ',$params['tipo_estatusubicacion']) ;
+        $almacen = $_SESSION['almacen'];
         $insumos = strpos($producto, 3);
 
         if( in_array(3,$params['tipo_producto'])  ) {
@@ -274,93 +274,93 @@ class Reportes implements IConnections {
         }
 
         if ($bancos != '0') {
-        	
-        	$where .= " AND inv.cve_banco in ('$banco')";
+            
+            $where .= " AND inv.cve_banco in ('$banco')";
         }
 
-		if( $ubicacion != '0' ) {
+        if( $ubicacion != '0' ) {
 
             $where .= " AND inv.id_ubicacion in ( $ubicacion )";
-		}
+        }
 
-		if( $estatusubicacion != '0' ) {
-			$where .= " AND inv.estatus_inventarioid in  ( $estatusubicacion )";
-			if($_SESSION['tipo_user'] != 'AL') {
-				
-				//$where .= "  AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) ";
-				
-			}
-			
-		}
-		
-		if( $estatus != '0' ) {
-			$where .= " AND inv.estatusid in  ( $estatus ) ";
-		}
+        if( $estatusubicacion != '0' ) {
+            $where .= " AND inv.estatus_inventarioid in  ( $estatusubicacion )";
+            if($_SESSION['tipo_user'] != 'AL') {
+                
+                //$where .= "  AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) ";
+                
+            }
+            
+        }
+        
+        if( $estatus != '0' ) {
+            $where .= " AND inv.estatusid in  ( $estatus ) ";
+        }
 
-		if( $producto != '0' ) {
-			$where .= " AND inv.tipo in ( $producto )";
-		}
+        if( $producto != '0' ) {
+            $where .= " AND inv.tipo in ( $producto )";
+        }
 
-		/* if(isset($start) && $length != -1 && $total) {
-			$filter .= " LIMIT  $start , $length"; 
-		} */
+        /* if(isset($start) && $length != -1 && $total) {
+            $filter .= " LIMIT  $start , $length"; 
+        } */
 
-		if( !empty($params['search']['value'])) {   
-			$where .=" AND ";
-			$where .=" ( m.modelo LIKE '".$params['search']['value']."%' ";
-			$where .=" OR inv.no_serie LIKE '".$params['search']['value']."%' ";
-			$where .=" OR em.nombre LIKE '".$params['search']['value']."%'  ";
-			$where .=" OR tu.nombre LIKE '".$params['search']['value']."%'  )";
+        if( !empty($params['search']['value'])) {   
+            $where .=" AND ";
+            $where .=" ( m.modelo LIKE '".$params['search']['value']."%' ";
+            $where .=" OR inv.no_serie LIKE '".$params['search']['value']."%' ";
+            $where .=" OR em.nombre LIKE '".$params['search']['value']."%'  ";
+            $where .=" OR tu.nombre LIKE '".$params['search']['value']."%'  )";
 
-		}
-		
-		if($_SESSION['tipo_user'] != 'admin' && $_SESSION['tipo_user'] != 'supervisor' && $_SESSION['tipo_user'] != 'CA' && $_SESSION['tipo_user'] != 'AN' && $_SESSION['tipo_user'] != 'AL') {
-			$userId = $_SESSION['userid'] ;
-			
-			//$where .= " ( AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) OR tu.id = $almacen )";
-		}
+        }
+        
+        if($_SESSION['tipo_user'] != 'admin' && $_SESSION['tipo_user'] != 'supervisor' && $_SESSION['tipo_user'] != 'CA' && $_SESSION['tipo_user'] != 'AN' && $_SESSION['tipo_user'] != 'AL') {
+            $userId = $_SESSION['userid'] ;
+            
+            //$where .= " ( AND inv.id_ubicacion in  (Select id from cuentas where almacen = $almacen ) OR tu.id = $almacen )";
+        }
 
-		/*$sql = "SELECT 
-						  CASE WHEN inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios' END tipoNombre,
-						  inv.no_serie,	
-						  bancos.banco banco,
-						   CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN  inv.tipo= 4 THEN a.concepto END modelo,
-						   em.nombre estatus,
-						   ei.nombre estatus_inventario,
-						   CASE WHEN inv.ubicacion= 9 THEN CONCAT(du.nombre,' ',du.apellidos) ELSE tu.nombre END  ubicacion,
-							inv.fecha_edicion fecha_modificacion,
-							CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad END cantidad
-							FROM inventario inv
-							LEFT JOIN modelos m  ON m.id = inv.modelo
-							LEFT JOIN carriers c  ON c.id = inv.modelo
-							LEFT JOIN accesorios a ON a.id = inv.modelo
-							LEFT JOIN tipo_estatus_modelos em ON em.id = inv.estatus
-							LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
-							LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
-							LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
-							LEFT JOIN bancos ON bancos.cve = inv.cve_banco
-							-- LEFT JOIN comercios c ON c.afiliacion = inv.id_ubicacion
-							WHERE inv.no_serie is not null
+        /*$sql = "SELECT 
+                          CASE WHEN inv.tipo = '1' THEN 'TPV' WHEN inv.tipo = '2' THEN 'SIM' WHEN inv.tipo = '3' THEN 'Insumos' WHEN inv.tipo = '4' THEN 'Accesorios' END tipoNombre,
+                          inv.no_serie, 
+                          bancos.banco banco,
+                           CASE WHEN inv.tipo = '1' THEN m.modelo WHEN inv.tipo = '2' THEN c.nombre WHEN  inv.tipo= 4 THEN a.concepto END modelo,
+                           em.nombre estatus,
+                           ei.nombre estatus_inventario,
+                           CASE WHEN inv.ubicacion= 9 THEN CONCAT(du.nombre,' ',du.apellidos) ELSE tu.nombre END  ubicacion,
+                            inv.fecha_edicion fecha_modificacion,
+                            CASE WHEN inv.tipo = '1' THEN '1' WHEN inv.tipo = '2' THEN '1' ELSE inv.cantidad END cantidad
+                            FROM inventario inv
+                            LEFT JOIN modelos m  ON m.id = inv.modelo
+                            LEFT JOIN carriers c  ON c.id = inv.modelo
+                            LEFT JOIN accesorios a ON a.id = inv.modelo
+                            LEFT JOIN tipo_estatus_modelos em ON em.id = inv.estatus
+                            LEFT JOIN tipo_estatus_inventario ei ON ei.id = inv.estatus_inventario
+                            LEFT JOIN tipo_ubicacion tu ON tu.id = inv.id_ubicacion
+                            LEFT JOIN detalle_usuarios du ON du.cuenta_id = inv.id_ubicacion
+                            LEFT JOIN bancos ON bancos.cve = inv.cve_banco
+                            -- LEFT JOIN comercios c ON c.afiliacion = inv.id_ubicacion
+                            WHERE inv.no_serie is not null
                             $where
                             $queryInsumos
-					        ORDER BY ubicacion ";
+                            ORDER BY ubicacion ";
                                              */
      $sql = " SELECT * FROM vw_inventario inv
               WHERE inv.no_serie is not null
               $where ";                                         
 
 
-				
-		//self::$logger->error ($sql.' '.$estatusubicacion);
-		
-		try {
-			$stmt = self::$connection->prepare ($sql);
-			$stmt->execute();
-			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		} catch ( PDOException $e ) {
-			self::$logger->error ("File: reportes_db.php;	Method Name: getAlmaceninventario();	Functionality: Get Table;	Log:" . $e->getMessage () );
-		}
-	}
+                
+        //self::$logger->error ($sql.' '.$estatusubicacion);
+        
+        try {
+            $stmt = self::$connection->prepare ($sql);
+            $stmt->execute();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: reportes_db.php;   Method Name: getAlmaceninventario();    Functionality: Get Table;   Log:" . $e->getMessage () );
+        }
+    }
 
     ///////REPORTE ALMACEN END////
     
@@ -375,7 +375,7 @@ class Reportes implements IConnections {
         $campoFecha = $params['customRadioInline1'];
         $fecha_alta         = $params['fecha_alta'];
         $fecha_hasta        = $params['fecha_hasta'];
-        $bancos				= isset($params['cve_banco']) ? $params['cve_banco'] : array();
+        $bancos             = isset($params['cve_banco']) ? $params['cve_banco'] : array();
         $estado             = isset($params['estado']) ? $params['estado'] : array();
         $tipo_servicio      = isset($params['tipo_servicio']) ? $params['tipo_servicio'] : array();
         $tipo_subservicios  = isset($params['tipo_subservicio']) ? $params['tipo_subservicio'] : array();
@@ -385,9 +385,9 @@ class Reportes implements IConnections {
         $fecha_cierre_hasta       = $params['hasta_fc'];
 
         if ( sizeof($bancos) > 0 ) {
-        	$bancosList = implode(",", $bancos);
+            $bancosList = implode(",", $bancos);
 
-        	$where .= " AND eventos.cve_banco in ($bancosList) ";
+            $where .= " AND eventos.cve_banco in ($bancosList) ";
         }
 
         if( sizeof($estado) > 0) {
@@ -413,9 +413,9 @@ class Reportes implements IConnections {
         if ( sizeof($estatus_servicio) > 0 ) 
         {
             $estatus_servicioList = implode(",",$estatus_servicio);
-			if($estatus_servicioList != '0') {
-				$where .= " AND eventos.estatusservicioId in ($estatus_servicioList) ";
-			}
+            if($estatus_servicioList != '0') {
+                $where .= " AND eventos.estatusservicioId in ($estatus_servicioList) ";
+            }
         } 
 
         if( sizeof($estatus_evento) > 0 )
@@ -446,82 +446,82 @@ class Reportes implements IConnections {
             $where .= " AND DATE(eventos.fecha_cierre) <= '$fecha_cierre_hasta'  ";
         }
 
-		$sql = " SELECT * FROM vw_eventos  eventos
-				 WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
+        $sql = " SELECT * FROM vw_eventos  eventos
+                 WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
                 $where ";
-		self::$logger->error ($sql);		
+        self::$logger->error ($sql);        
         /*$sql = "SELECT  
-				eventos.odt, 
-				IFNULL(img.totalImg,0) totalImg,
-				eventos.afiliacion, 
-				ts.nombre servicioNombre, 
-				tss.nombre subservicioNombre,
-				bancos.banco, 
-				CASE WHEN eventos.tipo_atencion = 1 THEN 'Presencial' WHEN eventos.tipo_atencion = 2 THEN 'Telefonico' END atencion,
-				CASE WHEN (eventos.latitud is null and eventos.longitud is null ) THEN 'NO' end coord,	
-				eventos.fecha_alta, 
-				eventos.fecha_vencimiento, 
-				eventos.fecha_cierre, 
-				CASE WHEN (eventos.fecha_cierre > eventos.fecha_vencimiento) THEN DATEDIFF(eventos.fecha_cierre, eventos.fecha_vencimiento) ELSE 0 END dias,
-				c.comercio, 
-				eventos.colonia, 
-				eventos.municipio, 
-				eventos.estado, 
-				eventos.direccion, 
-				eventos.telefono, 
-				eventos.hora_atencion,
-				eventos.hora_comida,
-				eventos.fecha_asignacion,
-				eventos.receptor_servicio,
-				eventos.fecha_atencion,
+                eventos.odt, 
+                IFNULL(img.totalImg,0) totalImg,
+                eventos.afiliacion, 
+                ts.nombre servicioNombre, 
+                tss.nombre subservicioNombre,
+                bancos.banco, 
+                CASE WHEN eventos.tipo_atencion = 1 THEN 'Presencial' WHEN eventos.tipo_atencion = 2 THEN 'Telefonico' END atencion,
+                CASE WHEN (eventos.latitud is null and eventos.longitud is null ) THEN 'NO' end coord,  
+                eventos.fecha_alta, 
+                eventos.fecha_vencimiento, 
+                eventos.fecha_cierre, 
+                CASE WHEN (eventos.fecha_cierre > eventos.fecha_vencimiento) THEN DATEDIFF(eventos.fecha_cierre, eventos.fecha_vencimiento) ELSE 0 END dias,
+                c.comercio, 
+                eventos.colonia, 
+                eventos.municipio, 
+                eventos.estado, 
+                eventos.direccion, 
+                eventos.telefono, 
+                eventos.hora_atencion,
+                eventos.hora_comida,
+                eventos.fecha_asignacion,
+                eventos.receptor_servicio,
+                eventos.fecha_atencion,
                 eventos.hora_llegada,
-				eventos.hora_salida,
-				eventos.descripcion, 
-				ts.nombre nombreServicio,			  
-				CONCAT( u.nombre,' ', IFNULL(u.apellidos, '')) tecnicoNombre, 
+                eventos.hora_salida,
+                eventos.descripcion, 
+                ts.nombre nombreServicio,             
+                CONCAT( u.nombre,' ', IFNULL(u.apellidos, '')) tecnicoNombre, 
                 tes.nombre estatus_servicio,
                 te.nombre estatus,
-				eventos.id_caja,
-				eventos.afiliacionamex,
-				eventos.amex,
+                eventos.id_caja,
+                eventos.afiliacionamex,
+                eventos.amex,
                 CASE WHEN eventos.bateria = 1 THEN 'SI' ELSE 'NO' END bateria,
                 CASE WHEN eventos.cable = 1 THEN 'SI' ELSE 'NO' END cable,
                 CASE WHEN eventos.cargador = 1 THEN 'SI' ELSE 'NO' END cargador,
                 CASE WHEN eventos.base = 1 THEN 'SI' ELSE 'NO' END base,
                 CASE WHEN eventos.kit = 1 THEN 'SI' ELSE 'NO' END kit,
-				eventos.rollos_instalar,
-				eventos.rollos_entregados,
+                eventos.rollos_instalar,
+                eventos.rollos_entregados,
 
-				eventos.tpv_instalado, 
+                eventos.tpv_instalado, 
                 tv.nombre versionIn,
-				ta.nombre aplicativoIn,
-				tp.nombre productoIn,
+                ta.nombre aplicativoIn,
+                tp.nombre productoIn,
 
-				eventos.tpv_retirado,
+                eventos.tpv_retirado,
                 tvr.nombre versionRet,
                 tar.nombre aplicativoRet,
                 tpr.nombre productoRet,
 
-				eventos.sim_instalado,
-				eventos.sim_retirado,
-				eventos.comentarios, 
-				eventos.comentarios_cierre,
-				eventos.comentarios_validacion,
+                eventos.sim_instalado,
+                eventos.sim_retirado,
+                eventos.comentarios, 
+                eventos.comentarios_cierre,
+                eventos.comentarios_validacion,
                 eventos.folio_telecarga,
-				tcc.nombre CausasCambio,
-				tc.nombre Cancelacion, 
-				tr.nombre Rechazo, 
-				tsr.nombre Subrechazo, 
-				he.fecha_movimiento FechaValidacion,
+                tcc.nombre CausasCambio,
+                tc.nombre Cancelacion, 
+                tr.nombre Rechazo, 
+                tsr.nombre Subrechazo, 
+                he.fecha_movimiento FechaValidacion,
                 CASE WHEN ce.serie = 1 THEN 'SI' ELSE 'NO' END FaltaSerie,
                 CASE WHEN ce.evidencia = 1 THEN 'SI' ELSE 'NO' END FaltaEvidencia,
                 CASE WHEN ce.informacion = 1 THEN 'SI' ELSE 'NO' END FaltaInformacion,
                 CASE WHEN ce.ubicacion = 1 THEN 'SI' ELSE 'NO' END FaltaUbicacion,
-				CONCAT(duc.nombre,' ',IFNULL(duc.apellidos,'')) cerrado_por,
+                CONCAT(duc.nombre,' ',IFNULL(duc.apellidos,'')) cerrado_por,
                 eventos.codigo_servicio codigo,
                 CASE WHEN ce.aplica_exito = 1 THEN 'SI' ELSE 'NO' END AplicaExito,
                 eventos.codigo_servicio_2 codigo2,
-                CASE WHEN ce.aplica_rechazo_2 = 1 THEN 'SI' ELSE 'NO' END AplicaRechazo													
+                CASE WHEN ce.aplica_rechazo_2 = 1 THEN 'SI' ELSE 'NO' END AplicaRechazo                                                 
                 FROM eventos
                 LEFT JOIN detalle_usuarios u ON u.cuenta_id = eventos.tecnico
                 LEFT JOIN view_total_odt_img img ON img.odt = eventos.odt
@@ -530,7 +530,7 @@ class Reportes implements IConnections {
                 JOIN tipo_estatus tes ON tes.id = eventos.estatus
                 JOIN tipo_servicio ts ON ts.id = eventos.tipo_servicio
                 Left JOIN tipo_subservicios tss ON tss.id= eventos.servicio
-				LEFT JOIN tipo_version tv ON tv.id = eventos.version
+                LEFT JOIN tipo_version tv ON tv.id = eventos.version
                 LEFT JOIN tipo_aplicativo ta ON ta.id = eventos.aplicativo
                 LEFT JOIN tipo_producto tp ON tp.id = eventos.producto
                 LEFT JOIN tipo_version tvr ON tvr.id = eventos.version_ret
@@ -538,7 +538,7 @@ class Reportes implements IConnections {
                 LEFT JOIN tipo_producto tpr ON tpr.id = eventos.producto_ret
                 LEFT JOIN detalle_usuarios du ON du.cuenta_id = eventos.modificado_por
                 LEFT JOIN checklist_evento ce ON eventos.odt = ce.odt
-				LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
+                LEFT JOIN tipo_causas_cambio tcc ON tcc.id = eventos.causacambio
                 LEFT JOIN tipo_cancelacion tc ON tc.id = eventos.cancelado
                 LEFT JOIN tipo_rechazos tr ON tr.id = eventos.rechazo
                 LEFT JOIN tipo_rechazos tsr ON tsr.id = eventos.subrechazo
@@ -550,7 +550,7 @@ class Reportes implements IConnections {
                 -- LEFT JOIN inventario tpvRe ON eventos.tpv_retirado = tpvRe.no_serie AND tpvRe.tipo = 1
                 WHERE $campoFecha BETWEEN '$fecha_alta' AND '$fecha_hasta'
                 $where 
-				 
+                 
                 "; */
         
         try {
@@ -577,7 +577,7 @@ class Reportes implements IConnections {
              $stmt->execute (array());
              return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
          } catch ( PDOException $e ) {
-             self::$logger->error ("File: reporte_db.php;	Method Name: getEstatusEvento();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+             self::$logger->error ("File: reporte_db.php;   Method Name: getEstatusEvento();    Functionality: Search Products; Log:". $sql . $e->getMessage () );
          }
   }
     
@@ -693,25 +693,25 @@ if($module == 'reporte_imagenestecnico') {
 if($module == 'getubi') {
     $val = '';
     $rows = $Reportes->getubi();
-	$almacen = $_SESSION['almacen'];
-	$isAdmin= 0;
-		
-	if($_SESSION['tipo_user'] == 'admin' ||  $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'AN') { 
-		$isAdmin = 1;
-	}
+    $almacen = $_SESSION['almacen'];
+    $isAdmin= 0;
+        
+    if($_SESSION['tipo_user'] == 'admin' ||  $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'AN') { 
+        $isAdmin = 1;
+    }
     foreach ( $rows as $row ) {
-		if($isAdmin == 1 ) {
-			$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
-		} else {
-			if($row ['almacen'] == '1') {
-				if($row['id'] == $almacen ) {
-				$val .=  '<option value="' . $row ['id'] . '" selected>' . $row ['nombre'] . '</option>';
-				}
-			}  
-		
-		}
-	}
-	echo $val;
+        if($isAdmin == 1 ) {
+            $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+        } else {
+            if($row ['almacen'] == '1') {
+                if($row['id'] == $almacen ) {
+                $val .=  '<option value="' . $row ['id'] . '" selected>' . $row ['nombre'] . '</option>';
+                }
+            }  
+        
+        }
+    }
+    echo $val;
 
 }
 
@@ -720,35 +720,35 @@ if($module == 'getEstatus') {
     $rows = $Reportes->getEstatus();
     foreach ( $rows as $row ) {
          
-		$val .=  '<option value="' . $row ['id'] . '"  >' . $row ['nombre'] . '</option>';
-	}
-	echo $val;
+        $val .=  '<option value="' . $row ['id'] . '"  >' . $row ['nombre'] . '</option>';
+    }
+    echo $val;
 
 }
 
 if($module == 'getubicacion') {
     $val = '';
     $rows = $Reportes->getubicacion();
-	$almacen = $_SESSION['almacen'];
-	$isAdmin= 0;
-		
+    $almacen = $_SESSION['almacen'];
+    $isAdmin= 0;
+        
     if($_SESSION['tipo_user'] == 'admin' ||  $_SESSION['tipo_user'] == 'CA' || $_SESSION['tipo_user'] == 'AN') 
     { 
-		$isAdmin = 1;
-	}
+        $isAdmin = 1;
+    }
     foreach ( $rows as $row ) {
         if($isAdmin == 1 ) 
         {
-			$val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
-		} else {
-			if($row ['almacen'] == '1') {
-				if($row['id'] == $almacen ) {
-				$val .=  '<option value="' . $row ['id'] . '" selected>' . $row ['nombre'] . '</option>';
-				}
-			}  
-		
-		}
-	}
+            $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+        } else {
+            if($row ['almacen'] == '1') {
+                if($row['id'] == $almacen ) {
+                $val .=  '<option value="' . $row ['id'] . '" selected>' . $row ['nombre'] . '</option>';
+                }
+            }  
+        
+        }
+    }
     echo $val;
     
     
@@ -756,12 +756,12 @@ if($module == 'getubicacion') {
 }
 
 if($module == 'getEstatusServicio') {
-	$rows = $Reportes->getEstatusServicio();
-	  $val = '';
-	  foreach ( $rows as $row ) {
-		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
-	  }
-	  echo $val;
+    $rows = $Reportes->getEstatusServicio();
+      $val = '';
+      foreach ( $rows as $row ) {
+          $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
+      }
+      echo $val;
   
 }
 
@@ -781,7 +781,7 @@ if($module == 'getEstatusServicio') {
     /*$rowsTotal = $Reportes->getAlmaceninventario($params,false);*/
     /*$data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
 
-	//echo json_encode($data); //$val;
+    //echo json_encode($data); //$val;
 } */
 
 
@@ -805,13 +805,13 @@ if($module == 'reporte_almaceninv') {
 
         //$hojaDeProductos->setFormatCode( PHPExcel_Style_NumberFormat::FORMAT_TEXT );
         $hojaDeProductos->setTitle('InventarioAlmacen');
-		
-		// Get sheet dimension
+        
+        // Get sheet dimension
         $sheet_dimension = $hojaDeProductos->calculateWorksheetDimension();
 
         // Apply text format to numbers 
         $hojaDeProductos->getStyle('A1')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
-		
+        
         $hojaDeProductos->fromArray($headers, null, 'A1');
         $numeroDeFila = 2;
 
@@ -820,10 +820,10 @@ if($module == 'reporte_almaceninv') {
             $totalCol = sizeof($fields);
             $counter = 1;
             foreach($fields as $index => $value) {
-				 
-				    $value = $counter == 2 ? "'$value" : $value;
+                 
+                    $value = $counter == 2 ? "'$value" : $value;
                 $hojaDeProductos->setCellValueByColumnAndRow($counter, $numeroDeFila, $value);
-				 
+                 
                 $counter++;
             }
             $numeroDeFila++;
@@ -851,8 +851,8 @@ if ( $module == 'reporte_detevento' ) {
 
     $rows = $Reportes->getDetEvento($params, true);
 
-	//$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
-	$headers = array ('ODT','IMG CARGADAS', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO','ATENCION','COORDENADAS','FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE', 'DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN', 'TPV RETIRADA','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CERRADO POR','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO');																																																																																																																																																																																 
+    //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
+    $headers = array ('ODT','IMG CARGADAS', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO','ATENCION','COORDENADAS','FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE','DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','MODELO_IN','CONECTIVIDAD_IN','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN','TPV RETIRADA','MODELO_RET','CONECTIVIDAD_RET','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CERRADO POR','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO', 'DESCRIPCION', 'TECNICO', 'ESTATUS', 'TPV INSTALADA', 'TPV RETIRADA', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION');
 

@@ -848,16 +848,16 @@ $(document).ready(function() {
      });
 
      $("#tipo_producto").on("change",function(){
-        var tp = $("#tipo_producto").val();
+            var tp = $("#tipo_producto").val();
 
-        if (tp == '2') 
-        {
-            $("#divCarrier").show();
-        }
-        else
-        {
-            $("#divCarrier").hide();
-        }
+            if (tp == '2') 
+            {
+                $("#divCarrier").show();
+            }
+            else
+            {
+                $("#divCarrier").hide();
+            }
      })
 
 });

@@ -29,7 +29,7 @@
          </li>
          <li>
             <a href="index.php">
-            <i class="fa fa-home"></i>
+            <i class="fas fa-home"></i>
             <span class="menu-text">Inicio </span> 
             </a>
          </li>
@@ -39,7 +39,7 @@
             ?>    
          <li id="comercioslink">
             <a href="comercios.php">
-            <i class="fa fa-shopping-cart"></i>
+            <i class="fas fa-shopping-cart"></i>
             <span class="menu-text">Comercios</span>
             </a>
          </li>
@@ -50,7 +50,7 @@
             ?>
          <li class="sidebar-dropdown" id="submenueventos">
             <a href="#">
-            <i class="far fa-calendar-alt"></i>
+            <i class="fas fa-calendar"></i>
             <span class="menu-text">Eventos</span>
             </a>
             <div class="sidebar-submenu" id="ulsubmenueventos">
@@ -129,7 +129,7 @@
             ?>
          <li class="sidebar-dropdown" id="submenualmacen">
             <a href="#">
-            <i class="fa fa-warehouse"></i>
+            <i class="fas fa-warehouse"></i>
             <span class="menu-text">Almacen</span>
             </a>
             <div class="sidebar-submenu" id="ulsubmenualmacen">
@@ -159,7 +159,7 @@
                                            if ( searchMenu($_SESSION['Modules'],'url','inventarioelavon')) { 
                                           ?>  
                   <li id="inventarioelavonlink">
-                     <a href="inventarioelavon.php">Inventario Elavon Universo</a>
+                     <a href="inventarioelavon.php">Universo Terminales</a>
                   </li>
                   <?php
                      }
@@ -182,12 +182,24 @@
             </div>
          </li>
          <?php }
+
+            if ( searchMenu($_SESSION['Modules'],'group','Incidencias') ) {
+            
+            ?>
+         <li id="incidenciaslink">
+            <a href="incidenciasOdt.php">
+               <i class="fas fa-list"></i>
+               <span class="menu-text">Incidencias</span>
+            </a>
+         </li>
+         <?php
+            }
             if ( searchMenu($_SESSION['Modules'],'group','Evaluacion') )
             { 
             ?>
          <li class="sidebar-dropdown" id="submenuevaluacion">
             <a href="#">
-            <i class="fa fa-file-alt"></i>
+            <i class="fas fa-file-alt"></i>
             <span class="menu-text">Evaluacion</span>
             </a>
             <div class="sidebar-submenu" id="ulsubmenuevaluacion">
@@ -236,18 +248,17 @@
             ?>
          <li id="imageneslink">
             <a href="imagenes.php">
-            <i class="fa fa-images"></i>
+            <i class="fas fa-images"></i>
             <span class="menu-text">Imagenes</span>
             </a>
          </li>
          <?php 
             }
-            
             if ( searchMenu($_SESSION['Modules'],'url','mapas') )   { 
             ?>
          <li id="mapaslink">
             <a href="mapas.php">
-            <i class="fa fa-map"></i>
+            <i class="fas fa-map"></i>
             <span class="menu-text">Mapas</span>
             </a>
          </li>
@@ -258,7 +269,7 @@
             ?>
          <li class="sidebar-dropdown" id="submenureportes">
             <a href="#">
-            <i class="fa fa-calendar-alt"></i>
+            <i class="fas fa-file-excel"></i>
             <span class="menu-text">Reportes</span>
             </a>
             <div class="sidebar-submenu" id="ulsubmenureportes">
@@ -325,7 +336,7 @@
             ?>
          <li class="sidebar-dropdown" id="submenucatalogos">
             <a href="#">
-            <i class="fa fa-calendar-alt"></i>
+            <i class="fas fa-book-open"></i>
             <span class="menu-text">Catalogos</span>
             </a>
             <div class="sidebar-submenu" id="ulsubmenucatalogos">

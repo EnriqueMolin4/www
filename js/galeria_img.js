@@ -17,10 +17,11 @@ function mostrarImagenes(odt) {
             var texto = '<div class="row">';
             var info = JSON.parse(data);
             var locacion = window.location;
+        
             if(info['estatus'] == '1') {
                 $.each(info['imagenes'], function(index, element) {
                     
-                    texto = texto + '<div class="col-4"><img src="'+locacion.origin+'/'+element.path+'" width="90%" class="zoomImgs"><button class="btn btn-primary button1 btnDelImage" data= "'+element.id+'">Borrar</button></div>'
+                    texto = texto + '<div class="col-4"><img src="'+locacion.origin+'/www/'+element.path+'" width="90%" class="zoomImgs"><button class="btn btn-primary button1 btnDelImage" data= "'+element.id+'">Borrar</button></div>'
 
                 })
 

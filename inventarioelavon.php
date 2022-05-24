@@ -49,7 +49,7 @@
                         <select id="tipo_estatus" name="tipo_estatus" class="form-control form-control-sm searchInventario">
                             <option value="0" selected>Seleccionar</option>
                             <option value="PERTENECE A HSBC">PERTENECE A HSBC</option>
-                            <option value="PERTENECE A ELAVON">PERTENECE A ELAVON</option>
+                            <option value="PERTENECE A ELAVON">PERTENECE AL BANCO</option>
                             <option value="DESTRUIDA ¡NO INSTALAR!">DESTRUIDA ¡NO INSTALAR!</option>
                             <option value="QUEBRANTADA ¡NO INSTALAR!">QUEBRANTADA ¡NO INSTALAR!</option>
                             <option value="PENDIENTE POR QUEBRANTAR">PENDIENTE POR QUEBRANTAR</option>
@@ -115,10 +115,7 @@
                                 <label for="fabricante" class="col-form-label-sm">FABRICANTE</label>
                                 <select id="fabricante" name="fabricante" class="form-control form-control-sm">
                                     <option value="0">SELECCIONAR</option>
-                                    <option value="INGENICO">INGENICO</option>
-                                    <option value="VERIFONE">VERIFONE</option>
-									<option value="HYPERCOM">HYPERCOM </option>
-                                    <option value="InteliPOS">InteliPOS</option>
+                                    
                                 </select>
                             </div>
                             <div class="col" id="colCarrier">           

@@ -4719,6 +4719,28 @@ if($module == 'eventoMasivoAssignacion') {
 		
 }
 
+if ($module == 'grabarIncidencia') {
+	
+	$user = $_SESSION['userid'];
+	$fecha_alta = date('Y-m-d H:m:s');
+	$odt = $params['odt'];
+	$tipo = $params['tipo'];
+	$comentarioAlta = $params['comentarioCallCenter'];
+	$incidenciaE = json_decode( $params['inc1'] );
+	$incidenciaI = json_decode( $params['inc2'] );
+	
 
+	foreach ($incidenciaE as $incEvento) {
+		
+		print_r($incEvento);
+	}
+
+	foreach ($incidenciaI as $incInventario) {
+		print_r($incInventario);
+	}
+
+
+
+}
 
 ?>

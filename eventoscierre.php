@@ -398,6 +398,7 @@
                <button type="button" class="btn btn-success" name="btnUpdateEvento" id="btnUpdateEvento">Cerrar Evento</button>
                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                <button type="button" class="btn btn-primary" name="btnComentValid" id="btnComentValid" >Guardar Comentario de Validación</button>
+               <button type="button" class="btn btn-warning" name="btnAddIncidencia" id="btnAddIncidencia">Generar Incidencia</button>
             </div>
          </div>
       </main>
@@ -449,6 +450,77 @@
             </div>
          </div>
       </div>
+      <!-- MODAL INCIDENCIA -->
+      <div class="modal fade" tabindex="-3" role="dialog" id="modalIncidencia">
+         <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">GENERAR INCIDENCIA</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+            
+                  <div class="row">
+                     <div class="col-md-5">
+                        <label for="tipoIncidencia" class="col-form-label-sm">Tipo Incidencia</label>
+                        <select class="form-control form-control-sm" name="tipoIncidencia" id="tipoIncidencia">
+                           <option value="0" selected>Seleccionar</option>
+                           <option value="e">Evidencia</option>
+                           <option value="i">Inventario</option>
+                        </select>
+                     </div>
+                  </div><hr>
+
+                     <div class="row" id="divEvidencia1" style="display:none;" >
+                        <div class="col">
+                           <label for="incidenciasEvidencia" class="col-form-label-sm">EVIDENCIA</label><br>
+                           <select name="incidenciasEvidencia[]" id="incidenciasEvidencia" class="form-control" multiple>
+                              
+                              <option value="FALTA EVIDENCIA 1">FALTA EVIDENCIA 1</option>
+                              <option value="FALTA EVIDENCIA 2">FALTA EVIDENCIA 2</option>
+                              <option value="FALTA EVIDENCIA 3">FALTA EVIDENCIA 3</option>
+                              <option value="FALTA EVIDENCIA 4">FALTA EVIDENCIA 4</option>
+                           </select>
+                        </div><br>
+                     </div>
+
+                     <div class="row" id="divComentE" style="display:none;"><br>
+                        <div class="col">
+                           <label class="form-check-label" for="descripcionE">Comentarios</label>
+                           <textarea class="form-control" name="descripcionE" id="descripcionE" rows="5"></textarea>
+                        </div>
+                     </div>
+
+                     <div class="row" id="divInventario1" style="display:none">
+                        <div class="col">
+                           <label for="incidenciasInventario" class="col-form-label-sm">INVENTARIO</label><br>
+                           <select name="incidenciasInventario[]" id="incidenciasInventario" class="form-control" multiple>
+                              
+                              <option value="FALTA SERIE INSTALADA">FALTA SERIE INSTALADA</option>
+                              <option value="FALTA SERIE RETIRADA">FALTA SERIE RETIRADA</option>
+                              <option value="SERIE RETIRADA NO CUENTA CON MODELO">SERIE RETIRADA NO CUENTA CON MODELO</option>
+                              <option value="SERIE INSTALADA NO CUENTA CON MODELO">SERIE RETIRADA NO CUENTA CON MODELO</option>
+                           </select>
+                        </div><br>
+                        
+                     </div>
+                                          
+                     <div class="row" id="divComentI" style="display:none;"><br>
+                        <div class="col">
+                           <label class="form-check-label" for="descripcionI">Comentarios</label>
+                           <textarea class="form-control" name="descripcionI" id="descripcionI" rows="5"></textarea>
+                        </div>
+                     </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-primary" name="btnGuardarIncidencia" id="btnGuardarIncidencia">Guardar</button>
+               </div>
+            </div>
+         </div>
+      </div>
       <!-- MODAL IMAGENES Ubicacion -->
       <!-- page-content" -->
    </div>
@@ -472,11 +544,21 @@
    <script src="js/zoomifyc.min.js" ></script> 
    <script type="text/javascript" src="js/jquery.toaster.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="js/bootstrap-multiselect.min.js"></script>
    <script src="js/main.js"></script>
    <script src="https://maps.google.com/maps/api/js?sensor=false&libraries=geometry&v=3.7&key=AIzaSyAQCiiA5ZZ1RoIxJquirYDaLOwRbZAQDzA&callback=initMap" async defer></script>
+   <style>
+        .multiselect{background-color: initial;border: 1px solid #ced4da;height: auto;
+        }
+
+        .multiselect-container
+        {height: auto  ;  overflow-x: hidden;overflow-y: scroll; width: 550px; }
+        
+    </style>
    <script>
       $(document).ready(function() {
-          
+         
+         camposIncidencias();
 
           //GET info from URL
           const queryString = window.location.search;
@@ -493,7 +575,7 @@
           $("#fecha_rep").datetimepicker({
             timepicker:false,
             format:'Y-m-d'
-          })
+         });
       
           $("#fechaVen_fin").datetimepicker({
               timepicker:false,
@@ -701,14 +783,12 @@
                   title: 'Aviso',
                   priority : 'danger'
                       });}
-            
+              
         
-            
-            
-            
-        
-        
-        
+          })
+
+          $("#btnAddIncidencia").on('click', function(){
+               $("#modalIncidencia").modal("show");
           })
 
           $("#btnConsultar").on("click",function() {
@@ -1204,7 +1284,7 @@
 							if($("#cve_banco").val() == '037') {
 								Swal.fire({
 									title: 'Cierre de Eventos ',
-									text: "Cerrado Existosamente Deseas<br> Enviar el Evento al Banco?",
+									text: "¡Cerrado Exitosamente! ¿Deseas enviar el evento al banco?",
 									showDenyButton: true,
 									confirmButtonText: `Enviar`,
 									denyButtonText: `No`,
@@ -1298,14 +1378,80 @@
 
           })
 
-
-          $("#tpvReDataConnect").on('change', function() {
-            
-              updateSerieData($("#tpv_retirado").val(), 'conectividad',$("#tpvReDataConnect").val() );
+          $("#tipoIncidencia").on('change',function(){
 
           })
 
+          $("#btnGuardarIncidencia").on("click", function(){
+
+               var tipoIncidencia = $("#tipoIncidencia").val();
+
+               var incEvidencia = JSON.stringify( $("#incidenciasEvidencia").val() ) ;
+               var incInventario = JSON.stringify( $("#incidenciasInventario").val() );
+              
+               var coment1 = $("#descripcionE").val();
+               var coment2 = $("#descripcionI").val();
+               
+               var form_data = {
+                  module: 'grabarIncidencia',
+                  id: id,
+                  odt : $("#odt").val(),
+                  tipo : tipoIncidencia,
+                  comentarioCallCenter : coment1,
+                  inc1 : incEvidencia,
+                  inc2 : incInventario
+
+               }
+            
+            $.ajax({
+               type: 'GET',
+               url: 'modelos/eventos_db.php',
+               data: form_data,
+               cache: false,
+               success: function(data){
+                  //var info = JSON.parse(data);
+                  console.log(form_data);
+               },
+               error: function(error){
+                  var demo = error;
+               }
+            })
+            
+
+          });
+          $("#incidenciasEvidencia").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
+               $("#incidenciasInventario").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
+
       });
+   
+      function camposIncidencias()
+      {
+         const tipo_incidencia = document.getElementById('tipoIncidencia');
+
+         tipo_incidencia.addEventListener('change', function handleChange(event){
+
+            if (event.target.value == 'e') 
+            {
+
+               $("#divEvidencia1").show();
+               
+               $("#divComentE").show();
+               $("#divComentI").hide();
+               $("#divInventario1").hide();
+               
+            }else
+            {
+
+               $("#divInventario1").show();
+               
+                $("#divComentI").show();
+                $("#divComentE").hide();
+                $("#divEvidencia1").hide();
+               
+            }
+         })
+
+      }
 
       function updateSerieData(tpv,tipo,dato) {
 
@@ -1513,10 +1659,10 @@
 
       function validarTPV(tpv,tipo,donde,comercio) {
           result = 0;
-        var afiliacion = $("#afiliacion").val();
-        var odt = $("#odt").val();
+            var afiliacion = $("#afiliacion").val();
+            var odt = $("#odt").val();
 
-        var permiso = donde == 'in' ? PermisosEvento.tvp_instalada : PermisosEvento.tpv_salida;
+         var permiso = donde == 'in' ? PermisosEvento.tvp_instalada : PermisosEvento.tpv_salida;
 
           $.ajax({
               type: 'GET',
