@@ -118,9 +118,10 @@ class Usuarios implements IConnections {
 				WHERE id = -1;
 				$order
                 $filter ";
-        } else if($catalogo == 'tipo_servicio') { 
+        } else if($catalogo == 'tipo_producto') { 
 
-			$sql = "SELECT id,nombre,status estatus from $catalogo
+			$sql = "SELECT $catalogo.id,$catalogo.nombre,$catalogo.status estatus, bancos.banco from $catalogo LEFT JOIN bancos ON bancos.cve = $catalogo.cve_banco
+					WHERE $catalogo.nombre IS NOT NULL
             $where 
 			$order
             $filter ";

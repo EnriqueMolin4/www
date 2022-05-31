@@ -26,6 +26,7 @@
                         <option value="tipo_conectividad">Tipo Conectividad</option>
                         <option value="tipo_causas_cambio">Causas Cambio</option>
                         <option value="tipo_cancelacion">Causas Cancelacion</option>
+                        <option value="tipo_producto">Tipo Producto</option>
                        
                     </select>
                 </div>
@@ -63,6 +64,12 @@
                     <button type="button" class="btn btn-primary addCCancelacion">Nueva Causa de Cancelación</button>
                 </div>
             </div>
+            <div class="row" id="divTp" class="divTp" style="display: none;">
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary addTipoProducto">Nuevo Tipo Producto</button>
+                </div>
+            </div>
+
             <br>
             <table id="parametros"  class="table table-md table-bordered ">
                 <thead>
@@ -277,6 +284,44 @@
                     </div>
                   </div>
                 </div>
+                <!-- Modal Nuevo Tipo Producto -->
+                <div class="modal" tabindex="-1" role="dialog" id="nuevoTp" data-backdrop="static" data-keyboard="false">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">AGREGAR NUEVO TIPO DE PRODUCTO</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        
+                        <div class="row">
+                            <div class="col">
+                                <label for="tpNombre" class="col-form-label-sm">Nombre Producto</label>
+                                <input type="text" class="form-control form-control-sm" id="tpNombre" name="tpNombre">
+                            </div>
+                            <div class="col">
+                                <label for="tpClave" class="col-form-label-sm">Clave Elavon</label>
+                                <input type="text" class="form-control form-control-sm" id="tpClave" name="tpClave">
+                            </div>
+                            <div class="col">
+                                <label for="tpBanco" class="col-form-label-sm">Banco</label>
+                                <select name="tpBanco" id="tpBanco" class="form-control form-control-sm">
+                                    <option value="0" selected>Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary guardarTipoProducto" id="guardarTipoProducto" name="guardarTipoProducto">Guardar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
 
 
 
@@ -423,6 +468,14 @@
                     {
                         $("#divCancel").hide();
                     }
+                    if (event.target.value == 'tipo_producto') 
+                    {
+                        $("#divTp").show();
+                    }
+                    else
+                    {
+                        $("#divTp").hide();
+                    }
                 })
 
 
@@ -476,6 +529,9 @@
                 })
                  $(document).on("click",".addCCancelacion", function(){
                     $("#nuevaCancelacion").modal("show");
+                })
+               $(document).on("click",".addTipoProducto", function(){
+                    $("#nuevoTp").modal("show");
                 })
                
                 $(document).on('click','.delParametro', function() {
@@ -869,6 +925,79 @@
 
                 })
 
+                 $(document).on('click','.guardarTipoProducto' ,function(){
+                    var catalogo = $("#catalogo").val();
+                    var nombreConect = $("#tpNombre").val();
+                    var claveConect = $("#tpClave").val();
+                    var bancoConect = $("#tpBanco").val();
+
+                    var valido = 0;
+
+                     if ( $("#tpBanco").val() == '0' ) 
+                    {
+                        $.toaster({
+                            message: 'Favor de seleccionar el banco',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        });
+                        valido++;
+                    }
+
+                    if ( $("#tpNombre").val().length > 0 || $("#tpClave").val().length > 0 ) 
+                    {
+
+                    }
+                    else 
+                    {
+                        $.toaster({
+                            message: 'Favor de ingresar nombre y clave elavon',
+                            title: 'Aviso',
+                            priority: 'danger'
+                        });
+                        valido++;
+                    }
+                    
+                    if (valido==0) {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'modelos/parametros_db.php',
+                            data: { module: 'grabarCatalogo',catalogo : catalogo, nombre : nombreConect, clave : claveConect, cve : bancoConect},
+                            cache: false,
+                            success: function(data){
+                                //console.log(data);
+                                var info = JSON.parse(data);
+                                console.log(info.valido);
+                                if (info.valido == '0') 
+                                {
+                                    $.toaster({
+                                        message: 'Se agregó con éxito',
+                                        title: 'Aviso',
+                                        priority : 'success'
+                                    });
+                                }
+                                else
+                                {
+                                    $.toaster({
+                                        message: 'El registro ya existe',
+                                        title: 'Aviso',
+                                        priority : 'warning'
+                                    });
+                                }
+
+                                parametros.ajax.reload();
+                                $("#nuevoTp").modal("hide");
+                                cleartext();
+
+                                
+                            },
+                            error: function(error){
+                                var demo = error;
+                            }
+                        });
+                    }
+
+                })
+
               
             } );
 
@@ -905,6 +1034,7 @@
                     $("#caBanco").html(data);
                     $("#ccBanco").html(data);
                     $("#fBanco").html(data);
+                    $("#tpBanco").html(data);
                 },
                 error: function(error){
                     var demo = error;
@@ -924,6 +1054,8 @@
             $("#ccBanco").val("0");
             $("#caNombre").val(" ");
             $("#caBanco").val("0");
+            $("#tpNombre").val(" ");
+            $("#tpBanco").val("0");
 
         }
 

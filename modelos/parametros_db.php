@@ -385,7 +385,7 @@ if ($module == 'grabarCatalogo')
 
 			$arrayString = array($nombre, $idServicio, $cve);
 		}
-		else if ($catalogo == 'tipo_aplicativo' || $catalogo == 'tipo_conectividad' || $catalogo == 'tipo_causas_cambio') 
+		else if ($catalogo == 'tipo_aplicativo' || $catalogo == 'tipo_conectividad' || $catalogo == 'tipo_causas_cambio' || $catalogo == 'tipo_producto') 
 		{
 			$claveE = $params['clave'];
 			
