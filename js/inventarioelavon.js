@@ -311,7 +311,7 @@ function getFabricantes()
     $.ajax({
         type: 'GET',
         url: 'modelos/inventarioelavon_db.php',
-        data: 'module=getFabricantes',
+        data: 'module=getFabricantesAlta',
         cache: true,
         success: function(data){
             $("#fabricante").html(data);
