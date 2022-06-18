@@ -949,14 +949,14 @@ class Eventos implements IConnections {
 		   }
 	}
 	
-	function getEstatusRechazo() {
+	function getEstatusRechazo($cvebanco) {
  
-		  $sql = "SELECT * FROM `tipo_rechazos` WHERE tipo='r'  Order by nombre ";
+		  $sql = "SELECT * FROM `tipo_rechazos` WHERE tipo='r' AND cve_banco=?  Order by nombre ";
 	
 
 		   try {
 			   $stmt = self::$connection->prepare ($sql );
-			   $stmt->execute (array());
+			   $stmt->execute (array($cvebanco));
 			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		   } catch ( PDOException $e ) {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusRechazo();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
@@ -981,12 +981,12 @@ class Eventos implements IConnections {
 	
 	function getEstatusSubRechazo() {
  
-		  $sql = "SELECT * FROM `tipo_rechazos` WHERE tipo='s'  Order by nombre ";
+		  $sql = "SELECT * FROM `tipo_rechazos` WHERE tipo='s' AND cve_banco=? Order by nombre ";
 	
 
 		   try {
 			   $stmt = self::$connection->prepare ($sql );
-			   $stmt->execute (array());
+			   $stmt->execute (array($cvebanco));
 			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
 		   } catch ( PDOException $e ) {
 			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusSubRechazo();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
@@ -995,7 +995,7 @@ class Eventos implements IConnections {
 	 
 	 
 	function getEventobyTecnico($id) {
-		$sql = "select eventos.id, eventos.odt,afiliacion folio,fecha_alta,direccion,colonia,ticket,eventos.estatus,
+		$sql = "select eventos.cve_banco,eventos.id, eventos.odt,afiliacion folio,fecha_alta,direccion,colonia,ticket,eventos.estatus,
 				GetNameById(servicio,'TipoServicio') servicio,
 				GetNameById(estado,'Estado') estadoNombre,
 				GetNameById(municipio,'Municipio') municipioNombre,
@@ -1402,7 +1402,7 @@ class Eventos implements IConnections {
 
 	function getOdtById($odtid)
 	{
-		$sql = "SELECT odt,cve_banco FROM eventos WHERE id= '$odtid' ";
+		$sql = "SELECT odt,cve_banco,bancos.banco FROM eventos,bancos WHERE eventos.id= '$odtid'  AND eventos.cve_banco = bancos.cve ";
 
 		try {
 			$stmt = self::$connection->prepare ($sql );
@@ -1526,12 +1526,12 @@ class Eventos implements IConnections {
 
 	function getBancos()
 	{
-		// $where = "";
+		 $where = "";
 		
-		// if($_SESSION['tipo_user'] == 'CL') 
-		// {
-			// $where .= " AND cve = '".$_SESSION['cve_user']."' ";
-		// }
+		 if($_SESSION['tipo_user'] == 'CU') 
+		 {
+			$where .= " AND cve = '".$_SESSION['cve_user']."' ";
+		 }
 		
 		$sql = " SELECT * FROM `bancos` WHERE status=1 ";//$where 
 
@@ -1573,6 +1573,89 @@ class Eventos implements IConnections {
 		}
 
 	}
+
+
+	function getIncidenciasEventos($params, $total){
+		$start = $params['start'];
+		$length = $params['length'];
+		$filter = "";
+		$param = "";
+		//$odt = $params['historiaOdt'];
+		$query = "";
+		$where = '';
+		
+		
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if ( $_SESSION['tipo_user'] == 'CA' ) 
+		{
+			$where .= " AND incidencia_odt.tipo = 'i' ";
+		}
+		
+		if ( $_SESSION['tipo_user'] == 'supOp') {
+			
+			$where .= " AND incidencia_odt.tipo = 'e' ";
+		}
+		if( !empty($params['search']['value'])) {
+			$where .=" AND ";
+			$where .=" (incidencia_odt.odt LIKE '".$params['search']['value']."%' )";
+			//$where .=" OR cuentas.correo LIKE '".$params['search']['value']."%' )";
+		}
+		
+		$sql = "SELECT incidencia_odt.id, incidencia_odt.id_odt, incidencia_odt.odt,incidencia_odt.tipo,incidencia_odt.comentario_cc,incidencia_odt.comentario_solucion, incidencia_odt.fecha_alta,incidencia_odt.fecha_solucion, incidencia_odt.vobo, incidencia_odt.estatus 
+				FROM `incidencia_odt`  WHERE incidencia_odt.odt IS NOT NULL
+				$where 
+				ORDER BY incidencia_odt.tipo ";
+
+				//self::$logger->error($sql);
+				
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getIncidenciasEventos();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+        }
+	}
+
+	function getDetalleIncidencia($params,$total)
+	{
+		$start = $params['start'];
+		$length = $params['length'];
+		$filter = "";
+		$param = "";
+		$query = "";
+		$where = '';
+
+		$id_inc = $params['inId'];
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( !empty($params['search']['value'])) {
+			$where .=" AND ";
+			$where .=" (diodt.subtipo_incidencia LIKE '".$params['search']['value']."%' )";
+			//$where .=" OR cuentas.correo LIKE '".$params['search']['value']."%' )";
+		}
+
+		$sql="SELECT diodt.id, diodt.incidencia_id, diodt.subtipo_incidencia, diodt.estatus FROM detalle_incidencia_odt diodt WHERE diodt.incidencia_id = '$id_inc'";
+
+		//self::$logger->error($sql);
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getDetalleIncidencia();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+        }
+
+	}
+	
+
 
 }
 //
@@ -1906,6 +1989,22 @@ if($module == 'getHistorialEvento'){
 	
 }
 
+if ($module == 'getIncidenciasEventos') {
+	$rows = $Eventos->getIncidenciasEventos($params,true);
+	$rowsTotal = $Eventos->getIncidenciasEventos($params,false);
+	$data = array("draw"=>$_POST['draw'],"data" =>$rows, 'recordsTotal' => count($rowsTotal), "recordsFiltered" => count($rowsTotal) );
+	
+	echo json_encode($data);
+}
+
+if ($module == 'getDetalleIncidencia') {
+	$rows = $Eventos->getDetalleIncidencia($params, true);
+	$rowsTotal = $Eventos->getDetalleIncidencia($params,false);
+	$data = array("draw"=>$_POST['draw'],"data"=>$rows,'recordsTotal' => count($rowsTotal), "recordsFiltered" => count($rowsTotal));
+
+	echo json_encode($data);
+}
+
 if($module == 'getListaModelos') {
     $val = '<option value="0" selected>Seleccionar Modelos</option>';
     $rows = $Eventos->getListaModelos($params['cve_banco']);
@@ -1951,13 +2050,13 @@ if($module == "getImagenesODT") {
 	$odt = $params['odt'];
 	$lstImagenes = array();
 	$rows = $Eventos->getImagenesODT($params['odt']);
-	if( file_exists($_SERVER["DOCUMENT_ROOT"].'/www/img/'.$odt) ) {
+	if( file_exists($_SERVER["DOCUMENT_ROOT"].'/img/'.$odt) ) {
 		//CORRECT
-	} else if ( file_exists($_SERVER["DOCUMENT_ROOT"].'/www/img/'.strtoupper($odt)) ) {
+	} else if ( file_exists($_SERVER["DOCUMENT_ROOT"].'/img/'.strtoupper($odt)) ) {
 		$odt = strtoupper($odt);
 	}
 
-	if(sizeof($rows) > 0 &&  file_exists($_SERVER["DOCUMENT_ROOT"].'/www/img/'.$odt)){
+	if(sizeof($rows) > 0 &&  file_exists($_SERVER["DOCUMENT_ROOT"].'/img/'.$odt)){
 		$odtHistory = $Eventos->getHistoriaODT($odt,$_SESSION['user']);
 
 		//if(sizeof($odtHistory) == 0 ) {
@@ -2231,7 +2330,7 @@ if($module == 'getEstatusCancelado') {
 }
 
 if($module == 'getEstatusRechazo') {
-	$rows = $Eventos->getEstatusRechazo();
+	$rows = $Eventos->getEstatusRechazo($params['cve_banco']);
 	  $val = '<option value="0">Seleccionar</option>';
 	  foreach ( $rows as $row ) {
 		  $val .=  '<option value="' . $row ['id'] . '">' . $row ['nombre'] . '</option>';
@@ -2241,7 +2340,7 @@ if($module == 'getEstatusRechazo') {
 }
 
 if($module == 'getEstatusSubRechazo') {
-	$rows = $Eventos->getEstatusSubRechazo();
+	$rows = $Eventos->getEstatusSubRechazo($params['cve_banco']);
 	  $val = '<option value="0">Seleccionar</option>';
 	  foreach ( $rows as $row ) {
 		  $val .=  '<option value="' . $row ['id'] . '" data-prog="'.$row['programado'].'" >' . $row ['nombre'] . '</option>';
@@ -2367,7 +2466,8 @@ if($module == 'validarTPV') {
 	$afiliacion = $params['comercio'];
 	$donde = $params['donde'];
 	$permiso = $params['permiso'];
-	$comercioId = $Eventos->getComercioBy($afiliacion,'037');
+	$cveBanco = $params['cve_banco'];
+	$comercioId = $Eventos->getComercioBy($afiliacion,$cveBanco);
 	$inventarioElavon = $Eventos->getInvUniversoNoserie($noserie);
 
 	if($inventarioElavon) {
@@ -2912,7 +3012,7 @@ if($module == 'guardarComVal')
 	$user = $_SESSION['userid'];
 	$fecha = date ( 'Y-m-d H:i:s' );
 	$aviso = '';
-	
+	$comentario = $fecha." ".$comentario;
 	$prepareStatement = "UPDATE `eventos` SET `comentarios_validacion`=?, `codigo_servicio`=?, `codigo_servicio_2`=? WHERE `odt`=?;";
 	
 	$arrayString = array ( $comentario, $codigoServicio ,$codigoServicio2 , $odt );
@@ -3183,7 +3283,7 @@ if($module == "cambiarReConnect"){
 
 if ($module== 'cambiarEstatusenTransito') {
 
-	$status = $params['estatus'];
+	$$status = $params['estatus'];
 	$odt = $params['odtid'];
 	$tecnico = $params['tecnico'];
 	$user = $_SESSION['userid'];
@@ -3192,24 +3292,40 @@ if ($module== 'cambiarEstatusenTransito') {
 
 	$evento = $Eventos->getOdtenServicioTecnico($tecnico);
 
-	if($evento) 
-	{
-		$msg = 'Ya tiene un evento con estatus En Tránsito';
+	// cambiar el evento con Estatus EN TRANSITO
+	$prepareStatement = "UPDATE eventos SET
+						 estatus=?,
+						 modificado_por=?
+						 WHERE tecnico=?
+						 AND estatus= 20 ;
+						 ";
 
-	} else{
-		$prepareStatement = "UPDATE eventos SET
-		                     estatus=?,
-		                     modificado_por=?;
-		                     ";
+	 $arrayString = array (
+		2,
+		$user,
+		$tecnico
+	 );
 
-		 $arrayString = array (
-		 	$status,
-		 	$user
-		 );
+	 $Eventos->insert($prepareStatement, $arrayString);
+	 
+	 // Actualizar el evento seleccionado
+	 
+	$prepareStatement = "UPDATE eventos SET
+						 estatus=?,
+						 modificado_por=?
+						 WHERE id=?;
+						 ";
 
-		 $upd = $Eventos->insert($prepareStatement, $arrayString);
-		 $result = 1;
-	}
+	 $arrayString = array (
+		$status,
+		$user,
+		$odt
+	 );
+
+	 $upd = $Eventos->insert($prepareStatement, $arrayString);
+	 
+	 $result = 1;
+	 
 	echo $result;
 
 }
@@ -3244,7 +3360,7 @@ if($module == 'cerrarEvento') {
 	$cancelado = $params['cancelado'];
 	
 	//$tpv = strlen($params['tpv']) > 0 ? $params['tpv'] : null;
-	$tpv = !sterlen($params['tpv']) ? null : $params['tpv'];
+	$tpv = !strlen($params['tpv']) ? null : $params['tpv'];
 	
 	$tvpInModelo = $params['tvpInModelo'];
 	$tpvInConnect = $params['tpvInConnect'];
@@ -4075,7 +4191,7 @@ if($module == 'eventoMasivo') {
 			);
 		
 			$id = $Eventos->insert($sql,$arrayString);
-			echo "Se Cargo el Archivo. $id ".$target_file;
+			echo "Se Cargo el Archivo. $id  $cveBanco ".$target_file;
 
 		} else {
 			echo "No se puede cargar el Archivo. " ;
@@ -4723,24 +4839,208 @@ if ($module == 'grabarIncidencia') {
 	
 	$user = $_SESSION['userid'];
 	$fecha_alta = date('Y-m-d H:m:s');
+	$id_odt = $params['id'];
 	$odt = $params['odt'];
 	$tipo = $params['tipo'];
 	$comentarioAlta = $params['comentarioCallCenter'];
 	$incidenciaE = json_decode( $params['inc1'] );
 	$incidenciaI = json_decode( $params['inc2'] );
 	
+	$prepareStatement = "INSERT INTO `incidencia_odt` (`id_odt`,`odt`, `tipo`, `comentario_cc`, `fecha_alta`, `creado_por`, `estatus`) 
+	                     VALUES(?,?,?,?,?,?,?);";
 
-	foreach ($incidenciaE as $incEvento) {
+	$arrayString = array(
+			$id_odt,
+			$odt,
+			$tipo,
+			$comentarioAlta,
+			$fecha_alta,
+			$user,
+			1
+	);
+
+	$id = $Eventos->insert($prepareStatement,$arrayString);
+
+	if ($id) {
 		
-		print_r($incEvento);
+		if ($tipo == 'e') {
+
+			foreach ($incidenciaE as $incEvento) {
+				
+				$prepareStatementE = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
+										VALUES(?,?,?,?);";
+
+				$arrayStringE = array(
+							$id,
+							$incEvento,
+							1,
+							$fecha_alta
+				);
+
+				$Eventos->insert($prepareStatementE, $arrayStringE);
+			}
+		}
+
+		if ($tipo == 'i') {
+
+			foreach ($incidenciaI as $incInventario) {
+				
+				$prepareStatementI = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
+										VALUES(?,?,?,?);";
+
+				$arrayStringI = array(
+							$id,
+							$incInventario,
+							1,
+							$fecha_alta
+				);
+
+				$Eventos->insert($prepareStatementI, $arrayStringI);
+
+			}
+		}
+
+	}else
+	{
+		echo "ERROR CON EL REGISTRO";
 	}
-
-	foreach ($incidenciaI as $incInventario) {
-		print_r($incInventario);
-	}
-
-
 
 }
+
+if($module == 'delIncidencia') {
+
+	$fecha_atencion = date("Y-m-d H:i:s");
+	$prepareStatement = "UPDATE `detalle_incidencia_odt` SET `estatus` = ?, `fecha_atencion` = ? WHERE id = ?;";
+	$arrayString = array (
+		0,
+		$fecha_atencion,
+    	$params['id']
+		
+	);
+
+	$Eventos->insert($prepareStatement,$arrayString);
+	echo $params['id'];
+
+	$prepareStatement2 = "UPDATE `incidencia_odt` SET `estatus` = ? WHERE id = ?";
+
+	$arrayString2 = array (
+		0,
+		$params['inc_id']
+	);
+
+	$Eventos->insert($prepareStatement2, $arrayString2);
+
+}
+
+if($module == 'addIncidencia') {
+	$fecha_alta = date("Y-m-d H:i:s");
+	$prepareStatement = "UPDATE `detalle_incidencia_odt` SET `estatus` = ? WHERE id = ?;
+					";
+	$arrayString = array (
+		1,
+    	$params['id']
+		
+	);
+
+	$Eventos->insert($prepareStatement,$arrayString);
+	echo $params['id'];
+
+	$prepareStatement2 = "UPDATE `incidencia_odt` SET `estatus` = ? WHERE id = ?";
+
+	$arrayString2 = array (
+		1,
+		$params['inc_id']
+	);
+
+	$Eventos->insert($prepareStatement2, $arrayString2);
+}
+
+if ($module == 'solucionIncidencia') 
+{
+	$fecha_solucion = date("Y-m-d H:i:s");
+	$id_incidencia = $params['id'];
+	$prepareStatement = "UPDATE `incidencia_odt` SET `comentario_solucion` = ?, `fecha_solucion` = ?, `estatus` = ? WHERE id = ?";
+
+	$arrayString = array (
+		$params['comentario'],
+		$fecha_solucion,
+		0,
+		$params['id']
+	);
+	$id = $Eventos->insert($prepareStatement, $arrayString);
+
+	var_dump($arrayString);
+	
+
+	
+		
+		$prepareStatement2 = "UPDATE `detalle_incidencia_odt` SET `estatus` = ?, `fecha_atencion` = ? WHERE `incidencia_id` = ?";
+
+		$arrayString2 = array (
+				0,
+				$fecha_solucion,
+		    	$id_incidencia
+				
+			);
+
+		$Eventos->insert($prepareStatement2,$arrayString2);
+			
+	
+		var_dump($arrayString2);
+	
+
+}
+
+if ($module == 'voboIncidencia') {
+	
+	$fecha_solucion = date("Y-m-d H:i:s");
+	$id_incidencia = $params['idIn'];
+
+
+	$prepareStatement = "UPDATE `incidencia_odt` SET `vobo` = ? WHERE id = ?";
+
+	$arrayString = array (
+		1,
+		$id_incidencia
+	);
+
+	$Eventos->insert($prepareStatement,$arrayString);
+
+	$prepareStatement2 = "UPDATE `detalle_incidencia_odt` SET `estatus` = ? WHERE `incidencia_id` = ?";
+
+	$arrayString2 = array (
+				0,
+		    	$id_incidencia
+				
+			);
+	$Eventos->insert($prepareStatement2,$arrayString2);
+
+}
+if ($module == 'voboIncidenciaBack') {
+	
+	$fecha_solucion = date("Y-m-d H:i:s");
+	$id_incidencia = $params['idIn'];
+
+
+	$prepareStatement = "UPDATE `incidencia_odt` SET `vobo` = ? WHERE id = ?";
+
+	$arrayString = array (
+		0,
+		$id_incidencia
+	);
+
+	$Eventos->insert($prepareStatement,$arrayString);
+
+	$prepareStatement2 = "UPDATE `detalle_incidencia_odt` SET `estatus` = ? WHERE `incidencia_id` = ?";
+
+	$arrayString2 = array (
+				1,
+		    	$id_incidencia
+				
+			);
+	$Eventos->insert($prepareStatement2,$arrayString2);
+
+}
+
 
 ?>
