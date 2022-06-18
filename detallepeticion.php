@@ -243,7 +243,7 @@
                                 </div>
                                 <div class="col-6">
                                     <label for="caja_guia_insumo" class="col-form-label-sm col-sm-2">GUIA:</label>
-                                    <input class="form-control" name="caja_guia_insumo" id="caja_guia_insumo">
+                                    <input type="text" onkeyup="mayus(this);" class="form-control" name="caja_guia_insumo" id="caja_guia_insumo">
                                 </div>
                             </div>                
                     </div>
@@ -1230,6 +1230,10 @@
                 var demo = error;
             }
         })
+    }
+
+    function mayus(e) {
+        e.value = e.value.toUpperCase();
     }
 
     </script> 
