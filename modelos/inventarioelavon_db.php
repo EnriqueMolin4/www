@@ -862,7 +862,7 @@ if($module == 'agregarSerie') {
 	$existe = $Almacen->getInventarioElavon($params['serie']);
 
 	switch($params['estatus']) {
-		case 'PERTENECE A ELAVON':
+		case 'PERTENECE AL BANCO':
 			$estatus == 3;
 		break;
 		case 'DESTRUIDA ¡NO INSTALAR!	':
@@ -941,6 +941,17 @@ if($module == 'getFabricantes') {
     foreach ( $rows as $row ) {
          
 		$val .=  '<option value="' . $row ['id'] . '"  >' . $row ['nombre'] . '</option>';
+	}
+	echo $val;
+
+}
+
+if($module == 'getFabricantesAlta') {
+    $val = '<option value="0">Seleccionar</option>';
+    $rows = $Almacen->getFabricantes();
+    foreach ( $rows as $row ) {
+         
+		$val .=  '<option value="' . $row ['nombre'] . '"  >' . $row ['nombre'] . '</option>';
 	}
 	echo $val;
 
