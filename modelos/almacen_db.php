@@ -2933,7 +2933,7 @@ if($module == 'updateInvProd')
 								`cantidad` = ?, 
 								`modificado_por` = ?,
 								`fecha_edicion` = ?
-							WHERE `no_serie` = ? AND `cve_banco` = ?";
+							WHERE `no_serie` = ?";
 
 		$arrayString = array (
 				$params['tipo'],
@@ -2948,8 +2948,7 @@ if($module == 'updateInvProd')
 				$params['cantidad'],
 				$user,
 				$fecha,
-				$params['noserie'],
-				$params['banco']
+				$params['noserie']
 		);
 		//print_r($arrayString);
 		$id = $Almacen->insert($prepareStatement,$arrayString);
@@ -4623,7 +4622,7 @@ if($module == 'InventarioElavon')
 					$Estatus_Modelo = 7;
 				} else if($Estatus == 'ACTIVA') {
 					$Estatus_Modelo = 3;
-				} else if($Estatus == 'PERTENECE A ELAVON') {
+				} else if($Estatus == 'PERTENECE AL BANCO') {
 					$Estatus_Modelo = 3;
 				} else if($Estatus == 'QUEBRANTADA ¡NO INSTALAR!') {
 					$Estatus_Modelo = 16;
