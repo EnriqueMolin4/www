@@ -14,7 +14,7 @@
            
             </div>
             <div class="container-fluid p-5">
-            <h3>Inventario Universo Elavon</h3>
+            <h3>Inventario Universo Terminales</h3>
             <div class="row">
                 <div class="col-md-7">
                         <label for="excelMasivo" class="col-form-label-sm">Carga Masiva Inventario</label> 
@@ -48,8 +48,7 @@
                         <label for="tipo_estatus" class="col-form-label-sm">Estatus</label>
                         <select id="tipo_estatus" name="tipo_estatus" class="form-control form-control-sm searchInventario">
                             <option value="0" selected>Seleccionar</option>
-                            <option value="PERTENECE A HSBC">PERTENECE A HSBC</option>
-                            <option value="PERTENECE A ELAVON">PERTENECE AL BANCO</option>
+                            <option value="PERTENECE AL BANCO">PERTENECE AL BANCO</option>
                             <option value="DESTRUIDA ¡NO INSTALAR!">DESTRUIDA ¡NO INSTALAR!</option>
                             <option value="QUEBRANTADA ¡NO INSTALAR!">QUEBRANTADA ¡NO INSTALAR!</option>
                             <option value="PENDIENTE POR QUEBRANTAR">PENDIENTE POR QUEBRANTAR</option>
@@ -140,7 +139,7 @@
                                 <label for="estatus" class="col-form-label-sm">ESTATUS</label>
                                 <select id="estatus" name="estatus" class="form-control form-control-sm">
                                     <option value="0" selected>Seleccionar</option>
-                                    <option value="PERTENECE A ELAVON" data-id="3">PERTENECE A ELAVON</option>
+                                    <option value="PERTENECE AL BANCO" data-id="3">PERTENECE AL BANCO</option>
                                     <option value="DESTRUIDA ¡NO INSTALAR!" data-id="17">DESTRUIDA ¡NO INSTALAR!</option>
                                     <option value="QUEBRANTADA ¡NO INSTALAR!" data-id="16">QUEBRANTADA ¡NO INSTALAR!</option>
                                     <option value="PENDIENTE POR QUEBRANTAR" data-id="3">PENDIENTE POR QUEBRANTAR</option>
