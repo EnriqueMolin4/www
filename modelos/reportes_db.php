@@ -351,7 +351,7 @@ class Reportes implements IConnections {
 
 
                 
-        //self::$logger->error ($sql.' '.$estatusubicacion);
+        self::$logger->error ($sql);
         
         try {
             $stmt = self::$connection->prepare ($sql);
@@ -821,7 +821,12 @@ if($module == 'reporte_almaceninv') {
             $counter = 1;
             foreach($fields as $index => $value) {
                  
-                    $value = $counter == 2 ? "'$value" : $value;
+                    $value = $counter == 2 ? "" : $value;
+                    $value = $counter == 10 ? "" : $value;
+                    $value = $counter == 11 ? "" : $value;
+                    $value = $counter == 12 ? "" : $value;
+                    $value = $counter == 13 ? "" : $value;
+                    $value = $counter == 14 ? "" : $value;
                 $hojaDeProductos->setCellValueByColumnAndRow($counter, $numeroDeFila, $value);
                  
                 $counter++;
@@ -833,11 +838,12 @@ if($module == 'reporte_almaceninv') {
 
         
                 
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($documento, 'Csv');
+        //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($documento, 'Csv');
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($documento);
         //$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($documento);
         //header('Content-Type: text/csv');
         header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
-        header('Content-Disposition: attachment; filename="InventarioAlmacen_'. date('YmdHms').'.csv"');
+        header('Content-Disposition: attachment; filename="InventarioAlmacen_'. date('YmdHms').'.xls"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header("Cache-Control: private",false);
@@ -852,7 +858,7 @@ if ( $module == 'reporte_detevento' ) {
     $rows = $Reportes->getDetEvento($params, true);
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
-    $headers = array ('ODT','IMG CARGADAS', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO','BANCO','ATENCION','COORDENADAS','FECHA ALTA','FECHA VENCMIENTO', 'FECHA CIERRE','DIAS_VENCIMIENTO', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','MODELO_IN','CONECTIVIDAD_IN','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN','TPV RETIRADA','MODELO_RET','CONECTIVIDAD_RET','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FECHA VALIDACION','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CERRADO POR','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    $headers = array ('BANCO','ODT','IMG CARGADAS','AFILIACION', 'SERVICIO', 'SUBSERVICIO','ATENCION','FECHA ALTA','FECHA VENCIMIENTO','FECHA ASIGNACION', 'FECHA TRANSITO','FECHA ATENCION','FECHA VALIDACION', 'HORA LLEGADA', 'HORA SALIDA', 'FECHA CIERRE','TIEMPO TRASLADO','TIEMPO CIERRE','CERRADO POR', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','DIAS VENCIMIENTO','COMERCIO','COLONIA','CIUDAD','ESTADO','DIRECCION','TELEFONO','QUIEN ATENDIO', 'DESCRIPCION', 'SERVICIO SOLICITADO','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','MODELO_IN','CONECTIVIDAD_IN','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN','SIM INSTALADO','TPV RETIRADA','MODELO_RET','CONECTIVIDAD_RET','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO','COORDENADAS');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO', 'DESCRIPCION', 'TECNICO', 'ESTATUS', 'TPV INSTALADA', 'TPV RETIRADA', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION');
 
@@ -874,25 +880,35 @@ if ( $module == 'reporte_detevento' ) {
 
         $hojaDeProductos->getStyle('Al')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
 
-        $hojaDeProductos->fromArray($headers, null, 'A1');
-        $numeroDeFila = 2;
 
+
+        $hojaDeProductos->fromArray($headers, null, 'A1');
+        //$hojaDeProductos->getColumnDimension('BT')->setVisible(false);
+        //$hojaDeProductos->getColumnDimension('BU')->setVisible(false);
+        $numeroDeFila = 2;
+       
         foreach ($rows as $fields) 
         {
             $counter = 1;
             foreach ($fields as $index => $value) {
                 //$value = $counter == 2 ? "'$value" : $value;
-                if( $counter == 1  ) {
+                if( $counter == 2  ) {
                     $value ="'$value";
-                } else if ( $counter == 41 ) {
-                    $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 43 ) {
                     $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 49 ) {
                     $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 50 ) {
                     $value = empty($value) ? "" : "'$value";
-                } 
+                } else if ( $counter == 56 ) {
+                    $value = empty($value) ? "" : "'$value";
+                } else if ( $counter == 74 ){
+                    $value = empty($value) ? "" : "";
+                } else if ( $counter == 75 ){
+                    $value = empty($value) ? "" : "";
+                } else if ( $counter == 76 ){
+                    $value = empty($value) ? "" : "";
+                }
 
                 $hojaDeProductos->setCellValueByColumnAndRow($counter, $numeroDeFila, $value);
                 $counter++;
