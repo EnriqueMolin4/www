@@ -96,7 +96,15 @@
                   </li>
                   <?php
                      }
-                  ?>
+                        if ( searchMenu($_SESSION['Modules'],'url','incidenciaodt') ) {
+                        ?>
+                     <li id="incidenciaslink">
+                        <a href="incidencias_eventos.php">Incidencias Eventos</a>
+                     </li>
+                     <?php
+                        }
+                     ?>
+               
                </ul>
             </div>
          </li>
