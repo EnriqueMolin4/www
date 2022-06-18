@@ -15,10 +15,10 @@ $(document).ready(function() {
     getCancelado();
     getCausasCambio();
     getProductos();
-    getAplicativo();
-    getVersion();
-    getModelos();
-    getConectividad();
+    getAplicativo('0',0);
+    getVersion('0',0);
+    getModelos('0',0);
+    getConectividad('0',0);
     getCarrier();
     getTerritoriosFilter();
     getTecnicosf();
@@ -68,7 +68,6 @@ $(document).ready(function() {
             [6, "ASC"]
         ],
         dom: 'lfrtiBp',
-        autoWidth: true,
         buttons: [
             {
             charset: 'utf-8',
@@ -248,7 +247,7 @@ $(document).ready(function() {
         }
     });
 
-    tableEventos.columns.adjust().draw();
+    
     $('#historia').DataTable({
         "responsive": true,
         language: {
@@ -568,171 +567,210 @@ $(document).ready(function() {
 
                 } else {
 
-                    $.each(info, function(index, element) {
+                    const getProd = fetch('modelos/eventos_db.php?module=getProductos&cve_banco='+info[0].cve_banco)
+                        .then(response => response.text() )
+                        .then(data => {
+                            $("#producto").html(data);
+                        })
+                    
+                    const getApp = fetch('modelos/eventos_db.php?module=getAplicativo&cve_banco='+info[0].cve_banco)
+                        .then(response => response.text())
+                        .then(data => {
+                            $("#aplicativo").html(data);
+                            $("#aplicativo_ret").html(data);
+                        })
+                    
+                    const getVer = fetch('modelos/eventos_db.php?module=getVersion&cve_banco='+info[0].cve_banco)
+                        .then(response => response.text())
+                        .then(data => {
+                            $("#version").html(data);
+                            $("#version_ret").html(data);
+                        })
 
-                        // trae validaciones de Campos obligatorios
-                        camposObligatorios(element.tipo_servicio)
-                            .then((data) => {
-                                PermisosEvento = data
+                    const getMod = fetch('modelos/eventos_db.php?module=getListaModelos&cve_banco='+info[0].cve_banco)
+                        .then(response => response.text())
+                        .then(data => {
+                            
+                            $("#tpvInDataModelo").html(data);
+                            $("#tpvReDataModelo").html(data);
+                        }) 
+                    
+                    const allData = Promise.all([getProd,getApp,getVer,getMod]);
+
+                    allData
+                        .then(res => {                     
+                            $.each(info, function(index, element) {
+
+                                // trae validaciones de Campos obligatorios
+                                camposObligatorios(element.tipo_servicio)
+                                    .then((data) => {
+                                        PermisosEvento = data
+                                    })
+                                
+                                
+                                //EXTRAS
+                                getInfoExtra(element.odt);
+                                $("#cambiarInfoTpv").hide();
+
+                                $("#odt").val(element.odt)
+                                $("#afiliacion").val(element.afiliacion)
+                                $("#tipo_servicio").val(element.servicioNombre);
+                                $("#tipo_subservicio").val(element.subservicioNombre);
+                                $("#fecha_alta").val(element.fecha_alta);
+                                $("#fecha_vencimiento").val(element.fecha_vencimiento)
+                                $("#fecha_cierre").val(element.fecha_cierre);
+                                $("#servicioId").val(element.tipo_servicio);
+                                $("#cve_banco").val(element.cve_banco);
+
+                                if(element.tipo_servicio == '2' || element.tipo_servicio == '8' || element.tipo_servicio == '13' || element.tipo_servicio == '14' ||  element.tipo_servicio == '26' || element.tipo_servicio == '30' || element.tipo_servicio == '33' || element.tipo_servicio == '45')
+                                {
+                                    $("#rowCausasCambio").show();
+                                }else if(element.tipo_servicio == '2' && element.estatus_servicio =="13")
+                                {
+                                    $("#rowCausasCambio").show();
+                                }
+
+                                if (element.tipo_servicio == '15') {
+                                    $("#comercio").val(element.cliente_vo)
+                                } else {
+                                    $("#comercio").val(element.comercioNombre)
+                                }
+                                $("#receptor_servicio").val(element.receptor_servicio);
+                                $("#fecha_atencion").val(element.fecha_atencion);
+                                $("#colonia").val(element.colonia)
+                                $("#ciudad").val(element.municipioNombre)
+                                $("#estado").val(element.estadoNombre)
+                                $("#direccion").val(element.direccion)
+                                $("#telefono").val(element.telefono)
+                                $("#descripcion").val(element.descripcion);
+                                $("#hora_atencion").val(element.hora_atencion + " | " + element.hora_atencion_fin)
+                                $("#hora_llegada").val(element.hora_llegada)
+                                $("#hora_salida").val(element.hora_salida)
+                                $("#tecnico").val(element.tecnicoNombre)
+                                $("#tecnicoid").val(element.tecnico)
+                                $("#estatus").val(element.estatusNombre)
+                                $("#servicio").val(element.servicioNombre)
+                                $("#comentarios_tecnico").val(element.comentarios)
+                                $("#comentarios_validacion").val(element.comentarios_validacion)
+                                $("#servicio_final").val(element.serviciofinalNombre)
+                                $("#comentarios_cierre").val(element.comentarios_cierre)
+                                $("#fecha_asignacion").val(element.fecha_asignacion);
+                                $("#hora_comida").val(element.hora_comida + " | " + element.hora_comida_fin);
+                                $("#latitud").val(element.latitud);
+                                $("#longitud").val(element.longitud);
+
+                                $("#tipo_credito").val(element.tipocreditoNombre);
+                                $("#tieneamex").val(element.tieneamex);
+                                $("#afiliacion_amex").val(element.afiliacionamex);
+                                $("#idamex").val(element.amex);
+                                $("#idcaja").val(element.id_caja);
+                                $("#tpv").val(element.tpv_instalado);
+                                 validarTPV(element.tpv_instalado, 1, 'in',element.afiliacion)
+                                $("#tpv_retirado").val(element.tpv_retirado,element.afiliacion);
+                                validarTPV(element.tpv_retirado, 1, 'out')
+                                $("#version").val(element.version);
+                                $("#version").val(element.version_ret);
+                                $("#aplicativo").val(element.aplicativo);
+                                $("#aplicativo_ret").val(element.aplicativo_ret);
+                                $("#producto").val(element.producto);
+                                $("#rollos_instalar").val(element.rollos_instalar);
+                                $("#rollos_entregados").val(element.rollos_entregados);
+                                $("#sim_instalado").val(element.sim_instalado);
+                                $("#sim_retirado").val(element.sim_retirado);
+                                $("#estatus_servicio").val(element.estatus_servicio);
+                                $("#causas_cambio").val(element.causacambio);
+
+                                $("#rechazo").val(element.rechazo);
+                                $("#subrechazo").val(element.subrechazo);
+                                $("#cancelado").val(element.cancelado);
+
+                                tipodeUsuario(element.estatus);
+
+                                /*   if (element.estatus_servicio == '13' )
+                                {
+                                    if($("#tipo_user").val() == 'callcenterADM' ) {
+                                        $("#estatus_servicio").attr("disabled",false);
+                                    } else {
+                                        $("#estatus_servicio").prop("disabled",true);
+                                        $("#btnUpdateEvento").attr("disabled",true);
+                                    }
+
+                                }  else {
+                                    
+                                } */
+
+                                $("#folio_telecarga").val(element.folio_telecarga);
+                                $("#tpvInDataModelo").val(element.tvpInModelo);
+                                $("#tpvInDataConnect").val(element.tvpInConectividad);
+                                $("#tpvReDataModelo").val(element.tvpReModelo);
+                                $("#tpvReDataConnect").val(element.tvpReConectividad);
+                                $("#simInData").val(element.simInCarrier);
+                                $("#simReData").val(element.simReCarrier);
+
+                                var faltaserie = element.faltaserie === null ? 0 : element.faltaserie;
+                                var faltaevidencia = element.faltaevidencia === null ? 0 : element.faltaevidencia;
+                                var faltainformacion = element.faltainformacion === null ? 0 : element.faltainformacion;
+                                var faltaubicacion = element.faltaubicacion === null ? 0 : element.faltaubicacion;
+                                $("#faltaSerie").prop('checked', faltaserie == 0 ? false : true);
+                                $("#faltaEvidencia").prop('checked', faltaevidencia == 0 ? false : true);
+                                $("#faltaInformacion").prop('checked', faltainformacion == 0 ? false : true);
+                                $("#faltaUbicacion").prop('checked', faltaubicacion == 0 ? false : true);
+                                
+                                $("#cod_rech").val(element.codigo_servicio);
+                                $("#cod_rech2").val(element.codigo_servicio_2);
+                                var aplica_exito = element.aplica_exito === null ? 0 : element.aplica_exito;
+                                var aplica_rechazo_2 = element.aplica_rechazo_2 === null ? 0 : element.aplica_rechazo_2;
+                                $("#aplicaExito").prop('checked', aplica_exito == 0 ? false : true);
+                                $("#aplicaRechazo").prop('checked', aplica_rechazo_2 == 0 ? false : true);
+
+                                if (element.servicio == '15') {
+                                    $("#labelAfiliacion").html('Folio');
+                                    $("#col_tipocredito").show();
+                                    $("#col_serviciofinal").hide();
+                                } else {
+                                    $("#labelAfiliacion").html('Afiliacion');
+                                    $("#col_tipocredito").hide();
+                                    $("#col_serviciofinal").show();
+                                }
+                                /*
+                                if(element.tecnico =='0') {
+                                    $("#btnReasignarTecnico").hide();
+                                } else {
+                                    $("#btnReasignarTecnico").show();
+                                }
+
+                                if(element.estatus == '3' || element.estatus == '1' ) {
+                                    $("#btnReasignarTecnico").hide();
+                                } else {
+                                    $("#btnReasignarTecnico").show();
+                                } */
+
+                                $("#divBtnCV").show();
+                                $("#comentarios_valid").show();
+                                //getScriptEvento(element.servicio,element.tpv_instalado)                       
+                            
+
+                                if (element.estatus_servicio == '13') {
+                                    $("#divBtnCV").show();
+                                    $("#comentarios_valid").show();
+                                    $("#rowRechazos").hide();
+                                    $("#rowSubRechazos").hide();
+                                    $("#rowCancelado").hide();
+                                    //$("#rowCausasCambio").hide();
+
+                                } else if (element.estatus_servicio == '14') {
+                                    $("#rowCausasCambio").hide();
+                                    $("#rowCancelado").show();
+                                } else if (element.estatus_servicio == '15') {
+                                    $("#divBtnCV").show();
+                                    $("#comentarios_valid").show();
+                                    $("#rowRechazos").show();
+                                    $("#rowSubRechazos").show();
+                                    $("#rowCausasCambio").hide();
+                                }
                             })
 
-                        //EXTRAS
-                        getInfoExtra(element.odt);
-                        $("#cambiarInfoTpv").hide();
-
-                        $("#odt").val(element.odt)
-                        $("#afiliacion").val(element.afiliacion)
-                        $("#tipo_servicio").val(element.servicioNombre);
-                        $("#tipo_subservicio").val(element.subservicioNombre);
-                        $("#fecha_alta").val(element.fecha_alta);
-                        $("#fecha_vencimiento").val(element.fecha_vencimiento)
-                        $("#fecha_cierre").val(element.fecha_cierre);
-                        $("#servicioId").val(element.tipo_servicio);
-
-                        if(element.tipo_servicio == '2' || element.tipo_servicio == '8' || element.tipo_servicio == '13' || element.tipo_servicio == '14' ||  element.tipo_servicio == '26' || element.tipo_servicio == '30' || element.tipo_servicio == '33' || element.tipo_servicio == '45')
-                        {
-                            $("#rowCausasCambio").show();
-                        }else if(element.tipo_servicio == '2' && element.estatus_servicio =="13")
-                        {
-                            $("#rowCausasCambio").show();
-                        }
-
-                        if (element.tipo_servicio == '15') {
-                            $("#comercio").val(element.cliente_vo)
-                        } else {
-                            $("#comercio").val(element.comercioNombre)
-                        }
-                        $("#receptor_servicio").val(element.receptor_servicio);
-                        $("#fecha_atencion").val(element.fecha_atencion);
-                        $("#colonia").val(element.colonia)
-                        $("#ciudad").val(element.municipioNombre)
-                        $("#estado").val(element.estadoNombre)
-                        $("#direccion").val(element.direccion)
-                        $("#telefono").val(element.telefono)
-                        $("#descripcion").val(element.descripcion);
-                        $("#hora_atencion").val(element.hora_atencion + " | " + element.hora_atencion_fin)
-                        $("#hora_llegada").val(element.hora_llegada)
-                        $("#hora_salida").val(element.hora_salida)
-                        $("#tecnico").val(element.tecnicoNombre)
-                        $("#tecnicoid").val(element.tecnico)
-                        $("#estatus").val(element.estatusNombre)
-                        $("#servicio").val(element.servicioNombre)
-                        $("#comentarios_tecnico").val(element.comentarios)
-                        $("#comentarios_validacion").val(element.comentarios_validacion)
-                        $("#servicio_final").val(element.serviciofinalNombre)
-                        $("#comentarios_cierre").val(element.comentarios_cierre)
-                        $("#fecha_asignacion").val(element.fecha_asignacion);
-                        $("#hora_comida").val(element.hora_comida + " | " + element.hora_comida_fin);
-                        $("#latitud").val(element.latitud);
-                        $("#longitud").val(element.longitud);
-
-                        $("#tipo_credito").val(element.tipocreditoNombre);
-                        $("#tieneamex").val(element.tieneamex);
-                        $("#afiliacion_amex").val(element.afiliacionamex);
-                        $("#idamex").val(element.amex);
-                        $("#idcaja").val(element.id_caja);
-                        $("#tpv").val(element.tpv_instalado);
-                        $("#tpv_retirado").val(element.tpv_retirado);
-                        $("#version").val(element.version);
-                        $("#aplicativo").val(element.aplicativo);
-                        $("#aplicativo_ret").val(element.aplicativo_ret);
-                        $("#producto").val(element.producto);
-                        $("#rollos_instalar").val(element.rollos_instalar);
-                        $("#rollos_entregados").val(element.rollos_entregados);
-                        $("#sim_instalado").val(element.sim_instalado);
-                        $("#sim_retirado").val(element.sim_retirado);
-                        $("#estatus_servicio").val(element.estatus_servicio);
-                        $("#causas_cambio").val(element.causacambio);
-
-                        $("#rechazo").val(element.rechazo);
-                        $("#subrechazo").val(element.subrechazo);
-                        $("#cancelado").val(element.cancelado);
-
-                        //tipodeUsuario(element.estatus);
-
-                        /*   if (element.estatus_servicio == '13' )
-                           {
-                               if($("#tipo_user").val() == 'callcenterADM' ) {
-                                   $("#estatus_servicio").attr("disabled",false);
-                               } else {
-                                   $("#estatus_servicio").prop("disabled",true);
-                                   $("#btnUpdateEvento").attr("disabled",true);
-                               }
-
-                           }  else {
-                               
-                           } */
-
-                        $("#folio_telecarga").val(element.folio_telecarga);
-                        $("#tpvInDataModelo").val(element.tvpInModelo);
-                        $("#tpvInDataConnect").val(element.tvpInConectividad);
-                        $("#tpvReDataModelo").val(element.tvpReModelo);
-                        $("#tpvReDataConnect").val(element.tvpReConectividad);
-                        $("#simInData").val(element.simInCarrier);
-                        $("#simReData").val(element.simReCarrier);
-
-                        var faltaserie = element.faltaserie === null ? 0 : element.faltaserie;
-                        var faltaevidencia = element.faltaevidencia === null ? 0 : element.faltaevidencia;
-                        var faltainformacion = element.faltainformacion === null ? 0 : element.faltainformacion;
-                        var faltaubicacion = element.faltaubicacion === null ? 0 : element.faltaubicacion;
-                        $("#faltaSerie").prop('checked', faltaserie == 0 ? false : true);
-                        $("#faltaEvidencia").prop('checked', faltaevidencia == 0 ? false : true);
-                        $("#faltaInformacion").prop('checked', faltainformacion == 0 ? false : true);
-                        $("#faltaUbicacion").prop('checked', faltaubicacion == 0 ? false : true);
-                        
-                        $("#cod_rech").val(element.codigo_servicio);
-                        $("#cod_rech2").val(element.codigo_servicio_2);
-                        var aplica_exito = element.aplica_exito === null ? 0 : element.aplica_exito;
-                        var aplica_rechazo_2 = element.aplica_rechazo_2 === null ? 0 : element.aplica_rechazo_2;
-                        $("#aplicaExito").prop('checked', aplica_exito == 0 ? false : true);
-                        $("#aplicaRechazo").prop('checked', aplica_rechazo_2 == 0 ? false : true);
-
-                        if (element.servicio == '15') {
-                            $("#labelAfiliacion").html('Folio');
-                            $("#col_tipocredito").show();
-                            $("#col_serviciofinal").hide();
-                        } else {
-                            $("#labelAfiliacion").html('Afiliacion');
-                            $("#col_tipocredito").hide();
-                            $("#col_serviciofinal").show();
-                        }
-                        /*
-                        if(element.tecnico =='0') {
-                            $("#btnReasignarTecnico").hide();
-                        } else {
-                            $("#btnReasignarTecnico").show();
-                        }
-
-                        if(element.estatus == '3' || element.estatus == '1' ) {
-                            $("#btnReasignarTecnico").hide();
-                        } else {
-                            $("#btnReasignarTecnico").show();
-                        } */
-
-                        $("#divBtnCV").show();
-                        $("#comentarios_valid").show();
-                        //getScriptEvento(element.servicio,element.tpv_instalado)                       
-                       
-
-                        if (element.estatus_servicio == '13') {
-                            $("#divBtnCV").show();
-                            $("#comentarios_valid").show();
-                            $("#rowRechazos").hide();
-                            $("#rowSubRechazos").hide();
-                            $("#rowCancelado").hide();
-                            //$("#rowCausasCambio").hide();
-
-                        } else if (element.estatus_servicio == '14') {
-                            $("#rowCausasCambio").hide();
-                            $("#rowCancelado").show();
-                        } else if (element.estatus_servicio == '15') {
-                            $("#divBtnCV").show();
-                            $("#comentarios_valid").show();
-                            $("#rowRechazos").show();
-                            $("#rowSubRechazos").show();
-                            $("#rowCausasCambio").hide();
-                        }
-                    })
+                        }) 
                 }
             },
             error: function(error) {
@@ -1247,7 +1285,7 @@ $(document).ready(function() {
     $("#tpv").on("change", function() {
         var tpv = $(this).val();
         if (tpv.length > 0) {
-            result = validarTPV(tpv, 1, 'in')
+            result = validarTPV(tpv, 1, 'in',$("#afiliacion").val())
 
         }
     })
@@ -1255,7 +1293,7 @@ $(document).ready(function() {
     $("#tpv_retirado").on("change", function() {
         var tpv = $(this).val();
         if (tpv.length > 0) {
-            validarTPV(tpv, 1, 'out')
+            validarTPV(tpv, 1, 'out',$("#afiliacion").val())
 
         }
 
@@ -1264,7 +1302,7 @@ $(document).ready(function() {
     $("#sim_instalado").on("change", function() {
         var tpv = $(this).val();
         if (tpv.length > 0) {
-            validarTPV(tpv, 2, 'in')
+            validarTPV(tpv, 2, 'in',$("#afiliacion").val())
 
         }
     })
@@ -1273,10 +1311,12 @@ $(document).ready(function() {
         var tpv = $(this).val();
         var result;
         if (tpv.length > 0) {
-            validarTPV(tpv, 2, 'out')
+            validarTPV(tpv, 2, 'out',$("#afiliacion").val())
 
         }
     })
+
+
 
     $("#tpvInDataConnect").on("change", function() {
         $("#cambiarInfoTpv").show();
@@ -1403,57 +1443,62 @@ function camposObligatorios(servicio) {
 
 }
 
-function validarTPV(tpv, tipo, donde) {
-    result = 0;
+function validarTPV(tpv,tipo,donde,comercio) {
+          result = 0;
+        var afiliacion = $("#afiliacion").val();
+        var odt = $("#odt").val();
+        var cve_banco = $("#cve_banco").val();
+        var permiso = 1; //donde == 'in' ? PermisosEvento.tvp_instalada : PermisosEvento.tpv_salida;
 
-    $.ajax({
-        type: 'GET',
-        url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=validarTPV&noserie=' + tpv + "&tipo=" + tipo,
-        cache: false,
-        success: function(data) {
-            if (data != 'false') {
-                result = 1;
-                var info = JSON.parse(data);
-                var modelo = info.modelo == null ? 0 : info.modelo;
-                var conectividad = info.conectividad == null ? 0 : info.conectividad;
-                if (tipo == 1) {
-                    if (donde == 'in') {
-                        $("#tpvInDataModelo").val(modelo);
-                        $("#tpvInDataConnect").val(conectividad);
-                    } else {
-                        $("#tpvReDataModelo").val(modelo);
-                        $("#tpvReDataConnect").val(conectividad);
-                    }
+          $.ajax({
+              type: 'GET',
+              url: 'modelos/eventos_db.php', // call your php file
+              data: 'module=validarTPV&noserie='+tpv+"&tipo="+tipo+"&comercio="+comercio+"&donde="+donde+"&permiso="+permiso+"&odt="+odt+"&cve_banco="+cve_banco,
+              cache: false,
+              success: function(data){
+                  var info = JSON.parse(data);
+                  if(info.status != false ) {
+                      result = 1;    
+                    
+                      var modelo = info.modelo == null ? 0 : info.modelo;
+                      var conectividad = info.conectividad == null ? 0 : info.conectividad;
+                      if(tipo == 1) {
+                          if(donde == 'in') {
+                              $("#tpvInDataModelo").val(modelo);
+                              $("#tpvInDataConnect").val(conectividad);
+                          } else {
+                              $("#tpvReDataModelo").val(modelo);
+                              $("#tpvReDataConnect").val(conectividad);
+                          }
 
-                } else if (tipo == 2) {
-                    if (donde == 'in') {
-                        $("#simInData").val(modelo)
-                    } else {
-                        $("#simReData").val(modelo)
-                    }
-                }
+                      } else if (tipo == 2) {
+                          if(donde == 'in') {
+                              $("#simInData").val(modelo)
+                          } else {
+                              $("#simReData").val(modelo)
+                          }
+                      }
 
-            } else {
-                tpv.val('');
-                $.toaster({
-                    message: 'La serie no es valida',
-                    title: 'Aviso',
-                    priority: 'danger'
-                });
+                  } else {
+                      $("#tpv").val('');  
+                      $.toaster({
+                          message: info.msg,
+                          title: 'Aviso',
+                          priority : 'danger'
+                                });
+                        
+                  }
+            
+                
+              },
+              error: function(error){
+                  var demo = error;
+              }
+          });
 
-            }
+          return result;
 
-
-        },
-        error: function(error) {
-            var demo = error;
-        }
-    });
-
-    return result;
-
-}
+      }
 
 
 
@@ -1517,6 +1562,7 @@ function tipodeUsuario(tipo) {
         $("#producto").attr('disabled', false)
         $("#version").attr('readonly', false)
         $("#aplicativo").attr('readonly', false)
+        $("#aplicativo_ret").attr('readonly', false)
         $("#receptor_servicio").attr('readonly', false);
 
         $("#odtGetNet").attr('disabled', false)
@@ -1552,6 +1598,7 @@ function tipodeUsuario(tipo) {
         $("#producto").attr('disabled', true)
         $("#version").attr('readonly', true)
         $("#aplicativo").attr('readonly', true)
+        $("#aplicativo_ret").attr('readonly', true)
         $("#receptor_servicio").attr('readonly', true);
 
         $("#odtGetNet").attr('disabled', true)
@@ -1571,7 +1618,8 @@ function tipodeUsuario(tipo) {
         $("#idamex").attr('readonly', true)
         $("#sim_instalado").attr('readonly', true)
         $("#sim_retirado").attr('readonly', true)
-
+        $("#cod_rech").attr('readonly',true);
+        $("#cod_rech2").attr('readonly',true);
     }
 }
 
@@ -1741,12 +1789,12 @@ function getTecnicosf(ter) {
     });
 }
 
-function getEstatusServicio() {
+function getEstatusServicio(cve_banco) {
 
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getEstatusServicio',
+        data: 'module=getEstatusServicio&cve_banco='+cve_banco,
         cache: true,
         success: function(data) {
             console.log(data);
@@ -1842,12 +1890,12 @@ function getSubRechazos() {
 
 }
 
-function getProductos() {
+function getProductos(cve_banco) {
 
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getProductos',
+        data: 'module=getProductos&cve_banco='+cve_banco,
         cache: true,
         success: function(data) {
             console.log(data);
@@ -1967,12 +2015,12 @@ function getEstatusEvento() {
     });
 }
 
-function getVersion() {
+function getVersion(cve_banco) {
 
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getVersion',
+        data: 'module=getVersion&cve_banco='+cve_banco,
         cache: true,
         success: function(data) {
             console.log(data);
@@ -2007,12 +2055,12 @@ function getBancosf() {
     });
 }
 
-function getAplicativo() {
+function getAplicativo(cve_banco) {
 
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getAplicativo',
+        data: 'module=getAplicativo&cve_banco='+cve_banco,
         cache: true,
         success: function(data) {
             console.log(data);
@@ -2028,12 +2076,12 @@ function getAplicativo() {
     });
 }
 
-function getModelos() {
+function getModelos(cve_banco) {
 
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getListaModelos',
+        data: 'module=getListaModelos&cve_banco='+cve_banco,
         cache: true,
         success: function(data) {
             console.log(data);
@@ -2049,12 +2097,12 @@ function getModelos() {
     });
 }
 
-function getConectividad() {
+function getConectividad(cve_banco) {
 
     $.ajax({
         type: 'GET',
         url: 'modelos/eventos_db.php', // call your php file
-        data: 'module=getListaConectividad',
+        data: 'module=getListaConectividad&cve_banco='+cve_banco,
         cache: true,
         success: function(data) {
             console.log(data);
