@@ -68,7 +68,9 @@ if($processActive) {
             $ODT = $hojaDeProductos[$indiceFila]['A'];
             if(!is_null($ODT)  ) {
                 $counter++;
-                if ( $cveBanco == '037') {
+                if ( $cveBanco == '037' || $cvebanco == '039') {
+
+                    $format = $cveBanco == '039' ? "d/m/Y H:i" : "d/m/Y H:i:s ";
 
                     $Ticket = $hojaDeProductos[$indiceFila]['B'];
                     $Afiliacion = $hojaDeProductos[$indiceFila]['C'];
@@ -102,6 +104,8 @@ if($processActive) {
                     $Proveedor = $hojaDeProductos[$indiceFila]['T'];  
                     $EstatusServicio =  $hojaDeProductos[$indiceFila]['U']; 
                     $EstatusServicio = $EstatusServicio = '' ? 0 : $Procesos->getEstatusServicioxNombre($EstatusServicio,$cveBanco);
+                    $EstatusServicio = $EstatusServicio = 0 ? 0 : $EstatusServicio['estatus_servicio'];
+
                     
                     $FechaAtencionProveedor = $hojaDeProductos[$indiceFila]['V']; 
                     if($FechaAtencionProveedor == "" ) {
@@ -207,11 +211,9 @@ if($processActive) {
                     $TipoComercio = 'NORMAL'; //$hojaDeProductos[$indiceFila]['N']; 
                     $Nivel = ''; //$hojaDeProductos[$indiceFila]['O']; 
                     $SubServicio = $hojaDeProductos[$indiceFila]['F'];
-					## SUBSERVICIO NOMBRE
-					echo "NOMBRE: ".$SubServicio." \n ";					
+									
                     $SubtipoServicio = $SubServicio = '' ? 0 : $Procesos->getSubServicioxNombre( $SubServicio,'038' );
-					## SUBSERVICIO ID
-					echo "ID: ".$SubtipoServicio." \n ";
+					
                     $TipoServicio = $Procesos->getServiciobySubservicio($SubServicio);
                     
                     $Propietario = 0; //$hojaDeProductos[$indiceFila]['R'];
