@@ -18,7 +18,7 @@
                </div>
               <div class="row">
                   <div class="col-sm-4">
-                     <label for="odt" class="col-form-label-sm">Ordenes de Trabajo</label>
+                     <label for="odt" class="col-form-label-sm">Ordenes de Trabajo  <b><span id="nombreBanco"></span></b> </label> 
                      <input type="text" class="form-control form-control-sm" id="odt" aria-describedby="odt"  readonly>
                   </div>
                   <div class="col-sm-4">
@@ -478,41 +478,45 @@
                            <label for="incidenciasEvidencia" class="col-form-label-sm">EVIDENCIA</label><br>
                            <select name="incidenciasEvidencia[]" id="incidenciasEvidencia" class="form-control" multiple>
                               
-                              <option value="FALTA EVIDENCIA 1">FALTA EVIDENCIA 1</option>
-                              <option value="FALTA EVIDENCIA 2">FALTA EVIDENCIA 2</option>
-                              <option value="FALTA EVIDENCIA 3">FALTA EVIDENCIA 3</option>
-                              <option value="FALTA EVIDENCIA 4">FALTA EVIDENCIA 4</option>
+                              <option value="FALTA EVIDENCIA">FALTA EVIDENCIA</option>
+                              <option value="EVIDENCIA ILEGIBLE">EVIDENCIA ILEGIBLE</option>
+                              <option value="NO COINCIDE">NO COINCIDE</option>
+                              <option value="VOBO">VOBO</option>
+                              <option value="FALTA INFORMACION">FALTA INFORMACION</option>
+                              <option value="PAPELETA">PAPELETA</option>
+                              <option value="PRUEBAS">PRUEBAS</option>
+                              <option value="COMERCIO">COMERCIO</option>
+                              <option value="UBICACION">UBICACION</option>
+                              <option value="DAÑO">DAÑO</option>
+                              <option value="ACCESORIOS">ACCESORIOS</option>
                            </select>
                         </div><br>
                      </div>
 
-                     <div class="row" id="divComentE" style="display:none;"><br>
-                        <div class="col">
-                           <label class="form-check-label" for="descripcionE">Comentarios</label>
-                           <textarea class="form-control" name="descripcionE" id="descripcionE" rows="5"></textarea>
-                        </div>
-                     </div>
+                     
 
                      <div class="row" id="divInventario1" style="display:none">
                         <div class="col">
                            <label for="incidenciasInventario" class="col-form-label-sm">INVENTARIO</label><br>
                            <select name="incidenciasInventario[]" id="incidenciasInventario" class="form-control" multiple>
                               
-                              <option value="FALTA SERIE INSTALADA">FALTA SERIE INSTALADA</option>
-                              <option value="FALTA SERIE RETIRADA">FALTA SERIE RETIRADA</option>
-                              <option value="SERIE RETIRADA NO CUENTA CON MODELO">SERIE RETIRADA NO CUENTA CON MODELO</option>
-                              <option value="SERIE INSTALADA NO CUENTA CON MODELO">SERIE RETIRADA NO CUENTA CON MODELO</option>
+                              <option value="SERIE">SERIE</option>
+                              <option value="SIM">SIM</option>
+                              
                            </select>
                         </div><br>
                         
                      </div>
-                                          
-                     <div class="row" id="divComentI" style="display:none;"><br>
+
+                     <br>
+                     <div class="row" id="divComentE" style="display:none;"><br>
                         <div class="col">
-                           <label class="form-check-label" for="descripcionI">Comentarios</label>
-                           <textarea class="form-control" name="descripcionI" id="descripcionI" rows="5"></textarea>
+                           <label class="form-check-label" for="descripcionE">Comentarios</label>
+                           <textarea class="form-control" name="descripcionE" id="descripcionE" rows="5"></textarea>
                         </div>
                      </div>
+                                          
+                     
                </div>
                <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -596,11 +600,12 @@
 			  result = JSON.parse(result);
               $("#odt").val(result.odt);
 			  $("#cve_banco").val(result.cve_banco);
+           $("#nombreBanco").html(result.banco);
 			  getTipoEvento();
 			  getEstatusEvento();
 			  getEstatusServicio(result.cve_banco);
-			  getRechazos();
-			  getSubRechazos();
+			  getRechazos(result.cve_banco);
+			  getSubRechazos(result.cve_banco);
 			  getCancelado();
 			  getProductos(result.cve_banco);
 			  getAplicativo(result.cve_banco);
@@ -751,11 +756,17 @@
 
           $("#btnComentValid").on('click', function() {
     
-    
+            var aplicaExito = $("#aplicaExito").is(":checked") ? 1 : 0 ;
+            var aplicaRechazo = $("#aplicaRechazo").is(":checked") ? 1 : 0 ;
+            var faltaSerie = $("#faltaSerie").prop('checked') ? 1 : 0 ;
+            var faltaEvidencia = $("#faltaEvidencia").prop('checked') ? 1 : 0 ;
+            var faltaInformacion = $("#faltaInformacion").prop('checked') ? 1 : 0 ;
+            var faltaUbicacion = $("#faltaUbicacion").prop('checked') ? 1 : 0 ;
     
               if( $('#comentarios_validacion').val().length > 0  )
               {
-                  var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val()};
+                  var dn = { module : 'guardarComVal', comentario:$('#comentarios_validacion').val(), odt:$('#odt').val(), codigo_rechazo:$("#cod_rech").val(),codigo_rechazo_2: $("#cod_rech2").val(),aplica_exito:aplicaExito,aplica_rechazo: aplicaRechazo,
+              faltaserie: faltaSerie,faltaubicacion:faltaUbicacion,faltainformacion:faltaInformacion,faltaevidencia:faltaEvidencia ,tecnico: $("#tecnicoid").val() };
               console.log(dn);
               $.ajax({ 
                       type: 'POST',
@@ -770,7 +781,7 @@
                               title: 'Aviso',
                               priority : 'success'
                           });
-                          cleartext();
+                          //cleartext();
                       },
                       error: function(error){
                           var demo = error;
@@ -783,7 +794,13 @@
                   title: 'Aviso',
                   priority : 'danger'
                       });}
-              
+            
+        
+            
+            
+            
+        
+        
         
           })
 
@@ -987,7 +1004,7 @@
                                               $("#rowSubRechazos").show();
                                           }
 
-                                          if( element.tipo_servicio == '2' || element.tipo_servicio == '8' || element.tipo_servicio == '13' || element.tipo_servicio == '14' ||  element.tipo_servicio == '26' || element.tipo_servicio == '30' || element.tipo_servicio == '33' || element.tipo_servicio == '45' || element.tipo_servicio == '48') {
+                                          if( element.tipo_servicio == '2' || element.tipo_servicio == '8' || element.tipo_servicio == '13' || element.tipo_servicio == '14' ||  element.tipo_servicio == '26' || element.tipo_servicio == '30' || element.tipo_servicio == '33' || element.tipo_servicio == '45' || element.tipo_servicio == '47' || element.tipo_servicio == '48') {
                                               $(".showcausacambio").show();
                                           } else {
                                               $(".showcausacambio").hide();
@@ -1378,6 +1395,12 @@
 
           })
 
+          $("#tpvReDataConnect").on('change', function() {
+            
+              updateSerieData($("#tpv_retirado").val(), 'conectividad',$("#tpvReDataConnect").val() );
+
+          })
+
           $("#tipoIncidencia").on('change',function(){
 
           })
@@ -1390,7 +1413,7 @@
                var incInventario = JSON.stringify( $("#incidenciasInventario").val() );
               
                var coment1 = $("#descripcionE").val();
-               var coment2 = $("#descripcionI").val();
+               //var coment2 = $("#descripcionI").val();
                
                var form_data = {
                   module: 'grabarIncidencia',
@@ -1402,22 +1425,38 @@
                   inc2 : incInventario
 
                }
-            
-            $.ajax({
-               type: 'GET',
-               url: 'modelos/eventos_db.php',
-               data: form_data,
-               cache: false,
-               success: function(data){
-                  //var info = JSON.parse(data);
-                  console.log(form_data);
-               },
-               error: function(error){
-                  var demo = error;
-               }
-            })
-            
 
+               if ( $("#incidenciasEvidencia").val().length > 0 || $("#incidenciasInventario").val().length > 0 ) 
+               {
+                  
+                  $.ajax({
+                     type: 'GET',
+                     url: 'modelos/eventos_db.php',
+                     data: form_data,
+                     cache: false,
+                     success: function(data){
+                        //var info = JSON.parse(data);
+                        console.log(form_data);
+                        $("#modalIncidencia").modal('hide');
+                        Swal.fire(
+                          'AVISO',
+                          'Se generó la incidencia',
+                          'success'
+                        )
+                     },
+                     error: function(error){
+                        var demo = error;
+                     }
+                  });
+                 
+               }else {
+                   $.toaster({
+                     message: 'Debes seleccionar una opción',
+                     title: 'Aviso',
+                     priority: 'danger'
+                  });
+               }
+         
           });
           $("#incidenciasEvidencia").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
                $("#incidenciasInventario").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
@@ -1436,7 +1475,7 @@
                $("#divEvidencia1").show();
                
                $("#divComentE").show();
-               $("#divComentI").hide();
+              
                $("#divInventario1").hide();
                
             }else
@@ -1444,8 +1483,8 @@
 
                $("#divInventario1").show();
                
-                $("#divComentI").show();
-                $("#divComentE").hide();
+                $("#divComentE").show();
+
                 $("#divEvidencia1").hide();
                
             }
@@ -1581,7 +1620,6 @@
               return true
           }
         
-    
       }
 
       function validateHhMm(inputField) {
@@ -1667,7 +1705,7 @@
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=validarTPV&noserie='+tpv+"&tipo="+tipo+"&comercio="+comercio+"&donde="+donde+"&permiso="+permiso+"&odt="+odt,
+              data: 'module=validarTPV&noserie='+tpv+"&tipo="+tipo+"&comercio="+comercio+"&donde="+donde+"&permiso="+permiso+"&odt="+odt+"&cve_banco="+cve_banco,
               cache: false,
               success: function(data){
                   var info = JSON.parse(data);
@@ -1941,8 +1979,6 @@
           $("#estatus_servicio").val("");
           $("#folio_telecarga").val("");
 
-    
-
       }
 
       function getTecnicos(id) {
@@ -2000,15 +2036,14 @@
               }
           });
         
-
       }
 
-      function getRechazos() {
+      function getRechazos(cve_banco) {
         
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=getEstatusRechazo',
+              data: 'module=getEstatusRechazo&cve_banco='+cve_banco,
               cache: true,
               success: function(data){
                   console.log(data);
@@ -2021,15 +2056,14 @@
               }
           });
         
-
       }
 
-      function getSubRechazos() {
+      function getSubRechazos(cve_banco) {
         
           $.ajax({
               type: 'GET',
               url: 'modelos/eventos_db.php', // call your php file
-              data: 'module=getEstatusSubRechazo',
+              data: 'module=getEstatusSubRechazo&cve_banco='+cve_banco,
               cache: true,
               success: function(data){
                   console.log(data);
@@ -2042,7 +2076,6 @@
               }
           });
         
-
       }
 
       function getProductos(cve_banco) {
@@ -2064,7 +2097,6 @@
               }
           });
         
-
       }
 
       function subirFotos(odt,file) {
