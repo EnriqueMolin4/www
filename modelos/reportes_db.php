@@ -858,7 +858,7 @@ if ( $module == 'reporte_detevento' ) {
     $rows = $Reportes->getDetEvento($params, true);
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO','HORA ATENCION','HORA COMIDA','FECHA ASIGNACION','QUIEN ATENDIO','FECHA ATENCION','HORA LLEGADA','HORA SALIDA', 'DESCRIPCION','SERVICIO SOLICITADO', 'TECNICO', 'ESTATUS','ESTATUS SERVICIO','ID CAJA','AFILIACION AMEX','AMEX','VERSION','APLICATIVO','PRODUCTO','ROLLOS A INSTALAR','ROLLOS ENTREGADOS', 'TPV INSTALADA', 'TPV RETIRADA','SIM INSTALADO','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION', 'CAMBIO DE ESTATUS POR');
-    $headers = array ('BANCO','ODT','IMG CARGADAS','AFILIACION', 'SERVICIO', 'SUBSERVICIO','ATENCION','FECHA ALTA','FECHA VENCIMIENTO','FECHA ASIGNACION', 'FECHA TRANSITO','FECHA ATENCION','FECHA VALIDACION', 'HORA LLEGADA', 'HORA SALIDA', 'FECHA CIERRE','TIEMPO TRASLADO','TIEMPO CIERRE','CERRADO POR', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','DIAS VENCIMIENTO','COMERCIO','COLONIA','CIUDAD','ESTADO','DIRECCION','TELEFONO','QUIEN ATENDIO', 'DESCRIPCION', 'SERVICIO SOLICITADO','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','MODELO_IN','CONECTIVIDAD_IN','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN','SIM INSTALADO','TPV RETIRADA','MODELO_RET','CONECTIVIDAD_RET','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO','COORDENADAS');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    $headers = array ('BANCO','ODT','IMG CARGADAS','AFILIACION', 'SERVICIO', 'SUBSERVICIO','ATENCION','FECHA ALTA','FECHA VENCIMIENTO','FECHA ASIGNACION', 'FECHA TRANSITO','FECHA ATENCION','FECHA VALIDACION', 'HORA LLEGADA', 'HORA SALIDA', 'FECHA CIERRE','TIEMPO TRASLADO','TIEMPO CIERRE','CERRADO POR', 'TECNICO', 'ESTATUS SERVICIO','ESTATUS VISITA','DIAS VENCIMIENTO','CERRADO','COMERCIO','COLONIA','CIUDAD','ESTADO','DIRECCION','TELEFONO','QUIEN ATENDIO', 'DESCRIPCION', 'SERVICIO SOLICITADO','ID CAJA','AFILIACION AMEX','AMEX','BATERIA','CABLE','CARGADOR','BASE','KIT','ROLLOS A INSTALAR','ROLLOS ENTREGADOS','TPV INSTALADA','MODELO_IN','CONECTIVIDAD_IN','VERSION_IN','APLICATIVO_IN','PRODUCTO_IN','SIM INSTALADO','TPV RETIRADA','MODELO_RET','CONECTIVIDAD_RET','VERSION_RET','APLICATIVO_RET','PRODUCTO_RET','SIM RETIRADO', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','COMENTARIOS VALIDACION','FOLIO TELECARGA','MOTIVO CAMBIO','MOTIVO CANCELACION','RECHAZO','SUBRECHAZO','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION','CODIGO SERVICIO','APLICA EXITO','CODIGO SERVICIO 2','APLICA RECHAZO','COORDENADAS');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 
     //$headers = array ('ODT', 'AFILIACION', 'SERVICIO', 'SUBSERVICIO', 'FECHA ALTA', 'FECHA VENCMIENTO', 'FECHA CIERRE', 'COMERCIO', 'COLONIA', 'CIUDAD', 'ESTADO', 'DIRECCION', 'TELEFONO', 'DESCRIPCION', 'TECNICO', 'ESTATUS', 'TPV INSTALADA', 'TPV RETIRADA', 'COMENTARIOS TECNICO','COMENTARIOS CIERRE','FALTA SERIE','FALTA EVIDENCIA','FALTA INFORMACION','FALTA UBICACION');
 
@@ -894,19 +894,19 @@ if ( $module == 'reporte_detevento' ) {
                 //$value = $counter == 2 ? "'$value" : $value;
                 if( $counter == 2  ) {
                     $value ="'$value";
-                } else if ( $counter == 43 ) {
-                    $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 49 ) {
+                } else if ( $counter == 44 ) {
                     $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 50 ) {
                     $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 56 ) {
+                } else if ( $counter == 51 ) {
                     $value = empty($value) ? "" : "'$value";
-                } else if ( $counter == 74 ){
-                    $value = empty($value) ? "" : "";
+                } else if ( $counter == 57 ) {
+                    $value = empty($value) ? "" : "'$value";
                 } else if ( $counter == 75 ){
                     $value = empty($value) ? "" : "";
                 } else if ( $counter == 76 ){
+                    $value = empty($value) ? "" : "";
+                } else if ( $counter == 77 ){
                     $value = empty($value) ? "" : "";
                 }
 
