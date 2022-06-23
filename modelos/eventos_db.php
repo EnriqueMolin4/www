@@ -1654,7 +1654,37 @@ class Eventos implements IConnections {
         }
 
 	}
+
+	function getSubtipoIncidencia($id)
+	{
+		$sql = "SELECT incidencia_odt.tipo, GROUP_CONCAT(detalle_incidencia_odt.subtipo_incidencia) stIncidencia
+				FROM detalle_incidencia_odt
+				LEFT JOIN incidencia_odt ON detalle_incidencia_odt.incidencia_id = incidencia_odt.id
+				WHERE detalle_incidencia_odt.incidencia_id = ? 
+				GROUP BY incidencia_odt.tipo ";
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute (array($id));
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getSubtipoIncidencia();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+        }
+	}
 	
+
+	function existeIncidencia($odt, $tipo)
+	{
+		$sql = "SELECT odt,tipo FROM incidencia_odt WHERE odt = '$odt' AND tipo = '$tipo'";
+
+		try {
+			$stmt = self::$connection->prepare($sql);
+			$stmt->execute();
+			return $stmt->fetchAll( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e) {
+			self::$logger->error ("File: eventos_db.php;	Method Name: existeIncidencia();	Functionality: Get Historia;	Log:" . $e->getMessage () );
+		}
+	}
 
 
 }
@@ -4842,10 +4872,19 @@ if ($module == 'grabarIncidencia') {
 	$id_odt = $params['id'];
 	$odt = $params['odt'];
 	$tipo = $params['tipo'];
-	$comentarioAlta = $params['comentarioCallCenter'];
+	$comentarioE = $params['comentarioCallCenter1'];
+	$comentarioI = $params['comentarioCallCenter2'];
 	$incidenciaE = json_decode( $params['inc1'] );
 	$incidenciaI = json_decode( $params['inc2'] );
 	
+	if ($tipo == 'e') {
+		$comentario = $comentarioE;
+	}
+	else
+	{
+		$comentario = $comentarioI;
+	}
+
 	$prepareStatement = "INSERT INTO `incidencia_odt` (`id_odt`,`odt`, `tipo`, `comentario_cc`, `fecha_alta`, `creado_por`, `estatus`) 
 	                     VALUES(?,?,?,?,?,?,?);";
 
@@ -4853,7 +4892,7 @@ if ($module == 'grabarIncidencia') {
 			$id_odt,
 			$odt,
 			$tipo,
-			$comentarioAlta,
+			$comentario,
 			$fecha_alta,
 			$user,
 			1
@@ -5042,5 +5081,79 @@ if ($module == 'voboIncidenciaBack') {
 
 }
 
+
+if ($module == 'getSubtipoIncidencia') 
+{
+	$tipos = $Eventos->getSubtipoIncidencia($params['id']);
+
+	echo json_encode($tipos);
+}
+
+if ($module == 'agregarsubIncidencia') {
+	
+	$fecha_alta = date("Y-m-d H:m:s");
+	$id_incidencia = $params['id'];
+	$tipo = $params['tipo'];
+	$comentarioAlta = $params['comentarioCallCenter'];
+	$incidenciaE = json_decode( $params['inc1'] );
+	$incidenciaI = json_decode( $params['inc2'] );
+
+	$prepareStatement ="UPDATE `incidencia_odt` SET `comentario_cc` = ?, `estatus` = ? WHERE `id` = ?;";
+
+	$arrayString = array(
+			$comentarioAlta, 
+			1, 
+			$id_incidencia
+		);
+
+	 $Eventos->insert($prepareStatement,$arrayString);
+
+		
+		if ($tipo == 'e') {
+
+			foreach ($incidenciaE as $incEvento) {
+				
+				$prepareStatementE = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
+										VALUES(?,?,?,?);";
+
+				$arrayStringE = array(
+							$id_incidencia,
+							$incEvento,
+							1,
+							$fecha_alta
+				);
+
+				$Eventos->insert($prepareStatementE, $arrayStringE);
+			}
+		}
+
+		if ($tipo == 'i') {
+
+			foreach ($incidenciaI as $incInventario) {
+				
+				$prepareStatementI = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
+										VALUES(?,?,?,?);";
+
+				$arrayStringI = array(
+							$id_incidencia,
+							$incInventario,
+							1,
+							$fecha_alta
+				);
+
+				$Eventos->insert($prepareStatementI, $arrayStringI);
+
+			}
+		}
+	
+}
+
+if ($module == 'existeIncidencia') {
+	
+	$existe = $Eventos->existeIncidencia($params['odt'],$params['tipo']);
+
+	echo json_encode($existe);
+
+}
 
 ?>
