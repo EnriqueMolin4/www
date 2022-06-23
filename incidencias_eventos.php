@@ -38,11 +38,11 @@
                 </div>
             
             
-            <input type="hidden" id="bancoId" value="0">
+            <input type="hidden" id="tipo_user" name="tipo_user" value="<?php echo $_SESSION['tipo_user']; ?>">
             <!-- <button class="btn btn-success" id="btnNewBanco">Nuevo Banco</button>-->
             </div>
 
-            <!-- MODAL -->
+            <!-- MODAL DETALLE INCIDENCIA-->
             <div class="modal fade" tabindex="-1" role="dialog" id="showIncidencias" role="document" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-lg" role="document" style="max-width: 950px!important;" >
                     <div class="modal-content">
@@ -53,18 +53,26 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row" id="estatus1" style="display: none;">
-                            <div class="col-md-4 offset-md-4">
+                        <div class="row" >
+                            <?php if ($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM') {
+                                
+                            ?>
+                            <div class="col-md-4">
+                                <button type="button" id="btnNuevaInc" class="btn btn-success">Agregar Inicidencia</button>
+                            </div>
+                        <?php } ?>
+                                                        
+                            <div class="col-md-4 offset-md-4" id="estatus1" style="display: none;">
                                 <label for="solucionVobo">Guardar solución con VoBo</label>
                                 <a href="#" id="solucionVobo" class="solucionVobo"><i class="fas fa-toggle-off fa-2x" style="color:#3C95D4"></i></a>
                             </div>
-                        </div>
-                        <div class="row" id="estatus0" style="display: none;">
-                            <div class="col-md-4 offset-md-4">
+                            <div class="col-md-4 offset-md-4" id="estatus0" style="display: none;">
                                 <label for="solucionVobo0">Quitar solucion con VoBo</label>
                                 <a href="#" id="solucionVobo0" class="solucionVobo0"><i class="fas fa-toggle-on fa-2x" style="color:#3C95D4"></i></a>
                             </div>
-                        </div>
+                            
+                        </div><br>
+                       
                         <div class="row">
                             <div class="col">
                              
@@ -80,7 +88,6 @@
                                             
                                         </tbody>
                                     </table>
-                                
                                 <br>
                             </div>
                         </div>
@@ -95,12 +102,75 @@
                     <div class="modal-footer">
                         <input type="hidden" id="estatusVobo" class="estatusVobo" value="0">
                         <input type="hidden" id="incidenciaId" name="incidenciaId" value="0">
+                        <input type="hidden" id="tipo_incidencia" name="tipo_incidencia" value="0">
                         <button type="button" class="btn btn-primary" id="btnGuardarSolucion">Guardar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     </div>
                     </div>
                 </div>
+            </div>
+
+
+            <!-- MODAL ADD INCIDENCIA -->
+            <div class="modal fade" tabindex="-1" role="dialog" id="agregarIncidencia" role="document" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-lg" role="document" style="max-width: 750px!important;" >
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Añadir Incidencia</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                       <div class="row"  >
+                              <div class="col" id="divEvidencia1" style="display:none;">
+                                 <label for="incidenciasEvidencia" class="col-form-label-sm">EVIDENCIA</label><br>
+                                 <select name="incidenciasEvidencia[]" id="incidenciasEvidencia" class="form-control" multiple>
+                                    
+                                    <option value="FALTA EVIDENCIA">FALTA EVIDENCIA</option>
+                                    <option value="EVIDENCIA ILEGIBLE">EVIDENCIA ILEGIBLE</option>
+                                    <option value="NO COINCIDE">NO COINCIDE</option>
+                                    <option value="VOBO">VOBO</option>
+                                    <option value="FALTA INFORMACION">FALTA INFORMACION</option>
+                                    <option value="PAPELETA">PAPELETA</option>
+                                    <option value="PRUEBAS">PRUEBAS</option>
+                                    <option value="COMERCIO">COMERCIO</option>
+                                    <option value="UBICACION">UBICACION</option>
+                                    <option value="DAÑO">DAÑO</option>
+                                    <option value="ACCESORIOS">ACCESORIOS</option>
+                                 </select>
+                              </div>
+                            
+                            <div class="col" id="divInventario1" style="display:none">
+                               <label for="incidenciasInventario" class="col-form-label-sm">INVENTARIO</label><br>
+                               <select name="incidenciasInventario[]" id="incidenciasInventario" class="form-control" multiple>
+                                  
+                                  <option value="SERIE">SERIE</option>
+                                  <option value="SIM">SIM</option>
+                                  
+                               </select>
+                            </div>
+                        
+                        </div>
+                        <br>
+                        <div class="row" id="divComentE"><br>
+                           <div class="col">
+                              <label class="form-check-label" for="descripcionE">Comentarios</label>
+                              <textarea class="form-control" name="descripcionE" id="descripcionE" rows="5"></textarea>
+                           </div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                    
+                        <button type="button" class="btn btn-primary" id="btnAddIncidencia">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                    </div>
                 </div>
+            </div>
+
+
         </main>
         <!-- page-content" -->
     </div>
@@ -124,14 +194,13 @@
     <script type="text/javascript" src="js/jquery.toaster.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="js/bootstrap-multiselect.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/jquery.rotate.1-1.js"></script>
     <script>
     var tblIncidencias, tblDetail;
         $(document).ready(function() {
             ResetLeftMenuClass("submenucatalogos", "ulsubmenucatalogos", "bancoslink")    
-
-            cambiarBtn();
 
             tblIncidencias = $('#tblIncidencias').DataTable({
                     language: {
@@ -194,7 +263,15 @@
                         {
                             "targets": [7],
                              "mRender": function (data, type, row){
-                                return '<a href="#" class="btn btn-primary verDetalleIncidencia" data="'+data+'">Detalle</a>';
+                                var btnAll = '';
+
+                                var btnDetalle ='<a href="#" title="Ver detalle" class="verDetalleIncidencia" style="color:#4497EB" data="'+data+'"><i class="fas fa-edit fa-2x"></i></a>'
+                                var btnAdd =' <a href="#" class="incidenciaAdd" title="Añadir incidencia" style="color:#43C495" data="'+data+'"><i class="fas fa-plus-circle fa-2x"></i></a>';
+
+                                btnAll = btnDetalle ;//+ btnAdd
+
+                                return btnAll;
+
                              }
                         }    
                     
@@ -215,13 +292,15 @@
                             $('td', row).eq(col).css('font-weight', 'bold');
                             $('td', row).eq(col).css('background-color', '#7cd992');
                         }
+                        if (data.vobo == '1' && data.estatus == '0') 
+                        {
+                            $('td', row).eq(col).css('color', '#000');
+                            $('td', row).eq(col).css('font-weight', 'bold');
+                            $('td', row).eq(col).css('background-color', '#f7e463');
+                        }
 
                     }
                 });
-
-            
-
-            //
 
             
                 $(document).on("click",".verDetalleIncidencia", function() {
@@ -229,22 +308,42 @@
                     var data = tblIncidencias.row( index ).data()
                     $("#incidenciaId").val(data.id);
                     $("#estatusVobo").val(data.vobo);
-                    //$("#cve").val(data.cve);
-                    //$("#bancoId").val( $(this).data('id') );
+                    $("#tipo_incidencia").val(data.tipo);
+                    $("#descripcionE").val(data.comentario_cc);
+
+                    if ( $("#tipo_user").val() == 'supOp' || $("#tipo_user").val() == 'supervisor' || $("#tipo_user").val() == 'admin' || $("#tipo_user").val() == 'CA') 
+                    {
+                        $("#textoSolucion").val(data.comentario_solucion);
+                    }
+                    
                     $("#showIncidencias").modal("show");
-                    //tblDetail.destroy();
+                    
                     tblDetail.ajax.reload();
                     tblDetail.columns.adjust();
+                                
                     var voboStat = document.getElementById("estatusVobo").value;
-                    if ( voboStat == "0" ) 
+                    var user = document.getElementById("tipo_user").value;
+                    
+                    if (user == "callcenter" || user == "callcenterADM") 
                     {
-                        $("#estatus1").show();
+                        $("#estatus1").hide();
                         $("#estatus0").hide();
                     }else
                     {
-                        $("#estatus0").show();
-                        $("#estatus1").hide();
+                            if ( voboStat == "0" ) 
+                        {
+                            $("#estatus1").show();
+                            $("#estatus0").hide();
+                        }else
+                        {
+                            $("#estatus0").show();
+                            $("#estatus1").hide();
+                        }
+                        
                     }
+                    cambiarBtn();
+                      $("#incidenciasEvidencia").multiselect();
+                    $("#incidenciasInventario").multiselect();
                 })
 
 
@@ -297,13 +396,24 @@
                             "targets":[2],
                             "mRender": function(data, type, row){
 
-                                if(row.estatus == '1'){
+                                if(row.estatus == '1')
+                                {
                                     boton =  '<a href="#" class="delIncidencia" data="'+row.id+'"><i class="fas fa-toggle-off fa-2x" style="color:#eb6060"></i></a>';
-                                } else {
+                                } else 
+                                {
                                     boton = '<a href="#" class="addIncidencia" data="'+row.id+'"><i class="fas fa-toggle-on fa-2x" style="color:#7cd992"></i></a>';
-                            }
+                                }
 
+                                if ( $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'callcenterADM') 
+                                {
+                                    boton = '';
+                                }
+
+                    
                                 return boton;
+                                
+
+                                
                             }
                         },
                         {
@@ -332,6 +442,10 @@
                   $("#detalleIncidencia").dataTable().fnDestroy();
                 })
 
+                $('#agregarIncidencia').on('hidden.bs.modal', function(e){
+                    tblDetail.ajax.reload();
+                    cleartext();
+                })
                
 
                 $('#detalleIncidencia tbody').on('click', 'tr a.addIncidencia', function () {
@@ -479,7 +593,72 @@
                     
                 })
 
- 
+               $("#btnNuevaInc").on("click",function(){
+                    var index = $(this).parent().parent().index() ;
+                    var data = tblIncidencias.row( index ).data()
+                    var id= data.id;
+                    
+                    
+                    $("#agregarIncidencia").modal("show");
+
+                    if ( $("#tipo_incidencia").val() == "e" ) 
+                    {
+                        $("#divEvidencia1").show();
+                        $("#divInventario1").hide();
+                    }
+                    if ($("#tipo_incidencia").val() == "i") 
+                    {
+                        $("#divEvidencia1").hide();
+                        $("#divInventario1").show();
+                    }
+
+               })
+
+
+
+               $("#btnAddIncidencia").on("click", function() {
+                    var id = $("#incidenciaId").val();
+                    var tipo = $("#tipo_incidencia").val();
+                    var incEvidencia = JSON.stringify( $("#incidenciasEvidencia").val() ) ;
+                    var incInventario = JSON.stringify( $("#incidenciasInventario").val() );
+                    var coment1 = $("#descripcionE").val();
+
+                    var form_data = {
+                       module: 'agregarsubIncidencia',
+                       id: id,
+                       tipo: tipo,
+                       comentarioCallCenter : coment1,
+                       inc1 : incEvidencia,
+                       inc2 : incInventario
+                    }
+
+                    $.ajax({
+                       type: 'GET',
+                       url: 'modelos/eventos_db.php',
+                       data: form_data,
+                       cache: false,
+                       success: function(data){
+                          //var info = JSON.parse(data);
+                          console.log(form_data);
+                          $("#agregarIncidencia").modal('hide');
+                          Swal.fire(
+                            'AVISO',
+                            'Incidencia Actualizada',
+                            'success'
+                          );
+                           $("#detalleIncidencia").DataTable().ajax.reload();
+                                $('#tblIncidencias').DataTable().ajax.reload();
+
+                       },
+                       error: function(error){
+                          var demo = error;
+                       }
+                    });
+
+               });
+
+               
+
         } );
 
         function getProveedor() {
@@ -520,20 +699,21 @@
         }
 
         function cleartext() {  
-            $("#modelo").val("");
-            $("#no_largo").val("");
-            $("#clave_elavon").val("");
-            $("#usuario").val("");
+            $("#incidenciasEvidencia").val("");
+            $("#incidenciasInventario").val("");
+            $("#tipo_incidencia").val("");
+            $("#id_incidencia").val("");
             $("#supervisor").val("0");
             $("#tipo").val("0");
             $("#conectividad").val("0");
-            $("#correo").val("")
-            $("#proveedor").val("0");
+            $("#descripcionE").val(" ")
+            $("#descripcionI").val(" ");
 
         }
 
         function cambiarBtn()
         {
+
             const estatusVobo1 = document.getElementById('solucionVobo');
             const estatusVobo0 = document.getElementById('solucionVobo0');
 
@@ -546,7 +726,6 @@
                 $("#estatus1").show();
                 $("#estatus0").hide();
             });
-
 
         }
 
