@@ -464,9 +464,9 @@
             
                   <div class="row">
                      <div class="col-md-5">
-                        <label for="tipoIncidencia" class="col-form-label-sm">Tipo Incidencia</label>
+                        <label for="tipoIncidencia" class="col-form-label-sm">Tipo Incidencia</label><br>
                         <select class="form-control form-control-sm" name="tipoIncidencia" id="tipoIncidencia">
-                           <option value="0" selected>Seleccionar</option>
+                           <option value="0" >Seleccionar</option>
                            <option value="e">Evidencia</option>
                            <option value="i">Inventario</option>
                         </select>
@@ -511,8 +511,14 @@
                      <br>
                      <div class="row" id="divComentE" style="display:none;"><br>
                         <div class="col">
-                           <label class="form-check-label" for="descripcionE">Comentarios</label>
+                           <label class="form-check-label" for="descripcionE">Comentarios para Operaciones</label>
                            <textarea class="form-control" name="descripcionE" id="descripcionE" rows="5"></textarea>
+                        </div>
+                     </div>
+                     <div class="row" id="divComentI" style="display:none;"><br>
+                        <div class="col">
+                           <label class="form-check-label" for="descripcionI">Comentarios para Almacén</label>
+                           <textarea class="form-control" name="descripcionI" id="descripcionI" rows="5"></textarea>
                         </div>
                      </div>
                                           
@@ -562,7 +568,7 @@
    <script>
       $(document).ready(function() {
          
-         camposIncidencias();
+        
 
           //GET info from URL
           const queryString = window.location.search;
@@ -675,6 +681,10 @@
     
           });
 
+          $('#modalIncidencia').on('show.bs.modal', function (e){
+            camposIncidencias();
+          })
+
           $(document).on('click','.btnDelImage', function() {
               var idImg = $(this).attr('data');
               $.ajax({
@@ -754,7 +764,7 @@
             
           })
 
-          $("#btnComentValid").on('click', function() {
+         $("#btnComentValid").on('click', function() {
     
             var aplicaExito = $("#aplicaExito").is(":checked") ? 1 : 0 ;
             var aplicaRechazo = $("#aplicaRechazo").is(":checked") ? 1 : 0 ;
@@ -794,13 +804,6 @@
                   title: 'Aviso',
                   priority : 'danger'
                       });}
-            
-        
-            
-            
-            
-        
-        
         
           })
 
@@ -1402,25 +1405,29 @@
           })
 
           $("#tipoIncidencia").on('change',function(){
-
+               
           })
 
           $("#btnGuardarIncidencia").on("click", function(){
 
                var tipoIncidencia = $("#tipoIncidencia").val();
+               var odt = $("#odt").val();
+
+               //existeFunctionCall
 
                var incEvidencia = JSON.stringify( $("#incidenciasEvidencia").val() ) ;
                var incInventario = JSON.stringify( $("#incidenciasInventario").val() );
               
                var coment1 = $("#descripcionE").val();
-               //var coment2 = $("#descripcionI").val();
+               var coment2 = $("#descripcionI").val();
                
                var form_data = {
                   module: 'grabarIncidencia',
                   id: id,
                   odt : $("#odt").val(),
                   tipo : tipoIncidencia,
-                  comentarioCallCenter : coment1,
+                  comentarioCallCenter1 : coment1,
+                  comentarioCallCenter2 : coment2,
                   inc1 : incEvidencia,
                   inc2 : incInventario
 
@@ -1458,8 +1465,8 @@
                }
          
           });
-          $("#incidenciasEvidencia").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
-               $("#incidenciasInventario").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
+            $("#incidenciasEvidencia").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
+            $("#incidenciasInventario").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
 
       });
    
@@ -1483,9 +1490,10 @@
 
                $("#divInventario1").show();
                
-                $("#divComentE").show();
+                $("#divComentI").show();
 
                 $("#divEvidencia1").hide();
+                $("#divComentE").hide();
                
             }
          })
@@ -2312,6 +2320,14 @@
           });
 
       }
+//existe incidencia 
+      function existeIncidencia(odt,tipo)
+        {   
+            
+            $.ajax({
+
+            })
+        }
    </script>
 </body>
 </html>
