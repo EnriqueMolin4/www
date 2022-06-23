@@ -1607,7 +1607,7 @@ class Eventos implements IConnections {
 		$sql = "SELECT incidencia_odt.id, incidencia_odt.id_odt, incidencia_odt.odt,incidencia_odt.tipo,incidencia_odt.comentario_cc,incidencia_odt.comentario_solucion, incidencia_odt.fecha_alta,incidencia_odt.fecha_solucion, incidencia_odt.vobo, incidencia_odt.estatus 
 				FROM `incidencia_odt`  WHERE incidencia_odt.odt IS NOT NULL
 				$where 
-				ORDER BY incidencia_odt.tipo ";
+				ORDER BY incidencia_odt.id ";
 
 				//self::$logger->error($sql);
 				
@@ -4872,10 +4872,21 @@ if ($module == 'grabarIncidencia') {
 	$id_odt = $params['id'];
 	$odt = $params['odt'];
 	$tipo = $params['tipo'];
+	if ($tipo == 'e') 
+	{
+		$t = 'Evidencia';
+	}
+	else
+	{
+		$t = 'Inventario';
+	}
 	$comentarioE = $params['comentarioCallCenter1'];
 	$comentarioI = $params['comentarioCallCenter2'];
 	$incidenciaE = json_decode( $params['inc1'] );
 	$incidenciaI = json_decode( $params['inc2'] );
+
+	$existeIncidencia = $Eventos->existeIncidencia($odt,$tipo);
+
 	
 	if ($tipo == 'e') {
 		$comentario = $comentarioE;
@@ -4885,64 +4896,80 @@ if ($module == 'grabarIncidencia') {
 		$comentario = $comentarioI;
 	}
 
-	$prepareStatement = "INSERT INTO `incidencia_odt` (`id_odt`,`odt`, `tipo`, `comentario_cc`, `fecha_alta`, `creado_por`, `estatus`) 
-	                     VALUES(?,?,?,?,?,?,?);";
 
-	$arrayString = array(
-			$id_odt,
-			$odt,
-			$tipo,
-			$comentario,
-			$fecha_alta,
-			$user,
-			1
-	);
-
-	$id = $Eventos->insert($prepareStatement,$arrayString);
-
-	if ($id) {
+	if (!$existeIncidencia) {
 		
-		if ($tipo == 'e') {
+		$prepareStatement = "INSERT INTO `incidencia_odt` (`id_odt`,`odt`, `tipo`, `comentario_cc`, `fecha_alta`, `creado_por`, `estatus`) 
+		                     VALUES(?,?,?,?,?,?,?);";
 
-			foreach ($incidenciaE as $incEvento) {
-				
-				$prepareStatementE = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
-										VALUES(?,?,?,?);";
+		$arrayString = array(
+				$id_odt,
+				$odt,
+				$tipo,
+				$comentario,
+				$fecha_alta,
+				$user,
+				1
+		);
 
-				$arrayStringE = array(
-							$id,
-							$incEvento,
-							1,
-							$fecha_alta
-				);
+		$id = $Eventos->insert($prepareStatement,$arrayString);
 
-				$Eventos->insert($prepareStatementE, $arrayStringE);
+		if ($id) {
+			
+			if ($tipo == 'e') {
+
+				foreach ($incidenciaE as $incEvento) {
+					
+					$prepareStatementE = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
+											VALUES(?,?,?,?);";
+
+					$arrayStringE = array(
+								$id,
+								$incEvento,
+								1,
+								$fecha_alta
+					);
+
+					$Eventos->insert($prepareStatementE, $arrayStringE);
+				}
 			}
-		}
 
-		if ($tipo == 'i') {
+			if ($tipo == 'i') {
 
-			foreach ($incidenciaI as $incInventario) {
-				
-				$prepareStatementI = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
-										VALUES(?,?,?,?);";
+				foreach ($incidenciaI as $incInventario) {
+					
+					$prepareStatementI = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
+											VALUES(?,?,?,?);";
 
-				$arrayStringI = array(
-							$id,
-							$incInventario,
-							1,
-							$fecha_alta
-				);
+					$arrayStringI = array(
+								$id,
+								$incInventario,
+								1,
+								$fecha_alta
+					);
 
-				$Eventos->insert($prepareStatementI, $arrayStringI);
+					$Eventos->insert($prepareStatementI, $arrayStringI);
 
+				}
 			}
-		}
 
-	}else
-	{
-		echo "ERROR CON EL REGISTRO";
+			
+			
+
+		}else
+		{
+			echo "ERROR CON EL REGISTRO";
+			
+		}
+		$msg = 'Se generó la incidencia';
 	}
+	else
+	{
+		$msg= 'La odt ya cuenta con incidencia del tipo '.$t;
+		$id = '0';
+	}
+
+	echo json_encode(['id'=> $id, 'msg' => $msg, 'existe' => $existeIncidencia ]);
 
 }
 

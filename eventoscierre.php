@@ -604,22 +604,22 @@
               data: 'module=getOdtById&id='+ id,
           }).done(function(result) {
 			  result = JSON.parse(result);
-              $("#odt").val(result.odt);
-			  $("#cve_banco").val(result.cve_banco);
-           $("#nombreBanco").html(result.banco);
-			  getTipoEvento();
-			  getEstatusEvento();
-			  getEstatusServicio(result.cve_banco);
-			  getRechazos(result.cve_banco);
-			  getSubRechazos(result.cve_banco);
-			  getCancelado();
-			  getProductos(result.cve_banco);
-			  getAplicativo(result.cve_banco);
-			  getVersion(result.cve_banco);
-			  getModelos(result.cve_banco);
-			  getConectividad(result.cve_banco);
-			  getCarrier();
-			  getCausasCambios();
+               $("#odt").val(result.odt);
+			      $("#cve_banco").val(result.cve_banco);
+               $("#nombreBanco").html(result.banco);
+			      getTipoEvento();
+			      getEstatusEvento();
+			      getEstatusServicio(result.cve_banco);
+			      getRechazos(result.cve_banco);
+			      getSubRechazos(result.cve_banco);
+			      getCancelado();
+			      getProductos(result.cve_banco);
+			      getAplicativo(result.cve_banco);
+			      getVersion(result.cve_banco);
+			      getModelos(result.cve_banco);
+			      getConectividad(result.cve_banco);
+			      getCarrier();
+			      getCausasCambios();
           });
 
           $("#btnEvidencias").on("click",function() {
@@ -1411,58 +1411,80 @@
           $("#btnGuardarIncidencia").on("click", function(){
 
                var tipoIncidencia = $("#tipoIncidencia").val();
+               
                var odt = $("#odt").val();
-
-               //existeFunctionCall
-
+               
                var incEvidencia = JSON.stringify( $("#incidenciasEvidencia").val() ) ;
                var incInventario = JSON.stringify( $("#incidenciasInventario").val() );
-              
+                  
                var coment1 = $("#descripcionE").val();
                var coment2 = $("#descripcionI").val();
-               
-               var form_data = {
-                  module: 'grabarIncidencia',
-                  id: id,
-                  odt : $("#odt").val(),
-                  tipo : tipoIncidencia,
-                  comentarioCallCenter1 : coment1,
-                  comentarioCallCenter2 : coment2,
-                  inc1 : incEvidencia,
-                  inc2 : incInventario
-
-               }
-
-               if ( $("#incidenciasEvidencia").val().length > 0 || $("#incidenciasInventario").val().length > 0 ) 
-               {
                   
-                  $.ajax({
-                     type: 'GET',
-                     url: 'modelos/eventos_db.php',
-                     data: form_data,
-                     cache: false,
-                     success: function(data){
-                        //var info = JSON.parse(data);
-                        console.log(form_data);
-                        $("#modalIncidencia").modal('hide');
-                        Swal.fire(
-                          'AVISO',
-                          'Se generó la incidencia',
-                          'success'
-                        )
-                     },
-                     error: function(error){
-                        var demo = error;
-                     }
-                  });
-                 
-               }else {
-                   $.toaster({
-                     message: 'Debes seleccionar una opción',
-                     title: 'Aviso',
-                     priority: 'danger'
-                  });
-               }
+                  var form_data = {
+                     module: 'grabarIncidencia',
+                     id: id,
+                     odt : $("#odt").val(),
+                     tipo : tipoIncidencia,
+                     comentarioCallCenter1 : coment1,
+                     comentarioCallCenter2 : coment2,
+                     inc1 : incEvidencia,
+                     inc2 : incInventario
+
+                  }
+
+                  if ( $("#incidenciasEvidencia").val().length > 0 || $("#incidenciasInventario").val().length > 0 ) 
+                  {
+                     
+                       $.ajax({
+                          type: 'GET',
+                         url: 'modelos/eventos_db.php',
+                          data: form_data,
+                          cache: false,
+                          success: function(data){
+                             var info = JSON.parse(data);
+                             //console.log(info);
+
+                             if (info.id == '0') 
+                             {
+                                 mensaje = info.msg;
+                                 Swal.fire({
+                                   icon: 'warning',
+                                   title: 'Ya existe',
+                                   text: mensaje
+                                   
+                                 });
+                             }
+                             else
+                             {
+                                 
+
+                                 Swal.fire({
+                                   icon: 'success',
+                                   title: 'Guardado',
+                                   text: 'Se generó la incidencia'
+                                   
+                                 })
+
+                                 $("#modalIncidencia").modal('hide');
+                             }
+                             
+                             
+                             
+                          },
+                          error: function(error){
+                             var demo = error;
+                          }
+                       });
+                    
+                  }else {
+                      $.toaster({
+                        message: 'Debes seleccionar una opción',
+                        title: 'Aviso',
+                        priority: 'danger'
+                     });
+                  }
+               
+               
          
           });
             $("#incidenciasEvidencia").multiselect({nonSelectedText: 'SELECCIONA UNA O VARIAS INCIDENCIAS'});
@@ -2320,13 +2342,35 @@
           });
 
       }
-//existe incidencia 
+
       function existeIncidencia(odt,tipo)
         {   
             
-            $.ajax({
 
+            $.ajax({
+               type: 'POST',
+               url: 'modelos/eventos_db.php',
+               data: 'module=existeIncidencia&odt='+odt+'&tipo='+tipo,
+               cache: false,
+               success: function(data)
+               {
+                  var existe = JSON.parse(data).length;
+
+                  if (existe == 0) 
+                  {
+                     console.log(existe);
+                  }
+                  else
+                  {
+                                       
+                  }
+               },
+               error: function(error)
+               {
+                  var demo = error;
+               }
             })
+            
         }
    </script>
 </body>
