@@ -163,6 +163,7 @@ $(document).ready(function() {
                     var btnALL = '';
                     var btnCambiarEstatus = '<a href="#" title="Cambiar Estatus" class="dropdown-item btnCambiarEst" data="' + row.id + '"><i class="fas fa-undo fa-sm" style="color:#3EA399"></i> Cambiar estatus</a>';
                     var btnEstatusEnTransito = '<a href="#" title="Estatus en Transito" class="dropdown-item btnEstatusEnTransito" data="' + row.id + '"><i class="fas fa-undo fa-sm"></i> Estatus en tránsito</a>';
+                    var btnEstatusRuta = '<a href="#" title="Estatus en Ruta" class="dropdown-item btnEstatusRuta" data="' + row.id + '"><i class="fas fa-route fa-sm"></i> Estatus en Ruta</a>';
                     var btnInfo = '<a href="#" class="dropdown-item editCom" title="Información del evento" data="' + row.id + '"><i class="fas fa-edit fa-sm " style="color:#187CD0"></i> Información del evento</a>';
                     var btnCambiarOdt = '<a href="#" title="Cambiar ODT" class="dropdown-item chgODT" data="' + row.odt + '"><i class="fas fa-exchange-alt fa-sm " style="color:red"></i> Cambiar ODT</a>';
                     var btnHistoria = '<a href="#" class="dropdown-item mostrarHistoria" data="' + row.odt + '"><i class="fas fa-history fa-sm" style="color:#C17137"></i> Historial </a>';
@@ -177,9 +178,16 @@ $(document).ready(function() {
                     {
                         btnALL = btnInfo + btnCerrar + btnCambiarOdt + btnHistoria + btnDates;
 
-                        if( $("#tipo_user").val() == 'supOp' || $("#tipo_user").val() == 'admin' )
+                        if( $("#tipo_user").val() == 'supOp' || $("#tipo_user").val() == 'admin' || row.nombreEstatus == 'En Ruta' || row.nombreEstatus == 'En Transito' || row.nombreEstatus == 'En validacion' )
                         {
-                            btnALL = btnALL + btnEstatusEnTransito;
+                            if (row.nombreEstatus == 'En Ruta') 
+                            {
+                                btnALL = btnALL + btnEstatusEnTransito;
+                            }
+                            if (row.nombreEstatus == 'En Transito') 
+                            {
+                                btnALL = btnALL + btnEstatusRuta;
+                            }
                         }  
                         else 
                         {
@@ -489,6 +497,51 @@ $(document).ready(function() {
 
     })
     
+
+     $(document).on("click", ".btnEstatusRuta", function() {
+
+        var odt = $(this).attr('data');
+        var tecnico = $("#tecnicoF").val();
+
+        if (confirm("El estatus cambiará a En Ruta. ¿Cambiar estatus?")) {
+            var estatus = 2;
+
+            $.ajax({
+                type: 'GET',
+                url: 'modelos/eventos_db.php',
+                data: 'module=cambiarEstatusenRuta&estatus=' + estatus + "&odtid=" + odt +"&tecnico=" + tecnico,
+                cache: false,
+                success: function(data) {
+                    var msg = '';
+
+                    if(data == '1') {
+                        msg = 'Se cambió el estatus con éxito';
+                    } else {
+                        msg = 'Ya existe una Odt en ruta para ese cliente';
+                    }
+                    $.toaster({
+                        message: msg,
+                        title: 'Aviso',
+                        priority: 'success'
+                    });
+                    tableEventos.ajax.reload();
+                },
+                error: function(error) {
+                    var demo = error;
+                }
+            });
+
+
+        } else {
+            $.toaster({
+                message: 'No se actualizó el estatus del evento ',
+                title: 'Aviso',
+                priority: 'warning'
+            });
+        }
+
+
+    })
     $(document).on("click", ".chgODT", function() {
         var odt = $(this).attr('data');
         $("#old_odt").val(odt);

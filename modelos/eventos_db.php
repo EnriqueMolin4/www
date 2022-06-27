@@ -3313,7 +3313,8 @@ if($module == "cambiarReConnect"){
 
 if ($module== 'cambiarEstatusenTransito') {
 
-	$$status = $params['estatus'];
+	$fecha_transito = date ( 'Y-m-d H:i:s' );
+	$status = $params['estatus'];
 	$odt = $params['odtid'];
 	$tecnico = $params['tecnico'];
 	$user = $_SESSION['userid'];
@@ -3325,7 +3326,8 @@ if ($module== 'cambiarEstatusenTransito') {
 	// cambiar el evento con Estatus EN TRANSITO
 	$prepareStatement = "UPDATE eventos SET
 						 estatus=?,
-						 modificado_por=?
+						 modificado_por=?,
+						 fecha_transito=?,
 						 WHERE tecnico=?
 						 AND estatus= 20 ;
 						 ";
@@ -3333,6 +3335,7 @@ if ($module== 'cambiarEstatusenTransito') {
 	 $arrayString = array (
 		2,
 		$user,
+		$fecha_transito,
 		$tecnico
 	 );
 
@@ -3342,13 +3345,70 @@ if ($module== 'cambiarEstatusenTransito') {
 	 
 	$prepareStatement = "UPDATE eventos SET
 						 estatus=?,
-						 modificado_por=?
+						 modificado_por=?,
+						 fecha_transito=?
 						 WHERE id=?;
 						 ";
 
 	 $arrayString = array (
 		$status,
 		$user,
+		$fecha_transito,
+		$odt
+	 );
+
+	 $upd = $Eventos->insert($prepareStatement, $arrayString);
+	 
+	 $result = 1;
+	 
+	echo $result;
+
+}
+
+
+if ($module== 'cambiarEstatusenRuta') {
+
+	$fecha_ruta = date ( 'Y-m-d H:i:s' );
+	$status = $params['estatus'];
+	$odt = $params['odtid'];
+	$tecnico = $params['tecnico'];
+	$user = $_SESSION['userid'];
+	$msg= '';
+	$result = 0;
+
+	$evento = $Eventos->getOdtenServicioTecnico($tecnico);
+
+	// cambiar el evento con Estatus EN RUTA
+	$prepareStatement = "UPDATE eventos SET
+						 estatus=?,
+						 modificado_por=?,
+						 fecha_asignacion=?,
+						 WHERE tecnico=?
+						 AND estatus= 2 ;
+						 ";
+
+	 $arrayString = array (
+		2,
+		$user,
+		$fecha_ruta,
+		$tecnico
+	 );
+
+	 $Eventos->insert($prepareStatement, $arrayString);
+	 
+	 // Actualizar el evento seleccionado
+	 
+	$prepareStatement = "UPDATE eventos SET
+						 estatus=?,
+						 modificado_por=?,
+						 fecha_asignacion=?
+						 WHERE id=?;
+						 ";
+
+	 $arrayString = array (
+		$status,
+		$user,
+		$fecha_ruta,
 		$odt
 	 );
 
