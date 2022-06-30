@@ -64,6 +64,8 @@
                </div>
             </div>
 
+
+
          </div>
       <!--</div>-->
    </main>
@@ -96,8 +98,8 @@
         }
     </style>
     <script type="text/javascript">
-        $(document).ready(function () {
-            
+        $(document).ready(function() {
+
             var eventos = $("#chartEventos");
             var servicios = $("#chartServicios");
             var serviciosMes = $("#chartEventosMes");
@@ -107,119 +109,117 @@
                 url: 'modelos/dashboard_db.php', // call your php file
                 data: 'module=getTotalEventosbyStatus',
                 cache: false,
-                success: function(data){
-                   var info = JSON.parse(data);
-                   console.log(info);  
-                
-                   var result = [];
-                   var resultMonth = [];
-                   var serviceMonth = []
+                success: function(data) {
+                    var info = JSON.parse(data);
+                    console.log(info);
 
-                   for (var i = 0; i < info.eventosStatus.length; i++) {
-                        
+                    var result = [];
+                    var resultMonth = [];
+                    var serviceMonth = []
+
+                    for (var i = 0; i < info.eventosStatus.length; i++) {
+
                         result.push(info.eventosStatus[i].total);
-                        
-                   }
 
-                   for (var i = 0; i < info.eventosMonth.length; i++) {
-                        
+                    }
+
+                    for (var i = 0; i < info.eventosMonth.length; i++) {
+
                         resultMonth.push(info.eventosMonth[i].total);
-                        
-                   }
 
-                   for (var i = 0; i < info.serviciosMes.length; i++) {
-                        
+                    }
+
+                    for (var i = 0; i < info.serviciosMes.length; i++) {
+
                         serviceMonth.push(info.serviciosMes[i].total);
-                        
-                   }
-                   
-                   
-                   var data1 = {
-                        labels : ["Abierto", "En Ruta", "Cerrado"],
-                        datasets : [
-                            {
-                                label : "EVENTOS",
-                                data : result,
-                                backgroundColor: ["#3E95CD", "#9F73B2","#C45850"],
-                                borderColor : [
-                                    "#CDA776",
-                                    "#41B8C3",
-                                    "#E1B240"
-                                ],
-                                borderWidth : [1, 1, 1]
-                            }
-                        ]
+
+                    }
+
+
+                    var data1 = {
+                        labels: ["Abierto", "En Ruta", "Cerrado"],
+                        datasets: [{
+                            label: "EVENTOS",
+                            data: result,
+                            backgroundColor: ["#3E95CD", "#9F73B2", "#C45850"],
+                            borderColor: [
+                                "#CDA776",
+                                "#41B8C3",
+                                "#E1B240"
+                            ],
+                            borderWidth: [1, 1, 1]
+                        }]
                     };
 
                     var data2 = {
-                        labels : ["Vencidos", "En Tiempo"],
-                        datasets : [
-                            {
-                                label : "SERVICIOS DEL MES",
-                                data : resultMonth,
-                                backgroundColor: ["#5A71D6","#15AF90"],
-                            }
-                        ]
+                        labels: ["Vencidos", "En Tiempo"],
+                        datasets: [{
+                            label: "SERVICIOS DEL MES",
+                            data: resultMonth,
+                            backgroundColor: ["#5A71D6", "#15AF90"],
+                        }]
                     };
 
                     var data3 = {
-                        labels : ["Mes Pasado", "Mes Actual"],
-                        datasets : [
-                            {
-                                label : "SERVICIOS DEL MES",
-                                data : serviceMonth,
-                                backgroundColor: ["#B4B4B4","#8174E0"],
-                            }
-                        ]
+                        labels: ["Mes Pasado", "Mes Actual"],
+                        datasets: [{
+                            label: "SERVICIOS DEL MES",
+                            data: serviceMonth,
+                            backgroundColor: ["#B4B4B4", "#8174E0"],
+                        }]
                     };
 
                     var myDoughnutChart = new Chart(eventos, {
                         type: 'doughnut',
-                        data: data1 ,
+                        data: data1,
                         options: {
                             responsive: true,
-                        title: {
-                            display: true,
-                            text: 'SERVICIOS DEL DIA'
-                        }
+                            title: {
+                                display: true,
+                                text: 'SERVICIOS DEL DIA'
+                            }
                         }
                     });
 
                     var chartServicios = new Chart(servicios, {
-                    type: 'bar',
-                    data:  data2,
-                    options: {
-                        responsive: true,
-                        legend: { display: false },
-                        title: {
-                        display: true,
-                        text: 'SERVICIOS DEL MES'
+                        type: 'bar',
+                        data: data2,
+                        options: {
+                            responsive: true,
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'SERVICIOS DEL MES'
+                            }
                         }
-                    }
 
-                     
+
                     });
 
                     var chartServicios = new Chart(serviciosMes, {
                         type: 'horizontalBar',
-                        data:  data3,
+                        data: data3,
                         options: {
                             responsive: true,
-                            legend: { display: false },
+                            legend: {
+                                display: false
+                            },
                             title: {
                                 display: true,
                                 text: 'TOTAL DE SERVICIOS | MES ANTERIOR Y ACTUAL'
-                                }
-                        }                   
+                            }
+                        }
                     });
-                    
+
                 },
-                error: function(error){
+                error: function(error) {
                     var demo = error;
                 }
             });
 
-                        
+
         });
     </script>
 </body>

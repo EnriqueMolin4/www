@@ -16,7 +16,7 @@
          </span>
          <span class="user-role"><?php echo $tipouser; ?></span>
          <span class="user-status">
-         <i class="fa fa-circle"></i>
+            <i class="fa fa-circle"></i>
          <span>Online</span>
          </span>
       </div>
