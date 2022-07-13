@@ -181,18 +181,18 @@ class Assignacion implements IConnections {
 			$order .= " ORDER BY   $orderField   $orderDir";
 		}
 		
-		if($_SESSION['tipo_user'] != 'admin' || $_SESSION['tipo_user'] != 'supervisor' ) 
-		{
+		//if($_SESSION['tipo_user'] != 'admin' || $_SESSION['tipo_user'] != 'supervisor' ) 
+		//{
 			if($params['supervisores'] != '0') 
 			{
 				$where .= " AND territorial.territorio_id IN ('$userId') " ;
 
 			} 
-			else 
-			{
-				$where .= " AND territorial.territorio_id = -1 " ;
-			}
-		}
+		//	else 
+		//	{
+				//$where .= " AND territorial.territorio_id = -1 " ;
+		//	}
+		//}
 
 		$inicio = $params['fechaVen_inicio'];
 		$fin = $params['fechaVen_fin'];
@@ -207,7 +207,7 @@ class Assignacion implements IConnections {
 		}
 		else 
 		{
-			$where .= " AND eventos.estatus IN (1,2,10,21,16)";
+			$where .= " AND eventos.estatus IN (1,2,10,21,16,20)";
 		}
 
 		/*if ($_SESSION['tipo_user'] == 17 || $_SESSION['tipo_user'] == 7) {
@@ -264,7 +264,8 @@ class Assignacion implements IConnections {
 				WHEN '10' THEN 1
 				WHEN '21' THEN 2
 				WHEN '2' THEN 3
-				WHEN '1' THEN 4 ELSE 5 END
+				WHEN '1' THEN 4 
+				WHEN '20' THEN 5 ELSE 6 END
 				$filter ";
 		
 			   //self::$logger->error($sql);
@@ -419,7 +420,8 @@ class Assignacion implements IConnections {
 
 		$sql = "SELECT cuentas.id,du.nombre,du.apellidos,cuentas.territorial from cuentas,detalle_usuarios du
 				WHERE cuentas.id = du.cuenta_id
-				and cuentas.tipo_user=12 
+				and cuentas.tipo_user=12
+				and cuentas.estatus= 1 
 				$where
 				ORDER BY  du.nombre
 				 ";

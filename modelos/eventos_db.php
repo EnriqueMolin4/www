@@ -130,12 +130,9 @@ class Eventos implements IConnections {
 
 		if ($_SESSION['tipo_user'] == 'callcenter') {
 
-			if ($_SESSION['validacion'] == '0') {
+			
 				$where .= " AND e.agente_cierre = $userId";
-			}else
-			{
-				$where .= "";
-			}
+			
 			
 		}
 
@@ -262,6 +259,7 @@ class Eventos implements IConnections {
 				municipio ,
 				CASE WHEN cast(municipio AS UNSIGNED) = 0 THEN municipio ELSE GetNameById(municipio,'Municipio') END municipioNombre,
 				CONCAT(u.nombre,' ',IFNULL(u.apellidos,'')) tecnicoNombre ,
+				CONCAT(uu.nombre,' ',IFNULL(uu.apellidos,'')) agenteNombre,
 				c.comercio comercioNombre ,
 				ts.nombre servicioNombre,
 				CASE WHEN servicio = '' OR  servicio is null THEN 0 ELSE GetNameById(servicio,'TipoSubServicio') END subservicioNombre  ,
@@ -281,6 +279,7 @@ class Eventos implements IConnections {
 				ee.nombre nombreStatus
 				from eventos 
 				LEFT JOIN detalle_usuarios u ON u.cuenta_id = tecnico
+				LEFT JOIN detalle_usuarios uu ON uu.cuenta_id = agente_cierre
 				LEFT JOIN comercios c ON c.id = eventos.comercio
 				LEFT JOIN estados e ON e.id = eventos.estado
 				LEFT JOIN tipo_estatus te ON te.id = eventos.estatus
@@ -1763,6 +1762,20 @@ if($module == 'assignarTecnico') {
 
 }
 
+if($module == 'assignarAgente') {
+	$fecha_alta = date("Y-m-d H:i:s");
+
+		$prepareStatement = "UPDATE `eventos` SET `agente_cierre`=?  WHERE `odt`=? ; ";
+		$arrayString = array (
+				$params['agente'],
+				$params['odtid'] 
+		);
+	
+	$Eventos->insert($prepareStatement,$arrayString);
+
+	echo $params['agente'];
+
+}
 /*if($module == 'getTipoServicios') {
 	$rows = $Eventos->getTipoServicios($params['tipo']);
 	$val = '';

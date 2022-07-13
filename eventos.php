@@ -484,6 +484,12 @@
                                 </div>
 
                             </div>
+                             <div class="col-md-4 offset-md-4">           
+                            <label for="agenteCierre" class="col-form-label-sm">Agente de Cierre</label>
+                            <?php if ($_SESSION['tipo_user'] == 'supOP' || $_SESSION['tipo_user'] == 'supervisor' || $_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenterADM' ) {  ?> 
+                                <a href="#" id="btnReasignarCierre"><i class="fas fa-arrows-alt-h"></i>Reasignar</a> <?php } ?>  
+                            <input type="text" class="form-control form-control-sm" id="agenteCierre" aria-describedby="agenteCierre" readonly>
+                        </div>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -524,6 +530,33 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" id="btnSubmitReasignar">ReAsignar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>  
+                </div>
+            </div>
+            </div>
+            <!-- MODAL Reasignar -->
+            <div class="modal fade" tabindex="-3" role="dialog" id="showReasignarCC">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reasignar Agente de Cierre</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">           
+                            <label for="reasignaragente" class="col-form-label-sm">Agente Call Center</label>
+                            <select class="form-control form-control-sm" name="reasignaragente" id="reasignaragente" aria-describedby="reasignaragente">
+                            </select>
+                        </div>
+                        
+                    </div>   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btnSubmitReasignarCC">ReAsignar</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>  
                 </div>

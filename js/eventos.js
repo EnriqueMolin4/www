@@ -775,7 +775,7 @@ $(document).ready(function() {
                                 var aplica_rechazo_2 = element.aplica_rechazo_2 === null ? 0 : element.aplica_rechazo_2;
                                 $("#aplicaExito").prop('checked', aplica_exito == 0 ? false : true);
                                 $("#aplicaRechazo").prop('checked', aplica_rechazo_2 == 0 ? false : true);
-
+                                $("#agenteCierre").val(element.agenteNombre);
                                 if (element.servicio == '15') {
                                     $("#labelAfiliacion").html('Folio');
                                     $("#col_tipocredito").show();
@@ -953,6 +953,11 @@ $(document).ready(function() {
         getTecnicos(0)
     })
 
+    $("#btnReasignarCierre").on("click", function() {
+        $("#showReasignarCC").modal("show");
+        getAgentes(0)
+    })
+
     $("#btnSubmitReasignar").on("click", function() {
         $.ajax({
             type: 'GET',
@@ -970,6 +975,32 @@ $(document).ready(function() {
                 $("#tecnico").val($("#reasignartecnico option:selected").text());
                 $("#showReasignar").modal("hide");
                 $("#reasignartecnico").val('0');
+                //$('#showEvento').modal("hide");
+
+            },
+            error: function(error) {
+                var demo = error;
+            }
+        });
+    })
+
+    $("#btnSubmitReasignarCC").on("click", function() {
+        $.ajax({
+            type: 'GET',
+            url: 'modelos/eventos_db.php', // call your php file
+            data: 'module=assignarAgente&agente=' + $("#reasignaragente").val() + "&odtid=" + $("#odt").val(),
+            cache: false,
+            success: function(data) {
+                //$("#tecnicoid").val(data);
+                $.toaster({
+                    message: 'Se Reasigno el Agente',
+                    title: 'Aviso',
+                    priority: 'success'
+                });
+
+                $("#agenteCierre").val($("#reasignaragente option:selected").text());
+                $("#showReasignarCC").modal("hide");
+                $("#reasignaragente").val('0');
                 //$('#showEvento').modal("hide");
 
             },
@@ -1819,6 +1850,22 @@ function getTecnicos(id) {
             $("#reasignartecnico").val(id);
         },
         error: function(error) {
+            var demo = error;
+        }
+    });
+}
+
+function getAgentes() {
+    $.ajax({
+        type: 'GET',
+        url: 'modelos/assignacioneventos_db.php',
+        data: 'module=getAgentes',
+        cache: true,
+        success: function(data){
+            console.log(data);
+        $("#reasignaragente").html(data);
+        },
+        error: function(error){
             var demo = error;
         }
     });
