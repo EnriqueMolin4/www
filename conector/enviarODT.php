@@ -13,15 +13,15 @@ $token = $api->getToken();
 $format = "Y-m-d\TH:i:s";
 $fecha = date('Y-m-d H:i:s');
 $odt = $_REQUEST['odt'];
-$evidencia = $_REQUEST['evidencia'];
- //echo $odt;
+$evidencia = isset($_REQUEST['evidencia']) ? $_REQUEST['evidencia'] : 1;
+//echo $odt." \n <br> ";
 
 $eventos = $Procesos->getEventosCerrados($odt);
-
+//echo json_encode($eventos)." \n <br> ";
 foreach($eventos as $evento) {
     //echo json_encode($evento);
         
-    //$odt = $evento['odt'];
+    $odt = $evento['odt'];
     $notificado = $evento['notificado'];
     $promociones = $evento['descarga'];
     $descarga_app = $evento['descarga'];
@@ -50,12 +50,21 @@ foreach($eventos as $evento) {
 
     $latitud = isset($geolocalizacion['latitud']) ? $geolocalizacion['latitud'] : $evento['latitud'] ;
     $longitud = isset($geolocalizacion['longitud']) ? $geolocalizacion['longitud'] : $evento['longitud'];
-    $causacambio = $evento['causacambio'] == '0' ? '1' : $evento['causacambio'];
+    $causacambio = $evento['ccgetnet'] == '0' ? '1' : $evento['ccgetnet'];
 	$rechazo = $evento['rechazoSgs'];
     $subrechazo = $evento['subrechazoSgs'];
     $cancelacion = $evento['canceladoSgs'];
 	$tipoevento = $Procesos->getCamposObligatorios($evento['tipo_servicio']);
+	//$tipoAtencion = (int) $evento['tipo_atencion'] == 2 ? 10 : 0;
+	$fecha_programacion = date('d/m/Y',strtotime($evento['fecha_programacion']));
+	$getTpvAccesorios = $Procesos->getTpvAccesorios($odt);
 	
+	$bateria = $getTpvAccesorios['ret_batalla'];
+	$eliminador = $getTpvAccesorios['ret_eliminador'];
+	$tapa = $getTpvAccesorios['ret_tapa'] ;
+	$cable = $getTpvAccesorios['ret_cable'];
+	$base = $getTpvAccesorios['ret_base'];
+	$tipoAtencion = (int) $evento['tipo_atencion'];
 
     //
     $object = "gntps/api/odts/Closure";
@@ -64,28 +73,32 @@ foreach($eventos as $evento) {
 	if($evento['estatus_servicio'] == '15' )
     {
         
-		$object = "gntps/api/Odts/Rejection";
+		$object = "provider/api/Odts/rejection";
 		 
 		$json = [
                 "fecCierre" => $fechacierre,
                 "causaRechazo" => (int) $rechazo,
                 "subrechazo" => (int) $subrechazo,
-                "tipoAtencion" => 9,
+                "tipoAtencion" => 10,
+				"Estatus" => 7,
                 "atiende" => $atiende,
                 "conclusiones"  => $comentario,
                 "noAr" => $odt,
                 "tecnico" => $idtecnico,
+				"fecProgramado" => $fecha_programacion
         ];
 
     } else if( $evento['estatus_servicio'] == '14' ) {
         
-        $object = "gntps/api/Odts/Cancellation";
+        $object = "provider/api/Odts/Cancellation";
 
         $json = [
             "noAr" => $odt,
             "tecnico" => $idtecnico,
             "idCausaCancelacion" => (int) $cancelacion,
-			"comentario" => $comentario
+			"comentario" => $comentario,
+			"Estatus" => 8,
+			"TipoAtencion" => 10,
 
         ];
 
@@ -125,11 +138,6 @@ foreach($eventos as $evento) {
 					$marca = $serieData['marca'];
 					$aplicativo = $aplicativo == '0' ? '17' : $aplicativo;
 					 
-					$bateria = 1;
-					$eliminador = 1;
-					$tapa = 1;
-					$cable = 1;
-					$base = 1;
 					$is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
 					$afiliacionamex = $evento['afiliacionamex'];
 					$conclusionesamex =  $evento['tieneamex'] == 'NO'  ? "" : "OK";
@@ -169,11 +177,6 @@ foreach($eventos as $evento) {
 						$marca = $serieData['marca'];
 						$aplicativo = $aplicativoret == '0' ? '17' : $aplicativoret;
 						$isretirosim = is_null($simr) ? false : true; 
-						$bateria = 1;
-						$eliminador = 1;
-						$tapa = 1;
-						$cable = 1;
-						$base = 1;
 						$is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
 						$afiliacionamex = $evento['afiliacionamex'];
 						$conclusionesamex =  $evento['tieneamex'] == 'NO'  ? "" : "OK";
@@ -215,12 +218,6 @@ foreach($eventos as $evento) {
 					$modelo = $serieData['modelo'];
 					$marca = $serieData['marca'];
 					$aplicativo = $aplicativo == '0' ? '17' : $aplicativo;
-					
-					$bateria = 1;
-					$eliminador = 1;
-					$tapa = 1;
-					$cable = 1;
-					$base = 1;
 					$is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
 					$afiliacionamex = $evento['afiliacionamex'];
 					$conclusionesamex = $evento['tieneamex'] == 'NO'  ? "" : "OK";
@@ -258,11 +255,6 @@ foreach($eventos as $evento) {
 					$marca = $serieData['marca'];
 					$aplicativo = $aplicativoret == '0' ? '17' : $aplicativoret;
 					 
-					$bateria = 1;
-					$eliminador = 1;
-					$tapa = 1;
-					$cable = 1;
-					$base = 1;
 					$is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
 					$afiliacionamex = $evento['afiliacionamex'];
 					$conclusionesamex =  $evento['tieneamex'] == 'NO'  ? "" : "OK";
@@ -304,11 +296,6 @@ foreach($eventos as $evento) {
 					$marca = $serieData['marca'];
 					$aplicativo = $aplicativo == '0' ? '17' : $aplicativo;
 					 
-					$bateria = 1;
-					$eliminador = 1;
-					$tapa = 1;
-					$cable = 1;
-					$base = 1;
 					$is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
 					$afiliacionamex = $evento['afiliacionamex'];
 					$conclusionesamex = $evento['tieneamex'] == 'NO'  ? "" : "OK";
@@ -346,11 +333,6 @@ foreach($eventos as $evento) {
 					$marca = $serieData['marca'];
 					$aplicativo = $aplicativoret == '0' ? '17' : $aplicativoret;
 					 
-					$bateria = 1;
-					$eliminador = 1;
-					$tapa = 1;
-					$cable = 1;
-					$base = 1;
 					$is_amex = $evento['tieneamex'] == 'NO' ? 0 : 1;
 					$afiliacionamex = $evento['afiliacionamex'];
 					$conclusionesamex =  $evento['tieneamex'] == 'NO'  ? "" : "OK";
@@ -386,7 +368,7 @@ foreach($eventos as $evento) {
 
     
         
-         //echo json_encode($json);
+         echo json_encode($json);
 		 
         
         try {
@@ -414,7 +396,8 @@ foreach($eventos as $evento) {
 			
 			
         } 
-
+		
+		echo json_encode($cierre);
          /*
         $images = $Procesos->getOdtImages($odt);
         $arrayImg = array();
@@ -425,6 +408,13 @@ foreach($eventos as $evento) {
 			$images = $Procesos->getOdtImages($odt);
 			$arrayImg = array();
 			$imagesUp = $api->putImg("gntps/api/files",$token->token,$images,$odt,$idtecnico);
+			file_put_contents("imgjson/img_manual_$odt.json",json_encode($imagesUp));
+			
+			  if ( $imagesUp->result == '200' ) {
+					  $sql = " UPDATE img SET sincronizado=1,fecha_modificacion=now() WHERE odt=?";
+					  $arrayData = array($odt);
+					  $Procesos->insert($sql,$arrayData);
+			  }
 			
 		}
 		echo "<a href='index.html'>REGRESAR</a>";
@@ -450,7 +440,16 @@ foreach($eventos as $evento) {
 		} else if($cierre->result == 201) {
 			
 			$msg = 'Se envio la odt '+$odt+' con Exito';
+			
+			if($evento['estatus_servicio'] == '15' )
+			{
+				$nuevaFechaProg= $evento['fecha_programacion']." 23:59:00";
+				$sql = "UPDATE eventos SET fecha_vencimiento= ? , estatus=?,estatus_servicio=?,fecha_atencion=?,hora_salida=?,hora_llegada=? WHERE odt=?";
 
+				$resultado =  $Procesos->insert($sql,array ($nuevaFechaProg,2,16,NULL,NULL,NULL,$odt));
+				
+			}
+			
 		} else if ($cierre->result->status == 410 ) {
 
 			foreach ($cierre->result->messages as $message) {

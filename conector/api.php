@@ -36,7 +36,7 @@ class Api {
         ]; 
 
         $body = json_encode($RequestBody);
-        $response = self::$client->request('POST', "getnetproviders/api/authenticate/token",[
+        $response = self::$client->request('POST', "GETNETPROVIDERS/api/authenticate/token",[
             'cert' => [ '/var/www/html/conector/cert.pem'],
             'headers' => ['Content-Type' => 'application/json', 'Accept' => 'application/json'],
             'body'    => $body 
@@ -112,9 +112,8 @@ class Api {
     }
 }
 
-
 $api = new Api ();
-
+ 
 /*$branches = $api->get('branch');
 
 foreach($branches as $branch) {

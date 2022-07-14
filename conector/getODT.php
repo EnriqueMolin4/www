@@ -7,14 +7,14 @@ require __DIR__ . '/api.php';
 require __DIR__ . '/../modelos/procesos_db.php';
 
 $token = $api->getToken();
-//echo $token->token;
+echo $token->token." <br>";
  
 $fechaObtener = date('Y-m-d');
-$fechaFrom = date('d/m/Y', strtotime($fechaObtener. ' - 2 days'));
-$fechaTo = date('d/m/Y', strtotime($fechaObtener. ' + 1 days'));
+$fechaFrom = date('d/m/Y', strtotime($fechaObtener. ' - 60 days'));
+$fechaTo = date('d/m/Y', strtotime($fechaObtener. ' + 2 days'));
 echo $fechaFrom." ".$fechaTo." \n "; 
-$params = [ 'StartDate'=>$fechaFrom,'EndDate'=>$fechaTo,'IdStatusOdt'=> '3,13,31' ];
-$odt = $api->get('gntps/api/odts/GetServicesProvider',$token->token,$params);
+$params = [ 'StartDate'=>$fechaFrom,'EndDate'=>$fechaTo ];
+$odt = $api->get('provider/api/odts/GetServicesProvider',$token->token,$params);
 
 $json =  json_encode($odt);
 //echo $json;
@@ -31,14 +31,14 @@ $hasNextPage = $odt->result->meta->hasNextPage;
 $hasPreviousPage = $odt->result->meta->hasPreviousPage;
 
 
-$params = [ 'StartDate'=>$fechaFrom,'EndDate'=>$fechaTo,'IdStatusOdt'=> '3,13,31','PageSize'=> $totalcount ];
-$odt = $api->get('gntps/api/odts/GetServicesProvider',$token->token,$params);
-echo "TOTAL a BAJAR ".count($odt->result->data)." \n ";
-echo $fecha."---- INICIO DESCARGA ODT  en Total son $totalcount  \n ";
+$params = [ 'StartDate'=>$fechaFrom,'EndDate'=>$fechaTo,'PageSize'=> $totalcount ];
+$odt = $api->get('provider/api/odts/GetServicesProvider',$token->token,$params);
+echo "TOTAL a BAJAR ".count($odt->result->data)." \n <br> ";
+echo $fecha."---- INICIO DESCARGA ODT  en Total son $totalcount  \n <br> ";
 foreach ($odt->result->data as $object) {
   // echo $object->TIPO_COMERCIO_2." \n ";
     //echo json_encode($object);
-  
+	//error_log(json_encode($object).PHP_EOL, 3, 'infoJSON.log');
     $user = 1;
     $ODT = $object->ODT;
     $Afiliacion = $object->AFILIACION;
@@ -151,6 +151,9 @@ foreach ($odt->result->data as $object) {
 		$DiasSlaGlobal = $object->DIAS_SLA_GLOBAL;
 		$Comentarios = $object->COMENTARIOS;
 		$AreaCierre = $object->AREA_CIERRA;
+	
+	//Codigo Servicio
+	$codigoServicio = $object->CODIGO;
 
     $clienteExiste = $Procesos->getClientesByAfiliacion($Afiliacion);
     
@@ -228,7 +231,7 @@ foreach ($odt->result->data as $object) {
     }
 	
     $existeEvento = $Procesos->existeEvento($ODT);
-	echo $Id_ar."".$ODT." ".$object->TIPO_SERVICIO." ".$FechaAlta." ".sizeof($existeEvento)." \n";
+	echo $Id_ar." --- ".$ODT." ".$object->TIPO_SERVICIO." ".$FechaAlta." ".sizeof($existeEvento)." \n <br>";
 	
 	
     if(sizeof($existeEvento) == '0') {
@@ -307,13 +310,26 @@ foreach ($odt->result->data as $object) {
             
             $Procesos->insert($sqlHistoria, $arrayStringHistoria);
           
-    }  
+		}  
       
       
-  }  
+	}  else  {
+		
+		/* if ( strlen($codigoServicio) > 0 ) {
+			
+			echo "Codigo Servicio ".$codigoServicio;
+			 
+			$sql = " UPDATE eventos SET codigo_servicio = ? WHERE odt = ? "
+			
+			$arrayData = array($codigoServicio,$ODT);
+			
+			$Procesos->insert($sql,$arrayData);
+			
+		} */
+	} 
 
 }
 
-echo $fecha."---- FIN DESCARGA ODT  ";
+echo $fecha."---- FIN DESCARGA ODT  <br>";
 
 ?>
