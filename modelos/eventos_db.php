@@ -109,6 +109,7 @@ class Eventos implements IConnections {
 		$valid = $_SESSION['validacion'];
 		$territorial = $_SESSION['territorial'];
 		$evidencias = $params['evidencias'];
+		$incidencias = $params['incidencias'];
 		$territorio = isset($params['territorialF']) ? $params['territorialF'] : array(); //filtro territorial
 		
 		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
@@ -174,6 +175,21 @@ class Eventos implements IConnections {
 		if($evidencias == '1') {
 			$where .= " AND img.totalImg > 0 ";
 		}
+
+		if($incidencias == '1'){
+
+			if($_SESSION['tipo_user'] == 'supOp' || $_SESSION['tipo_user'] == 'supervisor')
+			{
+				$where .= " AND ino.estatus IS NOT NULL OR ino.vobo IS NOT NULL AND ino.tipo = 'e'";
+			}else if($_SESSION['tipo_user'] == 'almacen' || $_SESSION['tipo_user'] == 'CA' )
+			{
+				$where .= " AND ino.estatus IS NOT NULL OR ino.vobo IS NOT NULL AND ino.tipo = 'i'";
+			}
+			else{
+				$where .= " AND ino.estatus IS NOT NULL OR ino.vobo IS NOT NULL";
+			}
+			
+		}
 	
 
 		if(isset($start) && $length != -1 && $total) {
@@ -215,16 +231,24 @@ class Eventos implements IConnections {
 				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
 				e.tipo_servicio,
 				e.servicio servicioid,
-				e.sync
+				e.sync,
+				ino.id idI,
+				ino.odt odtInc,
+				ino.comentario_cc, 
+				ino.fecha_alta fecha_altaI,
+				ino.estatus statusInc,
+				ino.vobo,
+				ino.comentario_solucion
 				from eventos e
 				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
 				LEFT JOIN comercios c ON  e.comercio = c.id
 				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
 				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
 				LEFT JOIN estatus_equivalencias ee ON ee.cve_banco = e.cve_banco AND ee.estatus_id = e.estatus AND ee.estatus_servicio = e.estatus_servicio
+				LEFT JOIN incidencia_odt ino ON ino.id_odt = e.id
 				WHERE date(e.fecha_alta) BETWEEN '$inicio' AND '$fin'
 				$where
-				group by id,img.totalImg,du.nombre,du.apellidos,ee.nombre
+				group by id,img.totalImg,du.nombre,du.apellidos,ee.nombre, ino.id
 				$order
 				$filter ";	
 			//AND e.cve_banco IN ('$cveBanco')
@@ -1640,7 +1664,7 @@ class Eventos implements IConnections {
 			//$where .=" OR cuentas.correo LIKE '".$params['search']['value']."%' )";
 		}
 
-		$sql="SELECT diodt.id, diodt.incidencia_id, diodt.subtipo_incidencia, diodt.estatus FROM detalle_incidencia_odt diodt WHERE diodt.incidencia_id = '$id_inc'";
+		$sql="SELECT incidencia_odt.id inid,incidencia_odt.id_odt,diodt.id, diodt.incidencia_id, diodt.subtipo_incidencia, diodt.estatus FROM detalle_incidencia_odt diodt JOIN incidencia_odt ON incidencia_odt.odt = diodt.odt AND incidencia_odt.odt = '$id_inc'";
 
 		//self::$logger->error($sql);
 
@@ -4993,11 +5017,12 @@ if ($module == 'grabarIncidencia') {
 
 				foreach ($incidenciaE as $incEvento) {
 					
-					$prepareStatementE = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
-											VALUES(?,?,?,?);";
+					$prepareStatementE = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`,`odt`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
+											VALUES(?,?,?,?,?);";
 
 					$arrayStringE = array(
 								$id,
+								$odt,
 								$incEvento,
 								1,
 								$fecha_alta
@@ -5011,11 +5036,12 @@ if ($module == 'grabarIncidencia') {
 
 				foreach ($incidenciaI as $incInventario) {
 					
-					$prepareStatementI = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`, `subtipo_incidencia`, `estatus`,`fecha_alta`)
-											VALUES(?,?,?,?);";
+					$prepareStatementI = "INSERT INTO `detalle_incidencia_odt` (`incidencia_id`,`odt`,`subtipo_incidencia`, `estatus`,`fecha_alta`)
+											VALUES(?,?,?,?,?);";
 
 					$arrayStringI = array(
 								$id,
+								$odt,
 								$incInventario,
 								1,
 								$fecha_alta

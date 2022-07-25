@@ -97,6 +97,7 @@ $(document).ready(function() {
                     d.fechaVen_inicio = $("#fechaVen_inicio").val(),
                     d.fechaVen_fin = $("#fechaVen_fin").val(),
                     d.evidencias = $('#evidencias').is(':checked') ? 1 : 0,
+                    d.incidencias = $('#incidencias').is(':checked') ? 1 : 0,
                     d.territorialF = $('#territorialF').val(),
                     d.tecnicof = $('#tecnicoF').val(),
                     d.bancof = $('#bancoF').val()
@@ -104,6 +105,9 @@ $(document).ready(function() {
         },
         columns: [{
                 data: 'odt'
+            },
+            {
+                data: 'statusInc'
             },
             {
                 data: 'afiliacion'
@@ -153,11 +157,30 @@ $(document).ready(function() {
             },
             {
                 "targets": [1],
+                "width": "5%",
+                "mRender": function (data, type, row){
+                    var mostrar;
+
+                    if(data == '1'){
+                        mostrar = 'Activa';
+                    }else if(data == '0'){
+                        mostrar = 'Resuelta';
+                    }
+                    else{
+                        mostrar = '';
+                    }
+
+                    return mostrar;
+                }
+
+            },
+            {
+                "targets": [2],
                 "visible": $("#tipo_user").val() == 'callcenter' ? false : true
 
             },
             {
-                "targets": [13],
+                "targets": [14],
                 "mRender": function(data, type, row) {
 
                     var btnALL = '';
@@ -169,6 +192,8 @@ $(document).ready(function() {
                     var btnHistoria = '<a href="#" class="dropdown-item mostrarHistoria" data="' + row.odt + '"><i class="fas fa-history fa-sm" style="color:#C17137"></i> Historial </a>';
                     var btnCerrar = '<a href="#" class="dropdown-item endEvent" title="Cerrar evento" data="' + row.id + '"><i class="far fa-calendar fa-sm " style="color:#E04242"></i> Cerrar Servicio</a>';
                     var btnDates = '<a href="#" class="dropdown-item editFecha" title="Cambiar Fechas" data="' + row.id + '"><i class="far fa-calendar-alt fa-sm " style="color:#3EA399"></i> Cambiar Fechas</a>';
+
+                    var btnInc = '<a href="#" class="dropdown-item verDetalleIncidencia" title="Detalle Incidencia" data="' + row.id + '"><i class="fa fa-tasks fa-sm " style="color:#A399"></i> Detalle Incidencia</a>';
 
                     if (row.nombreEstatus === 'Cerrado' && $("#tipo_user").val() == 'callcenterADM') 
                     {
@@ -188,10 +213,22 @@ $(document).ready(function() {
                             {
                                 btnALL = btnALL + btnEstatusRuta;
                             }
+
+                            if (row.statusInc == '0' || row.statusInc == '1' )
+                            {
+                                btnALL = btnALL + btnInc;
+                            }
                         }  
                         else 
                         {
-                            btnALL = btnInfo;
+                            if (row.statusInc == '0' || row.statusInc == '1' )
+                            {
+                                btnALL = btnInfo + btnInc;
+                            }
+                            else{
+                                btnALL = btnInfo;
+                            }
+                            
                         }                 
                     }
 
@@ -209,11 +246,11 @@ $(document).ready(function() {
         fixedColumns: true,
         rowCallback: function(row, data, index, full) {
             if ($("#tipo_user").val() != 'VO') {
-                fnShowHide(5, true)
+                fnShowHide(6, true)
                 var fechacompromiso = moment(data.fecha_vencimiento)
                 var now = moment();
                 var diff = moment.duration(fechacompromiso.diff(now));
-                var col = this.api().column(5).index('visible');
+                var col = this.api().column(6).index('visible');
                 /*console.log('Evento '+fechacompromiso.format('YYYY-MM-DD'));
                 console.log('HOY '+now.format('YYYY-MM-DD'));
                 console.log('Diferencia Dias '+ fechacompromiso.diff(now,'days'))
@@ -250,8 +287,32 @@ $(document).ready(function() {
                 }
 
             } else {
-                fnShowHide(5, false)
+                fnShowHide(6, false)
             }
+        },
+
+        rowCallback: function(row,data,index,full){
+            var col = this.api().column(1).index('visible');
+            if (data.statusInc == '1') 
+            {
+                $('td', row).eq(col).css('color', '#000');
+                $('td', row).eq(col).css('font-weight', 'bold');
+                $('td', row).eq(col).css('background-color', '#eb6060');
+                
+            }
+            if(data.statusInc == '0')
+            {
+                $('td', row).eq(col).css('color', '#000');
+                $('td', row).eq(col).css('font-weight', 'bold');
+                $('td', row).eq(col).css('background-color', '#7cd992');
+            }
+            if (data.vobo == '1' && data.statusInc == '0') 
+            {
+                $('td', row).eq(col).css('color', '#000');
+                $('td', row).eq(col).css('font-weight', 'bold');
+                $('td', row).eq(col).css('background-color', '#f7e463');
+            }
+
         }
     });
 
@@ -369,6 +430,279 @@ $(document).ready(function() {
 
     })
 
+    $(document).on("click",".verDetalleIncidencia", function() {
+        var index = $(this).parent().parent().index() ;
+        var data = tableEventos.row( index ).data()
+        $("#incidenciaId").val(data.idI);
+        $("#odtInc").val(data.odtInc);
+        $("#estatusVobo").val(data.vobo);
+        $("#tipo_incidencia").val(data.tipo);
+        $("#descripcionE").val(data.comentario_cc);
+        $("#textoSolucion").val(data.comentario_solucion);
+
+        $("#showIncidencias").modal("show");    
+
+        tblDetail.ajax.reload();
+        tblDetail.columns.adjust();
+
+        var voboStat = document.getElementById("estatusVobo").value;
+                    var user = document.getElementById("tipo_user").value;
+                    
+                    if (user == "callcenter" || user == "callcenterADM") 
+                    {
+                        $("#estatus1").hide();
+                        $("#estatus0").hide();
+                    }else
+                    {
+                            if ( voboStat == "0" ) 
+                        {
+                            $("#estatus1").show();
+                            $("#estatus0").hide();
+                        }else
+                        {
+                            $("#estatus0").show();
+                            $("#estatus1").hide();
+                        }
+                        
+                    }
+    });
+
+    $('#showIncidencias').on('show.bs.modal', function(){   
+
+        $(this).find('.modal-body').css({
+            width: 'auto',
+            height: 'auto',
+            'max-height': '100%'
+        });
+
+        tblDetail = $('#detalleIncidencia').DataTable({
+
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            searching: false,
+            order: [
+                [0, "ASC"]
+            ],
+            dom: 'lfrtiBp',
+            buttons: [
+                'pdf',
+                'excelHtml5'
+            ],
+
+            ajax: {
+                url: 'modelos/eventos_db.php',
+                type: 'POST',
+                data: function(d) {
+                    d.module = 'getDetalleIncidencia',
+                    d.inId = $("#odtInc").val()
+                }
+            },
+            columns: [{
+                    data: 'subtipo_incidencia'
+                },
+                {
+                    data: 'estatus'
+                },
+                {
+                    data: 'id'
+                }
+                
+            ],
+            aoColumnDefs: [
+            {
+                "targets":[2],
+                "mRender": function(data, type, row){
+
+                    if(row.estatus == '1')
+                    {
+                        boton =  '<a href="#" class="delIncidencia" data="'+row.id+'"><i class="fas fa-toggle-off fa-2x" style="color:#eb6060"></i></a>';
+                    } else 
+                    {
+                        boton = '<a href="#" class="addIncidencia" data="'+row.id+'"><i class="fas fa-toggle-on fa-2x" style="color:#7cd992"></i></a>';
+                    }
+
+                    if ( $("#tipo_user").val() == 'callcenter' || $("#tipo_user").val() == 'callcenterADM') 
+                    {
+                        boton = '';
+                    }
+
+        
+                    return boton;
+                    
+
+                    
+                }
+            },
+            {
+                "targets":[1],
+                "mRender": function(data, type, row){
+
+                    if (row.estatus == '1') 
+                    {
+                        aviso = 'Activa';
+                    }else 
+                    {
+                        aviso = 'Ya se atendió';
+                    }
+                    return aviso;
+                }
+            }
+            ]
+
+        });
+
+    });
+
+    $("#btnGuardarSolucion").on("click", function()
+                {
+                    var id_inc = $("#incidenciaId").val();
+                    var comentSolucion = $("#textoSolucion").val();
+                    if ( $("#textoSolucion").val().length > 0 ) 
+                    {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'modelos/eventos_db.php',
+                            data: {module:'solucionIncidencia',comentario: comentSolucion, id: id_inc},
+                            cache: false,
+                            success: function(data, textStatus, jqXHR){
+                                console.log(data);
+
+                                $.toaster({
+                                    message: 'Se guardó la información con éxito',
+                                    title: 'Aviso',
+                                    priority: 'success'
+                                });
+                                $("#showIncidencias").modal("hide")
+                                $('#eventos').DataTable().ajax.reload();
+                            }
+                        })
+                    }
+                    else 
+                    {
+                        $.toaster({
+                            message : 'Ingresa el comentario de solución de incidencia',
+                            title: 'Aviso',
+                            priority: 'warning'
+                        })
+                    }
+    });
+
+    $('#detalleIncidencia tbody').on('click', 'tr a.delIncidencia', function () {
+        var index = $(this).parent().parent().index() ;
+        var data = tblDetail.row( index ).data()
+        var id = $(this).attr('data');
+        var id_inc = $("#incidenciaId").val();
+        //console.log(id);
+        console.log(id_inc);
+        $.ajax({
+            type: 'POST',
+            url: 'modelos/eventos_db.php', // call your php file
+            data: { module:'delIncidencia', id: id, inc_id : id_inc},
+            cache: false,
+            success: function(data, textStatus, jqXHR){
+                var info = JSON.parse(data);
+                $.toaster({
+                        message: 'Incidencia atendida',
+                        title: 'Aviso',
+                        priority : 'success'
+                    });  
+                tblDetail.ajax.reload();
+                $('#tblIncidencias').DataTable().ajax.reload();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(data)
+        }
+        });
+    
+    });
+
+    $('#detalleIncidencia tbody').on('click', 'tr a.addIncidencia', function () {
+        var index = $(this).parent().parent().index() ;
+        var data = tblDetail.row( index ).data()
+        var id = $(this).attr('data');
+        var id_inc = $("#incidenciaId").val();
+        //console.log(id);
+         console.log(id_inc);
+        $.ajax({
+            type: 'POST',
+            url: 'modelos/eventos_db.php', // call your php file
+            data: { module:'addIncidencia', id: id},
+            cache: false,
+            success: function(data, textStatus, jqXHR){
+                var info = JSON.parse(data);
+                $.toaster({
+                        message: 'La incidencia vuelve a estar activa',
+                        title: 'Aviso',
+                        priority : 'warning'
+                    }); 
+                tblDetail.ajax.reload();
+                $('#tblIncidencias').DataTable().ajax.reload();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(data)
+        }
+        });
+    
+    });
+
+    $("#solucionVobo").on("click", function()
+                {
+                    //Hacer que se pongan como solucionados todos las incidencias 
+                    var idIn = $("#incidenciaId").val();
+                    var comentSolucion = $("#textoSolucion").val();
+                    $.ajax({
+                            type: 'POST',
+                            url: 'modelos/eventos_db.php',
+                            data: {module:'voboIncidencia', idIn: idIn, comentario:comentSolucion},
+                            cache: false,
+                            success: function(data, textStatus, jqXHR){
+                                console.log(data);
+                                //changeIcon();
+                                $.toaster({
+                                    message: 'Cambio de estatus de incidencia por VoBo',
+                                    title: 'Aviso',
+                                    priority: 'success'
+                                });
+                                $("#detalleIncidencia").DataTable().ajax.reload();
+                                $('#tblIncidencias').DataTable().ajax.reload();
+                                
+                            }
+                        })
+                    
+    })
+                $("#solucionVobo0").on("click", function()
+                {
+                    //Hacer que se pongan como solucionados todos las incidencias 
+                    var idIn = $("#incidenciaId").val();
+                    var comentSolucion = $("#textoSolucion").val();
+                    $.ajax({
+                            type: 'POST',
+                            url: 'modelos/eventos_db.php',
+                            data: {module:'voboIncidenciaBack', idIn: idIn, comentario:comentSolucion},
+                            cache: false,
+                            success: function(data, textStatus, jqXHR){
+                                console.log(data);
+                                //changeIcon2();
+                                $.toaster({
+                                    message: 'Las incidencias vuelven a estar activas',
+                                    title: 'Aviso',
+                                    priority: 'success'
+                                });
+                                $("#detalleIncidencia").DataTable().ajax.reload();
+                                $('#tblIncidencias').DataTable().ajax.reload();
+                                
+                            }
+                        })
+                    
+    })
+
+    $('#showIncidencias').on('hidden.bs.modal', function (e) {
+        $("#detalleIncidencia").dataTable().fnDestroy();
+        cleartextInc();
+      })
 
     $('#showHistoria').on('show.bs.modal', function() {
         $(this).find('.modal-body').css({
@@ -382,6 +716,13 @@ $(document).ready(function() {
     })
 
     $("#evidencias").on("change", function() {
+
+        if ($(this).is(":checked")) {
+            $('#eventos').DataTable().ajax.reload();
+        }
+    })
+
+    $("#incidencias").on("change", function() {
 
         if ($(this).is(":checked")) {
             $('#eventos').DataTable().ajax.reload();
@@ -1071,7 +1412,6 @@ $(document).ready(function() {
 
 
     $('#showEvento').on('hide.bs.modal', function(e) {
-
         cleartext()
     });
 
@@ -2292,6 +2632,38 @@ function cleartext() {
 
 
 }
+
+function cleartextInc() {  
+    $("#incidenciasEvidencia").val("");
+    $("#incidenciasInventario").val("");
+    $("#tipo_incidencia").val("");
+    $("#id_incidencia").val("");
+    $("#supervisor").val("0");
+    $("#tipo").val("0");
+    $("#conectividad").val("0");
+    $("#descripcionE").val(" ")
+    $("#descripcionI").val(" ");
+
+}
+
+
+function cambiarBtn()
+        {
+
+            const estatusVobo1 = document.getElementById('solucionVobo');
+            const estatusVobo0 = document.getElementById('solucionVobo0');
+
+            estatusVobo1.addEventListener('click', function(){
+                $("#estatus1").hide();
+                $("#estatus0").show();
+            });
+
+            estatusVobo0.addEventListener('click', function(){
+                $("#estatus1").show();
+                $("#estatus0").hide();
+            });
+
+        }
 
 /*function getFechaAtencion(odt) {
     $.ajax({

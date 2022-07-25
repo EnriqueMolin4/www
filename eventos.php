@@ -44,6 +44,10 @@
                         <input type="checkbox" class="form-check-input searchEvento" id="evidencias">
                         <label class="form-check-label" for="evidencias">Con evidencias</label>
                     </div>
+                    <div class="col-sm">
+                        <input type="checkbox" class="form-check-input searchEvento" id="incidencias">
+                        <label class="form-check-label" for="incidencias">Con incidencias</label>
+                    </div>
                     <?php if ($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'supervisor') { ?>
                     <div class="col-sm">
                         <label for="territorialF" class="col-form-label-sm">TERRITORIAL</label>
@@ -77,6 +81,7 @@
                         <thead>
                             <tr>
                              <th>ODT</th>
+                             <th>StatInc</th>
                                 <th>Afiliación | Folio</th>
                                 <th>CVE</th>
                                 <th>Comercio | Cliente</th>
@@ -782,6 +787,82 @@
 			</div>
 			
 			<!-- End Modal Historia Evento ODT -->
+
+            <!-- MODAL DETALLE INCIDENCIA-->
+            <div class="modal fade" tabindex="-1" role="dialog" id="showIncidencias" role="document" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-lg" role="document" style="max-width: 950px!important;" >
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Incidencias de ODT</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" >
+                            <div class="col">
+                            <input type="text" class="form-control" id="odtInc" readonly ><br>
+                            </div>    
+                            <?php if ($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM') {
+                                
+                            ?>
+                            <div class="col-md-4">
+                                <button type="button" id="btnNuevaInc" class="btn btn-success">Agregar Inicidencia</button>
+                            </div>
+                        <?php } ?>
+                                          
+                            <div class="col-md-4 offset-md-4" id="estatus1" style="display: none;">
+                                <label for="solucionVobo">Guardar solución con VoBo</label>
+                                <a href="#" id="solucionVobo" class="solucionVobo"><i class="fas fa-toggle-off fa-2x" style="color:#3C95D4"></i></a>
+                            </div>
+                            <div class="col-md-4 offset-md-4" id="estatus0" style="display: none;">
+                                <label for="solucionVobo0">Quitar solucion con VoBo</label>
+                                <a href="#" id="solucionVobo0" class="solucionVobo0"><i class="fas fa-toggle-on fa-2x" style="color:#3C95D4"></i></a>
+                            </div>
+                            
+                        </div><br>
+                        <div class="row">
+                            <div class="col">
+                              <label class="form-check-label" for="descripcionE">Comentarios</label>
+                              <textarea class="form-control" name="descripcionE" id="descripcionE" rows="5" readonly></textarea>
+                           </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                             
+                                    <table id="detalleIncidencia" class="table nowrap table-striped" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Incidencia</th>
+                                                <th>Estatus</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                        </tbody>
+                                    </table>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="row">
+                                <div class="col">
+                                    <label class="form-check-label" for="textoSolucion">Comentarios</label>
+                                    <textarea class="form-control" name="textoSolucion" id="textoSolucion" rows="5"></textarea>
+                                </div>
+                            </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="estatusVobo" class="estatusVobo" value="0">
+                        <input type="hidden" id="incidenciaId" name="incidenciaId" value="0">
+                        <input type="hidden" id="tipo_incidencia" name="tipo_incidencia" value="0">
+                        <button type="button" class="btn btn-primary" id="btnGuardarSolucion">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
             </div>
             </div>
         </main>

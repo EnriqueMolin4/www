@@ -478,7 +478,7 @@
                            <label for="incidenciasEvidencia" class="col-form-label-sm">EVIDENCIA</label><br>
                            <select name="incidenciasEvidencia[]" id="incidenciasEvidencia" class="form-control" multiple>
                               
-                              <option value="FALTA EVIDENCIA">FALTA EVIDENCIA</option>
+                              <option value="OTROS">OTROS</option>
                               <option value="EVIDENCIA ILEGIBLE">EVIDENCIA ILEGIBLE</option>
                               <option value="NO COINCIDE">NO COINCIDE</option>
                               <option value="VOBO">VOBO</option>
