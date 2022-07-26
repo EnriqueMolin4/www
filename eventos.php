@@ -801,7 +801,7 @@
                     <div class="modal-body">
                         <div class="row" >
                             <div class="col">
-                            <input type="text" class="form-control" id="odtInc" readonly ><br>
+                            <input type="text" class="form-control" id="incidencia_odt" name="incidencia_odt" readonly ><br>
                             </div>    
                             <?php if ($_SESSION['tipo_user'] == 'admin' || $_SESSION['tipo_user'] == 'callcenter' || $_SESSION['tipo_user'] == 'callcenterADM') {
                                 
@@ -854,8 +854,9 @@
                         
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" id="estatusVobo" class="estatusVobo" value="0">
-                        <input type="hidden" id="incidenciaId" name="incidenciaId" value="0">
+                        <input type="hidden" id="id_odt" name="id_odt" class="id_odt" value="0">
+                        <input type="hidden" id="estatusVobo" name="estatusVobo" class="estatusVobo" value="0">
+                        <input type="hidden" id="incidenciaId" class="incidenciaId" name="incidenciaId" value="0">
                         <input type="hidden" id="tipo_incidencia" name="tipo_incidencia" value="0">
                         <button type="button" class="btn btn-primary" id="btnGuardarSolucion">Guardar</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

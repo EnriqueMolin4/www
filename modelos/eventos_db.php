@@ -101,6 +101,7 @@ class Eventos implements IConnections {
  			self::$logger->error ("File: eventos_db.php; 	Method Name: getEstadoNombre(); Functionality: Get Products Price From PriceLists; Log:" . $e->getMessage ());   		
     	}
     }
+
     function getTable($params,$total) {
 
 		$start = $params['start'];
@@ -233,7 +234,6 @@ class Eventos implements IConnections {
 				e.servicio servicioid,
 				e.sync,
 				ino.id idI,
-				ino.odt odtInc,
 				ino.comentario_cc, 
 				ino.fecha_alta fecha_altaI,
 				ino.estatus statusInc,
@@ -1652,7 +1652,7 @@ class Eventos implements IConnections {
 		$query = "";
 		$where = '';
 
-		$id_inc = $params['inId'];
+		$odt = $params['odtI'];
 
 		if(isset($start) && $length != -1 && $total) {
 			$filter .= " LIMIT  $start , $length";
@@ -1664,7 +1664,7 @@ class Eventos implements IConnections {
 			//$where .=" OR cuentas.correo LIKE '".$params['search']['value']."%' )";
 		}
 
-		$sql="SELECT incidencia_odt.id inid,incidencia_odt.id_odt,diodt.id, diodt.incidencia_id, diodt.subtipo_incidencia, diodt.estatus FROM detalle_incidencia_odt diodt JOIN incidencia_odt ON incidencia_odt.odt = diodt.odt AND incidencia_odt.odt = '$id_inc'";
+		$sql="SELECT incidencia_odt.id inid,incidencia_odt.id_odt,diodt.id, diodt.incidencia_id, diodt.subtipo_incidencia, diodt.estatus FROM detalle_incidencia_odt diodt JOIN incidencia_odt ON incidencia_odt.odt = diodt.odt WHERE incidencia_odt.odt = '$odt'";
 
 		//self::$logger->error($sql);
 
@@ -1676,6 +1676,20 @@ class Eventos implements IConnections {
             self::$logger->error ("File: eventos_db.php;	Method Name: getDetalleIncidencia();	Functionality: Get Historia;	Log:" . $e->getMessage () );
         }
 
+	}
+
+	function getIncidencias($odt)
+	{
+		$sql = "select * from incidencia_odt where odt = '$odt'";
+		//self::$logger->error($sql);
+
+		try {
+            $stmt = self::$connection->prepare ($sql );
+            $stmt->execute ();
+            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+        } catch ( PDOException $e ) {
+            self::$logger->error ("File: eventos_db.php;	Method Name: getIncidencias();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
+        }
 	}
 
 	function getSubtipoIncidencia($id)
@@ -1739,6 +1753,13 @@ if($module == 'getTable') {
     $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  $rowsTotal, "recordsFiltered" => $rowsTotal );
 
 	echo json_encode($data); //$val;
+}
+
+if ($module == 'getIncidencias') {
+	
+	$rows = $Eventos->getIncidencias($params['odt']);
+
+	echo json_encode($rows);
 }
 
 if($module == 'getTerritoriales')

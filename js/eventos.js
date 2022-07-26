@@ -193,7 +193,7 @@ $(document).ready(function() {
                     var btnCerrar = '<a href="#" class="dropdown-item endEvent" title="Cerrar evento" data="' + row.id + '"><i class="far fa-calendar fa-sm " style="color:#E04242"></i> Cerrar Servicio</a>';
                     var btnDates = '<a href="#" class="dropdown-item editFecha" title="Cambiar Fechas" data="' + row.id + '"><i class="far fa-calendar-alt fa-sm " style="color:#3EA399"></i> Cambiar Fechas</a>';
 
-                    var btnInc = '<a href="#" class="dropdown-item verDetalleIncidencia" title="Detalle Incidencia" data="' + row.id + '"><i class="fa fa-tasks fa-sm " style="color:#A399"></i> Detalle Incidencia</a>';
+                    var btnInc = '<a href="#" class="dropdown-item verDetalleIncidencia" title="Detalle Incidencia" data="' + row.odt + '"><i class="fa fa-tasks fa-sm " style="color:#A399"></i> Detalle Incidencia</a>';
 
                     if (row.nombreEstatus === 'Cerrado' && $("#tipo_user").val() == 'callcenterADM') 
                     {
@@ -430,52 +430,8 @@ $(document).ready(function() {
 
     })
 
-    $(document).on("click",".verDetalleIncidencia", function() {
-        var index = $(this).parent().parent().index() ;
-        var data = tableEventos.row( index ).data()
-        $("#incidenciaId").val(data.idI);
-        $("#odtInc").val(data.odtInc);
-        $("#estatusVobo").val(data.vobo);
-        $("#tipo_incidencia").val(data.tipo);
-        $("#descripcionE").val(data.comentario_cc);
-        $("#textoSolucion").val(data.comentario_solucion);
 
-        $("#showIncidencias").modal("show");    
-
-        tblDetail.ajax.reload();
-        tblDetail.columns.adjust();
-
-        var voboStat = document.getElementById("estatusVobo").value;
-                    var user = document.getElementById("tipo_user").value;
-                    
-                    if (user == "callcenter" || user == "callcenterADM") 
-                    {
-                        $("#estatus1").hide();
-                        $("#estatus0").hide();
-                    }else
-                    {
-                            if ( voboStat == "0" ) 
-                        {
-                            $("#estatus1").show();
-                            $("#estatus0").hide();
-                        }else
-                        {
-                            $("#estatus0").show();
-                            $("#estatus1").hide();
-                        }
-                        
-                    }
-    });
-
-    $('#showIncidencias').on('show.bs.modal', function(){   
-
-        $(this).find('.modal-body').css({
-            width: 'auto',
-            height: 'auto',
-            'max-height': '100%'
-        });
-
-        tblDetail = $('#detalleIncidencia').DataTable({
+    tblDetail = $('#detalleIncidencia').DataTable({
 
             language: {
                 "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
@@ -497,7 +453,7 @@ $(document).ready(function() {
                 type: 'POST',
                 data: function(d) {
                     d.module = 'getDetalleIncidencia',
-                    d.inId = $("#odtInc").val()
+                    d.odtI = $("#incidencia_odt").val()
                 }
             },
             columns: [{
@@ -528,12 +484,8 @@ $(document).ready(function() {
                     {
                         boton = '';
                     }
-
-        
                     return boton;
-                    
-
-                    
+                
                 }
             },
             {
@@ -552,7 +504,83 @@ $(document).ready(function() {
             }
             ]
 
+    });
+
+    $(document).on("click",".verDetalleIncidencia", function() {
+        //var index = $(this).parent().parent().index() ;
+        //var data = tableEventos.row( index ).data();
+
+        var odtI = $(this).attr('data');
+        console.log(odtI);
+        $("#incidencia_odt").val(odtI);
+        
+       
+        
+        $("#showIncidencias").modal("show");    
+        cambiarBtn();
+        //$('#detalleIncidencia').DataTable().ajax.reload();
+        //tblDetail.columns.adjust();        
+
+    });
+
+    $('#showIncidencias').on('show.bs.modal', function(){   
+
+        $(this).find('.modal-body').css({
+            width: 'auto',
+            height: 'auto',
+            'max-height': '100%'
         });
+
+        $.ajax({
+            type: 'GET',
+            url: 'modelos/eventos_db.php', // call your php file
+            data: 'module=getIncidencias&odt=' + $("#incidencia_odt").val(),
+            cache: false,
+            success: function(data) {
+
+                var info = JSON.parse(data);
+
+                $.each(info, function(index, element) {
+                    $("#descripcionE").val(element.comentario_cc);
+                    $("#textoSolucion").val(element.comentario_solucion);
+                    $("#id_odt").val(element.id_odt);
+                    $("#incidenciaId").val(element.id);
+                    $("#odtInc").val(element.odt);
+                    $("#estatusVobo").val(element.vobo);
+                    $("#tipo_incidencia").val(element.tipo);
+
+                    
+
+                })
+            },
+            error: function(error) {
+                var demo = error;
+                alert(error)
+            }
+        });
+
+     $('#detalleIncidencia').DataTable().ajax.reload();
+
+     var voboStat = document.getElementById("estatusVobo").value;
+     var user = document.getElementById("tipo_user").value;
+                         
+     if (user == "callcenter" || user == "callcenterADM") 
+         {
+             $("#estatus1").hide();
+             $("#estatus0").hide();
+         }else
+         {
+             if ( voboStat == "0" ) 
+                 {
+                     $("#estatus1").show();
+                     $("#estatus0").hide();
+                 }else
+                 {
+                     $("#estatus0").show();
+                     $("#estatus1").hide();
+                 }
+                             
+         }
 
     });
 
@@ -609,8 +637,8 @@ $(document).ready(function() {
                         title: 'Aviso',
                         priority : 'success'
                     });  
-                tblDetail.ajax.reload();
-                $('#tblIncidencias').DataTable().ajax.reload();
+                $('#detalleIncidencia').DataTable().ajax.reload();
+                $('#eventos').DataTable().ajax.reload();
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert(data)
@@ -629,7 +657,7 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             url: 'modelos/eventos_db.php', // call your php file
-            data: { module:'addIncidencia', id: id},
+            data: { module:'addIncidencia', id: id, inc_id : id_inc},
             cache: false,
             success: function(data, textStatus, jqXHR){
                 var info = JSON.parse(data);
@@ -638,8 +666,8 @@ $(document).ready(function() {
                         title: 'Aviso',
                         priority : 'warning'
                     }); 
-                tblDetail.ajax.reload();
-                $('#tblIncidencias').DataTable().ajax.reload();
+                $('#detalleIncidencia').DataTable().ajax.reload();
+                $('#eventos').DataTable().ajax.reload();
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert(data)
@@ -667,7 +695,7 @@ $(document).ready(function() {
                                     priority: 'success'
                                 });
                                 $("#detalleIncidencia").DataTable().ajax.reload();
-                                $('#tblIncidencias').DataTable().ajax.reload();
+                                $('#eventos').DataTable().ajax.reload();
                                 
                             }
                         })
@@ -692,7 +720,7 @@ $(document).ready(function() {
                                     priority: 'success'
                                 });
                                 $("#detalleIncidencia").DataTable().ajax.reload();
-                                $('#tblIncidencias').DataTable().ajax.reload();
+                                $('#eventos').DataTable().ajax.reload();
                                 
                             }
                         })
@@ -700,7 +728,7 @@ $(document).ready(function() {
     })
 
     $('#showIncidencias').on('hidden.bs.modal', function (e) {
-        $("#detalleIncidencia").dataTable().fnDestroy();
+      //$("#detalleIncidencia").dataTable().fnDestroy();
         cleartextInc();
       })
 
@@ -839,7 +867,7 @@ $(document).ready(function() {
     })
     
 
-     $(document).on("click", ".btnEstatusRuta", function() {
+    $(document).on("click", ".btnEstatusRuta", function() {
 
         var odt = $(this).attr('data');
         var tecnico = $("#tecnicoF").val();
@@ -2643,6 +2671,13 @@ function cleartextInc() {
     $("#conectividad").val("0");
     $("#descripcionE").val(" ")
     $("#descripcionI").val(" ");
+    $("#incidenciaId").val("");
+    $("#odtInc").val("");
+    $("#estatusVobo").val("");
+    $("#textoSolucion").val("");
+    $("#id_odt").val("");
+    $("#incidencia_odt").val("");
+
 
 }
 

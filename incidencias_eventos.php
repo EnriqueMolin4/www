@@ -458,7 +458,7 @@
                     $.ajax({
                         type: 'POST',
                         url: 'modelos/eventos_db.php', // call your php file
-                        data: { module:'addIncidencia', id: id},
+                        data: { module:'addIncidencia', id: id, inc_id : id_inc},
                         cache: false,
                         success: function(data, textStatus, jqXHR){
                             var info = JSON.parse(data);
