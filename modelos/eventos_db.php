@@ -1,5 +1,9 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 ini_set('memory_limit', '128M');
 date_default_timezone_set('America/Monterrey');
 include('../librerias/enviomails.php');
@@ -272,6 +276,114 @@ class Eventos implements IConnections {
 			return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
 		} catch ( PDOException $e ) {
 			self::$logger->error ("File: eventos_db.php;	Method Name: getTotalTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
+		}
+	}
+
+	function getTotalTableCerrar() {
+
+		$sql = "SELECT count(*) FROM eventos WHERE e.tipo_servicio in (4,5,6) ";
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return  $stmt->fetch ( PDO::FETCH_COLUMN, 0 );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: eventos_db.php;	Method Name: getTotalTableCerrar();	Functionality: Get Table;	Log:" . $e->getMessage () );
+		}
+	}
+
+	function getEventosCerrar($params,$total) {
+
+		$start = $params['start'];
+		$length = $params['length'];
+		$userId = $_SESSION['userid'];
+		//$valid = $_SESSION['validacion'];						   
+		
+		
+		$orderField =  $params['columns'][$params['order'][0]['column']]['data'];
+		$orderDir = $params['order'][0]['dir'];
+		$order = '';
+		$filter = "";
+		$param = "";
+		$where = "";
+		$cveBanco = $_SESSION['cve_user'];
+		//$userValidacion = $_SESSION['validacion'];
+
+		//echo $userValidacion;
+
+		if(isset($orderField) ) {
+			$order .= " ORDER BY   $orderField   $orderDir";
+		}				   
+		$inicio = $params['fechaVen_inicio'];
+		$fin = $params['fechaVen_fin'];
+
+	 
+		
+		
+	
+
+		if(isset($start) && $length != -1 && $total) {
+			$filter .= " LIMIT  $start , $length";
+		}
+
+		if( !empty($params['search']['value'])) {   
+			$where .=" AND ";
+			$where .=" ( e.odt LIKE '".$params['search']['value']."%' ";    
+			$where .=" OR e.afiliacion LIKE '".$params['search']['value']."%' ";
+			$where .=" OR e.comercio LIKE '".$params['search']['value']."%' ";
+			$where .=" OR e.servicio LIKE '".$params['search']['value']."%'  ";
+			$where .=" OR e.estatus LIKE '".$params['search']['value']."%'  )";
+
+		}
+    
+     
+
+		$sql = "SELECT e.id,
+				e.odt,
+				e.cve_banco,
+				e.afiliacion,
+				CASE WHEN e.cve_banco = '' THEN 'Sin Clave' ELSE GetNameById(e.cve_banco,'CveBanco') END cveBancoNombre,
+				c.comercio  comercio ,
+				CASE WHEN e.tipo_servicio = '' THEN 0 ELSE GetNameById(e.tipo_servicio,'TipoServicio') END servicio, 
+				CASE WHEN e.servicio = '' THEN 0 ELSE GetNameById(e.servicio,'TipoSubServicio') END subservicio, 
+				e.fecha_alta,
+				e.fecha_atencion,
+				e.fecha_cierre,
+				e.fecha_vencimiento,
+				CASE WHEN (e.fecha_cierre > e.fecha_vencimiento) THEN DATEDIFF(e.fecha_cierre, e.fecha_vencimiento) ELSE 0 END dias,
+				e.estatus,
+				e.estatus_servicio,
+				
+				CASE WHEN ee.nombre is null then GetNameById(e.estatus_servicio,'EstatusServicio') ELSE ee.nombre END nombreEstatusServicio,
+				e.municipio,
+				e.comentarios_cierre,
+				CASE WHEN e.estatus = '' THEN '' ELSE GetNameById(e.estatus,'Estatus') END nombreEstatus,
+				IFNULL(img.totalImg,0) totalImg,
+				CONCAT(du.nombre,' ',IFNULL(du.apellidos,'')) tecnico,
+				e.tipo_servicio,
+				e.servicio servicioid,
+				e.sync
+				from eventos e
+				LEFT JOIN detalle_usuarios du ON du.cuenta_id = e.tecnico
+				LEFT JOIN comercios c ON  e.comercio = c.id
+				LEFT JOIN cp_territorios ON c.cp = cp_territorios.cp
+				LEFT JOIN view_total_odt_img img ON img.odt = e.odt
+				LEFT JOIN estatus_equivalencias ee ON ee.cve_banco = e.cve_banco AND ee.estatus_id = e.estatus AND ee.estatus_servicio = e.estatus_servicio
+				WHERE date(e.fecha_alta) BETWEEN '$inicio' AND '$fin'
+				AND e.tipo_servicio in (4,5,6)
+				AND e.estatus = 10
+				$where
+				group by id,img.totalImg,du.nombre,du.apellidos,ee.nombre
+				$order
+				$filter ";	
+			//AND e.cve_banco IN ('$cveBanco')
+			self::$logger->error($sql);
+		
+		try {
+			$stmt = self::$connection->prepare ($sql);
+			$stmt->execute();
+			return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+		} catch ( PDOException $e ) {
+			self::$logger->error ("File: eventos_db.php;	Method Name: getTable();	Functionality: Get Table;	Log:" . $e->getMessage () );
 		}
 	}
 
@@ -631,17 +743,27 @@ class Eventos implements IConnections {
         }
 	}
 
-	function getListaModelos($cve_banco) {
-		$sql = "SELECT id,modelo from modelos WHERE estatus=1 AND cve_banco =?";
-		
-        try {
-            $stmt = self::$connection->prepare ($sql );
-            $stmt->execute (array($cve_banco));
-            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-        } catch ( PDOException $e ) {
-            self::$logger->error ("File: eventos_db.php;	Method Name: getListaModelos();	Functionality: Get Products price From PriceLists;	Log:" . $e->getMessage () );
-        }
-	}
+	function getListaModelos($cveBanco) {
+			
+			$where = ' and clave_elavon != 0  and cve_banco=? ';
+
+			if ($cveBanco == '038' ) {
+				$where = ' and cve_banco=? ';
+			} else if ( $cveBanco == '039' ) {
+				$where = ' and cve_banco=? ';
+			}
+			 
+			$sql = "SELECT id,modelo from modelos WHERE estatus=1  $where ";
+			//self::$logger->error ($sql." ".$cveBanco);
+			
+	        try {
+	            $stmt = self::$connection->prepare ($sql );
+	            $stmt->execute (array($cveBanco));
+	            return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+	        } catch ( PDOException $e ) {
+	            self::$logger->error ("File: eventos_db.php;	Method Name: getListaModelos();	Functionality: Get Modelos;	Log:" . $e->getMessage () );
+	        }
+		}
 
 	function getListaConectividad($cve_banco) {
 		$sql = "SELECT id,nombre from tipo_conectividad WHERE estatus=1 AND cve_banco=?";
@@ -1002,19 +1124,19 @@ class Eventos implements IConnections {
 
 	
 	
-	function getEstatusSubRechazo() {
- 
-		  $sql = "SELECT * FROM `tipo_rechazos` WHERE tipo='s' AND cve_banco=? Order by nombre ";
-	
+	function getEstatusSubRechazo($cvebanco) {
+	 
+			  $sql = "SELECT * FROM `tipo_rechazos` WHERE tipo='s' AND cve_banco=? Order by nombre ";
+		
 
-		   try {
-			   $stmt = self::$connection->prepare ($sql );
-			   $stmt->execute (array($cvebanco));
-			   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
-		   } catch ( PDOException $e ) {
-			   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusSubRechazo();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
-		   }
-	}
+			   try {
+				   $stmt = self::$connection->prepare ($sql );
+				   $stmt->execute (array($cvebanco));
+				   return  $stmt->fetchAll ( PDO::FETCH_ASSOC );
+			   } catch ( PDOException $e ) {
+				   self::$logger->error ("File: eventos_db.php;	Method Name: getEstatusSubRechazo();	Functionality: Search Products;	Log:". $sql . $e->getMessage () );
+			   }
+		}
 	 
 	 
 	function getEventobyTecnico($id) {
@@ -1750,6 +1872,15 @@ if($module == 'getTable') {
 
     $rows = $Eventos->getTable($params,true);
     $rowsTotal = $Eventos->getTotalTable();
+    $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  $rowsTotal, "recordsFiltered" => $rowsTotal );
+
+	echo json_encode($data); //$val;
+}
+
+if($module == 'getEventosCerrar') {
+
+    $rows = $Eventos->getEventosCerrar($params,true);
+    $rowsTotal = $Eventos->getTotalTableCerrar();
     $data = array("draw"=>$_POST['draw'],"data" =>$rows,'recordsTotal' =>  $rowsTotal, "recordsFiltered" => $rowsTotal );
 
 	echo json_encode($data); //$val;

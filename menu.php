@@ -89,6 +89,14 @@
                   <?php 
                      } 
 
+                     if ( searchMenu($_SESSION['Modules'],'url','cierresmasivos')) {
+                     ?>
+                  <li id="cierresmasivoslink">
+                     <a href="cierresmasivos.php">Cierre Masivos Eventos</a>
+                  </li>
+                  <?php 
+                     } 
+
                      if ( searchMenu($_SESSION['Modules'],'url','asig_eventocierre') ) {
                      ?>
                   <li id="cierreasignlink">
